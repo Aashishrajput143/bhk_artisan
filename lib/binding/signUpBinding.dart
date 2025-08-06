@@ -1,0 +1,10 @@
+import 'package:bhk_artisan/Modules/controller/registrationController.dart';
+import 'package:get/get.dart';
+
+
+class SignupBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => RegistrationController());
+  }
+}

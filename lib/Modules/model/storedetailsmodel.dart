@@ -1,0 +1,125 @@
+class GetStoreDetailsModel {
+  String? message;
+  Data? data;
+
+  GetStoreDetailsModel({this.message, this.data});
+
+  GetStoreDetailsModel.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
+}
+
+class Data {
+  int? storeId;
+  String? storeName;
+  String? storeLogo;
+  String? description;
+  bool? isActive;
+  String? status;
+  String? createdAt;
+  String? updatedAt;
+  Address? address;
+
+  Data(
+      {this.storeId,
+      this.storeName,
+      this.storeLogo,
+      this.description,
+      this.isActive,
+      this.status,
+      this.createdAt,
+      this.updatedAt,
+      this.address});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    storeId = json['store_id'];
+    storeName = json['store_name'];
+    storeLogo = json['store_logo'];
+    description = json['description'];
+    isActive = json['isActive'];
+    status = json['status'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    address =
+        json['address'] != null ? Address.fromJson(json['address']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['store_id'] = storeId;
+    data['store_name'] = storeName;
+    data['store_logo'] = storeLogo;
+    data['description'] = description;
+    data['isActive'] = isActive;
+    data['status'] = status;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    if (address != null) {
+      data['address'] = address!.toJson();
+    }
+    return data;
+  }
+}
+
+class Address {
+  int? id;
+  String? createdAt;
+  bool? isDefault;
+  String? street;
+  String? houseNo;
+  String? postalCode;
+  String? city;
+  String? country;
+  String? state;
+  String? addressType;
+
+  Address(
+      {this.id,
+      this.createdAt,
+      this.isDefault,
+      this.street,
+      this.houseNo,
+      this.postalCode,
+      this.city,
+      this.country,
+      this.state,
+      this.addressType});
+
+  Address.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    createdAt = json['createdAt'];
+    isDefault = json['isDefault'];
+    street = json['street'];
+    houseNo = json['houseNo'];
+    postalCode = json['postalCode'];
+    city = json['city'];
+    country = json['country'];
+    state = json['state'];
+    addressType = json['addressType'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createdAt'] = createdAt;
+    data['isDefault'] = isDefault;
+    data['street'] = street;
+    data['houseNo'] = houseNo;
+    data['postalCode'] = postalCode;
+    data['city'] = city;
+    data['country'] = country;
+    data['state'] = state;
+    data['addressType'] = addressType;
+    return data;
+  }
+}
