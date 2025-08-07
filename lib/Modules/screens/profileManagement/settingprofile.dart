@@ -35,7 +35,7 @@ class SettingProfile extends StatelessWidget {
 
         break;
       case 3: //orders
-        Get.toNamed(RoutesClass.gotoOrderScreen());
+        //Get.toNamed(RoutesClass.gotoOrderScreen());
         // Fluttertoast.showToast(
         //     msg: "Please Login to see Your Addresses",
         //     toastLength: Toast.LENGTH_SHORT,

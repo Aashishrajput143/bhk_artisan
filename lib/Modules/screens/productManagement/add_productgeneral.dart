@@ -5,14 +5,15 @@ import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/inputformatter.dart';
+import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'buildstepcircle.dart';
 
-class AddProductPage extends ParentWidget {
-  const AddProductPage({super.key});
+class AddProductGeneral extends ParentWidget {
+  const AddProductGeneral({super.key});
 
   @override
   Widget buildingView(BuildContext context, double h, double w) {
@@ -588,29 +589,33 @@ class AddProductPage extends ParentWidget {
                         Spacer(),
                         ElevatedButton(
                           onPressed: () {
-                            if (controller.producteditId == false) {
-                              if (controller
-                                      .nameController.value.text.isNotEmpty &&
-                                  controller.detaileddescriptionController.value
-                                      .text.isNotEmpty &&
-                                  controller.categoryid.value.isNotEmpty &&
-                                  controller.subcategoryid.value.isNotEmpty &&
-                                  controller.brandid.value.isNotEmpty &&
-                                  controller.storeid.value.isNotEmpty) {
-                                controller.clickNext.value = true;
-                                controller.addProductApi(context);
+                            Get.toNamed(RoutesClass.addproductdetails,arguments: {
+            'productid': 0,
+            'producteditid': false,
+          },);
+                            // if (controller.producteditId == false) {
+                            //   if (controller
+                            //           .nameController.value.text.isNotEmpty &&
+                            //       controller.detaileddescriptionController.value
+                            //           .text.isNotEmpty &&
+                            //       controller.categoryid.value.isNotEmpty &&
+                            //       controller.subcategoryid.value.isNotEmpty &&
+                            //       controller.brandid.value.isNotEmpty &&
+                            //       controller.storeid.value.isNotEmpty) {
+                            //     controller.clickNext.value = true;
+                            //     controller.addProductApi(context);
 
-                                print(controller.clickNext.value);
-                              } else {
-                                CommonMethods.showToast(
-                                    "Please Fill All the Details");
-                              }
-                            } else {
-                              controller.clickNext.value = true;
-                              controller.addProductApi(context);
+                            //     print(controller.clickNext.value);
+                            //   } else {
+                            //     CommonMethods.showToast(
+                            //         "Please Fill All the Details");
+                            //   }
+                            // } else {
+                            //   controller.clickNext.value = true;
+                            //   controller.addProductApi(context);
 
-                              print(controller.clickNext.value);
-                            }
+                            //   print(controller.clickNext.value);
+                            // }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF5D2E17),

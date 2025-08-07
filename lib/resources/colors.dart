@@ -4,12 +4,16 @@ class AppColors {
   get backgroundColor =>  const Color.fromARGB(195, 247, 243, 233);
   get brownDarkText =>Color.fromARGB(255, 123, 64, 35);
   get brownbuttonBg=>Color.fromARGB(255, 204, 157, 118);
-    get contentBrown=> getColor("#7B4023");
-    get contentBrownLinearColor3 => getColor("#7B4023").withValues(alpha: 0.3);
+  get contentBrown=> getColor("#7B4023");
+  get contentBrownLinearColor3 => getColor("#7B4023").withValues(alpha: 0.3);
   get contentBrownLinearColor2 => getColor("#7B4023").withValues(alpha: 0.2);
   get contentBrownLinearColor1 => getColor("#7B4023").withValues(alpha: 0.1);
   get contentBrownLinearColor05 => getColor("#7B4023").withValues(alpha: 0.05);
   get contentBrownLinearColor => getColor("#7B4023").withValues(alpha: 0.0);
+  get contentdescBrownColor => Color.fromARGB(255, 140, 136, 136);
+  get border => const Color.fromARGB(197, 113, 113, 113);
+  get contentButtonBrown => Color(0xFF5D2E17);
+
 
 
   get contentPrimary => getColor('#000000');
@@ -19,7 +23,6 @@ class AppColors {
   get contentBluePrimaryLight => getColor("#6f9bb3");
   get labelTextBorder=>getColor("#208BD7");
   get contentPending=>getColor("#57585A");
-  get border => getColor('#969AA4');
   get headerContentColor => getColor('#484747');
   get contentBlue=> getColor("#007BFF");
   get blueLightColorButton => getColor("#E9F1FE");

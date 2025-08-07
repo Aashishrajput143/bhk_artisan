@@ -25,7 +25,7 @@ class AddProductDetailsController extends GetxController {
   void onInit() {
     super.onInit();
     productId = Get.arguments['productid'];
-    producteditId = Get.arguments['producteditid'];
+    producteditId = Get.arguments['producteditid']??"0";
     print(productId);
     // if (producteditId == true) {
     //   getproductDetailsApi(productId);
@@ -82,63 +82,6 @@ class AddProductDetailsController extends GetxController {
     'cm',
     'inches',
   ];
-
-  Widget buildStepCircle(
-      String title, int stepNumber, bool isActive, bool completed) {
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 12,
-          backgroundColor:
-              isActive ? const Color(0xFF5D2E17) : Colors.grey[300],
-          foregroundColor: isActive
-              ? Colors.white
-              : const Color.fromARGB(255, 140, 136, 136),
-          child: completed
-              ? const Icon(
-                  Icons.check_circle, // Tick icon
-                  color: Colors.green, // Change color if needed
-                )
-              : Text(
-                  "0$stepNumber",
-                  style: const TextStyle(fontSize: 12),
-                ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 11,
-            color: isActive
-                ? Colors.black
-                : const Color.fromARGB(255, 140, 136, 136),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Helper method to build the divider between steps
-  Widget buildStepDivider() {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(5, 0, 3, 0),
-      child: Row(
-        children: [
-          Container(
-            height: 2,
-            color: Colors.grey[300],
-            width: 10,
-          ),
-          Icon(
-            Icons.arrow_forward_ios, // Right arrow icon
-            size: 10, // Size of the arrow
-            color: Colors.grey[500], // Light grey color
-          ),
-        ],
-      ),
-    );
-  }
 
   void calculateSellingPrice() {
     // Parse MRP and Discount as doubles
@@ -548,9 +491,9 @@ class AddProductDetailsController extends GetxController {
         );
       }
     } else {
-      Get.offAllNamed(
-        RoutesClass.gotoProductScreen(),
-      );
+      // Get.offAllNamed(
+      //   RoutesClass.gotoProductScreen(),
+      // );
     }
   }
 

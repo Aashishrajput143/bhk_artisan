@@ -1,9 +1,12 @@
 import 'package:bhk_artisan/Modules/controller/home_controller.dart';
+import 'package:bhk_artisan/Modules/widgets/appBardrawer.dart';
+import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -21,26 +24,26 @@ class HomeScreen extends ParentWidget {
     return Obx(
       () => Stack(
         children: [
-          SafeArea(
-            child: Scaffold(
-              body: RefreshIndicator(
-                color: Colors.brown,
-                onRefresh: controller.dashboardRefresh,
-                child: Container(
-                  color: appColors.backgroundColor,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        commonCollection(h, w, controller),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [banner(context, w, h, controller), 12.kH, categories(), 12.kH, trendingProduct(w), 20.kH, 
-                          salesGraph(context, w, h, controller),
-                           12.kH, product(w)]),
-                        ),
-                      ],
-                    ),
+          Scaffold(
+            appBar: appBarHome(),
+            drawer: appDrawer(context, Get.height, Get.width),
+            body: RefreshIndicator(
+              color: Colors.brown,
+              onRefresh: controller.dashboardRefresh,
+              child: Container(
+                color: appColors.backgroundColor,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      commonCollection(h, w, controller),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [banner(context, w, h, controller), 12.kH, categories(), 12.kH, trendingProduct(w), 20.kH, 
+                        salesGraph(context, w, h, controller),
+                         12.kH, product(w)]),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -51,6 +54,37 @@ class HomeScreen extends ParentWidget {
       ),
     );
   }
+}
+
+PreferredSizeWidget appBarHome() {
+  return AppBar(
+    flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
+    elevation: 0,
+    automaticallyImplyLeading: true,
+    iconTheme: const IconThemeData(color: Colors.white),
+    toolbarHeight: 75,
+    centerTitle: true,
+    title: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircleAvatar(backgroundImage: AssetImage(appImages.logo), radius: 22),
+        const SizedBox(height: 4),
+        const Text(
+          'Business',
+          style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 10),
+      ],
+    ),
+    actions: [
+      IconButton(
+        icon: const Icon(Icons.notifications_none, color: Colors.white),
+        onPressed: () {
+          Get.toNamed(RoutesClass.notifications);
+        },
+      ),
+    ],
+  );
 }
 
 Widget commonCollection(double h, double w, Homecontroller controller) {
@@ -612,7 +646,7 @@ Widget salesGraph(BuildContext context, double w, double h, Homecontroller contr
               xValueMapper: (Map<String, dynamic> sales, _) => sales['month'] as String,
               yValueMapper: (Map<String, dynamic> sales, _) => sales['sales'] as num,
               //name: 'Sales',
-              gradient: LinearGradient(colors: [Color.fromARGB(255, 37, 153, 255), Color.fromARGB(255, 97, 167, 227), Color.fromARGB(255, 133, 194, 247), Color.fromARGB(255, 74, 255, 216)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+              gradient: AppGradients.graphGradient,
               dataLabelSettings: DataLabelSettings(isVisible: true, labelAlignment: ChartDataLabelAlignment.outer),
               dataLabelMapper: (Map<String, dynamic> sales, _) {
                 final value = sales['sales'] as num;

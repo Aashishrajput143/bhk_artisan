@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/images.dart';
@@ -15,6 +16,7 @@ class MainProfile extends StatelessWidget {
     ProfileController controller = Get.put(ProfileController());
     return Obx(() => Stack(children: [
            Scaffold(
+            appBar: appBarDefault(),
             backgroundColor: const Color.fromARGB(195, 247, 243, 233),
             body: RefreshIndicator(
               color: Colors.brown,
@@ -177,4 +179,14 @@ class MainProfile extends StatelessWidget {
               MediaQuery.of(context).size.height)
         ]));
   }
+}
+
+PreferredSizeWidget appBarDefault() {
+  return AppBar(
+    flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
+    centerTitle: true,
+    automaticallyImplyLeading: true,
+    iconTheme: const IconThemeData(color: Colors.white),
+    title: Text("Profile & More".toUpperCase(), style: const TextStyle(fontSize: 16, color: Colors.white)),
+  );
 }

@@ -345,9 +345,9 @@ class AddProductGeneralController extends GetxController {
                         1]
                 .variantId ==
             null) {
-          Get.offAllNamed(
-            RoutesClass.gotoProductScreen(),
-          );
+          // Get.offAllNamed(
+          //   RoutesClass.gotoProductScreen(),
+          // );
         } else {
           Get.offNamed(
             RoutesClass.gotoaddProductdetailsScreen(),
@@ -367,9 +367,9 @@ class AddProductGeneralController extends GetxController {
         );
       }
     } else {
-      Get.offAllNamed(
-        RoutesClass.gotoProductScreen(),
-      );
+      // Get.offAllNamed(
+      //   RoutesClass.gotoProductScreen(),
+      // );
     }
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bhk_artisan/utils/utils.dart';
-import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -166,9 +165,9 @@ class AddProductMediaController extends GetxController {
   }
 
   redirect() {
-    Get.offAllNamed(
-      RoutesClass.gotoProductScreen(),
-    );
+    // Get.offAllNamed(
+    //   RoutesClass.gotoProductScreen(),
+    // );
   }
 
   Widget buildStepCircle(

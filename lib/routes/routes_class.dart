@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/Modules/screens/common_screen.dart';
+import 'package:bhk_artisan/Modules/screens/productManagement/add_product_screen.dart';
 import 'package:bhk_artisan/binding/signupbinding.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +17,6 @@ import '../Modules/screens/otpScreen.dart';
 import '../Modules/screens/privacypolicy.dart';
 import '../Modules/screens/productManagement/add_productdetails.dart';
 import '../Modules/screens/productManagement/add_productfiles.dart';
-import '../Modules/screens/productManagement/add_productgeneral.dart';
 import '../Modules/screens/productManagement/productpreview.dart';
 import '../Modules/screens/profileManagement/edit_profile_screen.dart';
 import '../Modules/screens/profileManagement/settingprofile.dart';
@@ -32,7 +32,6 @@ class RoutesClass {
   //BR1
   static String splash = '/splash';
   static String commonScreen ='/commonScreen';
-  static String dashboard = '/dashboard';
   static String signUp = '/signUp';
   static String forgotPassword = '/forgotPassword';
   static String login = '/login';
@@ -43,11 +42,9 @@ class RoutesClass {
   static String stores = '/stores';
   static String addstores = '/addstores';
   static String storedetail = '/storedetail';
-  static String products = '/products';
   static String addproducts = '/addproducts';
   static String addproductdetails = '/addproductdetails';
   static String addproductmedia = '/addproductmedia';
-  static String orders = '/orders';
   static String ordersdetails = '/ordersdetails';
   static String ordertracking = '/ordertracking';
   static String profile = '/profile';
@@ -65,7 +62,6 @@ class RoutesClass {
   //BR1
   static String gotoSplash() => splash;
   static String gotoCommonScreen() => commonScreen;
-  static String gotoDashboardScreen() => dashboard;
   static String gotoLoginScreen() => login;
   static String gotoForgotPassword() => forgotPassword;
   static String gotoSignUpScreen() => signUp;
@@ -76,11 +72,9 @@ class RoutesClass {
   static String gotoStoreScreen() => stores;
   static String gotoaddStoreScreen() => addstores;
   static String gotoStoreDetailsScreen() => storedetail;
-  static String gotoProductScreen() => products;
   static String gotoaddProductScreen() => addproducts;
   static String gotoaddProductdetailsScreen() => addproductdetails;
   static String gotoaddProductmediaScreen() => addproductmedia;
-  static String gotoOrderScreen() => orders;
   static String gotoOrderDetailsScreen() => ordersdetails;
   static String gotoOrderTrackingScreen() => ordertracking;
   static String gotoProfileScreen() => profile;
@@ -112,12 +106,6 @@ class RoutesClass {
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 300),
     ),
-    // GetPage(
-    //   name: dashboard,
-    //   page: () => const CommonScreen(index: 0),
-    //   transition: Transition.fade,
-    //   transitionDuration: const Duration(milliseconds: 300),
-    // ),
     GetPage(
         name: signUp,
         page: () => RegistrationScreen(),
@@ -166,12 +154,6 @@ class RoutesClass {
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 300),
     ),
-    // GetPage(
-    //   name: products,
-    //   page: () => const CommonScreen(index: 1),
-    //   transition: Transition.fade,
-    //   transitionDuration: const Duration(milliseconds: 300),
-    // ),
     GetPage(
       name: addproducts,
       page: () => const AddProductPage(),
@@ -190,12 +172,6 @@ class RoutesClass {
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 300),
     ),
-    // GetPage(
-    //   name: orders,
-    //   page: () => const CommonScreen(index: 2),
-    //   transition: Transition.fade,
-    //   transitionDuration: const Duration(milliseconds: 300),
-    // ),
     GetPage(
       name: ordersdetails,
       page: () => OrderDetailsPage(),
@@ -208,12 +184,6 @@ class RoutesClass {
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 300),
     ),
-    // GetPage(
-    //   name: profile,
-    //   page: () => const CommonScreen(index: 3),
-    //   transition: Transition.fade,
-    //   transitionDuration: const Duration(milliseconds: 300),
-    // ),
     GetPage(
       name: notifications,
       page: () => const Notifications(),

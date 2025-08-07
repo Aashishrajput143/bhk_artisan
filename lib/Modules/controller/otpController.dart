@@ -159,7 +159,7 @@ class OtpController extends GetxController
     Utils.savePreferenceValues(
         Constants.email, "${verifyOTPData.value.data?.email}");
     //}
-    Get.offNamed(RoutesClass.gotoDashboardScreen(),
+    Get.offNamed(RoutesClass.commonScreen,
         arguments: {"isDialog": true});
   }
 
