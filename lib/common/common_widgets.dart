@@ -189,7 +189,7 @@ Widget commonDescriptionTextField(
   );
 }
 
-Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, Rxn<String> selectedValue, double width, double height, Color color, void Function(String?) onChanged, {String hint = ''}) {
+Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selectedValue, double width, double height, Color color, void Function(String?) onChanged, {String hint = ''}) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 8.0),
     decoration: BoxDecoration(
@@ -199,7 +199,7 @@ Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, Rxn<String> s
     child: DropdownButton2<String>(
       hint: Text(hint),
       style: TextStyle(fontSize: 14, color: Colors.black),
-      value: selectedValue.value,
+      value: selectedValue,
       items: items,
       onChanged: onChanged,
       dropdownStyleData: DropdownStyleData(

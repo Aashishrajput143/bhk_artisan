@@ -1,21 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import '../repository/productrepository.dart';
 
 class AddProductController extends GetxController {
-
   var selectedIndex = 0.obs;
 
   final repository = ProductRepository();
+
+
   var nameController = TextEditingController().obs;
-  var nameFocusNode = FocusNode().obs;
-
-
   var detaileddescriptionController = TextEditingController().obs;
-  var detaileddescriptionFocusNode = FocusNode().obs;
+  var netweightController = TextEditingController().obs;
+  var quantityController = TextEditingController().obs;
+  var materialController = TextEditingController().obs;
+  var mrpController = TextEditingController().obs;
+  var discountController = TextEditingController().obs;
+  var lengthController = TextEditingController().obs;
+  var breadthController = TextEditingController().obs;
+  var heightController = TextEditingController().obs;
+  var sellingController = TextEditingController().obs;
 
-  bool categorybool = false;
-  bool subcategorybool = false;
+
+  var nameFocusNode = FocusNode().obs;
+  var detaileddescriptionFocusNode = FocusNode().obs;
+  var netweightFocusNode = FocusNode().obs;
+  var quantityFocusNode = FocusNode().obs;
+  var materialFocusNode = FocusNode().obs;
+  var mrpFocusNode = FocusNode().obs;
+  var discountFocusNode = FocusNode().obs;
+  var lengthFocusNode = FocusNode().obs;
+  var breadthFocusNode = FocusNode().obs;
+  var heightFocusNode = FocusNode().obs;
+  var sellingFocusNode = FocusNode().obs;
 
   var selectedcategory = Rxn<String>();
   var categoryid = "".obs;
@@ -24,55 +42,32 @@ class AddProductController extends GetxController {
   var subcategoryid = "".obs;
 
   final RxList<ProductCategory> productCategories = <ProductCategory>[
-  ProductCategory(categoryId: 1, categoryName: 'Handloom Sarees'),
-  ProductCategory(categoryId: 2, categoryName: 'Cotton Fabric'),
-  ProductCategory(categoryId: 3, categoryName: 'Silk Fabric'),
-  ProductCategory(categoryId: 4, categoryName: 'Handmade Bags'),
-  ProductCategory(categoryId: 5, categoryName: 'Wooden Crafts'),
-  ProductCategory(categoryId: 6, categoryName: 'Terracotta Items'),
-  ProductCategory(categoryId: 7, categoryName: 'Brassware'),
-  ProductCategory(categoryId: 8, categoryName: 'Hand-painted Art'),
-  ProductCategory(categoryId: 9, categoryName: 'Jute Products'),
-  ProductCategory(categoryId: 10, categoryName: 'Bamboo & Cane Items'),
-  ProductCategory(categoryId: 11, categoryName: 'Embroidery Work'),
-  ProductCategory(categoryId: 12, categoryName: 'Macrame Crafts'),
-  ProductCategory(categoryId: 13, categoryName: 'Woolen Shawls'),
-  ProductCategory(categoryId: 14, categoryName: 'Block Printed Textiles'),
-  ProductCategory(categoryId: 15, categoryName: 'Ceramic Pottery'),
-  ProductCategory(categoryId: 16, categoryName: 'Handwoven Rugs'),
-  ProductCategory(categoryId: 17, categoryName: 'Tribal Jewelry'),
-].obs;
+    ProductCategory(categoryId: 1, categoryName: 'Handloom Sarees'),
+    ProductCategory(categoryId: 2, categoryName: 'Cotton Fabric'),
+    ProductCategory(categoryId: 3, categoryName: 'Silk Fabric'),
+    ProductCategory(categoryId: 4, categoryName: 'Handmade Bags'),
+    ProductCategory(categoryId: 5, categoryName: 'Wooden Crafts'),
+    ProductCategory(categoryId: 6, categoryName: 'Terracotta Items'),
+    ProductCategory(categoryId: 7, categoryName: 'Brassware'),
+    ProductCategory(categoryId: 8, categoryName: 'Hand-painted Art'),
+    ProductCategory(categoryId: 9, categoryName: 'Jute Products'),
+    ProductCategory(categoryId: 10, categoryName: 'Bamboo & Cane Items'),
+    ProductCategory(categoryId: 11, categoryName: 'Embroidery Work'),
+    ProductCategory(categoryId: 12, categoryName: 'Macrame Crafts'),
+    ProductCategory(categoryId: 13, categoryName: 'Woolen Shawls'),
+    ProductCategory(categoryId: 14, categoryName: 'Block Printed Textiles'),
+    ProductCategory(categoryId: 15, categoryName: 'Ceramic Pottery'),
+    ProductCategory(categoryId: 16, categoryName: 'Handwoven Rugs'),
+    ProductCategory(categoryId: 17, categoryName: 'Tribal Jewelry'),
+  ].obs;
 
- var netweightController = TextEditingController().obs;
-   var netweightFocusNode = FocusNode().obs;
-
-  var quantityController = TextEditingController().obs;
-     var quantityFocusNode = FocusNode().obs;
-
-  var materialController = TextEditingController().obs;
-  var materialFocusNode = FocusNode().obs;
-
-  var mrpController = TextEditingController().obs;
-  var mrpFocusNode = FocusNode().obs;
-
-  var discountController = TextEditingController().obs;
-  var discountFocusNode = FocusNode().obs;
-
-  var lengthController = TextEditingController().obs;
-  var lengthFocusNode = FocusNode().obs;
-  var breadthController = TextEditingController().obs;
-  var breadthFocusNode = FocusNode().obs;
-  var heightController = TextEditingController().obs;
-  var heightFocusNode = FocusNode().obs;
+  
 
   var colorController = TextEditingController().obs;
   var colorFocusNode = FocusNode().obs;
 
   var sizeController = TextEditingController().obs;
   var sizeFocusNode = FocusNode().obs;
-
-  var sellingController = TextEditingController().obs;
-  var sellingFocusNode = FocusNode().obs;
 
   var dropdownValues = 'gm'.obs;
   var dropdownValue = 'cm'.obs;
@@ -88,27 +83,42 @@ class AddProductController extends GetxController {
 
   var sellingprice = 0.0.obs;
 
-  List<String> colors = [
-    'Red',
-    'Green',
-    'Blue',
-    'Yellow',
-    'Purple',
-    'Pink',
-    'Orange',
-    'Black',
-    'White',
-  ];
+  final ImagePicker imgpicker = ImagePicker();
+  var imagefiles = <XFile>[].obs;
+  var errormessage = "".obs;
+  int count = 0;
 
-  List<String> weights = [
-    'gm',
-    'kg',
-  ];
+  openImages() async {
+    try {
+      var pickedfiles = await imgpicker.pickMultipleMedia();
+      count = pickedfiles.length;
 
-  List<String> measureunits = [
-    'cm',
-    'inches',
-  ];
+      if (pickedfiles.isNotEmpty) {
+        if (imagefiles.length + pickedfiles.length > 4) {
+          Fluttertoast.showToast(msg: "Please select up to 4 images only.", toastLength: Toast.LENGTH_SHORT, timeInSecForIosWeb: 1, backgroundColor: Colors.green[400], textColor: Colors.white, fontSize: 16.0);
+        } else {
+          errormessage.value = "";
+          imagefiles.addAll(pickedfiles);
+          print("Total images: ${imagefiles.length}");
+        }
+      } else {
+        print("No image selected.");
+      }
+    } catch (e) {
+      errormessage.value = "Error while picking files: $e";
+      print("Error: $e");
+    }
+  }
+
+  List<String> imageKeys = ['frontView', 'frontRight', 'rearView', 'rearLeft'];
+
+  List<String> getImagePaths() {
+    return imagefiles.map((image) => image.path.toString()).toList();
+  }
+
+  List<String> weights = ['gm', 'kg'];
+
+  List<String> measureunits = ['cm', 'inches'];
 
   void calculateSellingPrice() {
     double? mrp = double.tryParse(mrpController.value.text);
@@ -138,10 +148,7 @@ class AddProductController extends GetxController {
   }
 
   List<String> splitDimensions(String dimensions) {
-    return dimensions
-        .split(RegExp(r'[x\s]'))
-        .where((element) => element.isNotEmpty)
-        .toList();
+    return dimensions.split(RegExp(r'[x\s]')).where((element) => element.isNotEmpty).toList();
   }
 
   String getWeight() {
@@ -158,8 +165,6 @@ class AddProductController extends GetxController {
   List<String> splitWeightAndUnit(String input) {
     return input.split(' ').where((element) => element.isNotEmpty).toList();
   }
-
-
 
   @override
   void onInit() {
@@ -180,4 +185,3 @@ class ProductCategory {
 
   ProductCategory({required this.categoryId, required this.categoryName});
 }
-
