@@ -271,43 +271,40 @@ Widget mediaFiles(double w, double h, AddProductController controller) {
 }
 
 Widget pickedfiles(double w, double h, AddProductController controller) {
-  return SizedBox(
-    height: 200,
-    child: GridView.count(
-      crossAxisCount: 3,
-      shrinkWrap: true,
-      mainAxisSpacing: 20,
-      children: List.generate(growable: false, controller.imagefiles.length, (index) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 250,
-            child: Column(
-              children: [
-                InkWell(
-                  onTap: () {
-                    controller.imagefiles.removeAt(index);
-                    if (controller.count > 0) {
-                      controller.count--;
-                    }
-                  },
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Container(
-                      decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
-                      child: Padding(
-                        padding: EdgeInsets.all(2),
-                        child: Icon(Icons.close, size: 17, color: Colors.white),
-                      ),
+  return GridView.count(
+    crossAxisCount: 3,
+    shrinkWrap: true,
+    mainAxisSpacing: 20,
+    children: List.generate(growable: false, controller.imagefiles.length, (index) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          height: 250,
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  controller.imagefiles.removeAt(index);
+                  if (controller.count > 0) {
+                    controller.count--;
+                  }
+                },
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
+                    child: Padding(
+                      padding: EdgeInsets.all(2),
+                      child: Icon(Icons.close, size: 17, color: Colors.white),
                     ),
                   ),
                 ),
-                Image.file(File(controller.imagefiles[index].path), width: w * .25, height: h * .09),
-              ],
-            ),
+              ),
+              Image.file(File(controller.imagefiles[index].path), width: w * .25, height: h * .09),
+            ],
           ),
-        );
-      }),
-    ),
+        ),
+      );
+    }),
   );
 }
