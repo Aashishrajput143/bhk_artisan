@@ -107,7 +107,8 @@ Widget commonCard(double w, double h, int index) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
+          //borderRadius: BorderRadius.circular(8.0),
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0)),
           child: Container(
             color: Colors.brown.shade100,
             child: Image.asset(product[index], width: 100, height: 115, fit: BoxFit.fill),
