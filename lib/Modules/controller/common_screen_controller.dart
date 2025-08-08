@@ -36,11 +36,6 @@ class CommonScreenController extends GetxController {
   ];
 }
 
-
-
-// class CommonScreenController extends GetxController {
-//   var selectedScreenIndex = 0.obs;
-
 //   void showExitDialog() {
 //     Get.dialog(
 //       AlertDialog(
@@ -90,21 +85,3 @@ class CommonScreenController extends GetxController {
 //       barrierDismissible: false,
 //     );
 //   }
-
-//   // List of screens and titles
-//   final List<Map<String, dynamic>> screens = [
-//     {"screen": HomeScreen(), "title": "HOME"},
-//     {"screen": OrderScreen(), "title": "ORDERS DETAILS"},
-//     {"screen": ProductScreen(), "title": "MY PRODUCTS"},
-//     {"screen": Inventory(), "title": "Inventory"},
-//     {"screen": MainProfile(), "title": "Profile & More"}
-//   ];
-
-//   // Method to update the selected screen index
-//   dynamic selectScreen(int index) {
-//     selectedScreenIndex.value = index;
-//     print(selectedScreenIndex.value);
-//     return selectedScreenIndex.value;
-//   }
-// }
-

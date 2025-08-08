@@ -187,10 +187,10 @@ class Homecontroller extends GetxController {
     });
 
     bannerItems.addAll([
-      {'imagePath': AppImages.dashboardbanner, 'title': 'HAND MADE GIFTS', 'subtitle': 'Discount 50% for \nthe first transaction', 'discount': 'UP TO 50-60% OFF'},
-      {'imagePath': AppImages.dashboardbanner, 'title': 'BIGGEST SAVINGS ONLY HERE', 'subtitle': 'Discount 50% for \nthe first transaction', 'discount': 'UP TO 80% OFF'},
-      {'imagePath': AppImages.dashboardbanner, 'title': 'JEWELLERY & ACCESSORIES', 'subtitle': 'Discount 50% for \nthe first transaction', 'discount': 'UP TO 60-70% OFF'},
-      {'imagePath': AppImages.dashboardbanner, 'title': 'HOME DECOR & MORE', 'subtitle': 'Discount 50% for \nthe first transaction', 'discount': 'UP TO 60-70% OFF'},
+      {'imagePath': appImages.dashboardbanner, 'title': 'HAND MADE GIFTS', 'subtitle': 'Discount 50% for \nthe first transaction', 'discount': 'UP TO 50-60% OFF'},
+      {'imagePath': appImages.dashboardbanner, 'title': 'BIGGEST SAVINGS ONLY HERE', 'subtitle': 'Discount 50% for \nthe first transaction', 'discount': 'UP TO 80% OFF'},
+      {'imagePath': appImages.dashboardbanner, 'title': 'JEWELLERY & ACCESSORIES', 'subtitle': 'Discount 50% for \nthe first transaction', 'discount': 'UP TO 60-70% OFF'},
+      {'imagePath': appImages.dashboardbanner, 'title': 'HOME DECOR & MORE', 'subtitle': 'Discount 50% for \nthe first transaction', 'discount': 'UP TO 60-70% OFF'},
     ]);
   }
 

@@ -1,5 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/home_controller.dart';
 import 'package:bhk_artisan/Modules/widgets/appBardrawer.dart';
+import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -9,7 +10,6 @@ import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
@@ -39,9 +39,7 @@ class HomeScreen extends ParentWidget {
                       commonCollection(h, w, controller),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [banner(context, w, h, controller), 12.kH, categories(), 12.kH, trendingProduct(w), 20.kH, 
-                        salesGraph(context, w, h, controller),
-                         12.kH, product(w)]),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [banner(context, w, h, controller), 12.kH, categories(), 12.kH, trendingProduct(w), 20.kH, salesGraph(context, w, h, controller), 12.kH, product(w)]),
                       ),
                     ],
                   ),
@@ -189,18 +187,10 @@ Widget banner(BuildContext context, double w, double h, Homecontroller controlle
                               item["title"]!,
                               style: const TextStyle(color: Color.fromARGB(255, 117, 78, 63), fontWeight: FontWeight.bold, fontSize: 16),
                             ),
-                            SizedBox(height: 8),
+                            8.kH,
                             Text(item["subtitle"]!, style: const TextStyle(color: Color.fromARGB(255, 153, 119, 106))),
                             Spacer(),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                                backgroundColor: Colors.brown,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                              ),
-                              child: Text('BID Now', style: TextStyle(fontSize: 16, color: Colors.white)),
-                            ),
+                            commonButton(100, 38, Colors.brown, Colors.white, (){},hint: 'BID Now',radius: 16)
                           ],
                         ),
                       ),
@@ -555,107 +545,102 @@ Widget trendingProduct(double w) {
 }
 
 Widget salesGraph(BuildContext context, double w, double h, Homecontroller controller) {
-  return Obx(()=> Column(
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Sales Statistics', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-          InkWell(
-            onTap: () {
-              //dashController.selectedScreenIndex.value = 3;
-            },
-            child: Text('View All>', style: TextStyle(fontSize: 14.0, color: Colors.brown)),
-          ),
-        ],
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
-        child: Row(
+  return Obx(
+    () => Column(
+      children: [
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: w * 0.35,
-              child: DropdownButton2<String>(
-                style: TextStyle(fontSize: 14, color: Colors.black),
-                value: controller.dropdownsold.value,
-                alignment: Alignment.center,
-                items: controller.salesfilter.map((String value) {
-                  return DropdownMenuItem(
-                    alignment: AlignmentDirectional.centerStart,
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey.shade900),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  controller.dropdownsold.value = newValue ?? "";
-                },
-                dropdownStyleData: DropdownStyleData(padding: EdgeInsets.symmetric(vertical: 0), maxHeight: h * .4, width: w * .35, offset: const Offset(0, 2)),
-                menuItemStyleData: MenuItemStyleData(padding: const EdgeInsets.symmetric(horizontal: 8.0), height: 38),
-                isExpanded: true,
-                underline: SizedBox(),
-              ),
-            ),
-            SizedBox(
-              width: w * 0.36,
-              child: DropdownButton2<String>(
-                style: TextStyle(fontSize: 14, color: Colors.black),
-                value: controller.dropdownmonth.value,
-                alignment: Alignment.center,
-                items: controller.daysfilter.map((String value) {
-                  return DropdownMenuItem(
-                    alignment: AlignmentDirectional.centerStart,
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey.shade900),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  controller.dropdownmonth.value = newValue ?? "";
-                },
-                dropdownStyleData: DropdownStyleData(padding: EdgeInsets.symmetric(vertical: 0), maxHeight: h * .4, width: w * .36, offset: const Offset(0, 2)),
-                menuItemStyleData: MenuItemStyleData(padding: const EdgeInsets.symmetric(horizontal: 8.0), height: 38),
-                isExpanded: true,
-                underline: SizedBox(),
-              ),
-            ),
-          ],
-        ),
-      ),
-      Container(
-        padding: EdgeInsets.only(top: 20),
-        height: 280,
-        child: SfCartesianChart(
-          backgroundColor: const Color.fromARGB(195, 247, 243, 233),
-          primaryXAxis: CategoryAxis(
-            edgeLabelPlacement: EdgeLabelPlacement.shift,
-            interval: 1, // Show every month
-            labelRotation: 45, // Optional: Rotates text to prevent overlapping
-          ),
-          // primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1.8),
-          //legend: Legend(isVisible: true),
-          tooltipBehavior: TooltipBehavior(enable: true),
-          series: <CartesianSeries<Map<String, dynamic>, String>>[
-            ColumnSeries<Map<String, dynamic>, String>(
-              dataSource: controller.chartData,
-              xValueMapper: (Map<String, dynamic> sales, _) => sales['month'] as String,
-              yValueMapper: (Map<String, dynamic> sales, _) => sales['sales'] as num,
-              //name: 'Sales',
-              gradient: AppGradients.graphGradient,
-              dataLabelSettings: DataLabelSettings(isVisible: true, labelAlignment: ChartDataLabelAlignment.outer),
-              dataLabelMapper: (Map<String, dynamic> sales, _) {
-                final value = sales['sales'] as num;
-                return value != 0 ? value.toString() : null;
+            Text('Sales Statistics', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+            InkWell(
+              onTap: () {
+                //dashController.selectedScreenIndex.value = 3;
               },
+              child: Text('View All>', style: TextStyle(fontSize: 14.0, color: Colors.brown)),
             ),
           ],
         ),
-      ),
-    ],
-  ));
+        Padding(
+          padding: const EdgeInsets.only(top: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: commonDropdownButton(
+                  controller.salesfilter.map((String value) {
+                    return DropdownMenuItem(
+                      alignment: AlignmentDirectional.centerStart,
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey.shade900),
+                      ),
+                    );
+                  }).toList(),
+                  controller.dropdownsold.value,
+                  w*0.43,
+                  h,
+                  appColors.backgroundColor,
+                  (value) {
+                    controller.dropdownsold.value = value ?? "";
+                  },
+                ),
+              ),
+              30.kW,
+              Expanded(
+                child: commonDropdownButton(
+                  controller.daysfilter.map((String value) {
+                    return DropdownMenuItem(
+                      alignment: AlignmentDirectional.centerStart,
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey.shade900),
+                      ),
+                    );
+                  }).toList(),
+                  controller.dropdownmonth.value,
+                  w*0.47,
+                  h,
+                  appColors.backgroundColor,
+                  (value) {
+                    controller.dropdownmonth.value = value ?? "";
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(top: 20),
+          height: 280,
+          child: SfCartesianChart(
+            backgroundColor: const Color.fromARGB(195, 247, 243, 233),
+            primaryXAxis: CategoryAxis(
+              edgeLabelPlacement: EdgeLabelPlacement.shift,
+              interval: 1, // Show every month
+              labelRotation: 45, // Optional: Rotates text to prevent overlapping
+            ),
+            // primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1.8),
+            //legend: Legend(isVisible: true),
+            tooltipBehavior: TooltipBehavior(enable: true),
+            series: <CartesianSeries<Map<String, dynamic>, String>>[
+              ColumnSeries<Map<String, dynamic>, String>(
+                dataSource: controller.chartData,
+                xValueMapper: (Map<String, dynamic> sales, _) => sales['month'] as String,
+                yValueMapper: (Map<String, dynamic> sales, _) => sales['sales'] as num,
+                //name: 'Sales',
+                gradient: AppGradients.graphGradient,
+                dataLabelSettings: DataLabelSettings(isVisible: true, labelAlignment: ChartDataLabelAlignment.outer),
+                dataLabelMapper: (Map<String, dynamic> sales, _) {
+                  final value = sales['sales'] as num;
+                  return value != 0 ? value.toString() : null;
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
 }

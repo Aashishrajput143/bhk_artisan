@@ -13,6 +13,7 @@ class AppColors {
   get contentdescBrownColor => Color.fromARGB(255, 140, 136, 136);
   get border => const Color.fromARGB(197, 113, 113, 113);
   get contentButtonBrown => Color(0xFF5D2E17);
+  get cardBackground => const Color.fromARGB(255, 251, 249, 244);
 
 
 

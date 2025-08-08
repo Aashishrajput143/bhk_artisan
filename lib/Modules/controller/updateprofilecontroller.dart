@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:bhk_artisan/utils/utils.dart';
@@ -293,7 +292,7 @@ class UpdateProfileController extends GetxController {
         setupdateProfileModeldata(value);
         //CommonMethods.showToast(value.message);
         Utils.printLog("Response===> ${value.toString()}");
-        Get.offAllNamed(RoutesClass.gotoProfileScreen());
+        //Get.offAllNamed(RoutesClass.gotoProfileScreen());
       }).onError((error, stackTrace) {
         setError(error.toString());
         setRxRequestStatus(Status.ERROR);

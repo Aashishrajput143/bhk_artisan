@@ -11,14 +11,7 @@ import '../repository/productrepository.dart';
 
 class GetProductController extends GetxController {
   final repository = ProductRepository();
-
-  String smallSentence(String bigSentence) {
-    if (bigSentence.length > 50) {
-      return '${bigSentence.substring(0, 50)}.....';
-    } else {
-      return bigSentence;
-    }
-  }
+  var isData = true.obs;
 
 
   @override

@@ -189,11 +189,11 @@ Widget commonDescriptionTextField(
   );
 }
 
-Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selectedValue, double width, double height, Color color, void Function(String?) onChanged, {String hint = ''}) {
+Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selectedValue, double width, double height, Color color, void Function(String?) onChanged, {String hint = '', Color borderColor = Colors.transparent}) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 8.0),
     decoration: BoxDecoration(
-      border: Border.all(color: appColors.border, width: 1.5),
+      border: Border.all(color: borderColor, width: 1.5),
       borderRadius: BorderRadius.circular(8.0),
     ),
     child: DropdownButton2<String>(
@@ -427,7 +427,7 @@ Widget commonButtonWithLoader(double width, double height, Color backgroundColor
   );
 }
 
-Widget commonButtonWithoutWidth(Color backgroundColor, Color color, VoidCallback? onChanged, {Color borderColor = Colors.transparent, bool bold = false, double fontSize = 16, double padding = 4.0, String hint = '', double radius = 12}) {
+Widget commonButtonWithoutWidth(Color backgroundColor, Color color, VoidCallback? onChanged, {Color borderColor = Colors.transparent, bool bold = false, double fontSize = 16, double paddingV = 0.0, double paddingH = 4.0, String hint = '', double radius = 12}) {
   return ElevatedButton(
     onPressed: onChanged,
     style: ElevatedButton.styleFrom(
@@ -439,7 +439,7 @@ Widget commonButtonWithoutWidth(Color backgroundColor, Color color, VoidCallback
       ),
     ),
     child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: padding),
+      padding: EdgeInsets.symmetric(horizontal: paddingH,vertical: paddingV),
       child: Text(
         hint,
         style: TextStyle(fontSize: fontSize, fontFamily: bold ? appFonts.NunitoBold : appFonts.NunitoMedium, fontWeight: FontWeight.w600, color: color),
@@ -638,13 +638,13 @@ Widget checkButtonObjective(
   );
 }
 
-Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged}) {
+Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged , bool autoFocus = true, Color backgroundColor = Colors.grey}) {
   return PinCodeTextField(
     appContext: context,
     length: length,
     keyboardType: TextInputType.number,
     animationType: AnimationType.fade,
-    autoFocus: true,
+    autoFocus: autoFocus,
     cursorColor: appColors.contentPrimary,
     cursorHeight: fontSize,
     textStyle: TextStyle(fontSize: fontSize, color: appColors.contentPrimary, fontWeight: FontWeight.w800, fontFamily: appFonts.NunitoBold),
@@ -654,12 +654,12 @@ Widget otpField(BuildContext context, TextEditingController controller, length, 
       borderRadius: BorderRadius.circular(borderRadius),
       fieldHeight: fieldHeight ?? Get.height * 0.075,
       fieldWidth: fieldWidth ?? Get.width * 0.14,
-      activeFillColor: Colors.grey.withValues(alpha: 0.9),
+      activeFillColor: backgroundColor.withValues(alpha: 0.9),
       selectedColor: appColors.border,
       activeColor: appColors.border,
-      selectedFillColor: Colors.grey.withValues(alpha: 0.9),
+      selectedFillColor: backgroundColor.withValues(alpha: 0.9),
       inactiveColor: appColors.border,
-      inactiveFillColor: Colors.grey.withValues(alpha: 0.9),
+      inactiveFillColor: backgroundColor.withValues(alpha: 0.9),
     ),
     enableActiveFill: true,
     onChanged: onChanged,

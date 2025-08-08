@@ -114,6 +114,7 @@ Widget generalDetails(double w, double h, AddProductController controller) {
             controller.selectedcategory.value = newValue;
           },
           hint: 'Select Category',
+          borderColor: appColors.border
         ),
       ),
       16.kH,
@@ -134,6 +135,7 @@ Widget generalDetails(double w, double h, AddProductController controller) {
             controller.selectedcategory.value = newValue;
           },
           hint: 'Select SubCategory',
+          borderColor: appColors.border
         ),
       ),
       16.kH,
@@ -185,6 +187,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
                 h,
                 appColors.backgroundColor,
                 (value) => controller.dropdownValues.value = value ?? "",
+                borderColor: appColors.border
               ),
             ),
           ],
@@ -218,6 +221,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
                 h,
                 appColors.backgroundColor,
                 (value) => controller.dropdownValue.value = value ?? "",
+                borderColor: appColors.border
               ),
             ),
           ],

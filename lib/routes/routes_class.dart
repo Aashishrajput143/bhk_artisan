@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/screens/aadhar_verification_screen.dart';
 import 'package:bhk_artisan/Modules/screens/common_screen.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/add_product_screen.dart';
 import 'package:bhk_artisan/binding/signupbinding.dart';
@@ -47,13 +48,13 @@ class RoutesClass {
   static String addproductmedia = '/addproductmedia';
   static String ordersdetails = '/ordersdetails';
   static String ordertracking = '/ordertracking';
-  static String profile = '/profile';
   static String notifications = '/notifications';
   static String changepassword = '/changepassword';
   static String setting = '/setting';
   static String editprofile = '/editprofile';
   static String viewprofile = '/viewprofile';
   static String productdetail = '/productdetail';
+  static String aadharVerification = '/aadharVerification';
 
   static String termscondition = '/termscondition';
   static String privacypolicy = '/privacypolicy';
@@ -77,7 +78,6 @@ class RoutesClass {
   static String gotoaddProductmediaScreen() => addproductmedia;
   static String gotoOrderDetailsScreen() => ordersdetails;
   static String gotoOrderTrackingScreen() => ordertracking;
-  static String gotoProfileScreen() => profile;
   static String gotoNotificationScreen() => notifications;
   static String gotoChangePasswordScreen() => changepassword;
   static String gotoSettingScreen() => setting;
@@ -87,6 +87,8 @@ class RoutesClass {
   static String gotoTermsConditionScreen() => termscondition;
   static String gotoPrivacyPolicyScreen() => privacypolicy;
   static String gotoFAQScreen() => faq;
+  static String gotoAadharVerificationScreen() => aadharVerification;
+
   static List<GetPage> routes = [
     GetPage(
       name: splash,
@@ -103,6 +105,12 @@ class RoutesClass {
     GetPage(
       name: commonScreen,
       page: () => CommonScreen(),
+      transition: Transition.fade,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: aadharVerification,
+      page: () => AadharVerificationScreen(),
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 300),
     ),

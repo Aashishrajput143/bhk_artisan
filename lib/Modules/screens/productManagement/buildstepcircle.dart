@@ -1,7 +1,11 @@
+import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
   Widget buildCircle(isCompleted, active){
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         buildStepCircle("General", 01, active == 0 ? true : false,
             isCompleted == 1 || isCompleted == 2 ? true : false),
@@ -22,7 +26,7 @@ import 'package:flutter/material.dart';
         CircleAvatar(
           radius: 14,
           backgroundColor:
-              isActive ? const Color(0xFF5D2E17) : Colors.grey[300],
+              isActive ? appColors.contentButtonBrown : Colors.grey[300],
           foregroundColor: isActive
               ? Colors.white
               : const Color.fromARGB(255, 140, 136, 136),
@@ -33,41 +37,39 @@ import 'package:flutter/material.dart';
                 )
               : Text(
                   "0$stepNumber",
-                  style: const TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 13),
                 ),
         ),
-        const SizedBox(width: 6),
+        6.kW,
         Text(
           title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 12,
+            fontSize: 13,
             color: isActive
                 ? Colors.black
                 : const Color.fromARGB(255, 140, 136, 136),
           ),
         ),
-        const SizedBox(width: 2),
       ],
     );
   }
 
   Widget buildStepDivider() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(5, 0, 3, 0),
+      margin: const EdgeInsets.symmetric(horizontal: 5),
       child: Row(
         children: [
           Container(
             height: 2,
             color: Colors.grey[300],
-            width: 37,
+            width: Get.width*0.13,
           ),
           Icon(
-            Icons.arrow_forward_ios, // Right arrow icon
-            size: 10, // Size of the arrow
-            color: Colors.grey[500], // Light grey color
+            Icons.arrow_forward_ios, 
+            size: 10, 
+            color: Colors.grey[500],
           ),
-          const SizedBox(width: 4),
         ],
       ),
     );
