@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bhk_artisan/utils/utils.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../common/CommonMethods.dart';
@@ -72,28 +71,5 @@ class GetOrderController extends GetxController {
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
-  }
-
-  Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-          ),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: color ?? Colors.black87,
-          ),
-        ),
-      ],
-    );
   }
 }

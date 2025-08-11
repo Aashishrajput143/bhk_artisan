@@ -20,8 +20,8 @@ class ProfileController extends GetxController {
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
-
   void setLogoutdata(LogoutModel value) => logoutModel.value = value;
+
 
   Future<void> logOutApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
@@ -53,7 +53,6 @@ class ProfileController extends GetxController {
     Utils.savePreferenceValues(Constants.email, "");
     Utils.clearPreferenceValues();
     Get.delete<LoginController>();
-    Get.put(LoginController());
     Get.offAll(() => LoginScreen());
   }
 }

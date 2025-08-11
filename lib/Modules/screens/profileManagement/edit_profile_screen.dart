@@ -25,7 +25,7 @@ class EditProfile extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            appBar: commonAppBar("Update Profile"),
+            appBar: commonAppBar("Update Profile",automaticallyImplyLeading:controller.isNewUser.value?false:true),
             body: Padding(
               padding: const EdgeInsets.all(20.0),
               child: SingleChildScrollView(

@@ -51,11 +51,12 @@ void handleApiError(
   Utils.printLog("stackTrace===> ${stackTrace.toString()}");
 }
 
-PreferredSizeWidget commonAppBar(String title) {
+PreferredSizeWidget commonAppBar(String title,{bool automaticallyImplyLeading = true}) {
   return AppBar(
     flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
     iconTheme: const IconThemeData(color: Colors.white),
     centerTitle: true,
+    automaticallyImplyLeading: automaticallyImplyLeading,
     title: Text(title.toUpperCase(), style: const TextStyle(fontSize: 16, color: Colors.white)),
   );
 }

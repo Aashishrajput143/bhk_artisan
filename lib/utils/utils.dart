@@ -18,6 +18,11 @@ class Utils {
     await prefs.setInt(key, value);
   }
 
+  static Future<dynamic> setBoolPreferenceValues(String key, bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setBool(key,value);
+  }
+
   static Future<dynamic> getPreferenceValues(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(
@@ -28,6 +33,11 @@ class Utils {
   static Future<dynamic> getIntPreferenceValues(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt(key);
+  }
+
+  static Future<dynamic> getBoolPreferenceValues(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(key);
   }
 
   static Future<dynamic> clearPreferenceValues() async {

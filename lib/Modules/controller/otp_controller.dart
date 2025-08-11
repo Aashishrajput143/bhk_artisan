@@ -13,8 +13,7 @@ import '../model/verifyOtpModel.dart';
 import '../repository/loginRepository.dart';
 import '../repository/otpRepository.dart';
 
-class OtpController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class OtpController extends GetxController with GetSingleTickerProviderStateMixin {
   final _api = OtpRepository();
   final _apiLogin = LoginRepository();
   var checkInternetValue = false.obs();
@@ -41,6 +40,7 @@ class OtpController extends GetxController
   var identity = "".obs;
   Timer? timer;
   var countryCode = "".obs;
+  var isNewUser = false.obs;
 
   @override
   void onInit() {
@@ -52,25 +52,22 @@ class OtpController extends GetxController
     if (Get.arguments['countryCode'] != null) {
       countryCode.value = Get.arguments['countryCode'];
     }
-    animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 6),
-    )..repeat();
+    if (Get.arguments['isNewUser'] != null) {
+      isNewUser.value = Get.arguments['isNewUser'];
+    }
+    animationController = AnimationController(vsync: this, duration: const Duration(seconds: 6))..repeat();
     print("${referenceId.value} ${identity.value} ${countryCode.value}");
   }
 
   void startTimerCountdown() {
     const oneSec = Duration(seconds: 1);
-    timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (startTime.value == 0) {
-          timer.cancel();
-        } else {
-          startTime.value--;
-        }
-      },
-    );
+    timer = Timer.periodic(oneSec, (Timer timer) {
+      if (startTime.value == 0) {
+        timer.cancel();
+      } else {
+        startTime.value--;
+      }
+    });
   }
 
   Future<void> otpVerification(context) async {
@@ -80,57 +77,48 @@ class OtpController extends GetxController
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
 
-      Map<String, dynamic> data = {
-        "referenceId": referenceId.value,
-        "otp": otp.value.toString()
-      };
-      _api.verifyOtpApi(data).then((value) {
-        setRxRequestStatus(Status.COMPLETED);
-        setVerifyData(value);
-        Utils.printLog("Response===> ${value.toString()}");
-        redirect();
-      }).onError((error, stackTrace) {
-        Get.back();
-        handleApiError(
-        error,stackTrace,
-        setError: setError,
-        setRxRequestStatus: setRxRequestStatus,
-      );
-    });
+      Map<String, dynamic> data = {"referenceId": referenceId.value, "otp": otp.value.toString()};
+      _api
+          .verifyOtpApi(data)
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setVerifyData(value);
+            Utils.printLog("Response===> ${value.toString()}");
+            redirect();
+          })
+          .onError((error, stackTrace) {
+            Get.back();
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
   }
 
   Future<void> resendOtp(context) async {
-    otpController.value.text="";
+    otpController.value.text = "";
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
 
-      Map<String, dynamic> data = {
-        "identity": identity.value,
-        "user_group": "ARTISAN",
-        if (identity.value.isNotEmpty) "countryCode": countryCode.value
-      };
-      _apiLogin.logInApi(data).then((value) {
-        setRxRequestStatus(Status.COMPLETED);
-        setLoginData(value);
-        CommonMethods.showToast("${value.message} ${value.data?.oTP}");
-        Utils.printLog("Response===> ${value.toString()}");
-        startTime.value = 30;
-        otpController.value.clear();
-        startTimerCountdown();
-      }).onError((error, stackTrace) {
-        Get.back();
-        handleApiError(
-        error,stackTrace,
-        setError: setError,
-        setRxRequestStatus: setRxRequestStatus,
-      );
-    });
+      Map<String, dynamic> data = {"identity": identity.value, "user_group": "ARTISAN", if (identity.value.isNotEmpty) "countryCode": countryCode.value};
+      _apiLogin
+          .logInApi(data)
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setLoginData(value);
+            CommonMethods.showToast("${value.message} ${value.data?.oTP}");
+            Utils.printLog("Response===> ${value.toString()}");
+            startTime.value = 30;
+            otpController.value.clear();
+            startTimerCountdown();
+          })
+          .onError((error, stackTrace) {
+            Get.back();
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
@@ -139,14 +127,17 @@ class OtpController extends GetxController
   redirect() {
     //if (verifyOTPData.value.statusCode == 200) {
     print("Statuscode======> ${verifyOTPData.value.statusCode}");
-    Utils.savePreferenceValues(
-        Constants.accessToken, "${verifyOTPData.value.data?.accessToken}");
+    Utils.savePreferenceValues(Constants.accessToken, "${verifyOTPData.value.data?.accessToken}");
 
-    Utils.savePreferenceValues(
-        Constants.email, "${verifyOTPData.value.data?.email}");
-    
-    Get.offNamed(RoutesClass.commonScreen,
-        arguments: {"isDialog": true});
+    Utils.savePreferenceValues(Constants.email, "${verifyOTPData.value.data?.email}");
+    if (isNewUser.value) {
+      Utils.setBoolPreferenceValues(Constants.isNewUser, isNewUser.value);
+    }
+    if (isNewUser.value) {
+      Get.offAllNamed(RoutesClass.editprofile, arguments: {"isNewUser": true});
+    } else {
+      Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
+    }
   }
 
   @override

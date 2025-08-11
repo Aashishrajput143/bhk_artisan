@@ -10,6 +10,6 @@ class Constants {
   static const String mobileNo = "mobileNo";
   static const String userId = "user_id";
   static const String walkthroughStatus = "walkthrough_status";
-  static const String jobId = "jobId";
+  static const String isNewUser = "isNewUser";
   static const String referenceId = "referenceId";
 }

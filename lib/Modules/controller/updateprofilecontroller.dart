@@ -1,5 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/constants.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import '../model/updateprofilemodel.dart';
 import '../repository/profilerepository.dart';
 
 class UpdateProfileController extends GetxController {
-  CommonScreenController commonController = Get.find();
+  CommonScreenController commonController = Get.put(CommonScreenController());
   final _api = ProfileRepository();
   var selectedImage = Rxn<String>();
 
@@ -24,13 +25,18 @@ class UpdateProfileController extends GetxController {
   var emailFocusNode = FocusNode().obs;
 
   var selectedExpertise = Rxn<String>();
+  var isNewUser = false.obs;
 
   final RxList<Expertise> expertise = <Expertise>[Expertise(id: 1, name: 'HandLoom'), Expertise(id: 2, name: 'HandiCraft')].obs;
 
   @override
   void onInit() {
     super.onInit();
-    loadData();
+    if (Get.arguments?['isNewUser'] != null) {
+      isNewUser.value = Get.arguments['isNewUser'];
+    }else{
+      loadData();
+    }
   }
 
   void loadData() {
@@ -61,7 +67,7 @@ class UpdateProfileController extends GetxController {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
-    Map<String, String> data = {if (firstNameController.value.text.isNotEmpty) "firstName": firstNameController.value.text, if (lastNameController.value.text.isNotEmpty) "lastName": lastNameController.value.text, if (emailController.value.text.isNotEmpty) "email": emailController.value.text, if (selectedExpertise.value != null) "expertizeField": selectedExpertise.value??""};
+    Map<String, String> data = {if (firstNameController.value.text.isNotEmpty) "firstName": firstNameController.value.text, if (lastNameController.value.text.isNotEmpty) "lastName": lastNameController.value.text, if (emailController.value.text.isNotEmpty) "email": emailController.value.text, if (selectedExpertise.value != null) "expertizeField": selectedExpertise.value ?? ""};
 
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
@@ -73,9 +79,14 @@ class UpdateProfileController extends GetxController {
             setupdateProfileModeldata(value);
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> ${value.toString()}");
-            Get.offAllNamed(RoutesClass.commonScreen);
-            commonController.selectedIndex.value=4;
-            commonController.getProfileApi();
+            if (isNewUser.value) {
+              Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
+            }else{
+              Get.offAllNamed(RoutesClass.commonScreen);
+               commonController.selectedIndex.value = 4;
+              commonController.getProfileApi();
+            }
+            Utils.setBoolPreferenceValues(Constants.isNewUser, false);
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
