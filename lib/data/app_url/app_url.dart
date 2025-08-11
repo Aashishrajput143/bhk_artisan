@@ -6,9 +6,9 @@ class AppUrl {
   //Authentication
   static String login = '$baseUrl/auth/api/auth/loginOrRegister';
   static String verifyOtp = '$baseUrl/auth/api/auth/verify';
-  static String logout = '$baseUrl/api/logout/allSession';
-  static String loggedinuser = '$baseUrl/api/users/userdetails';
-  static String updateprofile = '$baseUrl/api/users/updateprofile';
+  static String logout = '$baseUrl/auth/api/logout/currentsession';
+  static String loggedinuser = '$baseUrl/users/api/users/userdetails';
+  static String updateprofile = '$baseUrl/users/api/users/updateprofile';
   static String register = '$baseUrl/api/user/register';
 
   //get

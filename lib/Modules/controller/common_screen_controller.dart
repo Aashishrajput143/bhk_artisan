@@ -1,4 +1,11 @@
+import 'package:bhk_artisan/Modules/model/getprofilemodel.dart';
+import 'package:bhk_artisan/Modules/repository/profilerepository.dart';
 import 'package:bhk_artisan/Modules/screens/dashboardManagement/home_screen.dart';
+import 'package:bhk_artisan/common/CommonMethods.dart';
+import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/strings.dart';
+import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,8 +15,15 @@ import '../screens/productManagement/product_screen.dart';
 import '../screens/profileManagement/main_profile.dart';
 
 class CommonScreenController extends GetxController {
+  final _api = ProfileRepository();
   var selectedIndex = 0.obs;
   var tabInitial = true.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    getProfileApi();
+  }
 
   int changeIndex() {
     if (selectedIndex.value <= 4) {
@@ -34,54 +48,39 @@ class CommonScreenController extends GetxController {
     BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Inventory'),
     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
   ];
-}
 
-//   void showExitDialog() {
-//     Get.dialog(
-//       AlertDialog(
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(8),
-//         ),
-//         title: Row(
-//           children: [
-//             Icon(Icons.help_outline, color: Colors.orange, size: 30),
-//             SizedBox(width: 8),
-//             Text("Confirm Exit...!!!",
-//                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-//           ],
-//         ),
-//         content: Text("Are you sure you want to exit?"),
-//         actions: [
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               TextButton(
-//                 onPressed: () {
-//                   Get.back(); // Close dialog without doing anything
-//                 },
-//                 child: Text("CANCEL", style: TextStyle(color: Colors.pink)),
-//               ),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   TextButton(
-//                     onPressed: () {
-//                       Get.back(); // Close dialog and stay in the app
-//                     },
-//                     child: Text("NO", style: TextStyle(color: Colors.pink)),
-//                   ),
-//                   TextButton(
-//                     onPressed: () {
-//                       SystemNavigator.pop(); // Exit the app
-//                     },
-//                     child: Text("YES", style: TextStyle(color: Colors.pink)),
-//                   ),
-//                 ],
-//               )
-//             ],
-//           )
-//         ],
-//       ),
-//       barrierDismissible: false,
-//     );
-//   }
+  final profileData = GetProfileModel().obs;
+  void setProfileData(GetProfileModel value) => profileData.value = value;
+  final rxRequestStatus = Status.COMPLETED.obs;
+  void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
+  RxString error = ''.obs;
+  void setError(String value) => error.value = value;
+
+
+
+  Future<void> getProfileApi() async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      setRxRequestStatus(Status.LOADING);
+      _api
+          .getprofileApi()
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setProfileData(value);
+            //CommonMethods.showToast(value.message);
+            Utils.printLog("Response===> ${value.toString()}");
+          })
+          .onError((error, stackTrace) {
+            handleApiError(
+        error,stackTrace,
+        setError: setError,
+        setRxRequestStatus: setRxRequestStatus,
+      );
+    });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+}

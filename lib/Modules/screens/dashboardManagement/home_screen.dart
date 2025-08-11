@@ -1,5 +1,4 @@
 import 'package:bhk_artisan/Modules/controller/home_controller.dart';
-import 'package:bhk_artisan/Modules/widgets/appBardrawer.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
@@ -25,8 +24,8 @@ class HomeScreen extends ParentWidget {
       () => Stack(
         children: [
           Scaffold(
-            appBar: appBarHome(),
-            drawer: appDrawer(context, Get.height, Get.width),
+            appBar: appBarHome(controller),
+            //drawer: appDrawer(context, Get.height, Get.width),
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: controller.dashboardRefresh,
@@ -39,7 +38,7 @@ class HomeScreen extends ParentWidget {
                       commonCollection(h, w, controller),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [banner(context, w, h, controller), 12.kH, categories(), 12.kH, trendingProduct(w), 20.kH, salesGraph(context, w, h, controller), 12.kH, product(w)]),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [banner(context, w, h, controller), 12.kH, categories(), 12.kH, trendingProduct(w), 20.kH, salesGraph(context, w, h, controller), 12.kH, product(w,controller)]),
                       ),
                     ],
                   ),
@@ -54,26 +53,48 @@ class HomeScreen extends ParentWidget {
   }
 }
 
-PreferredSizeWidget appBarHome() {
+PreferredSizeWidget appBarHome(Homecontroller controller) {
   return AppBar(
     flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
     elevation: 0,
     automaticallyImplyLeading: true,
     iconTheme: const IconThemeData(color: Colors.white),
     toolbarHeight: 75,
-    centerTitle: true,
+    centerTitle: false,
+    titleSpacing: 2,
+    leading: GestureDetector(
+      onTap: ()=>controller.commonController.selectedIndex.value=4,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 7.0,vertical: 10),
+        child: CircleAvatar(backgroundImage: AssetImage(appImages.profile)),
+      ),
+    ),
     title: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CircleAvatar(backgroundImage: AssetImage(appImages.logo), radius: 22),
-        const SizedBox(height: 4),
         const Text(
-          'Business',
-          style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
+          'Good Morning',
+          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500),
         ),
-        const SizedBox(height: 10),
+        Text(
+          controller.commonController.profileData.value.data?.firstName??"User",
+          style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
+        ),
       ],
     ),
+    // title: Column(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [
+    //     CircleAvatar(backgroundImage: AssetImage(appImages.logo), radius: 22),
+    //     const SizedBox(height: 4),
+    //     const Text(
+    //       'Business',
+    //       style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
+    //     ),
+    //     const SizedBox(height: 10),
+    //   ],
+    // ),
     actions: [
       IconButton(
         icon: const Icon(Icons.notifications_none, color: Colors.white),
@@ -358,7 +379,7 @@ Widget categories() {
   );
 }
 
-Widget product(double w) {
+Widget product(double w, Homecontroller controller) {
   List product = [appImages.product1, appImages.product2, appImages.product3, appImages.product4, appImages.product5, appImages.product6];
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,7 +392,7 @@ Widget product(double w) {
             Text('Recently Added Products', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
             InkWell(
               onTap: () {
-                //dashController.selectedScreenIndex.value = 2;
+                controller.commonController.selectedIndex.value = 2;
               },
               child: Text('View All>', style: TextStyle(fontSize: 14.0, color: Colors.brown)),
             ),
@@ -512,7 +533,7 @@ Widget trendingProduct(double w) {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      "₹ 200",
+                      "₹ 20$index",
                       // "₹ ${controller.getTrendingProductModel.value.data?.docs?[index].variants?[(controller.getTrendingProductModel.value.data?.docs?[index].variants?.length ?? 0) - 1].sellingPrice ?? ""}",
                       style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
                     ),
@@ -521,7 +542,7 @@ Widget trendingProduct(double w) {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "₹ 0",
+                          "₹ 30$index",
                           // "₹ ${controller.getTrendingProductModel.value.data?.docs?[index].variants?[(controller.getTrendingProductModel.value.data?.docs?[index].variants?.length ?? 0) - 1].mrp ?? ""}",
                           style: const TextStyle(color: Color.fromARGB(198, 143, 142, 142), fontSize: 10, decoration: TextDecoration.lineThrough),
                         ),
@@ -554,7 +575,7 @@ Widget salesGraph(BuildContext context, double w, double h, Homecontroller contr
             Text('Sales Statistics', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
             InkWell(
               onTap: () {
-                //dashController.selectedScreenIndex.value = 3;
+                controller.commonController.selectedIndex.value = 3;
               },
               child: Text('View All>', style: TextStyle(fontSize: 14.0, color: Colors.brown)),
             ),
@@ -644,3 +665,4 @@ Widget salesGraph(BuildContext context, double w, double h, Homecontroller contr
     ),
   );
 }
+

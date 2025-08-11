@@ -54,7 +54,6 @@ Widget appDrawer(BuildContext context, double h, double w) {
                   title("AUTHENTICATION"),
                   commonListTile(Icons.logout, "Log Out", () {
                     Get.back();
-                    controller.showlogoutDialog();
                   }),
                   Divider(),
                   commonListTileWithOutIcon('Terms & Conditions', () {

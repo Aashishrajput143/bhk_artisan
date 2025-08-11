@@ -15,7 +15,6 @@ import '../app_exceptions.dart';
 import 'base_api_services.dart';
 
 class NetworkApiServices extends BaseApiServices {
-  
   void expired(response) async {
     final decoded = json.decode(response.body);
 
@@ -27,15 +26,8 @@ class NetworkApiServices extends BaseApiServices {
       Utils.savePreferenceValues(Constants.accessToken, "");
       Utils.savePreferenceValues(Constants.email, "");
       await Utils.clearPreferenceValues();
-
-      // Reset LoginController
       Get.delete<LoginController>();
-      Get.put(LoginController());
-
-      // Redirect to login
       Get.offAll(() => LoginScreen());
-
-      throw UnauthorizedException();
     }
   }
 
@@ -46,10 +38,7 @@ class NetworkApiServices extends BaseApiServices {
     String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
 
     try {
-      final response = await http.get(Uri.parse(url), headers: {
-        'content-Type': 'application/json',
-        'accesstoken': token,
-      }).timeout(const Duration(seconds: 600));
+      final response = await http.get(Uri.parse(url), headers: {'content-Type': 'application/json', 'accesstoken': token}).timeout(const Duration(seconds: 600));
       expired(response);
       responseJson = returnResponse(response);
     } on SocketException {
@@ -74,10 +63,7 @@ class NetworkApiServices extends BaseApiServices {
 
     try {
       final uri = Uri.parse(url).replace(queryParameters: {'page': page, 'status': status, 'search': search});
-      final response = await http.get(uri, headers: {
-        'Accept': 'application/json',
-        'Authorization': token,
-      }).timeout(const Duration(seconds: 600));
+      final response = await http.get(uri, headers: {'Accept': 'application/json', 'Authorization': token}).timeout(const Duration(seconds: 600));
       expired(response);
       responseJson = returnResponse(response);
     } on SocketException {
@@ -105,10 +91,7 @@ class NetworkApiServices extends BaseApiServices {
       final response = await http
           .post(
             Uri.parse(url),
-            headers: {
-              'Accept': 'application/json',
-              'Authorization': token,
-            },
+            headers: {'Accept': 'application/json', 'Authorization': token},
             body: data, //jsonEncode(data) //if raw form then we set jsonEncode if form the only data
           )
           .timeout(const Duration(seconds: 600));
@@ -159,10 +142,7 @@ class NetworkApiServices extends BaseApiServices {
         final response = await http
             .post(
               Uri.parse(url),
-              headers: {
-                'Content-Type': 'application/json',
-                'accesstoken': token,
-              },
+              headers: {'Content-Type': 'application/json', 'accesstoken': token},
               body: data, // use jsonEncode if sending JSON data
             )
             .timeout(const Duration(seconds: 600));
@@ -217,7 +197,7 @@ class NetworkApiServices extends BaseApiServices {
   }
 
   @override
-  Future<dynamic> multiPartApi(var data, String url, String path, var keys) async {
+  Future<dynamic> multiPartApi(var data, String url, String? path, var keys) async {
     Utils.printLog(url);
     Utils.printLog(data);
     Utils.printLog(path);
@@ -225,34 +205,16 @@ class NetworkApiServices extends BaseApiServices {
     String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
 
     try {
-      if (path == '') {
-        final response = await http
-            .post(
-              Uri.parse(url),
-              headers: {
-                'content-Type': 'application/json',
-                'accesstoken': token,
-              },
-              body: data, //jsonEncode(data) //if raw form then we set jsonEncode if form the only data
-            )
-            .timeout(const Duration(seconds: 600));
-        expired(response);
-        responseJson = returnResponse(response);
-      } else {
-        var request = http.MultipartRequest("POST", Uri.parse(url));
-        if (data != null) {
-          for (int i = 0; i < data.length; i++) {
-            String key = data.keys.elementAt(i);
-            request.fields[key] = data[key];
-          }
-        }
-        request.headers['accesstoken'] = token;
-        request.files.add(http.MultipartFile(keys, File(path).readAsBytes().asStream(), File(path).lengthSync(), filename: 'profile-image.png'));
-        final response = await request.send();
-        final responseHttp = await http.Response.fromStream(response);
-        expired(responseHttp);
-        responseJson = returnResponse(responseHttp);
+      var request = http.MultipartRequest("POST", Uri.parse(url));
+      request.fields.addAll(data);
+      request.headers['accesstoken'] = token;
+      if (path != null) {
+        request.files.add(await http.MultipartFile.fromPath(keys, path));
       }
+      final response = await request.send();
+      final responseHttp = await http.Response.fromStream(response);
+      expired(responseHttp);
+      responseJson = returnResponse(responseHttp);
     } on SocketException {
       throw InternetException('');
     } on RequestTimeOut {
@@ -277,10 +239,7 @@ class NetworkApiServices extends BaseApiServices {
       final response = await http
           .post(
             Uri.parse(url),
-            headers: {
-              'content-Type': "application/json",
-              'accesstoken': token,
-            },
+            headers: {'content-Type': "application/json", 'accesstoken': token},
             body: jsonEncode(data), //jsonEncode(data) //if raw form then we set jsonEncode if form the only data
           )
           .timeout(const Duration(seconds: 600));

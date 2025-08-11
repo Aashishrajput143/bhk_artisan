@@ -1,4 +1,5 @@
 // import 'dart:html';
+import 'package:bhk_artisan/Modules/screens/profileManagement/main_profile.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:flutter/material.dart';
@@ -63,46 +64,13 @@ class SettingProfile extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 5, 20, 20),
             child: Column(
               children: [
-                // List options without Expanded and ListView
-                // _buildProfileOptionCard(
-                //     'Change Password',
-                //     'Change Your Password, Secure your Account',
-                //     Icons.password,
-                //     1),
-                _buildProfileOptionCard('Edit Profile',
-                    'Edit, or Change your Profile', Icons.edit, 2),
+                 buildProfileOptionCard("Edit Profile", 'Edit, or Change your Profile', Icons.edit, ()=>Get.toNamed(RoutesClass.editprofile)),
+                  buildProfileOptionCard("Delete Account", "Remove your account permanently", Icons.delete, (){})
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  // Reusable method to create profile options in cards
-  Widget _buildProfileOptionCard(
-      String title, String subtitle, IconData icon, int index) {
-    return Column(
-      children: [
-        ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-          leading: Icon(icon, color: Colors.brown[700]),
-          title:
-              Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text(subtitle,
-              style: const TextStyle(fontSize: 12, color: Colors.grey)),
-          trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
-          onTap: () {
-            profile(index);
-          },
-        ),
-        const Divider(
-          height: 5,
-          thickness: 0.25,
-          endIndent: 0,
-          color: Colors.black,
-        ),
-      ],
     );
   }
 }

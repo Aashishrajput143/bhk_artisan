@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
+import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:bhk_artisan/common/commonmethods.dart';
@@ -29,6 +31,8 @@ class Homecontroller extends GetxController {
   var bannerItems = <Map<String, String>>[].obs;
   var currentIndex = 0.obs;
   var sliderController = CarouselSliderController();
+
+  CommonScreenController commonController = Get.find();
 
   // var chartData = <Map<String, dynamic>>[];
 
@@ -290,19 +294,12 @@ class Homecontroller extends GetxController {
             print("redirect");
           })
           .onError((error, stackTrace) {
-            setError(error.toString());
-            setRxRequestStatus(Status.ERROR);
-            if (error.toString().contains("{")) {
-              var errorResponse = json.decode(error.toString());
-              print("errrrorrr=====>$errorResponse");
-              if (errorResponse is Map || errorResponse.containsKey('message')) {
-                //CommonMethods.showToast(errorResponse['message']);
-              } else {
-                //CommonMethods.showToast("An unexpected error occurred.");
-              }
-            }
-            Utils.printLog("Error===> ${error.toString()}");
-          });
+            handleApiError(
+        error,stackTrace,
+        setError: setError,
+        setRxRequestStatus: setRxRequestStatus,
+      );
+    });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }

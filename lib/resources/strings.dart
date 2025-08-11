@@ -18,6 +18,12 @@ class AppStrings {
   String get verifyPhoneNumber => "Verify Phone Number";
   String get otpDesc =>"We need to register your phone without getting started!";
 
+    // Upload Image Drawer
+  String get uploadPhoto => 'Upload Photo';
+  String get viewPhotoLibrary => 'View Photo Library';
+  String get takeAPhoto => 'Take a Photo';
+  String get removePhoto => 'Remove Photo';
+
   //default
   String get alert => 'Alert';
   String get yourAuthExpired =>

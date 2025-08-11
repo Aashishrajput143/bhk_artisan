@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bhk_artisan/Modules/model/login_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:bhk_artisan/utils/utils.dart';
@@ -8,7 +9,6 @@ import '../../common/Constants.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../../routes/routes_class.dart';
-import '../model/signUpModel.dart';
 import '../repository/signupRepository.dart';
 
 class RegistrationController extends GetxController {
@@ -25,8 +25,8 @@ class RegistrationController extends GetxController {
   var cpasswordFocusNode = FocusNode().obs;
   var numController = TextEditingController().obs;
   var numFocusNode = FocusNode().obs;
-  final signUpModel = SignUpModel().obs;
-  void setSignUpData(SignUpModel value) => signUpModel.value = value;
+  final signUpModel = LoginModel().obs;
+  void setSignUpData(LoginModel value) => signUpModel.value = value;
   var checkInternetValue = false.obs();
   void setError(String value) => error.value = value;
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
@@ -72,11 +72,9 @@ class RegistrationController extends GetxController {
   }
 
   void redirect() {
-    if (signUpModel.value.statusCode == 200) {
       Utils.savePreferenceValues(Constants.referenceId,
           signUpModel.value.data?.referenceId.toString() ?? "");
 
       Get.offAllNamed(RoutesClass.gotoVerifyScreen());
-    }
   }
 }

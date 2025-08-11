@@ -1,5 +1,4 @@
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -21,58 +20,50 @@ class MainProfile extends StatelessWidget {
       () => Stack(
         children: [
           Scaffold(
-            appBar: appBarDefault(),
+            appBar: commonAppBar("Profile & More"),
             backgroundColor: const Color.fromARGB(195, 247, 243, 233),
-            body: RefreshIndicator(
-              color: Colors.brown,
-              onRefresh: controller.profileRefresh,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    20.kH,
-                    CircleAvatar(
-                      backgroundColor: Color.fromARGB(195, 250, 248, 238),
-                      backgroundImage: controller.getProfileModel.value.data?.avatar?.isNotEmpty ?? false
-                          ? NetworkImage(
-                              // Otherwise show the network image
-                              controller.getProfileModel.value.data?.avatar ?? "",
-                            )
-                          : AssetImage(appImages.profile),
-                      radius: 70.0,
-                    ),
-                    20.kH,
-                    Text(
-                      controller.getProfileModel.value.data?.name?.isNotEmpty ?? true ? controller.getProfileModel.value.data?.name ?? "User".toUpperCase() : "User".toUpperCase(),
-                      style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    5.kH,
-                    Text(
-                      controller.getProfileModel.value.data?.phoneNo?.isEmpty ?? true ? controller.getProfileModel.value.data?.email ?? "User@gmail.com" : controller.getProfileModel.value.data?.phoneNo ?? "XXXXXXXX10",
-                      style: const TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.bold),
-                    ),
-                    10.kH,
-                    commonButton(
-                      100,
-                      40,
-                      Colors.brown,
-                      Colors.white,
-                      () => Get.toNamed(
-                        RoutesClass.viewprofile,
-                        arguments: {'name': controller.getProfileModel.value.data?.name ?? "", 'email': controller.getProfileModel.value.data?.email ?? "", 'phone': controller.getProfileModel.value.data?.phoneNo ?? "", 'avatar': controller.getProfileModel.value.data?.avatar ?? "", 'countrycode': controller.getProfileModel.value.data?.countryCode ?? ""},
-                      ),
-                      hint: "View Profile",
-                      radius: 18,
-                      paddingHorizontal: 16,
-                      paddingVertical: 8,
-                    ),
-                    20.kH,
-                    buildProfileOptionCard('My Addresses', 'Edit, add or remove Address', Icons.location_city, () =>Get.toNamed(RoutesClass.aadharVerification)),
-                    buildProfileOptionCard('Privacy & Policy', 'Read how we protect your personal data', Icons.privacy_tip, () =>Get.toNamed(RoutesClass.privacypolicy)),
-                    buildProfileOptionCard('Terms & Conditions', 'Review the terms of using our services', Icons.description, () =>Get.toNamed(RoutesClass.termscondition)),
-                    buildProfileOptionCard('Settings', 'Edit Profile, Manage your profile', Icons.settings_outlined, () =>Get.toNamed(RoutesClass.setting)),
-                    buildProfileOptionCard('Logout', 'Sign out from your account', Icons.logout, () {}),
-                  ],
-                ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  20.kH,
+                  CircleAvatar(
+                    backgroundColor: appColors.backgroundColor,
+                    backgroundImage: controller.commonController.profileData.value.data?.avatar?.isNotEmpty ?? false
+                        ? NetworkImage(
+                            controller.commonController.profileData.value.data?.avatar ?? "",
+                          )
+                        : AssetImage(appImages.profile),
+                    radius: 70.0,
+                  ),
+                  16.kH,
+                  Text(
+                    controller.commonController.profileData.value.data?.name ?? "User".toUpperCase(),
+                    style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  3.kH,
+                  Text(
+                    controller.commonController.profileData.value.data?.phoneNo ?? "XXXXXXXX10",
+                    style: const TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.bold),
+                  ),
+                  10.kH,
+                  commonButton(
+                    100,
+                    40,
+                    Colors.brown,
+                    Colors.white,
+                    () => Get.toNamed(RoutesClass.viewprofile, arguments: {'name': controller.commonController.profileData.value.data?.name ?? "", 'email': controller.commonController.profileData.value.data?.email ?? "", 'phone': controller.commonController.profileData.value.data?.phoneNo ?? "", 'avatar': controller.commonController.profileData.value.data?.avatar ?? "", 'countrycode': controller.commonController.profileData.value.data?.countryCode ?? ""}),
+                    hint: "View Profile",
+                    radius: 18,
+                    paddingHorizontal: 16,
+                    paddingVertical: 8,
+                  ),
+                  20.kH,
+                  buildProfileOptionCard('My Addresses', 'Edit, add or remove Address', Icons.location_city, () => Get.toNamed(RoutesClass.aadharVerification)),
+                  buildProfileOptionCard('Privacy & Policy', 'Read how we protect your personal data', Icons.privacy_tip, () => Get.toNamed(RoutesClass.privacypolicy)),
+                  buildProfileOptionCard('Terms & Conditions', 'Review the terms of using our services', Icons.description, () => Get.toNamed(RoutesClass.termscondition)),
+                  buildProfileOptionCard('Settings', 'Edit Profile, Manage your profile', Icons.settings_outlined, () => Get.toNamed(RoutesClass.setting)),
+                  buildProfileOptionCard('Logout', 'Sign out from your account', Icons.logout, () => showlogoutDialog(controller)),
+                ],
               ),
             ),
           ),
@@ -81,6 +72,42 @@ class MainProfile extends StatelessWidget {
       ),
     );
   }
+}
+
+void showlogoutDialog(ProfileController controller) {
+  Get.dialog(
+    AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      title: Row(
+        children: [
+          Icon(Icons.logout, color: Colors.orange, size: 30),
+          8.kH,
+          Text("Confirm", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+        ],
+      ),
+      content: Text("Are you sure you want to Logout?"),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text("CANCEL", style: TextStyle(color: Colors.pink)),
+            ),
+            TextButton(
+              onPressed: () {
+                controller.logOutApi();
+              },
+              child: Text("YES", style: TextStyle(color: Colors.pink)),
+            ),
+          ],
+        ),
+      ],
+    ),
+    barrierDismissible: false,
+  );
 }
 
 Widget buildProfileOptionCard(String title, String subtitle, IconData icon, void Function()? onTap) {
@@ -94,17 +121,7 @@ Widget buildProfileOptionCard(String title, String subtitle, IconData icon, void
         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
         onTap: onTap,
       ),
-      if (title != "Logout") Divider(height: 0.1, color: Colors.black),
+      Divider(height: 0.1, color: Colors.black),
     ],
-  );
-}
-
-PreferredSizeWidget appBarDefault() {
-  return AppBar(
-    flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
-    centerTitle: true,
-    automaticallyImplyLeading: true,
-    iconTheme: const IconThemeData(color: Colors.white),
-    title: Text("Profile & More".toUpperCase(), style: const TextStyle(fontSize: 16, color: Colors.white)),
   );
 }

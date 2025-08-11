@@ -127,12 +127,12 @@ Widget generalDetails(double w, double h, AddProductController controller) {
               child: Text(item.categoryName, style: const TextStyle(fontSize: 14)),
             );
           }).toList(),
-          controller.selectedcategory.value,
+          controller.selectedsubcategory.value,
           w,
           h,
           appColors.backgroundColor,
           (String? newValue) {
-            controller.selectedcategory.value = newValue;
+            controller.selectedsubcategory.value = newValue;
           },
           hint: 'Select SubCategory',
           borderColor: appColors.border

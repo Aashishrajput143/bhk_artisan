@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:bhk_artisan/common/gradient.dart';
+import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
+import 'package:bhk_artisan/utils/utils.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +18,118 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../resources/colors.dart';
 import '../resources/font.dart';
 
+void handleApiError(
+  dynamic error,dynamic stackTrace, {
+  Function(String)? setError,
+  Function(Status)? setRxRequestStatus,
+  bool closeDialog = true,
+}) {
+  if (closeDialog) {
+    Get.back();
+  }
+
+  setError?.call(error.toString());
+  setRxRequestStatus?.call(Status.ERROR);
+
+  try {
+    if (error.toString().contains("{")) {
+      var errorResponse = json.decode(error.toString());
+
+      if (errorResponse is Map && errorResponse.containsKey('message')) {
+        //CommonMethods.showToast(errorResponse['message']);
+      } else {
+        //CommonMethods.showToast("An unexpected error occurred.");
+      }
+    } else {
+      //CommonMethods.showToast(error.toString());
+    }
+  } catch (e) {
+    //CommonMethods.showToast("An unexpected error occurred.");
+  }
+
+  Utils.printLog("Error===> ${error.toString()}");
+  Utils.printLog("stackTrace===> ${stackTrace.toString()}");
+}
+
 PreferredSizeWidget commonAppBar(String title) {
   return AppBar(
     flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
     iconTheme: const IconThemeData(color: Colors.white),
     centerTitle: true,
     title: Text(title.toUpperCase(), style: const TextStyle(fontSize: 16, color: Colors.white)),
+  );
+}
+
+Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void Function()? onImageGallery, void Function()? onCamera,{bool isDeleteButton = false}) {
+  return showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        height: h,
+        width: w,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
+              child: Text(
+                appStrings.uploadPhoto,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
+              ),
+            ),
+            8.kH,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: onImageGallery,
+                child: Row(
+                  children: [
+                    Icon(Icons.photo_library_outlined, size: 30, color: appColors.contentSecondary),
+                    const SizedBox(width: 10),
+                    Text(
+                      appStrings.viewPhotoLibrary,
+                      style: TextStyle(fontSize: 16, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.w600, color: appColors.contentSecondary),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            20.kH,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: onCamera,
+                child: Row(
+                  children: [
+                    Icon(Icons.camera_alt_outlined, size: 30, color: appColors.contentSecondary),
+                    const SizedBox(width: 10),
+                    Text(
+                      appStrings.takeAPhoto,
+                      style: TextStyle(fontSize: 16, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.w600, color: appColors.contentSecondary),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if(isDeleteButton)...[
+              20.kH,
+              commonButtonIcon(w, 50,backgroundColor: selectedImage.value!=null ? Colors.white : appColors.buttonStateDisabled, selectedImage.value!=null ?appColors.brownDarkText : appColors.buttonTextStateDisabled, (){
+                if (selectedImage.isNotEmpty ?? false) {
+                    Get.back();
+                    selectedImage.value = null;
+                  }
+              },hint:  appStrings.removePhoto,icon: Icons.delete,borderColor: selectedImage.value!=null? appColors.brownDarkText : appColors.buttonStateDisabled),
+            ]
+          ],
+        ),
+      );
+    },
   );
 }
 

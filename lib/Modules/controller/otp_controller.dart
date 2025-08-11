@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
+import 'package:bhk_artisan/Modules/model/login_model.dart';
+import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bhk_artisan/utils/utils.dart';
@@ -8,7 +9,6 @@ import '../../common/Constants.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../../routes/routes_class.dart';
-import '../model/signUpModel.dart';
 import '../model/verifyOtpModel.dart';
 import '../repository/loginRepository.dart';
 import '../repository/otpRepository.dart';
@@ -22,10 +22,10 @@ class OtpController extends GetxController
   dynamic errorMessage;
   var otpController = TextEditingController().obs;
   var otp = "".obs;
-  final logInData = SignUpModel().obs;
+  final logInData = LoginModel().obs;
 
   late final AnimationController animationController;
-  void setLoginData(SignUpModel value) => logInData.value = value;
+  void setLoginData(LoginModel value) => logInData.value = value;
   final rxRequestStatus = Status.COMPLETED.obs;
 
   void setVerifyData(VerifyOTPModel value) => verifyOTPData.value = value;
@@ -91,19 +91,12 @@ class OtpController extends GetxController
         redirect();
       }).onError((error, stackTrace) {
         Get.back();
-        setError(error.toString());
-        setRxRequestStatus(Status.ERROR);
-        if (error.toString().contains("{")) {
-          var errorResponse = json.decode(error.toString());
-          print("errrrorrr=====>$errorResponse");
-          if (errorResponse is Map || errorResponse.containsKey('message')) {
-            //CommonMethods.showToast(errorResponse['message']);
-          } else {
-            //CommonMethods.showToast("An unexpected error occurred.");
-          }
-        }
-        Utils.printLog("Error===> ${error.toString()}");
-      });
+        handleApiError(
+        error,stackTrace,
+        setError: setError,
+        setRxRequestStatus: setRxRequestStatus,
+      );
+    });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
@@ -119,32 +112,25 @@ class OtpController extends GetxController
 
       Map<String, dynamic> data = {
         "identity": identity.value,
-        "group": "ARTISAN",
+        "user_group": "ARTISAN",
         if (identity.value.isNotEmpty) "countryCode": countryCode.value
       };
       _apiLogin.logInApi(data).then((value) {
         setRxRequestStatus(Status.COMPLETED);
         setLoginData(value);
-        CommonMethods.showToast("${value.message} ${value.data?.otp}");
+        CommonMethods.showToast("${value.message} ${value.data?.oTP}");
         Utils.printLog("Response===> ${value.toString()}");
         startTime.value = 30;
         otpController.value.clear();
         startTimerCountdown();
       }).onError((error, stackTrace) {
         Get.back();
-        setError(error.toString());
-        setRxRequestStatus(Status.ERROR);
-        if (error.toString().contains("{")) {
-          var errorResponse = json.decode(error.toString());
-          print("errrrorrr=====>$errorResponse");
-          if (errorResponse is Map || errorResponse.containsKey('message')) {
-            //CommonMethods.showToast(errorResponse['message']);
-          } else {
-            //CommonMethods.showToast("An unexpected error occurred.");
-          }
-        }
-        Utils.printLog("Error===> ${error.toString()}");
-      });
+        handleApiError(
+        error,stackTrace,
+        setError: setError,
+        setRxRequestStatus: setRxRequestStatus,
+      );
+    });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
@@ -158,7 +144,7 @@ class OtpController extends GetxController
 
     Utils.savePreferenceValues(
         Constants.email, "${verifyOTPData.value.data?.email}");
-    //}
+    
     Get.offNamed(RoutesClass.commonScreen,
         arguments: {"isDialog": true});
   }

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../data/response/status.dart';
-import '../controller/otpController.dart';
+import '../controller/otp_controller.dart';
 
 class OtpScreen extends ParentWidget {
   const OtpScreen({super.key});

@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:bhk_artisan/Modules/repository/loginRepository.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:bhk_artisan/Modules/controller/logincontroller.dart';
 import 'package:bhk_artisan/Modules/screens/login_screen.dart';
 import 'package:bhk_artisan/common/constants.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../common/CommonMethods.dart';
@@ -12,61 +12,11 @@ import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../model/getprofilemodel.dart';
 import '../model/logoutmodel.dart';
-import '../repository/logoutRepository.dart';
 import '../repository/profilerepository.dart';
 
 class Appbardrawercontroller extends GetxController {
-  final repository = LogoutRepository();
+  final repository = LoginRepository();
   final profilerepository = ProfileRepository();
-
-  void showlogoutDialog() {
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        title: Row(
-          children: [
-            Icon(Icons.logout, color: Colors.orange, size: 30),
-            SizedBox(width: 8),
-            Text("Confirm", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-          ],
-        ),
-        content: Text("Are you sure you want to Logout?"),
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Get.back(); // Close dialog without doing anything
-                },
-                child: Text("CANCEL", style: TextStyle(color: Colors.pink)),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Get.back(); // Close dialog and stay in the app
-                    },
-                    child: Text("NO", style: TextStyle(color: Colors.pink)),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      logOutApi();
-                    },
-                    child: Text("YES", style: TextStyle(color: Colors.pink)),
-                  ),
-                ],
-              )
-            ],
-          )
-        ],
-      ),
-      barrierDismissible: false,
-    );
-  }
 
   var isLoading = false.obs;
   final rxRequestStatus = Status.COMPLETED.obs;
