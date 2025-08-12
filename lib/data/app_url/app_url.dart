@@ -29,6 +29,5 @@ class AppUrl {
   //post
   static String addbrand = '$baseUrl/api/brand/add';
   static String addstore = '$baseUrl/api/store/addstore';
-  static String addproduct = '$baseUrl/api/product/addproduct';
-  static String addproductmedia = '$baseUrl/api/product/addorupdatemedia';
+  static String addproduct = '$baseUrl/product/api/product/addproduct';
 }

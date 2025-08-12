@@ -60,7 +60,7 @@ class AddProductPage extends ParentWidget {
                 children: [
                   controller.selectedIndex.value > 0 ? commonOutlinedButtonIcon(w * 0.2, 48, Colors.black, () => controller.selectedIndex.value--, hint: "Previous step", radius: 25, forward: false, icon: Icons.arrow_back) : SizedBox(),
                   controller.selectedIndex.value < 2 ? commonButtonIcon(w * 0.2, 48, Colors.white, () => controller.selectedIndex.value++, hint: "Next step", radius: 25, backgroundColor: appColors.contentButtonBrown) : SizedBox(),
-                  if (controller.selectedIndex.value == 2) commonButtonIcon(w * 0.2, 48, Colors.white, () {}, hint: "Submit", radius: 25, backgroundColor: appColors.contentButtonBrown),
+                  if (controller.selectedIndex.value == 2) commonButtonIcon(w * 0.2, 48, Colors.white, () =>controller.addProductApi(), hint: "Submit", radius: 25, backgroundColor: appColors.contentButtonBrown),
                 ],
               ),
             ),
@@ -116,7 +116,7 @@ Widget generalDetails(double w, double h, AddProductController controller) {
           (String? newValue) {
             controller.selectedcategoryid.value = newValue;
             print(controller.selectedcategoryid.value);
-            controller.selectedcategorysubcategoryid.value=null;
+            controller.selectedsubcategoryid.value=null;
             controller.getSubCategoryApi();
           },
           hint: 'Select Category',
@@ -133,12 +133,12 @@ Widget generalDetails(double w, double h, AddProductController controller) {
               child: Text(item.categoryName??"", style: const TextStyle(fontSize: 14)),
             );
           }).toList(),
-          controller.selectedcategorysubcategoryid.value,
+          controller.selectedsubcategoryid.value,
           w,
           h,
           appColors.backgroundColor,
           (String? newValue) {
-            controller.selectedcategorysubcategoryid.value = newValue;
+            controller.selectedsubcategoryid.value = newValue;
           },
           hint: 'Select SubCategory',
           borderColor: appColors.border,
@@ -281,8 +281,6 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
       ),
       8.kH,
       Text("Add up to 4 images to your product. Used to represent your product during checkout, in email, social sharing, and more.", style: TextStyle(color: Colors.grey[600])),
-      10.kH,
-      Text(controller.errormessage.value, style: TextStyle(color: Colors.red)),
       20.kH,
       Text("Picked Files:"),
       Divider(),
@@ -306,9 +304,6 @@ Widget pickedfiles(double w, double h, AddProductController controller) {
               GestureDetector(
                 onTap: () {
                   controller.imagefiles.removeAt(index);
-                  if (controller.count > 0) {
-                    controller.count--;
-                  }
                 },
                 child: Align(
                   alignment: Alignment.topRight,

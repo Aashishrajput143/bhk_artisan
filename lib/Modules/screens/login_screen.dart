@@ -98,7 +98,6 @@ class LoginScreen extends ParentWidget {
                           controller.errorMessage.value = appStrings.loginerrormessage;
                         } else {
                           controller.errorMessage.value = "";
-                          FocusScope.of(context).unfocus();
                           controller.logInAndRegister(context);
                         }
                       }, radius: 30, hint: appStrings.getOTP),

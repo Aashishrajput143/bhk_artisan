@@ -20,7 +20,7 @@ Future<void> pickImageFromGallery(Rxn<String> selectedImage, gallery) async {
   }
 }
 
-Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromGallery) async {
+Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles,bool fromGallery) async {
   try {
     List<XFile> pickedFiles = [];
 

@@ -6,12 +6,12 @@ class AddProductModel {
 
   AddProductModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['message'] = message;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -23,194 +23,150 @@ class Data {
   int? productId;
   String? productName;
   String? description;
+  String? mrp;
+  int? quantity;
+  String? sellingPrice;
+  String? material;
+  int? discount;
+  String? netWeight;
+  String? dimension;
+  dynamic color;
+  dynamic size;
   String? createdAt;
-  bool? isDisabled;
   String? productStatus;
   String? adminApprovalStatus;
-  String? adminRemarks;
+ dynamic adminRemarks;
   String? updatedAt;
-  List<Variants>? variants;
+  List<Images>? images;
   Category? category;
-  Brand? brand;
-  Store? store;
+  SubCategory? subCategory;
+  Artisan? artisan;
 
   Data(
       {this.productId,
       this.productName,
       this.description,
+      this.mrp,
+      this.quantity,
+      this.sellingPrice,
+      this.material,
+      this.discount,
+      this.netWeight,
+      this.dimension,
+      this.color,
+      this.size,
       this.createdAt,
-      this.isDisabled,
       this.productStatus,
       this.adminApprovalStatus,
       this.adminRemarks,
       this.updatedAt,
-      this.variants,
+      this.images,
       this.category,
-      this.brand,
-      this.store});
+      this.subCategory,
+      this.artisan});
 
   Data.fromJson(Map<String, dynamic> json) {
     productId = json['product_id'];
     productName = json['product_name'];
     description = json['description'];
+    mrp = json['mrp'];
+    quantity = json['quantity'];
+    sellingPrice = json['selling_price'];
+    material = json['material'];
+    discount = json['discount'];
+    netWeight = json['net_weight'];
+    dimension = json['dimension'];
+    color = json['color'];
+    size = json['size'];
     createdAt = json['createdAt'];
-    isDisabled = json['isDisabled'];
     productStatus = json['product_status'];
     adminApprovalStatus = json['admin_approval_status'];
     adminRemarks = json['adminRemarks'];
     updatedAt = json['updatedAt'];
-    if (json['variants'] != null) {
-      variants = <Variants>[];
-      json['variants'].forEach((v) {
-        variants!.add(Variants.fromJson(v));
+    if (json['images'] != null) {
+      images = <Images>[];
+      json['images'].forEach((v) {
+        images!.add(new Images.fromJson(v));
       });
     }
     category = json['category'] != null
-        ? Category.fromJson(json['category'])
+        ? new Category.fromJson(json['category'])
         : null;
-    brand = json['brand'] != null ? Brand.fromJson(json['brand']) : null;
-    store = json['store'] != null ? Store.fromJson(json['store']) : null;
+    subCategory = json['subCategory'] != null
+        ? new SubCategory.fromJson(json['subCategory'])
+        : null;
+    artisan =
+        json['artisan'] != null ? new Artisan.fromJson(json['artisan']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['product_id'] = productId;
-    data['product_name'] = productName;
-    data['description'] = description;
-    data['createdAt'] = createdAt;
-    data['isDisabled'] = isDisabled;
-    data['product_status'] = productStatus;
-    data['admin_approval_status'] = adminApprovalStatus;
-    data['adminRemarks'] = adminRemarks;
-    data['updatedAt'] = updatedAt;
-    if (variants != null) {
-      data['variants'] = variants!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['product_id'] = this.productId;
+    data['product_name'] = this.productName;
+    data['description'] = this.description;
+    data['mrp'] = this.mrp;
+    data['quantity'] = this.quantity;
+    data['selling_price'] = this.sellingPrice;
+    data['material'] = this.material;
+    data['discount'] = this.discount;
+    data['net_weight'] = this.netWeight;
+    data['dimension'] = this.dimension;
+    data['color'] = this.color;
+    data['size'] = this.size;
+    data['createdAt'] = this.createdAt;
+    data['product_status'] = this.productStatus;
+    data['admin_approval_status'] = this.adminApprovalStatus;
+    data['adminRemarks'] = this.adminRemarks;
+    data['updatedAt'] = this.updatedAt;
+    if (this.images != null) {
+      data['images'] = this.images!.map((v) => v.toJson()).toList();
     }
-    if (category != null) {
-      data['category'] = category!.toJson();
+    if (this.category != null) {
+      data['category'] = this.category!.toJson();
     }
-    if (brand != null) {
-      data['brand'] = brand!.toJson();
+    if (this.subCategory != null) {
+      data['subCategory'] = this.subCategory!.toJson();
     }
-    if (store != null) {
-      data['store'] = store!.toJson();
+    if (this.artisan != null) {
+      data['artisan'] = this.artisan!.toJson();
     }
     return data;
   }
 }
 
-class Variants {
-  int? variantId;
-  String? sellingPrice;
-  String? mrp;
-  dynamic tax;
-  String? color;
-  String? size;
-  String? material;
-  String? productDimensions;
-  String? weight;
-  String? discount;
-  int? quantity;
-  String? description;
-  String? inStock;
-  String? approvalStatus;
-  bool? isDisabled;
+class Images {
+  int? imageId;
+  String? imageUrl;
+  int? imageOrder;
+  int? productId;
   String? createdAt;
   String? updatedAt;
-  Media? media;
 
-  Variants(
-      {this.variantId,
-      this.sellingPrice,
-      this.mrp,
-      this.tax,
-      this.color,
-      this.size,
-      this.material,
-      this.productDimensions,
-      this.weight,
-      this.discount,
-      this.quantity,
-      this.description,
-      this.inStock,
-      this.approvalStatus,
-      this.isDisabled,
+  Images(
+      {this.imageId,
+      this.imageUrl,
+      this.imageOrder,
+      this.productId,
       this.createdAt,
-      this.updatedAt,
-      this.media});
+      this.updatedAt});
 
-  Variants.fromJson(Map<String, dynamic> json) {
-    variantId = json['variant_id'];
-    sellingPrice = json['sellingPrice'];
-    mrp = json['mrp'];
-    tax = json['tax'];
-    color = json['color'];
-    size = json['size'];
-    material = json['material'];
-    productDimensions = json['productDimensions'];
-    weight = json['weight'];
-    discount = json['discount'];
-    quantity = json['quantity'];
-    description = json['description'];
-    inStock = json['inStock'];
-    approvalStatus = json['approvalStatus'];
-    isDisabled = json['isDisabled'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    media = json['media'] != null ? Media.fromJson(json['media']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['variant_id'] = variantId;
-    data['sellingPrice'] = sellingPrice;
-    data['mrp'] = mrp;
-    data['tax'] = tax;
-    data['color'] = color;
-    data['size'] = size;
-    data['material'] = material;
-    data['productDimensions'] = productDimensions;
-    data['weight'] = weight;
-    data['discount'] = discount;
-    data['quantity'] = quantity;
-    data['description'] = description;
-    data['inStock'] = inStock;
-    data['approvalStatus'] = approvalStatus;
-    data['isDisabled'] = isDisabled;
-    data['createdAt'] = createdAt;
-    data['updatedAt'] = updatedAt;
-    if (media != null) {
-      data['media'] = media!.toJson();
-    }
-    return data;
-  }
-}
-
-class Media {
-  int? mediaId;
-  List<String>? images;
-  String? videos;
-  String? createdAt;
-  String? updatedAt;
-
-  Media(
-      {this.mediaId, this.images, this.videos, this.createdAt, this.updatedAt});
-
-  Media.fromJson(Map<String, dynamic> json) {
-    mediaId = json['media_id'];
-    images = json['images'].cast<String>();
-    videos = json['videos'];
+  Images.fromJson(Map<String, dynamic> json) {
+    imageId = json['imageId'];
+    imageUrl = json['imageUrl'];
+    imageOrder = json['imageOrder'];
+    productId = json['product_id'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['media_id'] = mediaId;
-    data['images'] = images;
-    data['videos'] = videos;
-    data['createdAt'] = createdAt;
-    data['updatedAt'] = updatedAt;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['imageId'] = this.imageId;
+    data['imageUrl'] = this.imageUrl;
+    data['imageOrder'] = this.imageOrder;
+    data['product_id'] = this.productId;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
     return data;
   }
 }
@@ -218,56 +174,190 @@ class Media {
 class Category {
   int? categoryId;
   String? categoryName;
+  String? type;
+  String? categoryLogo;
+  String? description;
+  dynamic parentId;
+  String? createdAt;
+  String? updatedAt;
+  bool? isActive;
 
-  Category({this.categoryId, this.categoryName});
+  Category(
+      {this.categoryId,
+      this.categoryName,
+      this.type,
+      this.categoryLogo,
+      this.description,
+      this.parentId,
+      this.createdAt,
+      this.updatedAt,
+      this.isActive});
 
   Category.fromJson(Map<String, dynamic> json) {
     categoryId = json['category_id'];
     categoryName = json['category_name'];
+    type = json['type'];
+    categoryLogo = json['category_logo'];
+    description = json['description'];
+    parentId = json['parent_id'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    isActive = json['isActive'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['category_id'] = categoryId;
-    data['category_name'] = categoryName;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['category_id'] = this.categoryId;
+    data['category_name'] = this.categoryName;
+    data['type'] = this.type;
+    data['category_logo'] = this.categoryLogo;
+    data['description'] = this.description;
+    data['parent_id'] = this.parentId;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
+    data['isActive'] = this.isActive;
     return data;
   }
 }
 
-class Brand {
-  int? brandId;
-  String? brandName;
+class SubCategory {
+  int? categoryId;
+  String? categoryName;
+  String? type;
+  String? categoryLogo;
+  String? description;
+  int? parentId;
+  String? createdAt;
+  String? updatedAt;
+  bool? isActive;
 
-  Brand({this.brandId, this.brandName});
+  SubCategory(
+      {this.categoryId,
+      this.categoryName,
+      this.type,
+      this.categoryLogo,
+      this.description,
+      this.parentId,
+      this.createdAt,
+      this.updatedAt,
+      this.isActive});
 
-  Brand.fromJson(Map<String, dynamic> json) {
-    brandId = json['brand_id'];
-    brandName = json['brand_name'];
+  SubCategory.fromJson(Map<String, dynamic> json) {
+    categoryId = json['category_id'];
+    categoryName = json['category_name'];
+    type = json['type'];
+    categoryLogo = json['category_logo'];
+    description = json['description'];
+    parentId = json['parent_id'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    isActive = json['isActive'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['brand_id'] = brandId;
-    data['brand_name'] = brandName;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['category_id'] = this.categoryId;
+    data['category_name'] = this.categoryName;
+    data['type'] = this.type;
+    data['category_logo'] = this.categoryLogo;
+    data['description'] = this.description;
+    data['parent_id'] = this.parentId;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
+    data['isActive'] = this.isActive;
     return data;
   }
 }
 
-class Store {
-  int? storeId;
-  String? storeName;
+class Artisan {
+  int? id;
+  String? createdAt;
+  String? name;
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? phoneNo;
+  bool? isPhoneNoVerified;
+  bool? isEmailVerified;
+  String? countryCode;
+  String? avatar;
+  String? password;
+  String? status;
+  String? verifyStatus;
+  String? roleName;
+  String? userGroup;
+  String? expertizeField;
+  dynamic loginSource;
+ dynamic platform;
+  dynamic guestUserId;
 
-  Store({this.storeId, this.storeName});
+  Artisan(
+      {this.id,
+      this.createdAt,
+      this.name,
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.phoneNo,
+      this.isPhoneNoVerified,
+      this.isEmailVerified,
+      this.countryCode,
+      this.avatar,
+      this.password,
+      this.status,
+      this.verifyStatus,
+      this.roleName,
+      this.userGroup,
+      this.expertizeField,
+      this.loginSource,
+      this.platform,
+      this.guestUserId});
 
-  Store.fromJson(Map<String, dynamic> json) {
-    storeId = json['store_id'];
-    storeName = json['store_name'];
+  Artisan.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    createdAt = json['createdAt'];
+    name = json['name'];
+    firstName = json['firstName'];
+    lastName = json['lastName'];
+    email = json['email'];
+    phoneNo = json['phoneNo'];
+    isPhoneNoVerified = json['isPhoneNoVerified'];
+    isEmailVerified = json['isEmailVerified'];
+    countryCode = json['countryCode'];
+    avatar = json['avatar'];
+    password = json['password'];
+    status = json['status'];
+    verifyStatus = json['verifyStatus'];
+    roleName = json['roleName'];
+    userGroup = json['user_group'];
+    expertizeField = json['expertizeField'];
+    loginSource = json['loginSource'];
+    platform = json['platform'];
+    guestUserId = json['guestUserId'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['store_id'] = storeId;
-    data['store_name'] = storeName;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['createdAt'] = this.createdAt;
+    data['name'] = this.name;
+    data['firstName'] = this.firstName;
+    data['lastName'] = this.lastName;
+    data['email'] = this.email;
+    data['phoneNo'] = this.phoneNo;
+    data['isPhoneNoVerified'] = this.isPhoneNoVerified;
+    data['isEmailVerified'] = this.isEmailVerified;
+    data['countryCode'] = this.countryCode;
+    data['avatar'] = this.avatar;
+    data['password'] = this.password;
+    data['status'] = this.status;
+    data['verifyStatus'] = this.verifyStatus;
+    data['roleName'] = this.roleName;
+    data['user_group'] = this.userGroup;
+    data['expertizeField'] = this.expertizeField;
+    data['loginSource'] = this.loginSource;
+    data['platform'] = this.platform;
+    data['guestUserId'] = this.guestUserId;
     return data;
   }
 }

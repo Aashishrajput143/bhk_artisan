@@ -25,7 +25,7 @@ class SplashController extends GetxController with GetSingleTickerProviderStateM
             Utils.getBoolPreferenceValues(Constants.isNewUser).then(
               (value) => {
                 Utils.printLog("isNewUser $value"),
-                if (value == "" && value == null)
+                if (value == true)
                   {
                     Future.delayed(const Duration(seconds: 5), () {
                       Get.offAllNamed(RoutesClass.editprofile);

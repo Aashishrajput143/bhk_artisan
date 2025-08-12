@@ -16,8 +16,6 @@ import '../Modules/screens/ordersManagement/orderdetails.dart';
 import '../Modules/screens/ordersManagement/trackingorder.dart';
 import '../Modules/screens/otpScreen.dart';
 import '../Modules/screens/privacypolicy.dart';
-import '../Modules/screens/productManagement/add_productdetails.dart';
-import '../Modules/screens/productManagement/add_productfiles.dart';
 import '../Modules/screens/productManagement/productpreview.dart';
 import '../Modules/screens/profileManagement/edit_profile_screen.dart';
 import '../Modules/screens/profileManagement/settingprofile.dart';
@@ -44,8 +42,6 @@ class RoutesClass {
   static String addstores = '/addstores';
   static String storedetail = '/storedetail';
   static String addproducts = '/addproducts';
-  static String addproductdetails = '/addproductdetails';
-  static String addproductmedia = '/addproductmedia';
   static String ordersdetails = '/ordersdetails';
   static String ordertracking = '/ordertracking';
   static String notifications = '/notifications';
@@ -74,8 +70,6 @@ class RoutesClass {
   static String gotoaddStoreScreen() => addstores;
   static String gotoStoreDetailsScreen() => storedetail;
   static String gotoaddProductScreen() => addproducts;
-  static String gotoaddProductdetailsScreen() => addproductdetails;
-  static String gotoaddProductmediaScreen() => addproductmedia;
   static String gotoOrderDetailsScreen() => ordersdetails;
   static String gotoOrderTrackingScreen() => ordertracking;
   static String gotoNotificationScreen() => notifications;
@@ -165,18 +159,6 @@ class RoutesClass {
     GetPage(
       name: addproducts,
       page: () => const AddProductPage(),
-      transition: Transition.fade,
-      transitionDuration: const Duration(milliseconds: 300),
-    ),
-    GetPage(
-      name: addproductdetails,
-      page: () => const AddProductDetails(),
-      transition: Transition.fade,
-      transitionDuration: const Duration(milliseconds: 300),
-    ),
-    GetPage(
-      name: addproductmedia,
-      page: () => AddProductfiles(),
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 300),
     ),

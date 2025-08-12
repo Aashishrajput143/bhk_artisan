@@ -127,59 +127,28 @@ class NetworkApiServices extends BaseApiServices {
     }
   }
 
-  Future<dynamic> multiPartMediaApi(var data, String url, List<String> paths, List<String> keys) async {
+  Future<dynamic> multiPartMediaApi(var data, String url,List<String>? imagePaths, var key) async {
     Utils.printLog(url);
     Utils.printLog(data);
-    Utils.printLog(paths);
+    Utils.printLog(imagePaths);
     dynamic responseJson;
     String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
 
     try {
-      if (paths.isEmpty) {
-        // If no images to upload, send a normal POST request
-        final response = await http
-            .post(
-              Uri.parse(url),
-              headers: {'Content-Type': 'application/json', 'accesstoken': token},
-              body: data, // use jsonEncode if sending JSON data
-            )
-            .timeout(const Duration(seconds: 600));
-        expired(response);
-        responseJson = returnResponse(response);
-      } else {
-        // Create MultipartRequest for uploading files
-        var request = http.MultipartRequest("POST", Uri.parse(url));
+      var request = http.MultipartRequest("POST", Uri.parse(url));
+      request.fields.addAll(data);
+      request.headers['accesstoken'] = token;
 
-        // Add data fields if provided
-        if (data != null) {
-          data.forEach((key, value) {
-            request.fields[key] = value;
-          });
-        }
-
-        request.headers['accesstoken'] = token;
-
-        // Ensure the number of keys matches the number of paths
-        if (keys.length != paths.length) {
-          throw Exception('The number of keys must match the number of image paths');
-        }
-
-        // Add each image with its corresponding key as MultipartFile
-        for (int i = 0; i < paths.length; i++) {
-          String path = paths[i];
-          String key = keys[i];
-          if (path.isNotEmpty) {
-            request.files.add(http.MultipartFile(key, File(path).readAsBytes().asStream(), File(path).lengthSync(), filename: path.split('/').last)); // Use the filename from the path
-          }
-        }
-
-        // Send the request and get the response
-        final response = await request.send();
-        final responseHttp = await http.Response.fromStream(response);
-        expired(responseHttp);
-
-        responseJson = returnResponse(responseHttp);
-      }
+    if (imagePaths != null && imagePaths.isNotEmpty) {
+      final files = await Future.wait(
+        imagePaths.map((path) => http.MultipartFile.fromPath(key, path)),
+      );
+      request.files.addAll(files);
+    }
+      final response = await request.send();
+      final responseHttp = await http.Response.fromStream(response);
+      expired(responseHttp);
+      responseJson = returnResponse(responseHttp);
     } on SocketException {
       throw InternetException('');
     } on RequestTimeOut {
@@ -189,7 +158,6 @@ class NetworkApiServices extends BaseApiServices {
     } on UnauthorizedException {
       throw AuthenticationException('');
     }
-
     Utils.printLog(responseJson);
     return responseJson;
   }

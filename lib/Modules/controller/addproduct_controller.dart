@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/model/addproductmodel.dart';
 import 'package:bhk_artisan/Modules/model/getcategorymodel.dart';
 import 'package:bhk_artisan/Modules/model/getsubcategorymodel.dart';
 import 'package:bhk_artisan/common/CommonMethods.dart';
@@ -6,7 +7,6 @@ import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../repository/productrepository.dart';
@@ -41,7 +41,7 @@ class AddProductController extends GetxController {
 
   var selectedcategoryid = Rxn<String>();
 
-  var selectedcategorysubcategoryid = Rxn<String>();
+  var selectedsubcategoryid = Rxn<String>();
 
   final RxList<ProductCategory> productCategories = <ProductCategory>[
     ProductCategory(categoryId: 1, categoryName: 'Handloom Sarees'),
@@ -85,30 +85,6 @@ class AddProductController extends GetxController {
 
   final ImagePicker imgpicker = ImagePicker();
   var imagefiles = <String>[].obs;
-  var errormessage = "".obs;
-  int count = 0;
-
-  openImages() async {
-    try {
-      var pickedfiles = await imgpicker.pickMultipleMedia();
-      count = pickedfiles.length;
-
-      if (pickedfiles.isNotEmpty) {
-        if (imagefiles.length + pickedfiles.length > 4) {
-          Fluttertoast.showToast(msg: "Please select up to 4 images only.", toastLength: Toast.LENGTH_SHORT, timeInSecForIosWeb: 1, backgroundColor: Colors.green[400], textColor: Colors.white, fontSize: 16.0);
-        } else {
-          errormessage.value = "";
-          imagefiles.addAll(pickedfiles.map((file) => file.path));
-          print("Total images: ${imagefiles.length}");
-        }
-      } else {
-        print("No image selected.");
-      }
-    } catch (e) {
-      errormessage.value = "Error while picking files: $e";
-      print("Error: $e");
-    }
-  }
 
   List<String> imageKeys = ['frontView', 'frontRight', 'rearView', 'rearLeft'];
 
@@ -177,12 +153,14 @@ class AddProductController extends GetxController {
   final rxRequestStatus = Status.COMPLETED.obs;
   final getCategoryModel = GetCategoryModel().obs;
   final getSubcategoryModel = GetSubCategoryModel().obs;
+  final addProductData = AddProductModel().obs;
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
 
   void setgetCategoryModeldata(GetCategoryModel value) => getCategoryModel.value = value;
   void setgetSubcategoryModeldata(GetSubCategoryModel value) => getSubcategoryModel.value = value;
+  void setaddProductModeldata(AddProductModel value) => addProductData.value = value;
 
   Future<void> getCategoryApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
@@ -218,6 +196,42 @@ class AddProductController extends GetxController {
             setRxRequestStatus(Status.COMPLETED);
             setgetSubcategoryModeldata(value);
             Utils.printLog("Response===> ${value.toString()}");
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+
+  Future<void> addProductApi() async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      setRxRequestStatus(Status.LOADING);
+
+      Map<String, String> data = {
+        "product_name": nameController.value.text,
+        "categoryId": selectedcategoryid.value ?? "",
+        "subCategoryId": selectedsubcategoryid.value ?? "",
+        "description": detaileddescriptionController.value.text,
+        "mrp": mrpController.value.text,
+        if (discountController.value.text.isNotEmpty) "discount": discountController.value.text,
+        "quantity": quantityController.value.text,
+        "material": materialController.value.text,
+        if (netweightController.value.text.isNotEmpty) "netWeight": getWeight(),
+        if (lengthController.value.text.isNotEmpty && breadthController.value.text.isNotEmpty && heightController.value.text.isNotEmpty) "dimension": getDimensions(),
+      };
+
+      _api
+          .addproductApi(data, imagefiles)
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setaddProductModeldata(value);
+            Utils.printLog("Response===> ${value.toString()}");
+            Get.back();
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

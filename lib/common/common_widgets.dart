@@ -318,10 +318,14 @@ Widget commonDescriptionTextField(
 }) {
   return StatefulBuilder(
     builder: (context, setState) {
-      int maxLinesCalc = focusNode.hasFocus ? minLines : maxLines;
+      focusNode.removeListener(() {});
       focusNode.addListener(() {
-        setState(() {});
+        if (context.mounted) {
+          setState(() {});
+        }
       });
+
+      int maxLinesCalc = focusNode.hasFocus ? minLines : maxLines;
       return TextField(
         controller: controller,
         focusNode: focusNode,

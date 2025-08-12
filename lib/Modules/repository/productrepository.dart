@@ -1,6 +1,5 @@
 import 'package:bhk_artisan/data/app_url/app_url.dart';
 import 'package:bhk_artisan/data/network/network_api_services.dart';
-import '../model/addproductmediamodel.dart';
 import '../model/addproductmodel.dart';
 import '../model/getbrandModel.dart';
 import '../model/getcategorymodel.dart';
@@ -34,17 +33,9 @@ class ProductRepository {
     return GetStoreModel.fromJson(response);
   }
 
-  Future<AddProductModel> addproductApi(var data) async {
-    dynamic response =
-        await _apiServices.postEncodeApi(data, AppUrl.addproduct);
+  Future<AddProductModel> addproductApi(var data, var path) async {
+    dynamic response = await _apiServices.multiPartMediaApi(data, AppUrl.addproduct, path, "images");
     return AddProductModel.fromJson(response);
-  }
-
-  Future<AddProductMediaModel> addproductmediaApi(
-      var data, List<String> paths, List<String> keys) async {
-    dynamic response = await _apiServices.multiPartMediaApi(
-        data, AppUrl.addproductmedia, paths, keys);
-    return AddProductMediaModel.fromJson(response);
   }
 
   Future<GetProductModel> getproductApi() async {

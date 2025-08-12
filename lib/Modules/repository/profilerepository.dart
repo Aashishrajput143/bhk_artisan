@@ -11,9 +11,8 @@ class ProfileRepository {
     return GetProfileModel.fromJson(response);
   }
 
-    Future<UpdateProfileModel> updateProfileApi(var data, var path) async {
-    dynamic response = await _apiServices.multiPartApi(
-        data, AppUrl.updateprofile, path, "avatar");
+  Future<UpdateProfileModel> updateProfileApi(var data, var path) async {
+    dynamic response = await _apiServices.multiPartApi(data, AppUrl.updateprofile, path, "avatar");
     return UpdateProfileModel.fromJson(response);
   }
 }
