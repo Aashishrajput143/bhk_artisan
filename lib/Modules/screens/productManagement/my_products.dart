@@ -123,10 +123,10 @@ Widget commonCard(double w, double h, int index) {
               children: [
                 SizedBox(
                   width: w * 0.4,
-                  child: Text(StringLimiter.limitCharacters("Product$index", 35), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  child: Text(StringLimiter.limitCharacters("Product${index+1}", 35), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                 ),
                 5.kH,
-                Text(StringLimiter.limitCharacters("Material$index", 35), style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                Text(StringLimiter.limitCharacters("Material${index+1}", 35), style: TextStyle(fontSize: 12, color: Colors.grey[700])),
                 5.kH,
                 Row(children: [commonContainer("Category", Colors.deepPurple), 8.kW, commonContainer("Subcategory", appColors.brownDarkText)]),
               ],
