@@ -63,11 +63,12 @@ class PendingProducts extends ParentWidget {
 Widget emptyScreen(double w, double h) {
   return Column(
     children: [
+      16.kH,
       Text(
         "Hi, there.",
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
       ),
-      SizedBox(height: h * 0.3),
+      SizedBox(height: h * 0.1),
       Image.asset(appImages.myproductcart, height: 120, width: 130, fit: BoxFit.contain),
       SizedBox(height: h * 0.15),
       Text(

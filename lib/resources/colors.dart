@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  get backgroundColor =>  const Color.fromARGB(195, 247, 243, 233);
-  get brownDarkText =>Color.fromARGB(255, 123, 64, 35);
-  get brownbuttonBg=>Color.fromARGB(255, 204, 157, 118);
-  get contentBrown=> getColor("#7B4023");
+  get backgroundColor => const Color.fromARGB(195, 247, 243, 233);
+  get brownDarkText => Color.fromARGB(255, 123, 64, 35);
+  get brownbuttonBg => Color.fromARGB(255, 204, 157, 118);
+  get contentBrown => getColor("#7B4023");
   get contentBrownLinearColor3 => getColor("#7B4023").withValues(alpha: 0.3);
   get contentBrownLinearColor2 => getColor("#7B4023").withValues(alpha: 0.2);
   get contentBrownLinearColor1 => getColor("#7B4023").withValues(alpha: 0.1);
@@ -14,28 +14,25 @@ class AppColors {
   get border => const Color.fromARGB(197, 113, 113, 113);
   get contentButtonBrown => Color(0xFF5D2E17);
   get cardBackground => const Color.fromARGB(255, 251, 249, 244);
-
-
+  get popColor => const Color.fromARGB(195, 252, 250, 245);
 
   get contentPrimary => getColor('#000000');
   get contentBluePrimary => getColor('#0d3d5d');
   get contentBlueLight => getColor('#3a6f93');
   get contentSecondary => getColor('#80000000');
   get contentBluePrimaryLight => getColor("#6f9bb3");
-  get labelTextBorder=>getColor("#208BD7");
-  get contentPending=>getColor("#57585A");
+  get labelTextBorder => getColor("#208BD7");
+  get contentPending => getColor("#57585A");
   get headerContentColor => getColor('#484747');
-  get contentBlue=> getColor("#007BFF");
+  get contentBlue => getColor("#007BFF");
   get blueLightColorButton => getColor("#E9F1FE");
-  get buttonBackgroundColor=>getColor("#99CAFF");
+  get buttonBackgroundColor => getColor("#99CAFF");
   get yellowLightColorButton => getColor("#FFFCF2");
   get yellowDarkColorButton => getColor("#CC7A00");
   get contentRed => getColor("#BB271A");
   get lightGrey => getColor("#E2E2E2");
-  get selectServiceBottom =>getColor("#7B7979");
-  get serviceContent=>getColor("#6D6C6C");
-
-
+  get selectServiceBottom => getColor("#7B7979");
+  get serviceContent => getColor("#6D6C6C");
 
   get contentAccent => getColor('#FB5933');
   get buttonStateDisabled => getColor('#F3F3F3');
@@ -56,14 +53,13 @@ class AppColors {
   get contentAccentLightButton => getColor("#FEF8F3");
   get roadmapBlueColorButton => getColor("#22A0C9");
   get roadmapGreyColorButton => getColor("#5F5F5F");
-  get coursesContentColor=> getColor("#FFEFEB");
-  get correctBackgroundColor=>getColor("#C8E6C9");
-  get wrongBackgroundColor=>getColor("#FFCDD2");
-  get durationColor=>getColor("#FFF4F1");
-  get greenLightAccentColor=>const Color(0x479CEDA1);
-  get orangeLightAccentColor=>const Color(0x47FEE6C2);
-  get orangeDarkAccentColor=>getColor('#FFA726');
-
+  get coursesContentColor => getColor("#FFEFEB");
+  get correctBackgroundColor => getColor("#C8E6C9");
+  get wrongBackgroundColor => getColor("#FFCDD2");
+  get durationColor => getColor("#FFF4F1");
+  get greenLightAccentColor => const Color(0x479CEDA1);
+  get orangeLightAccentColor => const Color(0x47FEE6C2);
+  get orangeDarkAccentColor => getColor('#FFA726');
 
   get photoBackground => getColor('#6481A1');
   get accentBlue => getColor("#F8F9FF");
@@ -82,8 +78,8 @@ class AppColors {
   get emailNPhoneLogin => getColorHexFromStr("#e6e7e8");
   get internshipDetailColor => getColorHexFromStr("#d7d7d7");
 
-  get careerSubtitleColor=>getColor("#3B36C2");
-  get contentAccentLightColor=>getColor("#FFDBC1").withValues(alpha: 0.45);
+  get careerSubtitleColor => getColor("#3B36C2");
+  get contentAccentLightColor => getColor("#FFDBC1").withValues(alpha: 0.45);
 
   get moreTotalJobsTextColor => const Color.fromRGBO(25, 193, 255, 1);
   get greyNew => const Color.fromRGBO(0, 0, 0, 0.6);

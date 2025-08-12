@@ -362,7 +362,7 @@ Widget categories() {
                   //       ),
                   5.kH,
                   Text(
-                    "collection$index",
+                    "collection${index+1}",
                     // controller.getCategoryModel.value.data?.docs?[index]
                     //         .categoryName ??
                     //     "",
@@ -427,7 +427,7 @@ Widget product(double w, Homecontroller controller) {
                 ),
                 10.kH,
                 Text(
-                  "Product$index",
+                  "Product${index+1}",
                   // controller.getProductModel.value.data
                   //         ?.docs?[index].productName ??
                   //     "",
@@ -439,7 +439,7 @@ Widget product(double w, Homecontroller controller) {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Category$index",
+                      "Category${index+1}",
                       // controller
                       //         .getProductModel
                       //         .value
@@ -452,7 +452,7 @@ Widget product(double w, Homecontroller controller) {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      "brand$index",
+                      "Subcategory${index+1}",
                       // "(${controller.getProductModel.value.data?.docs?[index].brand?.brandName ?? ""})",
                       style: const TextStyle(fontSize: 12),
                     ),
@@ -526,7 +526,7 @@ Widget trendingProduct(double w) {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "product$index",
+                      "product${index+1}",
                       // controller.getTrendingProductModel.value.data?.docs?[index].productName ?? "",
                       style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),
                       textAlign: TextAlign.start,

@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
@@ -10,39 +11,31 @@ import 'package:get/get.dart';
 
 import '../../controller/profilecontroller.dart';
 
-class MainProfile extends StatelessWidget {
+class MainProfile extends ParentWidget {
   const MainProfile({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildingView(BuildContext context, double h, double w) {
     ProfileController controller = Get.put(ProfileController());
     return Obx(
       () => Stack(
         children: [
           Scaffold(
             appBar: commonAppBar("Profile & More"),
-            backgroundColor: const Color.fromARGB(195, 247, 243, 233),
+            backgroundColor: appColors.backgroundColor,
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  20.kH,
-                  CircleAvatar(
-                    backgroundColor: appColors.backgroundColor,
-                    backgroundImage: controller.commonController.profileData.value.data?.avatar?.isNotEmpty ?? false
-                        ? NetworkImage(
-                            controller.commonController.profileData.value.data?.avatar ?? "",
-                          )
-                        : AssetImage(appImages.profile),
-                    radius: 70.0,
-                  ),
-                  16.kH,
+                  30.kH,
+                  getProfileImage(h, w, controller),
+                  10.kH,
                   Text(
                     controller.commonController.profileData.value.data?.name ?? "User".toUpperCase(),
                     style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                   3.kH,
                   Text(
-                    controller.commonController.profileData.value.data?.phoneNo ?? "XXXXXXXX10",
+                    "${controller.commonController.profileData.value.data?.countryCode} ${controller.commonController.profileData.value.data?.phoneNo}",
                     style: const TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.bold),
                   ),
                   10.kH,
@@ -51,7 +44,16 @@ class MainProfile extends StatelessWidget {
                     40,
                     Colors.brown,
                     Colors.white,
-                    () => Get.toNamed(RoutesClass.viewprofile, arguments: {'name': controller.commonController.profileData.value.data?.name ?? "", 'email': controller.commonController.profileData.value.data?.email ?? "", 'phone': controller.commonController.profileData.value.data?.phoneNo ?? "", 'avatar': controller.commonController.profileData.value.data?.avatar ?? "", 'countrycode': controller.commonController.profileData.value.data?.countryCode ?? ""}),
+                    () => Get.toNamed(
+                      RoutesClass.viewprofile,
+                      arguments: {
+                        'name': controller.commonController.profileData.value.data?.name ?? "",
+                        'email': controller.commonController.profileData.value.data?.email ?? "",
+                        'phone': controller.commonController.profileData.value.data?.phoneNo ?? "",
+                        'avatar': controller.commonController.profileData.value.data?.avatar ?? "",
+                        'countrycode': controller.commonController.profileData.value.data?.countryCode ?? "",
+                      },
+                    ),
                     hint: "View Profile",
                     radius: 18,
                     paddingHorizontal: 16,
@@ -72,6 +74,20 @@ class MainProfile extends StatelessWidget {
       ),
     );
   }
+
+  Widget getProfileImage(double h, double w, ProfileController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Center(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: controller.commonController.profileData.value.data?.avatar?.isNotEmpty ?? false ? Image.network(controller.commonController.profileData.value.data?.avatar ?? "", width: 150, height: 150, fit: BoxFit.cover) : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 void showlogoutDialog(ProfileController controller) {
@@ -81,7 +97,7 @@ void showlogoutDialog(ProfileController controller) {
       title: Row(
         children: [
           Icon(Icons.logout, color: Colors.orange, size: 30),
-          8.kH,
+          8.kW,
           Text("Confirm", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
         ],
       ),

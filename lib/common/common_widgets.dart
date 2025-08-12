@@ -61,6 +61,70 @@ PreferredSizeWidget commonAppBar(String title,{bool automaticallyImplyLeading = 
   );
 }
 
+Future bottomDrawerMultiFile(BuildContext context, h, w, RxList<String> selectedImages, void Function()? onImageGallery, void Function()? onCamera) {
+  return showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        height: h,
+        width: w,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
+              child: Text(
+                appStrings.uploadPhoto,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
+              ),
+            ),
+            8.kH,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: onImageGallery,
+                child: Row(
+                  children: [
+                    Icon(Icons.photo_library_outlined, size: 30, color: appColors.contentSecondary),
+                    const SizedBox(width: 10),
+                    Text(
+                      appStrings.viewPhotoLibrary,
+                      style: TextStyle(fontSize: 16, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.w600, color: appColors.contentSecondary),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            20.kH,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: onCamera,
+                child: Row(
+                  children: [
+                    Icon(Icons.camera_alt_outlined, size: 30, color: appColors.contentSecondary),
+                    const SizedBox(width: 10),
+                    Text(
+                      appStrings.takeAPhoto,
+                      style: TextStyle(fontSize: 16, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.w600, color: appColors.contentSecondary),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void Function()? onImageGallery, void Function()? onCamera,{bool isDeleteButton = false}) {
   return showModalBottomSheet(
     context: context,

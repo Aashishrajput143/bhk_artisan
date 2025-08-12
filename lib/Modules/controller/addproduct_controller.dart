@@ -84,7 +84,7 @@ class AddProductController extends GetxController {
   var sellingprice = 0.0.obs;
 
   final ImagePicker imgpicker = ImagePicker();
-  var imagefiles = <XFile>[].obs;
+  var imagefiles = <String>[].obs;
   var errormessage = "".obs;
   int count = 0;
 
@@ -98,7 +98,7 @@ class AddProductController extends GetxController {
           Fluttertoast.showToast(msg: "Please select up to 4 images only.", toastLength: Toast.LENGTH_SHORT, timeInSecForIosWeb: 1, backgroundColor: Colors.green[400], textColor: Colors.white, fontSize: 16.0);
         } else {
           errormessage.value = "";
-          imagefiles.addAll(pickedfiles);
+          imagefiles.addAll(pickedfiles.map((file) => file.path));
           print("Total images: ${imagefiles.length}");
         }
       } else {
@@ -112,9 +112,9 @@ class AddProductController extends GetxController {
 
   List<String> imageKeys = ['frontView', 'frontRight', 'rearView', 'rearLeft'];
 
-  List<String> getImagePaths() {
-    return imagefiles.map((image) => image.path.toString()).toList();
-  }
+  // List<String> getImagePaths() {
+  //   return imagefiles.map((image) => image.path.toString()).toList();
+  // }
 
   List<String> weights = ['gm', 'kg'];
 

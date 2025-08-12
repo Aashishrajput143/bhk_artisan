@@ -24,20 +24,18 @@ class SplashController extends GetxController with GetSingleTickerProviderStateM
           {
             Utils.getBoolPreferenceValues(Constants.isNewUser).then(
               (value) => {
-                Utils.printLog("token $value"),
-                if (value != "" && value != null)
+                Utils.printLog("isNewUser $value"),
+                if (value == "" && value == null)
                   {
                     Future.delayed(const Duration(seconds: 5), () {
                       Get.offAllNamed(RoutesClass.editprofile);
                     }),
-                    print(value),
                   }
                 else
                   {
                     Future.delayed(const Duration(seconds: 5), () {
                       Get.offAllNamed(RoutesClass.commonScreen);
                     }),
-                    print(value),
                   },
               },
             ),

@@ -18,11 +18,9 @@ class NetworkApiServices extends BaseApiServices {
   void expired(response) async {
     final decoded = json.decode(response.body);
 
-    // ✅ Check for custom session expiry
     if (decoded is Map && decoded['statusCode'] == 463) {
       CommonMethods.showToast("Session expired. Please login again.");
 
-      // Clear preferences
       Utils.savePreferenceValues(Constants.accessToken, "");
       Utils.savePreferenceValues(Constants.email, "");
       await Utils.clearPreferenceValues();

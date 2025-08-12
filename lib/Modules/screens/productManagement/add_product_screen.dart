@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bhk_artisan/Modules/controller/addproduct_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/get_image_photo_gallery.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -41,11 +42,11 @@ class AddProductPage extends ParentWidget {
                       style: TextStyle(fontSize: 11.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
                     ),
                     25.kH,
-                    buildCircle(controller.selectedIndex.value, controller.selectedIndex.value),
+                    buildCircle(controller.selectedIndex.value, controller.selectedIndex.value,controller),
                     16.kH,
                     if (controller.selectedIndex.value == 0) generalDetails(w, h, controller),
                     if (controller.selectedIndex.value == 1) productDetails(w, h, controller),
-                    if (controller.selectedIndex.value == 2) mediaFiles(w, h, controller),
+                    if (controller.selectedIndex.value == 2) mediaFiles(context, w, h, controller),
                   ],
                 ),
               ),
@@ -114,7 +115,7 @@ Widget generalDetails(double w, double h, AddProductController controller) {
             controller.selectedcategory.value = newValue;
           },
           hint: 'Select Category',
-          borderColor: appColors.border
+          borderColor: appColors.border,
         ),
       ),
       16.kH,
@@ -135,7 +136,7 @@ Widget generalDetails(double w, double h, AddProductController controller) {
             controller.selectedsubcategory.value = newValue;
           },
           hint: 'Select SubCategory',
-          borderColor: appColors.border
+          borderColor: appColors.border,
         ),
       ),
       16.kH,
@@ -187,7 +188,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
                 h,
                 appColors.backgroundColor,
                 (value) => controller.dropdownValues.value = value ?? "",
-                borderColor: appColors.border
+                borderColor: appColors.border,
               ),
             ),
           ],
@@ -221,7 +222,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
                 h,
                 appColors.backgroundColor,
                 (value) => controller.dropdownValue.value = value ?? "",
-                borderColor: appColors.border
+                borderColor: appColors.border,
               ),
             ),
           ],
@@ -231,7 +232,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
   );
 }
 
-Widget mediaFiles(double w, double h, AddProductController controller) {
+Widget mediaFiles(BuildContext context, double w, double h, AddProductController controller) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,7 +240,7 @@ Widget mediaFiles(double w, double h, AddProductController controller) {
       commonComponent(
         "Upload Images",
         Container(
-          width: double.infinity,
+          width: w,
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
@@ -253,9 +254,20 @@ Widget mediaFiles(double w, double h, AddProductController controller) {
               const Text("Upload your images here"),
               5.kH,
               ElevatedButton(
-                onPressed: () {
-                  controller.openImages();
-                },
+                onPressed: ()=>bottomDrawerMultiFile(
+                    context,
+                    h * 0.25,
+                    w,
+                    controller.imagefiles,
+                    () {
+                      Get.back();
+                      pickMultipleImagesFromGallery(controller.imagefiles, true);
+                    },
+                    () {
+                      Get.back();
+                      pickMultipleImagesFromGallery(controller.imagefiles, false);
+                    },
+                  ),
                 child: const Text('Click to browse', style: TextStyle(fontSize: 12)),
               ),
             ],
@@ -286,7 +298,7 @@ Widget pickedfiles(double w, double h, AddProductController controller) {
           height: 250,
           child: Column(
             children: [
-              InkWell(
+              GestureDetector(
                 onTap: () {
                   controller.imagefiles.removeAt(index);
                   if (controller.count > 0) {
@@ -304,7 +316,7 @@ Widget pickedfiles(double w, double h, AddProductController controller) {
                   ),
                 ),
               ),
-              Image.file(File(controller.imagefiles[index].path), width: w * .25, height: h * .09),
+              Image.file(File(controller.imagefiles[index]), width: w * .25, height: h * .09),
             ],
           ),
         ),

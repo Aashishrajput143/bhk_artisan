@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/addproductmediacontroller.dart';
-import 'buildstepcircle.dart';
 
 class AddProductfiles extends StatelessWidget {
   const AddProductfiles({super.key});
@@ -99,7 +98,7 @@ class AddProductfiles extends StatelessWidget {
                                     ),
                                   ),
                             SizedBox(height: 25.0),
-                            buildCircle(2,2),
+                            //buildCircle(2,2),
                             SizedBox(height: 16.0),
 
                             // Image Picker Box

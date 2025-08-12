@@ -31,7 +31,7 @@ class MyProducts extends ParentWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    headerButton(),
+                    if (controller.isData.value) headerButton(),
                     controller.isData.value
                         ? Expanded(
                             child: ListView.builder(
@@ -61,36 +61,36 @@ class MyProducts extends ParentWidget {
       ),
     );
   }
-}
 
-Widget headerButton() {
-  return Padding(
-    padding: const EdgeInsets.only(top: 16.0,bottom: 8),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text('My Products', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-        InkWell(
-          onTap: () {
-            Get.toNamed(RoutesClass.gotoaddProductScreen(), arguments: {"productid": 0, "producteditid": false})?.then((onValue) {
-              //controller.getProductApi();
-            });
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center, // Center the content
-            children: [
-              Icon(Icons.add, color: Colors.brown, size: 24.0),
-              2.kW,
-              Text(
-                'Add Product',
-                style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold, fontSize: 14),
-              ),
-            ],
+  Widget headerButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0, bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('My Products', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+          InkWell(
+            onTap: () {
+              Get.toNamed(RoutesClass.gotoaddProductScreen(), arguments: {"productid": 0, "producteditid": false})?.then((onValue) {
+                //controller.getProductApi();
+              });
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center, // Center the content
+              children: [
+                Icon(Icons.add, color: Colors.brown, size: 24.0),
+                2.kW,
+                Text(
+                  'Add Product',
+                  style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
 
 Widget commonCard(double w, double h, int index) {
@@ -145,7 +145,7 @@ Widget cornerTag(double w, int index) {
     child: Container(
       width: w * 0.21,
       padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 5.0),
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
         color: appColors.brownDarkText,
         borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), bottomLeft: Radius.circular(10.0)),
       ),
@@ -175,11 +175,12 @@ Widget commonContainer(String title, Color color) {
 Widget emptyScreen(double w, double h) {
   return Column(
     children: [
+      16.kH,
       Text(
         "Hi, there.",
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
       ),
-      SizedBox(height: h * 0.3),
+      SizedBox(height: h * 0.1),
       Image.asset(appImages.myproductcart, height: 120, width: 130, fit: BoxFit.contain),
       SizedBox(height: h * 0.15),
       Text(

@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../controller/addproductdetailscontroller.dart';
-import 'buildstepcircle.dart';
 
 class AddProductDetails extends ParentWidget {
   const AddProductDetails({super.key});
@@ -81,7 +80,7 @@ class AddProductDetails extends ParentWidget {
                             style: TextStyle(fontSize: 11.0, color: Color.fromARGB(255, 140, 136, 136), fontWeight: FontWeight.bold),
                           ),
                     SizedBox(height: 25.0),
-                    buildCircle(1, 1),
+                    //buildCircle(1, 1),
                     const SizedBox(height: 16.0),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.9,

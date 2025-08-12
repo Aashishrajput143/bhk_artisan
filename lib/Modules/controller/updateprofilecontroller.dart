@@ -34,7 +34,7 @@ class UpdateProfileController extends GetxController {
     super.onInit();
     if (Get.arguments?['isNewUser'] != null) {
       isNewUser.value = Get.arguments['isNewUser'];
-    }else{
+    } else {
       loadData();
     }
   }
@@ -79,14 +79,14 @@ class UpdateProfileController extends GetxController {
             setupdateProfileModeldata(value);
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> ${value.toString()}");
+            Utils.setBoolPreferenceValues(Constants.isNewUser, false);
             if (isNewUser.value) {
               Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
-            }else{
+            } else {
               Get.offAllNamed(RoutesClass.commonScreen);
-               commonController.selectedIndex.value = 4;
+              commonController.selectedIndex.value = 4;
               commonController.getProfileApi();
             }
-            Utils.setBoolPreferenceValues(Constants.isNewUser, false);
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

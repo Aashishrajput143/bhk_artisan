@@ -10,7 +10,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'buildstepcircle.dart';
 
 class AddProductGeneral extends ParentWidget {
   const AddProductGeneral({super.key});
@@ -98,7 +97,7 @@ class AddProductGeneral extends ParentWidget {
                             ),
                           ),
                     SizedBox(height: 25.0),
-                    buildCircle(0,0),
+                    //buildCircle(0,0),
                     SizedBox(height: 16.0),
                     const Row(
                       mainAxisSize: MainAxisSize.min,
