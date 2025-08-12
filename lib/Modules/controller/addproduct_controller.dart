@@ -1,3 +1,10 @@
+import 'package:bhk_artisan/Modules/model/getcategorymodel.dart';
+import 'package:bhk_artisan/Modules/model/getsubcategorymodel.dart';
+import 'package:bhk_artisan/common/CommonMethods.dart';
+import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/strings.dart';
+import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -6,9 +13,7 @@ import '../repository/productrepository.dart';
 
 class AddProductController extends GetxController {
   var selectedIndex = 0.obs;
-
-  final repository = ProductRepository();
-
+  final _api = ProductRepository();
 
   var nameController = TextEditingController().obs;
   var detaileddescriptionController = TextEditingController().obs;
@@ -22,7 +27,6 @@ class AddProductController extends GetxController {
   var heightController = TextEditingController().obs;
   var sellingController = TextEditingController().obs;
 
-
   var nameFocusNode = FocusNode().obs;
   var detaileddescriptionFocusNode = FocusNode().obs;
   var netweightFocusNode = FocusNode().obs;
@@ -35,11 +39,9 @@ class AddProductController extends GetxController {
   var heightFocusNode = FocusNode().obs;
   var sellingFocusNode = FocusNode().obs;
 
-  var selectedcategory = Rxn<String>();
-  var categoryid = "".obs;
+  var selectedcategoryid = Rxn<String>();
 
-  var selectedsubcategory = Rxn<String>();
-  var subcategoryid = "".obs;
+  var selectedcategorysubcategoryid = Rxn<String>();
 
   final RxList<ProductCategory> productCategories = <ProductCategory>[
     ProductCategory(categoryId: 1, categoryName: 'Handloom Sarees'),
@@ -60,8 +62,6 @@ class AddProductController extends GetxController {
     ProductCategory(categoryId: 16, categoryName: 'Handwoven Rugs'),
     ProductCategory(categoryId: 17, categoryName: 'Tribal Jewelry'),
   ].obs;
-
-  
 
   var colorController = TextEditingController().obs;
   var colorFocusNode = FocusNode().obs;
@@ -111,10 +111,6 @@ class AddProductController extends GetxController {
   }
 
   List<String> imageKeys = ['frontView', 'frontRight', 'rearView', 'rearLeft'];
-
-  // List<String> getImagePaths() {
-  //   return imagefiles.map((image) => image.path.toString()).toList();
-  // }
 
   List<String> weights = ['gm', 'kg'];
 
@@ -170,12 +166,65 @@ class AddProductController extends GetxController {
   void onInit() {
     super.onInit();
     sellingController.value.text = "0.0";
-    // getCategoryApi();
+    getCategoryApi();
     // getBrandApi();
     // getStoreApi();
     // if (producteditId == true) {
     //   getproductDetailsApi(productId);
     // }
+  }
+
+  final rxRequestStatus = Status.COMPLETED.obs;
+  final getCategoryModel = GetCategoryModel().obs;
+  final getSubcategoryModel = GetSubCategoryModel().obs;
+  void setError(String value) => error.value = value;
+  RxString error = ''.obs;
+  void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
+
+  void setgetCategoryModeldata(GetCategoryModel value) => getCategoryModel.value = value;
+  void setgetSubcategoryModeldata(GetSubCategoryModel value) => getSubcategoryModel.value = value;
+
+  Future<void> getCategoryApi() async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      setRxRequestStatus(Status.LOADING);
+      _api
+          .getcategoryApi()
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setgetCategoryModeldata(value);
+            //CommonMethods.showToast(value.message);
+            Utils.printLog("Response===> ${value.toString()}");
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+
+  Future<void> getSubCategoryApi() async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      setRxRequestStatus(Status.LOADING);
+      _api
+          .getsubcategoryApi(selectedcategoryid)
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setgetSubcategoryModeldata(value);
+            Utils.printLog("Response===> ${value.toString()}");
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
   }
 }
 

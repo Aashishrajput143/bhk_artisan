@@ -96,7 +96,7 @@ Widget aadhaarOTP(BuildContext context, double w, double h, AadharVerificationCo
     children: [
       commonComponent("Aadhaar OTP", otpField(context, controller.otpController.value, 6, (pin) => controller.otp.value = pin.toString(),backgroundColor: appColors.backgroundColor,fieldHeight: 65,fieldWidth: 55,autoFocus: false)),
       20.kH,
-      commonButton(w, 50, appColors.contentButtonBrown, Colors.white, () {}, hint: "Verify OTP"),
+      commonButton(w, 50, appColors.contentButtonBrown, Colors.white, () =>Get.back(), hint: "Verify OTP"),
     ],
   );
 }

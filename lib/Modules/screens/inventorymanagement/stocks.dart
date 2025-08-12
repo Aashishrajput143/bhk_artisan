@@ -1,76 +1,56 @@
 import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/response/status.dart';
 
-class Stocks extends StatelessWidget {
+class Stocks extends ParentWidget {
   const Stocks({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildingView(BuildContext context, double h, double w) {
     return Stack(
-        children: [
-          Container(
-            color: appColors.backgroundColor,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 24),
-                        child: Column(
-                          children: [
-                            // Header Text
-                            Text(
-                              "Hi, there.",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue[900],
-                              ),
-                            ),
-                            SizedBox(height: 100),
-                            // Mammoth Image (Use asset image here)
-                            Image.asset(
-                              appImages
-                                  .firststock, // Add your mammoth image to assets
-                              height: 200,
-                              width: 180,
-                              fit: BoxFit.fill,
-                            ),
-                            SizedBox(height: 70),
-                            // Greeting Text
-                            Text(
-                              'Add Your Stocks',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueGrey[900],
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            // Subtext
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Text(
-                                "Thanks for checking out Harry's, we hope our products can "
-                                "make your morning routine a little more enjoyable.",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.grey[700]),
-                              ),
-                            ),
-                            SizedBox(height: 40),
-                          ],
-                        ),
-                      ),
-                    ),
-          // Progress bar overlay
-          progressBarTransparent(
-            Status.COMPLETED == Status.LOADING,
-            MediaQuery.of(context).size.height,
-            MediaQuery.of(context).size.width,
+      children: [
+        Scaffold(
+          backgroundColor: appColors.backgroundColor,
+          body: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(children: [emptyScreen(w, h)]),
           ),
-        ],
+        ),
+        progressBarTransparent(Status.COMPLETED == Status.LOADING, h, w),
+      ],
     );
   }
+}
+
+Widget emptyScreen(double w, double h) {
+  return Column(
+    children: [
+      16.kH,
+      Text(
+        "Hi, there.",
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
+      ),
+      SizedBox(height: h * 0.1),
+      Image.asset(appImages.firststock, height: 130, width: 130, fit: BoxFit.contain),
+      SizedBox(height: h * 0.15),
+      Text(
+        'Add Your Stocks',
+        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
+      ),
+      10.kH,
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Text(
+          "Thanks for checking out Stocks, we hope your products can make your routine a little more enjoyable.",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+        ),
+      ),
+    ],
+  );
 }

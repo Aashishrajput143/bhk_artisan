@@ -636,7 +636,7 @@ Widget salesGraph(BuildContext context, double w, double h, Homecontroller contr
           padding: EdgeInsets.only(top: 20),
           height: 280,
           child: SfCartesianChart(
-            backgroundColor: const Color.fromARGB(195, 247, 243, 233),
+            backgroundColor: appColors.backgroundColor,
             primaryXAxis: CategoryAxis(
               edgeLabelPlacement: EdgeLabelPlacement.shift,
               interval: 1, // Show every month

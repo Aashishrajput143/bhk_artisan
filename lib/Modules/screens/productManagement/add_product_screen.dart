@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:bhk_artisan/Modules/controller/addproduct_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/get_image_photo_gallery.dart';
+import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -63,7 +65,7 @@ class AddProductPage extends ParentWidget {
               ),
             ),
           ),
-          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),
+          progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
     );
@@ -101,18 +103,21 @@ Widget generalDetails(double w, double h, AddProductController controller) {
       commonComponent(
         "Category",
         commonDropdownButton(
-          controller.productCategories.map((item) {
+          controller.getCategoryModel.value.data?.docs?.map((item) {
             return DropdownMenuItem<String>(
               value: item.categoryId.toString(),
-              child: Text(item.categoryName, style: const TextStyle(fontSize: 14)),
+              child: Text(item.categoryName??"", style: const TextStyle(fontSize: 14)),
             );
           }).toList(),
-          controller.selectedcategory.value,
+          controller.selectedcategoryid.value,
           w,
           h,
           appColors.backgroundColor,
           (String? newValue) {
-            controller.selectedcategory.value = newValue;
+            controller.selectedcategoryid.value = newValue;
+            print(controller.selectedcategoryid.value);
+            controller.selectedcategorysubcategoryid.value=null;
+            controller.getSubCategoryApi();
           },
           hint: 'Select Category',
           borderColor: appColors.border,
@@ -122,18 +127,18 @@ Widget generalDetails(double w, double h, AddProductController controller) {
       commonComponent(
         "SubCategory",
         commonDropdownButton(
-          controller.productCategories.map((item) {
+          controller.getSubcategoryModel.value.data?.docs?.map((item) {
             return DropdownMenuItem<String>(
               value: item.categoryId.toString(),
-              child: Text(item.categoryName, style: const TextStyle(fontSize: 14)),
+              child: Text(item.categoryName??"", style: const TextStyle(fontSize: 14)),
             );
           }).toList(),
-          controller.selectedsubcategory.value,
+          controller.selectedcategorysubcategoryid.value,
           w,
           h,
           appColors.backgroundColor,
           (String? newValue) {
-            controller.selectedsubcategory.value = newValue;
+            controller.selectedcategorysubcategoryid.value = newValue;
           },
           hint: 'Select SubCategory',
           borderColor: appColors.border,

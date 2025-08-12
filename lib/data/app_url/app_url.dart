@@ -13,8 +13,8 @@ class AppUrl {
 
   //get
   static String getcategory =
-      '$baseUrl/api/category/getallcategory?page=1&pageSize=10';
-  static String getsubcategory = '$baseUrl/api/category/getsubcategory/';
+      '$baseUrl/product/api/category/main-categories?page=1&pageSize=10';
+  static String getsubcategory = '$baseUrl/product/api/category/getsubcategory/';
   static String getbrand = '$baseUrl/api/brand/getall?page=';
   static String getbranddetails = '$baseUrl/api/brand/getby/';
   static String getstoredetails = '$baseUrl/api/store/getby/';
