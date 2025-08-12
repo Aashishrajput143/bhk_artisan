@@ -73,8 +73,8 @@ PreferredSizeWidget appBarHome(Homecontroller controller) {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Good Morning',
+        Text(
+          controller.greetings.value,
           style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500),
         ),
         Text(

@@ -34,7 +34,7 @@ class Homecontroller extends GetxController {
 
   CommonScreenController commonController = Get.find();
 
-  // var chartData = <Map<String, dynamic>>[];
+  var greetings = "Good Morning".obs;
 
   var chartData = <Map<String, dynamic>>[
   {"month": "Jan", "sales": 120},
@@ -167,6 +167,28 @@ class Homecontroller extends GetxController {
     );
   }
 
+  void setGreeting() {
+    String time = DateTime.now().toString();
+    time = time.split(" ")[1].toString();
+    time = time.split(".")[0].toString();
+    DateTime timeNow = DateTime.parse("2000-01-01 $time");
+    DateTime morningStart = DateTime.parse("2000-01-01 05:00:00");
+    DateTime morningEnd = DateTime.parse("2000-01-01 11:59:59");
+    DateTime afternoonStart = DateTime.parse("2000-01-01 12:00:00");
+    DateTime afternoonEnd = DateTime.parse("2000-01-01 16:59:59");
+    DateTime eveningStart = DateTime.parse("2000-01-01 17:00:00");
+    DateTime eveningEnd = DateTime.parse("2000-01-01 20:59:59");
+    if (timeNow.isAfter(morningStart) && timeNow.isBefore(morningEnd)) {
+      greetings.value = "Good Morning";
+    } else if (timeNow.isAfter(afternoonStart) && timeNow.isBefore(afternoonEnd)) {
+      greetings.value = "Good Afternoon";
+    } else if (timeNow.isAfter(eveningStart) && timeNow.isBefore(eveningEnd)) {
+      greetings.value = "Good Evening";
+    } else {
+      greetings.value = "Good Night";
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -176,6 +198,8 @@ class Homecontroller extends GetxController {
       scrollPosition.value = scrollController.value.position.pixels;
       maxScrollExtent.value = scrollController.value.position.maxScrollExtent;
     });
+
+    setGreeting();
 
     // getCategoryApi();
 
