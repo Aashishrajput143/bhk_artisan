@@ -1,8 +1,10 @@
+import 'package:bhk_artisan/resources/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../resources/component/authentication_exception.dart';
 import '../resources/component/general_exception.dart';
 import '../resources/component/internet_exception_widget.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 Visibility progressBarTransparent(value, h, w) {
   return Visibility(
@@ -11,19 +13,11 @@ Visibility progressBarTransparent(value, h, w) {
       height: h,
       width: w,
       decoration: BoxDecoration(
-          gradient: LinearGradient(
-        begin: Alignment.topRight,
-        end: Alignment.bottomLeft,
-        colors: [
-          Colors.black.withOpacity(0.6),
-          Colors.black.withOpacity(0.8),
-        ],
-      )),
-      child: const Center(
-        child: CircularProgressIndicator(
-          color: Colors.white,
-          backgroundColor: Colors.transparent,
-        ),
+        color: Colors.black.withValues(alpha: 0.5),
+      ),
+      child: LoadingAnimationWidget.dotsTriangle(
+        color: appColors.contentButtonBrown,
+        size: 70,
       ),
     ),
   );
@@ -36,7 +30,7 @@ Visibility progressBarTransparentWithOpacity(value, h, w) {
       height: h,
       width: w,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.5),
+        color: Colors.black.withValues(alpha: 0.5),
       ),
       child: const Center(
         child: CircularProgressIndicator(

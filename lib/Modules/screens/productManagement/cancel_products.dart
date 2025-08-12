@@ -25,13 +25,14 @@ class CancelProducts extends ParentWidget {
               color: Colors.brown,
               onRefresh: controller.productRefresh,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    8.kH,
                     !controller.isData.value
                         ? Expanded(
-                          child: ListView.builder(
+                            child: ListView.builder(
                               shrinkWrap: true,
                               itemCount: 6,
                               itemBuilder: (context, index) {
@@ -45,7 +46,7 @@ class CancelProducts extends ParentWidget {
                                 );
                               },
                             ),
-                        )
+                          )
                         : emptyScreen(w, h),
                   ],
                 ),
@@ -88,4 +89,3 @@ Widget emptyScreen(double w, double h) {
     ],
   );
 }
-
