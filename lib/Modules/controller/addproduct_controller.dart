@@ -86,8 +86,6 @@ class AddProductController extends GetxController {
   final ImagePicker imgpicker = ImagePicker();
   var imagefiles = <String>[].obs;
 
-  List<String> imageKeys = ['frontView', 'frontRight', 'rearView', 'rearLeft'];
-
   List<String> weights = ['gm', 'kg'];
 
   List<String> measureunits = ['cm', 'inches'];
@@ -136,6 +134,11 @@ class AddProductController extends GetxController {
 
   List<String> splitWeightAndUnit(String input) {
     return input.split(' ').where((element) => element.isNotEmpty).toList();
+  }
+
+  bool validateForm() {
+    if((selectedcategoryid.value?.isNotEmpty??false)&&(selectedsubcategoryid.value?.isNotEmpty??false)&&(nameController.value.text.isNotEmpty)&&(detaileddescriptionController.value.text.isNotEmpty)&&(mrpController.value.text.isNotEmpty)&&(materialController.value.text.isNotEmpty)&&(quantityController.value.text.isNotEmpty)&&(imagefiles.length>2 && imagefiles.length<5)) return true;
+    return false;
   }
 
   @override

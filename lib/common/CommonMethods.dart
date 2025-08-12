@@ -46,13 +46,39 @@ class CommonMethods {
     textField.selection = cursorPos;
   }
 
-  static void showToast(message) {
-    Get.showSnackbar(GetSnackBar(
-      message: message.toString(),
-      isDismissible: false,
-      duration: const Duration(seconds: 2),
-    ));
-  }
+static void showToast(String message, {IconData icon = Icons.info, Color bgColor = Colors.black87}) {
+  Get.showSnackbar(
+    GetSnackBar(
+      snackPosition: SnackPosition.TOP,
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      borderRadius: 12,
+      backgroundColor: bgColor,
+      isDismissible: true,
+      dismissDirection: DismissDirection.up,
+      duration: const Duration(seconds: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      messageText: Row(
+        children: [
+          Icon(icon, color: Colors.white, size: 22),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 
   static void showProgress() {
     Get.dialog(

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bhk_artisan/Modules/controller/addproduct_controller.dart';
+import 'package:bhk_artisan/common/CommonMethods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/get_image_photo_gallery.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
@@ -60,7 +61,13 @@ class AddProductPage extends ParentWidget {
                 children: [
                   controller.selectedIndex.value > 0 ? commonOutlinedButtonIcon(w * 0.2, 48, Colors.black, () => controller.selectedIndex.value--, hint: "Previous step", radius: 25, forward: false, icon: Icons.arrow_back) : SizedBox(),
                   controller.selectedIndex.value < 2 ? commonButtonIcon(w * 0.2, 48, Colors.white, () => controller.selectedIndex.value++, hint: "Next step", radius: 25, backgroundColor: appColors.contentButtonBrown) : SizedBox(),
-                  if (controller.selectedIndex.value == 2) commonButtonIcon(w * 0.2, 48, Colors.white, () =>controller.addProductApi(), hint: "Submit", radius: 25, backgroundColor: appColors.contentButtonBrown),
+                  if (controller.selectedIndex.value == 2) commonButtonIcon(w * 0.2, 48, Colors.white, (){
+                    if(controller.validateForm()){
+                      controller.addProductApi();
+                    }else{
+                      CommonMethods.showToast("Please fill all the fields");
+                    }
+                  }, hint: "Submit", radius: 25, backgroundColor: appColors.contentButtonBrown),
                 ],
               ),
             ),
