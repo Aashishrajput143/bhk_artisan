@@ -45,7 +45,7 @@ class AddProductPage extends ParentWidget {
                       style: TextStyle(fontSize: 11.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
                     ),
                     25.kH,
-                    buildCircle(controller.selectedIndex.value, controller.selectedIndex.value,controller),
+                    buildCircle(controller.selectedIndex.value, controller.selectedIndex.value, controller),
                     16.kH,
                     if (controller.selectedIndex.value == 0) generalDetails(w, h, controller),
                     if (controller.selectedIndex.value == 1) productDetails(w, h, controller),
@@ -61,13 +61,22 @@ class AddProductPage extends ParentWidget {
                 children: [
                   controller.selectedIndex.value > 0 ? commonOutlinedButtonIcon(w * 0.2, 48, Colors.black, () => controller.selectedIndex.value--, hint: "Previous step", radius: 25, forward: false, icon: Icons.arrow_back) : SizedBox(),
                   controller.selectedIndex.value < 2 ? commonButtonIcon(w * 0.2, 48, Colors.white, () => controller.selectedIndex.value++, hint: "Next step", radius: 25, backgroundColor: appColors.contentButtonBrown) : SizedBox(),
-                  if (controller.selectedIndex.value == 2) commonButtonIcon(w * 0.2, 48, Colors.white, (){
-                    if(controller.validateForm()){
-                      controller.addProductApi();
-                    }else{
-                      CommonMethods.showToast("Please fill all the fields");
-                    }
-                  }, hint: "Submit", radius: 25, backgroundColor: appColors.contentButtonBrown),
+                  if (controller.selectedIndex.value == 2)
+                    commonButtonIcon(
+                      w * 0.2,
+                      48,
+                      Colors.white,
+                      () {
+                        if (controller.validateForm()) {
+                          controller.addProductApi();
+                        } else {
+                          CommonMethods.showToast("Please fill all the mandatory fields!", icon: Icons.warning_amber_rounded, bgColor: appColors.contentButtonBrown);
+                        }
+                      },
+                      hint: "Submit",
+                      radius: 25,
+                      backgroundColor: appColors.contentButtonBrown,
+                    ),
                 ],
               ),
             ),
@@ -113,7 +122,7 @@ Widget generalDetails(double w, double h, AddProductController controller) {
           controller.getCategoryModel.value.data?.docs?.map((item) {
             return DropdownMenuItem<String>(
               value: item.categoryId.toString(),
-              child: Text(item.categoryName??"", style: const TextStyle(fontSize: 14)),
+              child: Text(item.categoryName ?? "", style: const TextStyle(fontSize: 14)),
             );
           }).toList(),
           controller.selectedcategoryid.value,
@@ -123,7 +132,7 @@ Widget generalDetails(double w, double h, AddProductController controller) {
           (String? newValue) {
             controller.selectedcategoryid.value = newValue;
             print(controller.selectedcategoryid.value);
-            controller.selectedsubcategoryid.value=null;
+            controller.selectedsubcategoryid.value = null;
             controller.getSubCategoryApi();
           },
           hint: 'Select Category',
@@ -137,7 +146,7 @@ Widget generalDetails(double w, double h, AddProductController controller) {
           controller.getSubcategoryModel.value.data?.docs?.map((item) {
             return DropdownMenuItem<String>(
               value: item.categoryId.toString(),
-              child: Text(item.categoryName??"", style: const TextStyle(fontSize: 14)),
+              child: Text(item.categoryName ?? "", style: const TextStyle(fontSize: 14)),
             );
           }).toList(),
           controller.selectedsubcategoryid.value,
@@ -266,20 +275,20 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
               const Text("Upload your images here"),
               5.kH,
               ElevatedButton(
-                onPressed: ()=>bottomDrawerMultiFile(
-                    context,
-                    h * 0.25,
-                    w,
-                    controller.imagefiles,
-                    () {
-                      Get.back();
-                      pickMultipleImagesFromGallery(controller.imagefiles, true);
-                    },
-                    () {
-                      Get.back();
-                      pickMultipleImagesFromGallery(controller.imagefiles, false);
-                    },
-                  ),
+                onPressed: () => bottomDrawerMultiFile(
+                  context,
+                  h * 0.25,
+                  w,
+                  controller.imagefiles,
+                  () {
+                    Get.back();
+                    pickMultipleImagesFromGallery(controller.imagefiles, true);
+                  },
+                  () {
+                    Get.back();
+                    pickMultipleImagesFromGallery(controller.imagefiles, false);
+                  },
+                ),
                 child: const Text('Click to browse', style: TextStyle(fontSize: 12)),
               ),
             ],
