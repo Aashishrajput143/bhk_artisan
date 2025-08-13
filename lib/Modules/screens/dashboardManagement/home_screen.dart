@@ -65,8 +65,8 @@ PreferredSizeWidget appBarHome(Homecontroller controller) {
     leading: GestureDetector(
       onTap: ()=>controller.commonController.selectedIndex.value=4,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 7.0,vertical: 10),
-        child: CircleAvatar(backgroundImage: AssetImage(appImages.profile)),
+        padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 10.0),
+        child: commonCircleNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "",radius: 25),
       ),
     ),
     title: Column(

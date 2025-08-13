@@ -61,6 +61,10 @@ Widget commonProfileNetworkImage(String url, {double? width, double? height, Box
   return AvatarWithBlurHash().avatarWithBlurHash(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, width: 150, height: 150);
 }
 
+Widget commonCircleNetworkImage(String url, {double radius=22}) {
+  return AvatarWithBlurHash().circleAvatarWithBlurHash(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url,radius: radius);
+}
+
 Future bottomDrawerMultiFile(BuildContext context, h, w, RxList<String> selectedImages, void Function()? onImageGallery, void Function()? onCamera) {
   return showModalBottomSheet(
     context: context,
