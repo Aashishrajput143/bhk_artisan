@@ -14,7 +14,9 @@ class AppColors {
   get border => const Color.fromARGB(197, 113, 113, 113);
   get contentButtonBrown => Color(0xFF5D2E17);
   get cardBackground => const Color.fromARGB(255, 251, 249, 244);
-  get popColor => const Color.fromARGB(195, 252, 250, 245);
+  get popColor => const Color.fromARGB(255, 243, 241, 235);
+  get drawerbackgroundColor => const Color.fromARGB(246, 244, 241, 234);
+
 
   get contentPrimary => getColor('#000000');
   get contentBluePrimary => getColor('#0d3d5d');

@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/Modules/screens/aadhar_verification_screen.dart';
+import 'package:bhk_artisan/Modules/screens/address_screen.dart';
 import 'package:bhk_artisan/Modules/screens/common_screen.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/add_product_screen.dart';
 import 'package:bhk_artisan/binding/signupbinding.dart';
@@ -51,6 +52,7 @@ class RoutesClass {
   static String viewprofile = '/viewprofile';
   static String productdetail = '/productdetail';
   static String aadharVerification = '/aadharVerification';
+  static String addresses = '/Addresses';
 
   static String termscondition = '/termscondition';
   static String privacypolicy = '/privacypolicy';
@@ -82,6 +84,7 @@ class RoutesClass {
   static String gotoPrivacyPolicyScreen() => privacypolicy;
   static String gotoFAQScreen() => faq;
   static String gotoAadharVerificationScreen() => aadharVerification;
+  static String gotoAddressesScreen() => addresses;
 
   static List<GetPage> routes = [
     GetPage(
@@ -105,6 +108,12 @@ class RoutesClass {
     GetPage(
       name: aadharVerification,
       page: () => AadharVerificationScreen(),
+      transition: Transition.fade,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: addresses,
+      page: () => AddressScreen(),
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 300),
     ),

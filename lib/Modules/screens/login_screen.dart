@@ -79,7 +79,7 @@ class LoginScreen extends ParentWidget {
                     // const SizedBox(height: 15),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: phoneTextField(controller.phoneController.value, controller.phoneNumberFocusNode.value, w, 40, onCountryChanged: (country) {
+                      child: phoneTextField(controller.phoneController.value, controller.phoneNumberFocusNode.value, w, onCountryChanged: (country) {
                         print('Country changed to: ${country.dialCode}');
                         controller.phoneController.value.text = "";
                       }, onCountryCodeChange: (phone) {
@@ -88,7 +88,7 @@ class LoginScreen extends ParentWidget {
                         if (phone.number.isNotEmpty) {
                           controller.emailController.value.text = "";
                         }
-                      }, hint: appStrings.phone, inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)]),
+                      }, isWhite: true, radius: 25,borderWidth: 2, hint: appStrings.phone, inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)]),
                     ),
                     20.kH,
                     Padding(

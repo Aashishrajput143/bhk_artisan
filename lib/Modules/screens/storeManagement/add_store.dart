@@ -85,8 +85,14 @@ class AddStore extends ParentWidget {
                       const SizedBox(height: 16.0),
                       Padding(
                         padding: const EdgeInsets.only(top: 2),
-                        child: commonLocation(onCountryChanged: (value) => controller.countryValue = value, onStateChanged: (value) => controller.stateValue = value, onCityChanged: (value) => controller.cityValue = value),
-                      ),
+                        child: commonLocation(
+                          controller.countryValue,
+                          controller.stateValue,
+                          controller.cityValue,
+                          onCountryChanged: (value) => controller.countryValue.value = value,
+                          onStateChanged: (value) => controller.stateValue.value = value,
+                          onCityChanged: (value) => controller.cityValue.value = value,
+                        ),),
                       const SizedBox(height: 16),
                       const Row(
                         mainAxisSize: MainAxisSize.min,

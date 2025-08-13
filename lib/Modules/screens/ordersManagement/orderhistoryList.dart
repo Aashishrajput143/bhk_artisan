@@ -235,8 +235,8 @@ class OrderListHistory extends ParentWidget {
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
       ),
       SizedBox(height: h * 0.1),
-      Image.asset(appImages.myproductcart, height: 120, width: 130, fit: BoxFit.contain),
-      SizedBox(height: h * 0.15),
+      Image.asset(appImages.orderscreen, height: 250, fit: BoxFit.fitHeight),
+      16.kH,
       Text(
         'No Pending Orders',
         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),

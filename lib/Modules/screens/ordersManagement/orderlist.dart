@@ -29,6 +29,7 @@ class OrderList extends ParentWidget {
                     : Expanded(
                         child: ListView.builder(
                           itemCount: 4,
+                          shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return orderContent(h, w, index);
                           },
@@ -52,8 +53,8 @@ class OrderList extends ParentWidget {
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
         ),
         SizedBox(height: h * 0.1),
-        Image.asset(appImages.myproductcart, height: 120, width: 130, fit: BoxFit.contain),
-        SizedBox(height: h * 0.15),
+        Image.asset(appImages.orderscreen, height: 250, fit: BoxFit.fitHeight),
+        16.kH,
         Text(
           'No Orders Available',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
@@ -111,7 +112,7 @@ Widget orderContent(double h, double w, int index) {
               children: [
                 buildOrderDetailColumn('Payment', '₹ 300.50'),
                 buildOrderDetailColumn('Product ID', 'TST11414'),
-                buildOrderDetailColumn('Qty.', '${index+1}0'),
+                buildOrderDetailColumn('Qty.', '${index + 1}0'),
                 buildOrderDetailColumn('Order Status', 'Pending', color: const Color(0xFF5D2E17)),
               ],
             ),
@@ -152,7 +153,7 @@ Widget orderCardHeader() {
 }
 
 Widget orderCardContent(int index) {
-    List product = [appImages.product1, appImages.product2, appImages.product3, appImages.product4, appImages.product5, appImages.product6];
+  List product = [appImages.product1, appImages.product2, appImages.product3, appImages.product4, appImages.product5, appImages.product6];
   return Row(
     children: [
       ClipRRect(
@@ -177,7 +178,7 @@ Widget orderCardContent(int index) {
           ),
         ),
       ),
-      12.kH,
+      12.kW,
       Expanded(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bhk_artisan/common/cache_network_image.dart';
 import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
@@ -18,12 +19,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../resources/colors.dart';
 import '../resources/font.dart';
 
-void handleApiError(
-  dynamic error,dynamic stackTrace, {
-  Function(String)? setError,
-  Function(Status)? setRxRequestStatus,
-  bool closeDialog = true,
-}) {
+void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setError, Function(Status)? setRxRequestStatus, bool closeDialog = true}) {
   if (closeDialog) {
     Get.back();
   }
@@ -51,7 +47,7 @@ void handleApiError(
   Utils.printLog("stackTrace===> ${stackTrace.toString()}");
 }
 
-PreferredSizeWidget commonAppBar(String title,{bool automaticallyImplyLeading = true}) {
+PreferredSizeWidget commonAppBar(String title, {bool automaticallyImplyLeading = true}) {
   return AppBar(
     flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
     iconTheme: const IconThemeData(color: Colors.white),
@@ -59,6 +55,10 @@ PreferredSizeWidget commonAppBar(String title,{bool automaticallyImplyLeading = 
     automaticallyImplyLeading: automaticallyImplyLeading,
     title: Text(title.toUpperCase(), style: const TextStyle(fontSize: 16, color: Colors.white)),
   );
+}
+
+Widget commonProfileNetworkImage(String url, {double? width, double? height, BoxFit? fit}) {
+  return AvatarWithBlurHash().avatarWithBlurHash(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, width: 150, height: 150);
 }
 
 Future bottomDrawerMultiFile(BuildContext context, h, w, RxList<String> selectedImages, void Function()? onImageGallery, void Function()? onCamera) {
@@ -125,7 +125,7 @@ Future bottomDrawerMultiFile(BuildContext context, h, w, RxList<String> selected
   );
 }
 
-Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void Function()? onImageGallery, void Function()? onCamera,{bool isDeleteButton = false}) {
+Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void Function()? onImageGallery, void Function()? onCamera, {bool isDeleteButton = false}) {
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -182,15 +182,24 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
                 ),
               ),
             ),
-            if(isDeleteButton)...[
+            if (isDeleteButton) ...[
               20.kH,
-              commonButtonIcon(w, 50,backgroundColor: selectedImage.value!=null ? Colors.white : appColors.buttonStateDisabled, selectedImage.value!=null ?appColors.brownDarkText : appColors.buttonTextStateDisabled, (){
-                if (selectedImage.isNotEmpty ?? false) {
+              commonButtonIcon(
+                w,
+                50,
+                backgroundColor: selectedImage.value != null ? Colors.white : appColors.buttonStateDisabled,
+                selectedImage.value != null ? appColors.brownDarkText : appColors.buttonTextStateDisabled,
+                () {
+                  if (selectedImage.isNotEmpty ?? false) {
                     Get.back();
                     selectedImage.value = null;
                   }
-              },hint:  appStrings.removePhoto,icon: Icons.delete,borderColor: selectedImage.value!=null? appColors.brownDarkText : appColors.buttonStateDisabled),
-            ]
+                },
+                hint: appStrings.removePhoto,
+                icon: Icons.delete,
+                borderColor: selectedImage.value != null ? appColors.brownDarkText : appColors.buttonStateDisabled,
+              ),
+            ],
           ],
         ),
       );
@@ -213,8 +222,8 @@ Widget commonTextField(
   void Function(String)? onChange,
   double radius = 8,
   double borderWidth = 1,
-  String prefix ="",
-  String suffix ="",
+  String prefix = "",
+  String suffix = "",
   double fontSize = 12,
   TextInputType keyboardType = TextInputType.text,
   TextInputAction textInputAction = TextInputAction.done,
@@ -239,24 +248,24 @@ Widget commonTextField(
           labelText: hint,
           prefixText: prefix,
           suffixText: suffix,
-          labelStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary,fontSize: fontSize),
+          labelStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize),
           alignLabelWithHint: true,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width:borderWidth),
+            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
           ),
           counterText: "",
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width:borderWidth),
+            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide:  BorderSide(color: Colors.red, width:borderWidth),
+            borderSide: BorderSide(color: Colors.red, width: borderWidth),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide:  BorderSide(color: Colors.red, width:borderWidth),
+            borderSide: BorderSide(color: Colors.red, width: borderWidth),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: contentPadding),
         ),
@@ -265,7 +274,7 @@ Widget commonTextField(
   );
 }
 
-Widget commonLocation({void Function(String)? onCountryChanged, ValueChanged<String?>? onStateChanged, ValueChanged<String?>? onCityChanged, double radius = 25, double height = 1.8}) {
+Widget commonLocation(RxString? initalCountry, Rxn<String>? initalState, Rxn<String>? initalCity, {void Function(String)? onCountryChanged, ValueChanged<String?>? onStateChanged, ValueChanged<String?>? onCityChanged, double radius = 12, double height = 2.3}) {
   return StatefulBuilder(
     builder: (context, setState) {
       return CSCPicker(
@@ -275,14 +284,14 @@ Widget commonLocation({void Function(String)? onCountryChanged, ValueChanged<Str
         layout: Layout.vertical,
         flagState: CountryFlag.DISABLE,
         dropdownDecoration: BoxDecoration(
-          border: Border.all(color: appColors.border, width: 2),
+          border: Border.all(color: appColors.border),
           borderRadius: BorderRadius.all(Radius.circular(radius)),
         ),
         disabledDropdownDecoration: BoxDecoration(
-          border: Border.all(color: appColors.border, width: 2),
+          border: Border.all(color: appColors.border),
           borderRadius: BorderRadius.all(Radius.circular(radius)),
         ),
-        selectedItemStyle: TextStyle(color: appColors.contentPrimary, fontSize: 14, height: height),
+        selectedItemStyle: TextStyle(color: appColors.contentPending, fontSize: 16, height: height),
         dropdownHeadingStyle: TextStyle(color: appColors.contentPending, fontSize: 20, fontFamily: appFonts.robotoSlabBold, fontWeight: FontWeight.bold),
         dropdownItemStyle: TextStyle(color: appColors.contentPending, fontSize: 16),
         dropdownDialogRadius: radius,
@@ -290,6 +299,9 @@ Widget commonLocation({void Function(String)? onCountryChanged, ValueChanged<Str
         onCountryChanged: onCountryChanged,
         onStateChanged: onStateChanged,
         onCityChanged: onCityChanged,
+        currentCountry: initalCountry!.value,
+        currentState: initalState!.value,
+        currentCity: initalCity!.value,
       );
     },
   );
@@ -343,24 +355,24 @@ Widget commonDescriptionTextField(
         style: TextStyle(color: isWhite ? Colors.white : appColors.contentPrimary),
         decoration: InputDecoration(
           labelText: hint,
-          labelStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary,fontSize: fontSize),
+          labelStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize),
           alignLabelWithHint: true,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width:borderWidth),
+            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
           ),
           counterText: "",
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width:borderWidth),
+            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide:  BorderSide(color: Colors.red, width:borderWidth),
+            borderSide: BorderSide(color: Colors.red, width: borderWidth),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide:  BorderSide(color: Colors.red, width:borderWidth),
+            borderSide: BorderSide(color: Colors.red, width: borderWidth),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: contentPadding),
         ),
@@ -453,14 +465,19 @@ Widget passwordField(TextEditingController controller, FocusNode focusNode, doub
 Widget phoneTextField(
   TextEditingController controller,
   FocusNode focusNode,
-  double width,
   double height, {
   FormFieldValidator<String>? validator,
   var error,
   int maxLength = 15,
   String hint = '',
+  bool isWhite = false,
   bool enabled = true,
   bool obscure = false,
+  double contentPadding = 12,
+  dynamic maxLines = 1,
+  bool readonly = false,
+  double radius = 8,
+  double borderWidth = 1,
   String initialValue = "IN",
   TextInputType keyboardType = TextInputType.phone,
   void Function(String)? onChange,
@@ -476,31 +493,31 @@ Widget phoneTextField(
         inputFormatters: inputFormatters,
         decoration: InputDecoration(
           labelText: hint,
-          labelStyle: const TextStyle(color: Colors.white),
+          labelStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary),
           error: null,
           errorStyle: TextStyle(color: Colors.transparent),
-          counterStyle: TextStyle(color: Colors.white),
+          counterStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: const BorderSide(color: Colors.white, width: 2.0),
+            borderRadius: BorderRadius.circular(radius),
+            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: const BorderSide(color: Colors.white, width: 2.0),
+            borderRadius: BorderRadius.circular(radius),
+            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: const BorderSide(color: Colors.white, width: 2.0),
+            borderRadius: BorderRadius.circular(radius),
+            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: const BorderSide(color: Colors.white, width: 2.0),
+            borderRadius: BorderRadius.circular(radius),
+            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+          contentPadding: EdgeInsets.symmetric(horizontal: contentPadding, vertical: 5.0),
         ),
-        style: const TextStyle(color: Colors.white),
-        dropdownTextStyle: const TextStyle(color: Colors.white),
-        cursorColor: Colors.white,
+        style: TextStyle(color: isWhite ? Colors.white : appColors.contentPrimary),
+        dropdownTextStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPrimary),
+        cursorColor: isWhite ? Colors.white : appColors.contentPlaceholderPrimary,
         dropdownIcon: const Icon(Icons.arrow_drop_down, color: Colors.transparent),
         initialCountryCode: initialValue,
         languageCode: "en",
@@ -619,7 +636,7 @@ Widget commonButtonWithoutWidth(Color backgroundColor, Color color, VoidCallback
       ),
     ),
     child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: paddingH,vertical: paddingV),
+      padding: EdgeInsets.symmetric(horizontal: paddingH, vertical: paddingV),
       child: Text(
         hint,
         style: TextStyle(fontSize: fontSize, fontFamily: bold ? appFonts.NunitoBold : appFonts.NunitoMedium, fontWeight: FontWeight.w600, color: color),
@@ -659,7 +676,7 @@ Widget commonButtonShadow(double width, double height, Color borderColor, Color 
   );
 }
 
-Widget commonButtonIcon(double width, double height,  Color color, VoidCallback? onChanged, {String hint = '', double radius = 12, IconData icon = Icons.arrow_forward, bool forward = true, Color borderColor = Colors.transparent,Color backgroundColor = Colors.transparent}) {
+Widget commonButtonIcon(double width, double height, Color color, VoidCallback? onChanged, {String hint = '', double radius = 12, IconData icon = Icons.arrow_forward, bool forward = true, Color borderColor = Colors.transparent, Color backgroundColor = Colors.transparent}) {
   return ElevatedButton(
     onPressed: onChanged,
     style: ElevatedButton.styleFrom(
@@ -691,7 +708,7 @@ Widget commonButtonIcon(double width, double height,  Color color, VoidCallback?
   );
 }
 
-Widget commonOutlinedButtonIcon(double width, double height,  Color color, VoidCallback? onChanged, {String hint = '', double radius = 12, IconData icon = Icons.arrow_forward, bool forward = true, Color borderColor = Colors.transparent, Color overlayColor = Colors.brown}) {
+Widget commonOutlinedButtonIcon(double width, double height, Color color, VoidCallback? onChanged, {String hint = '', double radius = 12, IconData icon = Icons.arrow_forward, bool forward = true, Color borderColor = Colors.transparent, Color overlayColor = Colors.brown}) {
   return OutlinedButton(
     onPressed: onChanged,
     style: ElevatedButton.styleFrom(
@@ -740,32 +757,21 @@ Widget commonColorTags(Color backgroundColor, Color color, {Color borderColor = 
   );
 }
 
-Widget radioButtonObjective(String value, Rx<String> selectedValue, Color selectedColor, Color textColor, String hint, VoidCallback? onTap, {double borderRadius = 12}) {
+Widget radioButtonObjective(Rx<String> selectedValue, Color selectedColor, Color textColor, String hint, VoidCallback? onTap, {double borderRadius = 12}) {
   return Obx(
     () => GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        margin: const EdgeInsets.only(bottom: 20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(borderRadius),
-          border: Border.all(color: selectedValue.value == value ? appColors.contentAccent : appColors.buttonStateDisabled, width: 2),
-          color: Colors.white,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(selectedValue.value == value ? Icons.check_circle : Icons.circle_outlined, color: selectedValue.value == value ? selectedColor : textColor, size: 25),
-            const SizedBox(width: 6),
-            Flexible(
-              child: Text(
-                textAlign: TextAlign.start,
-                hint,
-                style: TextStyle(fontSize: 16, fontFamily: AppFonts.appFonts.NunitoBold, color: appColors.contentPrimary),
-              ),
-            ),
-          ],
-        ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(selectedValue.value == hint ? Icons.check_circle : Icons.circle_outlined, color: selectedValue.value == hint ? selectedColor : textColor, size: 25),
+          const SizedBox(width: 6),
+          Text(
+            textAlign: TextAlign.start,
+            hint,
+            style: TextStyle(fontSize: 16, fontFamily: AppFonts.appFonts.NunitoBold, color: appColors.contentPrimary),
+          ),
+        ],
       ),
     ),
   );
@@ -818,7 +824,7 @@ Widget checkButtonObjective(
   );
 }
 
-Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged , bool autoFocus = true, Color backgroundColor = Colors.grey}) {
+Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged, bool autoFocus = true, Color backgroundColor = Colors.grey}) {
   return PinCodeTextField(
     appContext: context,
     length: length,
@@ -859,5 +865,29 @@ Text descriptionText(String text, {double fontSize = 11.0, double height = 0, fo
     text,
     textAlign: textAlign,
     style: TextStyle(height: height, fontSize: fontSize, fontFamily: fontFamily, color: color, fontWeight: fontWeight, decoration: underLine ? TextDecoration.underline : TextDecoration.none),
+  );
+}
+
+Widget commonPressed(double width, double height, Color backgroundColor, Color color, VoidCallback? onChanged, {String hint = '', double radius = 12, double paddingVertical = 0, double paddingHorizontal = 0, double fontSize = 16, Color borderColor = Colors.transparent}) {
+  return InkWell(
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
+    onTap: onChanged,
+    child: Container(
+      width: width,
+      height: height,
+      padding: EdgeInsets.symmetric(vertical: paddingVertical, horizontal: paddingHorizontal),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(color: color),
+      ),
+      child: Center(
+        child: Text(
+          hint,
+          style: TextStyle(fontSize: fontSize, fontFamily: appFonts.NunitoMedium, fontWeight: FontWeight.w600, color: color),
+        ),
+      ),
+    ),
   );
 }

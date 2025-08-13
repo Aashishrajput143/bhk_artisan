@@ -36,9 +36,9 @@ class AddStoreController extends GetxController {
   //   closingTime.text = "";
   // }
 
-  String? countryValue;
-  String? stateValue;
-  String? cityValue;
+  var countryValue ="India".obs;
+  var stateValue = Rxn<String>();
+  var cityValue = Rxn<String>();
 
   final ImagePicker imgpicker = ImagePicker();
   var imagefiles = Rxn<File>();
@@ -52,9 +52,9 @@ class AddStoreController extends GetxController {
         addressstreetController.value.text.isNotEmpty &&
         descriptionController.value.text.isNotEmpty &&
         pincodeController.value.text.isNotEmpty &&
-        stateValue != null &&
-        cityValue != null &&
-        countryValue != null &&
+        stateValue.value!=null &&
+        cityValue.value!=null &&
+       countryValue.value.isNotEmpty &&
         imagefiles.value != null);
   }
 

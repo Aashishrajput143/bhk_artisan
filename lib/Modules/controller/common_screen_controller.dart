@@ -17,8 +17,7 @@ import '../screens/profileManagement/main_profile.dart';
 class CommonScreenController extends GetxController {
   final _api = ProfileRepository();
   var selectedIndex = 0.obs;
-  var tabInitial = true.obs;
-
+  
   @override
   void onInit() {
     super.onInit();

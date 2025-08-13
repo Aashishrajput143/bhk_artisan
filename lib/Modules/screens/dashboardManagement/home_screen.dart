@@ -46,7 +46,7 @@ class HomeScreen extends ParentWidget {
               ),
             ),
           ),
-          progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.height),
+          progressBarTransparent(controller.commonController.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
     );

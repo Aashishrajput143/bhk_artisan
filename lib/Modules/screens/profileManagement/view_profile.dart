@@ -35,7 +35,7 @@ class ViewProfile extends ParentWidget {
               16.kH,
               commonCards("First Name", controller.profileData.value.data?.firstName ?? "Please set your First Name", Icons.person_outline),
               commonCards("First Name", controller.profileData.value.data?.lastName ?? "Please set your Last Name", Icons.person_outline),
-              commonCards("Phone Number", "${controller.profileData.value.data?.countryCode} ${controller.profileData.value.data?.phoneNo}", Icons.phone_outlined),
+              commonCards("Phone Number", "${controller.profileData.value.data?.countryCode??"Please set your Phone Number"} ${controller.profileData.value.data?.phoneNo??""}", Icons.phone_outlined),
               commonCards("Email", controller.profileData.value.data?.email ?? "Please set your Email", Icons.email_outlined),
               commonCards("Expertise", controller.profileData.value.data?.expertizeField ?? "Please set your Expertise", Icons.work_outline),
             ],
@@ -63,7 +63,7 @@ class ViewProfile extends ParentWidget {
         Center(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
-            child: controller.profileData.value.data?.avatar?.isNotEmpty ?? false ? Image.network(controller.profileData.value.data?.avatar ?? "", width: 150, height: 150, fit: BoxFit.cover) : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
+            child: controller.profileData.value.data?.avatar?.isNotEmpty ?? false ?commonProfileNetworkImage(controller.profileData.value.data?.avatar ?? "") : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
           ),
         ),
       ],

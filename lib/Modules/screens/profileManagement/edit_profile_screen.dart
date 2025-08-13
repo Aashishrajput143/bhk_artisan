@@ -80,7 +80,7 @@ Widget profile(BuildContext context, double h, double w, UpdateProfileController
               child: controller.selectedImage.value != null
                   ? Image.file(File(controller.selectedImage.value ?? ""), width: 150, height: 150, fit: BoxFit.cover)
                   : (controller.commonController.profileData.value.data?.avatar?.isNotEmpty??false)
-                  ? Image.network(controller.commonController.profileData.value.data?.avatar ?? "", width: 150, height: 150, fit: BoxFit.cover)
+                  ? commonProfileNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "")
                   : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
             ),
             Positioned(
