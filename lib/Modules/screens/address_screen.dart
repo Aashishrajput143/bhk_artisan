@@ -37,7 +37,7 @@ class AddressScreen extends ParentWidget {
             ),
           ),
           floatingActionButton: Padding(
-            padding: EdgeInsets.only(bottom: h * 0.03, right: 16),
+            padding: EdgeInsets.only(bottom: h * 0.03, right: 10),
             child: FloatingActionButton(
               backgroundColor: appColors.contentButtonBrown,
               onPressed: () => bottomDrawer(context, h * 0.8, w, controller),
@@ -53,7 +53,7 @@ class AddressScreen extends ParentWidget {
 
   Widget orderContent(double h, double w, int index) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(16),
@@ -95,13 +95,12 @@ class AddressScreen extends ParentWidget {
                 // Get.toNamed(RoutesClass.gotoOrderDetailsScreen());
               } else if (value == 'Edit') {
                 // Get.toNamed(RoutesClass.gotoOrderTrackingScreen());
-              }
-              else if (value == 'markasDefault') {
+              } else if (value == 'markasDefault') {
                 // Get.toNamed(RoutesClass.gotoOrderTrackingScreen());
               }
             },
             icon: Icon(Icons.more_vert, color: Colors.grey[700]),
-            itemBuilder: (BuildContext context) => [const PopupMenuItem(value: 'markasDefault', child: Text('Mark As Default')),const PopupMenuItem(value: 'Delete', child: Text('Delete')), const PopupMenuItem(value: 'Edit', child: Text('Edit'))],
+            itemBuilder: (BuildContext context) => [const PopupMenuItem(value: 'markasDefault', child: Text('Mark As Default')), const PopupMenuItem(value: 'Delete', child: Text('Delete')), const PopupMenuItem(value: 'Edit', child: Text('Edit'))],
           ),
         ),
         6.kH,
@@ -124,6 +123,7 @@ class AddressScreen extends ParentWidget {
       context: context,
       isDismissible: false,
       backgroundColor: appColors.drawerbackgroundColor,
+      transitionAnimationController: AnimationController(duration: const Duration(milliseconds: 400), vsync: Navigator.of(context)),
       isScrollControlled: true,
       builder: (context) {
         return Obx(
