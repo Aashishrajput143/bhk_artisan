@@ -24,7 +24,7 @@ class AvatarWithBlurHash {
                       ))));
   }
 
-  Widget avatarWithBlurHash({required String blurHash, String? imageUrl, double? width, double? height, BoxFit fit = BoxFit.cover, BorderRadius? borderRadius}) {
+  Widget avatarWithBlurHash({required String blurHash, String? imageUrl, double? width, double? height, BoxFit fit = BoxFit.cover, BorderRadius? borderRadius,String? defaultImage}) {
     return ClipRRect(
         borderRadius: borderRadius ?? BorderRadius.circular(0),
         child: Container(
@@ -39,7 +39,7 @@ class AvatarWithBlurHash {
                     width: width,
                     height: height,
                     placeholder: (context, url) => BlurHash(hash: blurHash, imageFit: fit),
-                    errorWidget: (context, url, error) => Image.asset(appImages.profile, fit: BoxFit.contain),
+                    errorWidget: (context, url, error) => Image.asset(defaultImage??appImages.profile, fit: fit),
                   )));
   }
 }

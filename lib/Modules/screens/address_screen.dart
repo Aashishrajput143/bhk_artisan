@@ -123,7 +123,6 @@ class AddressScreen extends ParentWidget {
       context: context,
       isDismissible: false,
       backgroundColor: appColors.drawerbackgroundColor,
-      transitionAnimationController: AnimationController(duration: const Duration(milliseconds: 400), vsync: Navigator.of(context)),
       isScrollControlled: true,
       builder: (context) {
         return Obx(
