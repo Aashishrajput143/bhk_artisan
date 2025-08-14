@@ -6,12 +6,12 @@ class GetCategoryModel {
 
   GetCategoryModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -41,7 +41,7 @@ class Data {
     if (json['docs'] != null) {
       docs = <Docs>[];
       json['docs'].forEach((v) {
-        docs!.add(new Docs.fromJson(v));
+        docs!.add(Docs.fromJson(v));
       });
     }
     page = json['page'];
@@ -53,16 +53,16 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.docs != null) {
-      data['docs'] = this.docs!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (docs != null) {
+      data['docs'] = docs!.map((v) => v.toJson()).toList();
     }
-    data['page'] = this.page;
-    data['limit'] = this.limit;
-    data['totalDocs'] = this.totalDocs;
-    data['totalPages'] = this.totalPages;
-    data['hasNextPage'] = this.hasNextPage;
-    data['hasPrevPage'] = this.hasPrevPage;
+    data['page'] = page;
+    data['limit'] = limit;
+    data['totalDocs'] = totalDocs;
+    data['totalPages'] = totalPages;
+    data['hasNextPage'] = hasNextPage;
+    data['hasPrevPage'] = hasPrevPage;
     return data;
   }
 }
@@ -102,16 +102,16 @@ class Docs {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['category_id'] = this.categoryId;
-    data['category_name'] = this.categoryName;
-    data['type'] = this.type;
-    data['category_logo'] = this.categoryLogo;
-    data['description'] = this.description;
-    data['parent_id'] = this.parentId;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['isActive'] = this.isActive;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['category_id'] = categoryId;
+    data['category_name'] = categoryName;
+    data['type'] = type;
+    data['category_logo'] = categoryLogo;
+    data['description'] = description;
+    data['parent_id'] = parentId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['isActive'] = isActive;
     return data;
   }
 }

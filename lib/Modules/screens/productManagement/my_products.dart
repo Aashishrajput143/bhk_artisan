@@ -158,12 +158,12 @@ Widget cornerTag(double w, int index) {
   );
 }
 
-Widget commonContainer(String title, Color color) {
+Widget commonContainer(String title, Color color,{ bool isBrown = false, double pH = 10, double borderWidth = 2}) {
   return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    padding: EdgeInsets.symmetric(horizontal: pH, vertical: 5),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: Colors.grey.shade300, width: 2),
+      border: Border.all(color:isBrown?appColors.brownDarkText: Colors.grey.shade300, width: borderWidth),
     ),
     child: Text(
       title,

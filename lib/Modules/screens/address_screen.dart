@@ -1,5 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/address_controller.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/add_product_screen.dart';
+import 'package:bhk_artisan/Modules/screens/productManagement/my_products.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -80,13 +81,20 @@ class AddressScreen extends ParentWidget {
             size: 25,
             color: appColors.brownDarkText,
           ),
-          title: Text(
-            index == 0
-                ? "Home"
-                : index == 1
-                ? "Work"
-                : "Others",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          title: Row(
+            children: [
+              Text(
+                index == 0
+                    ? "Home"
+                    : index == 1
+                    ? "Work"
+                    : "Others",
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              if(index==0)...[
+              10.kW,
+              commonContainer("Default", appColors.brownDarkText,isBrown: true,pH: 14,borderWidth: 1)]
+            ],
           ),
           trailing: PopupMenuButton<String>(
             color: appColors.popColor,

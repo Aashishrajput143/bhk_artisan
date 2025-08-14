@@ -38,7 +38,7 @@ class HomeScreen extends ParentWidget {
                       commonCollection(h, w, controller),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [banner(context, w, h, controller), 12.kH, categories(), 12.kH, trendingProduct(w), 20.kH, salesGraph(context, w, h, controller), 12.kH, product(w,controller)]),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [banner(context, w, h, controller),12.kH, categories(),20.kH, salesGraph(context, w, h, controller),  12.kH, trendingProduct(w),  12.kH, product(w,controller)]),
                       ),
                     ],
                   ),
@@ -65,7 +65,7 @@ PreferredSizeWidget appBarHome(Homecontroller controller) {
     leading: GestureDetector(
       onTap: ()=>controller.commonController.selectedIndex.value=4,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 7.0,vertical: 16.0),
         child: commonCircleNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "",radius: 25),
       ),
     ),

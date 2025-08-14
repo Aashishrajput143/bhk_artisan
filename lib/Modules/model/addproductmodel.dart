@@ -6,12 +6,12 @@ class AddProductModel {
 
   AddProductModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -86,49 +86,49 @@ class Data {
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
-        images!.add(new Images.fromJson(v));
+        images!.add(Images.fromJson(v));
       });
     }
     category = json['category'] != null
-        ? new Category.fromJson(json['category'])
+        ? Category.fromJson(json['category'])
         : null;
     subCategory = json['subCategory'] != null
-        ? new SubCategory.fromJson(json['subCategory'])
+        ? SubCategory.fromJson(json['subCategory'])
         : null;
     artisan =
-        json['artisan'] != null ? new Artisan.fromJson(json['artisan']) : null;
+        json['artisan'] != null ? Artisan.fromJson(json['artisan']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['product_id'] = this.productId;
-    data['product_name'] = this.productName;
-    data['description'] = this.description;
-    data['mrp'] = this.mrp;
-    data['quantity'] = this.quantity;
-    data['selling_price'] = this.sellingPrice;
-    data['material'] = this.material;
-    data['discount'] = this.discount;
-    data['net_weight'] = this.netWeight;
-    data['dimension'] = this.dimension;
-    data['color'] = this.color;
-    data['size'] = this.size;
-    data['createdAt'] = this.createdAt;
-    data['product_status'] = this.productStatus;
-    data['admin_approval_status'] = this.adminApprovalStatus;
-    data['adminRemarks'] = this.adminRemarks;
-    data['updatedAt'] = this.updatedAt;
-    if (this.images != null) {
-      data['images'] = this.images!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['product_id'] = productId;
+    data['product_name'] = productName;
+    data['description'] = description;
+    data['mrp'] = mrp;
+    data['quantity'] = quantity;
+    data['selling_price'] = sellingPrice;
+    data['material'] = material;
+    data['discount'] = discount;
+    data['net_weight'] = netWeight;
+    data['dimension'] = dimension;
+    data['color'] = color;
+    data['size'] = size;
+    data['createdAt'] = createdAt;
+    data['product_status'] = productStatus;
+    data['admin_approval_status'] = adminApprovalStatus;
+    data['adminRemarks'] = adminRemarks;
+    data['updatedAt'] = updatedAt;
+    if (images != null) {
+      data['images'] = images!.map((v) => v.toJson()).toList();
     }
-    if (this.category != null) {
-      data['category'] = this.category!.toJson();
+    if (category != null) {
+      data['category'] = category!.toJson();
     }
-    if (this.subCategory != null) {
-      data['subCategory'] = this.subCategory!.toJson();
+    if (subCategory != null) {
+      data['subCategory'] = subCategory!.toJson();
     }
-    if (this.artisan != null) {
-      data['artisan'] = this.artisan!.toJson();
+    if (artisan != null) {
+      data['artisan'] = artisan!.toJson();
     }
     return data;
   }
@@ -160,13 +160,13 @@ class Images {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['imageId'] = this.imageId;
-    data['imageUrl'] = this.imageUrl;
-    data['imageOrder'] = this.imageOrder;
-    data['product_id'] = this.productId;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['imageId'] = imageId;
+    data['imageUrl'] = imageUrl;
+    data['imageOrder'] = imageOrder;
+    data['product_id'] = productId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }
@@ -206,16 +206,16 @@ class Category {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['category_id'] = this.categoryId;
-    data['category_name'] = this.categoryName;
-    data['type'] = this.type;
-    data['category_logo'] = this.categoryLogo;
-    data['description'] = this.description;
-    data['parent_id'] = this.parentId;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['isActive'] = this.isActive;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['category_id'] = categoryId;
+    data['category_name'] = categoryName;
+    data['type'] = type;
+    data['category_logo'] = categoryLogo;
+    data['description'] = description;
+    data['parent_id'] = parentId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['isActive'] = isActive;
     return data;
   }
 }
@@ -255,16 +255,16 @@ class SubCategory {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['category_id'] = this.categoryId;
-    data['category_name'] = this.categoryName;
-    data['type'] = this.type;
-    data['category_logo'] = this.categoryLogo;
-    data['description'] = this.description;
-    data['parent_id'] = this.parentId;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['isActive'] = this.isActive;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['category_id'] = categoryId;
+    data['category_name'] = categoryName;
+    data['type'] = type;
+    data['category_logo'] = categoryLogo;
+    data['description'] = description;
+    data['parent_id'] = parentId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['isActive'] = isActive;
     return data;
   }
 }
@@ -337,27 +337,27 @@ class Artisan {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['createdAt'] = this.createdAt;
-    data['name'] = this.name;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['email'] = this.email;
-    data['phoneNo'] = this.phoneNo;
-    data['isPhoneNoVerified'] = this.isPhoneNoVerified;
-    data['isEmailVerified'] = this.isEmailVerified;
-    data['countryCode'] = this.countryCode;
-    data['avatar'] = this.avatar;
-    data['password'] = this.password;
-    data['status'] = this.status;
-    data['verifyStatus'] = this.verifyStatus;
-    data['roleName'] = this.roleName;
-    data['user_group'] = this.userGroup;
-    data['expertizeField'] = this.expertizeField;
-    data['loginSource'] = this.loginSource;
-    data['platform'] = this.platform;
-    data['guestUserId'] = this.guestUserId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createdAt'] = createdAt;
+    data['name'] = name;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['email'] = email;
+    data['phoneNo'] = phoneNo;
+    data['isPhoneNoVerified'] = isPhoneNoVerified;
+    data['isEmailVerified'] = isEmailVerified;
+    data['countryCode'] = countryCode;
+    data['avatar'] = avatar;
+    data['password'] = password;
+    data['status'] = status;
+    data['verifyStatus'] = verifyStatus;
+    data['roleName'] = roleName;
+    data['user_group'] = userGroup;
+    data['expertizeField'] = expertizeField;
+    data['loginSource'] = loginSource;
+    data['platform'] = platform;
+    data['guestUserId'] = guestUserId;
     return data;
   }
 }

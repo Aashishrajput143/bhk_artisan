@@ -83,9 +83,12 @@ class UpdateProfileController extends GetxController {
             if (isNewUser.value) {
               Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
             } else {
-              Get.offAllNamed(RoutesClass.commonScreen);
-              commonController.selectedIndex.value = 4;
+              Get.back();
+              Get.back();
               commonController.getProfileApi();
+              //Get.offAllNamed(RoutesClass.commonScreen);
+              //commonController.getProfileApi();
+              //commonController.selectedIndex.value = 4;
             }
           })
           .onError((error, stackTrace) {

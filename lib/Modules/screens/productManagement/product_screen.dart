@@ -50,7 +50,7 @@ PreferredSizeWidget appBarProduct(ProductController productcontroller) {
       tabs: [
         Tab(text: 'Approved'),
         Tab(text: 'Pending'),
-        Tab(text: 'Cancel'),
+        Tab(text: 'Rejected'),
       ],
       labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, height: 1.7),
     ),
