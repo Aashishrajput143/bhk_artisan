@@ -39,6 +39,11 @@ class UpdateProfileController extends GetxController {
     }
   }
 
+  bool validateForm() {
+    if ((firstNameController.value.text.isNotEmpty) && (lastNameController.value.text.isNotEmpty) && (selectedExpertise.value?.isNotEmpty ?? false)) return true;
+    return false;
+  }
+
   void loadData() {
     firstNameController.value.text = commonController.profileData.value.data?.firstName ?? "";
     lastNameController.value.text = commonController.profileData.value.data?.lastName ?? "";
@@ -77,15 +82,17 @@ class UpdateProfileController extends GetxController {
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
             setupdateProfileModeldata(value);
-            //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> ${value.toString()}");
             Utils.setBoolPreferenceValues(Constants.isNewUser, false);
             if (isNewUser.value) {
               Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
+              CommonMethods.showToast(value.message ?? "Profile Updated Successfully...", icon: Icons.check, bgColor: Colors.green);
             } else {
               Get.back();
               Get.back();
               commonController.getProfileApi();
+              CommonMethods.showToast(value.message ?? "Profile Updated Successfully...", icon: Icons.check, bgColor: Colors.green);
+
               //Get.offAllNamed(RoutesClass.commonScreen);
               //commonController.getProfileApi();
               //commonController.selectedIndex.value = 4;

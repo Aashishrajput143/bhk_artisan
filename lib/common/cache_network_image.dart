@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 
 class AvatarWithBlurHash {
-  Widget circleAvatarWithBlurHash({required String blurHash, String? imageUrl, double radius = 70}) {
+  Widget circleAvatarWithBlurHash({required String blurHash, String? imageUrl, double radius = 70,BoxFit fit = BoxFit.cover,String? defaultImage}) {
     return CircleAvatar(
         radius: radius,
         backgroundColor: Colors.grey[200],
@@ -20,7 +20,7 @@ class AvatarWithBlurHash {
                         width: radius * 2,
                         height: radius * 2,
                         placeholder: (context, url) => BlurHash(hash: blurHash, imageFit: BoxFit.cover),
-                        errorWidget: (context, url, error) => BlurHash(hash: blurHash, imageFit: BoxFit.cover),
+                        errorWidget: (context, url, error) => Image.asset(defaultImage??appImages.profile, fit: fit),
                       ))));
   }
 

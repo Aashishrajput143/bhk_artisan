@@ -173,7 +173,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      commonComponent("Maximum Retail Price (MRP)", commonTextField(controller.mrpController.value, controller.mrpFocusNode.value, w, (value) {}, hint: 'Enter Maximum Retail Price', prefix: '₹ ')),
+      commonComponent("Maximum Retail Price (MRP)", commonTextField(controller.mrpController.value, controller.mrpFocusNode.value, w, onChange: (value)=>controller.sellingController.value.text=value, (value) {}, hint: 'Enter Maximum Retail Price', prefix: '₹ ')),
       16.kH,
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

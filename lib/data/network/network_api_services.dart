@@ -139,12 +139,12 @@ class NetworkApiServices extends BaseApiServices {
       request.fields.addAll(data);
       request.headers['accesstoken'] = token;
 
-    if (imagePaths != null && imagePaths.isNotEmpty) {
-      final files = await Future.wait(
-        imagePaths.map((path) => http.MultipartFile.fromPath(key, path)),
-      );
-      request.files.addAll(files);
-    }
+    // if (imagePaths != null && imagePaths.isNotEmpty) {
+    //   final files = await Future.wait(
+    //     imagePaths.map((path) => http.MultipartFile.fromPath(key, path)),
+    //   );
+    //   request.files.addAll(files);
+    // }
       final response = await request.send();
       final responseHttp = await http.Response.fromStream(response);
       expired(responseHttp);

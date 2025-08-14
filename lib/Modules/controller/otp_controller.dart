@@ -70,7 +70,7 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
     });
   }
 
-  Future<void> otpVerification(context) async {
+  Future<void> otpVerificationApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
@@ -87,8 +87,7 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
             redirect();
           })
           .onError((error, stackTrace) {
-            Get.back();
-            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus,showMessage: true);
           });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
@@ -116,7 +115,6 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
             startTimerCountdown();
           })
           .onError((error, stackTrace) {
-            Get.back();
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
           });
     } else {
@@ -125,7 +123,6 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
   }
 
   redirect() {
-    //if (verifyOTPData.value.statusCode == 200) {
     print("Statuscode======> ${verifyOTPData.value.statusCode}");
     Utils.savePreferenceValues(Constants.accessToken, "${verifyOTPData.value.data?.accessToken}");
 

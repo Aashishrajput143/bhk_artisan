@@ -98,7 +98,10 @@ class AddProductController extends GetxController {
       double discountAmount = mrp * (discountPercentage / 100);
       sellingprice.value = mrp - discountAmount;
       sellingController.value.text = sellingprice.value.toStringAsFixed(2);
-    } else {
+    }else if(mrp != null){
+      sellingController.value.text = mrpController.value.text;
+    } 
+    else {
       sellingprice.value = 0.0;
       sellingController.value.text = "0.0";
     }
@@ -234,8 +237,8 @@ class AddProductController extends GetxController {
             setRxRequestStatus(Status.COMPLETED);
             setaddProductModeldata(value);
             Utils.printLog("Response===> ${value.toString()}");
-            CommonMethods.showToast("Product Added Successfully...",icon: Icons.check);
             Get.back();
+            CommonMethods.showToast("Product Added Successfully...",icon: Icons.check,bgColor: Colors.green);
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

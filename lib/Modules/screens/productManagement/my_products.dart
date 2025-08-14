@@ -71,9 +71,7 @@ class MyProducts extends ParentWidget {
           const Text('My Products', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
           InkWell(
             onTap: () {
-              Get.toNamed(RoutesClass.gotoaddProductScreen(), arguments: {"productid": 0, "producteditid": false})?.then((onValue) {
-                //controller.getProductApi();
-              });
+              Get.toNamed(RoutesClass.addproducts);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center, // Center the content

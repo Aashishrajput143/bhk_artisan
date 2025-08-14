@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bhk_artisan/common/cache_network_image.dart';
+import 'package:bhk_artisan/common/commonmethods.dart';
 import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
@@ -19,7 +20,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../resources/colors.dart';
 import '../resources/font.dart';
 
-void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setError, Function(Status)? setRxRequestStatus, bool closeDialog = true}) {
+void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setError, Function(Status)? setRxRequestStatus, bool closeDialog = false,bool showMessage = false}) {
   if (closeDialog) {
     Get.back();
   }
@@ -32,7 +33,9 @@ void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setErr
       var errorResponse = json.decode(error.toString());
 
       if (errorResponse is Map && errorResponse.containsKey('message')) {
-        //CommonMethods.showToast(errorResponse['message']);
+        if(showMessage) {
+          CommonMethods.showToast(errorResponse['message']);
+        }
       } else {
         //CommonMethods.showToast("An unexpected error occurred.");
       }

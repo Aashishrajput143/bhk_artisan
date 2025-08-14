@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/commonmethods.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -60,7 +61,13 @@ class OtpScreen extends ParentWidget {
                             )
                             : resendOtp(context, controller),
                         30.kH,
-                        commonButton(w, 45, appColors.brownbuttonBg, Colors.white, () => controller.otpVerification(context), hint: appStrings.verifyPhoneNumber, radius: 30),
+                        commonButton(w, 45, appColors.brownbuttonBg, Colors.white, () {
+                          if(controller.otp.value.length==6){
+                            controller.otpVerificationApi();
+                          }else{
+                             CommonMethods.showToast("Please Enter OTP");
+                          }
+                        }, hint: appStrings.verifyPhoneNumber, radius: 30),
                         Align(
                           alignment: Alignment.topLeft,
                           child: TextButton(

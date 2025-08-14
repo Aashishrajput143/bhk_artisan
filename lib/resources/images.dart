@@ -18,8 +18,9 @@ class AppImages {
   String get firststock => 'assets/images/firststock.png';
   String get loaderouter => 'assets/images/splashscreenouter.png';
   String get dashboardbanner => 'assets/images/banner.jpg';
+  String get dashboardbanner1 => 'assets/images/banner1.jpeg';
+  String get dashboardbanner2 => 'assets/images/banner2.jpeg';
   String get aadharbanner => 'assets/images/aadhar_banner.png';
-
 
   static final AppImages _appImages = AppImages._internal();
   factory AppImages() {

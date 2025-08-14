@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bhk_artisan/Modules/screens/productManagement/add_product_screen.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/commonmethods.dart';
 import 'package:bhk_artisan/common/get_image_photo_gallery.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -51,7 +52,13 @@ class EditProfile extends ParentWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, () => Get.back(), hint: "Cancel", radius: 30),
-                          commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, () => controller.updateProfileApi(), hint: "Save", radius: 30),
+                          commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, (){
+                            if(controller.validateForm()){
+                              controller.updateProfileApi();
+                            }else{
+                              CommonMethods.showToast("please fill all the mandatory fields");
+                            }
+                          }, hint: "Save", radius: 30),
                         ],
                       ),
                     ),

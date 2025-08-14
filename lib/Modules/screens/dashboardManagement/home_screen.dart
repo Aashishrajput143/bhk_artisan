@@ -64,10 +64,10 @@ PreferredSizeWidget appBarHome(Homecontroller controller) {
     titleSpacing: 2,
     leading: GestureDetector(
       onTap: ()=>controller.commonController.selectedIndex.value=4,
-      child: Padding(
+      child: controller.commonController.profileData.value.data?.avatar?.isNotEmpty??false? Padding(
         padding: const EdgeInsets.symmetric(horizontal: 7.0,vertical: 16.0),
         child: commonCircleNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "",radius: 25),
-      ),
+      ):Image.asset(appImages.profile),
     ),
     title: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -199,22 +199,22 @@ Widget banner(BuildContext context, double w, double h, Homecontroller controlle
                         borderRadius: BorderRadius.circular(15),
                         image: DecorationImage(image: AssetImage(item["imagePath"]!), fit: BoxFit.fill),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item["title"]!,
-                              style: const TextStyle(color: Color.fromARGB(255, 117, 78, 63), fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            8.kH,
-                            Text(item["subtitle"]!, style: const TextStyle(color: Color.fromARGB(255, 153, 119, 106))),
-                            Spacer(),
-                            commonButton(100, 38, Colors.brown, Colors.white, (){},hint: 'BID Now',radius: 16)
-                          ],
-                        ),
-                      ),
+                      // child: Padding(
+                      //   padding: const EdgeInsets.all(16.0),
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Text(
+                      //         item["title"]!,
+                      //         style: const TextStyle(color: Color.fromARGB(255, 117, 78, 63), fontWeight: FontWeight.bold, fontSize: 16),
+                      //       ),
+                      //       8.kH,
+                      //       Text(item["subtitle"]!, style: const TextStyle(color: Color.fromARGB(255, 153, 119, 106))),
+                      //       Spacer(),
+                      //       commonButton(100, 38, Colors.brown, Colors.white, (){},hint: 'BID Now',radius: 16)
+                      //     ],
+                      //   ),
+                      // ),
                     ),
                   ),
                 ),
