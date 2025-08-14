@@ -39,7 +39,7 @@ class GetProductController extends GetxController {
     // Simulate network fetch or database query
     await Future.delayed(Duration(seconds: 2));
     // Update the list of items and refresh the UI
-    getProductApi();
+    //getProductApi();
     print("items.length");
   }
 

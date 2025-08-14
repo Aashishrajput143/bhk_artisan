@@ -17,7 +17,6 @@ import '../Modules/screens/ordersManagement/orderdetails.dart';
 import '../Modules/screens/ordersManagement/trackingorder.dart';
 import '../Modules/screens/otpScreen.dart';
 import '../Modules/screens/privacypolicy.dart';
-import '../Modules/screens/productManagement/productpreview.dart';
 import '../Modules/screens/profileManagement/edit_profile_screen.dart';
 import '../Modules/screens/profileManagement/settingprofile.dart';
 import '../Modules/screens/profileManagement/view_profile.dart';
@@ -210,12 +209,6 @@ class RoutesClass {
     GetPage(
       name: editprofile,
       page: () => EditProfile(),
-      transition: Transition.fade,
-      transitionDuration: const Duration(milliseconds: 300),
-    ),
-    GetPage(
-      name: productdetail,
-      page: () => ProductPreview(),
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 300),
     ),
