@@ -8,8 +8,8 @@ import 'package:get/get.dart';
 import '../../common/CommonMethods.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
-import '../model/getprofilemodel.dart';
-import '../model/updateprofilemodel.dart';
+import '../model/get_profile_model.dart';
+import '../model/update_profile_model.dart';
 import '../repository/profilerepository.dart';
 
 class UpdateProfileController extends GetxController {

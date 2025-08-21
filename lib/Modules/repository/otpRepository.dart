@@ -2,7 +2,7 @@
 
 import '../../data/app_url/app_url.dart';
 import '../../data/network/network_api_services.dart';
-import '../model/verifyOtpModel.dart';
+import '../model/verify_otp_model.dart';
 
 class OtpRepository {
   final _apiServices = NetworkApiServices();

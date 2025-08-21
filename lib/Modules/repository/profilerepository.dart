@@ -1,7 +1,7 @@
-import 'package:bhk_artisan/Modules/model/updateprofilemodel.dart';
+import 'package:bhk_artisan/Modules/model/update_profile_model.dart';
 import 'package:bhk_artisan/data/app_url/app_url.dart';
 import 'package:bhk_artisan/data/network/network_api_services.dart';
-import '../model/getprofilemodel.dart';
+import '../model/get_profile_model.dart';
 
 class ProfileRepository {
   final _apiServices = NetworkApiServices();

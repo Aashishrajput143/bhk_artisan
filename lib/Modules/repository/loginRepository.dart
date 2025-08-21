@@ -1,5 +1,5 @@
 import 'package:bhk_artisan/Modules/model/login_model.dart';
-import 'package:bhk_artisan/Modules/model/logoutmodel.dart';
+import 'package:bhk_artisan/Modules/model/logout_model.dart';
 
 import '../../data/app_url/app_url.dart';
 import '../../data/network/network_api_services.dart';

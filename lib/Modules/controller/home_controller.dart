@@ -14,10 +14,10 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../model/getbrandModel.dart';
-import '../model/getcategorymodel.dart';
+import '../model/get_category_model.dart';
 import '../model/getproductmodel.dart';
 import '../model/salesgraphmodel.dart';
-import '../model/todayordermodel.dart';
+import '../model/today_order_model.dart';
 import '../repository/brandrepository.dart';
 import '../repository/orderrepository.dart';
 import '../repository/productrepository.dart';

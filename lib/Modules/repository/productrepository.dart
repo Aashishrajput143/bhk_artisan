@@ -1,11 +1,11 @@
 import 'package:bhk_artisan/data/app_url/app_url.dart';
 import 'package:bhk_artisan/data/network/network_api_services.dart';
-import '../model/addproductmodel.dart';
+import '../model/add_product_model.dart';
 import '../model/getbrandModel.dart';
-import '../model/getcategorymodel.dart';
+import '../model/get_category_model.dart';
 import '../model/getproductmodel.dart';
 import '../model/getstoremodel.dart';
-import '../model/getsubcategorymodel.dart';
+import '../model/get_subcategory_model.dart';
 import '../model/productdetailsmodel.dart';
 
 class ProductRepository {

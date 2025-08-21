@@ -10,8 +10,8 @@ import 'package:get/get.dart';
 import '../../common/CommonMethods.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
-import '../model/getprofilemodel.dart';
-import '../model/logoutmodel.dart';
+import '../model/get_profile_model.dart';
+import '../model/logout_model.dart';
 import '../repository/profilerepository.dart';
 
 class Appbardrawercontroller extends GetxController {

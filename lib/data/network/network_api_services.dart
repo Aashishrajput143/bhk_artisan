@@ -5,9 +5,11 @@ import 'package:bhk_artisan/Modules/controller/logincontroller.dart';
 import 'package:bhk_artisan/Modules/screens/login_screen.dart';
 import 'package:bhk_artisan/common/CommonMethods.dart';
 import 'package:bhk_artisan/utils/utils.dart';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart' as dio;
 
 import '../../common/constants.dart';
 
@@ -127,7 +129,31 @@ class NetworkApiServices extends BaseApiServices {
     }
   }
 
-  Future<dynamic> multiPartMediaApi(var data, String url,List<String>? imagePaths, var key) async {
+  dynamic returnDioResponse(dio.Response response) {
+    switch (response.statusCode) {
+      case 200:
+        if (response.data != null && response.data.toString().isNotEmpty) {
+          try {
+            return response.data is String ? jsonDecode(response.data) : response.data;
+          } catch (e) {
+            return response.data;
+          }
+        }
+        return null;
+      case 400:
+        throw InvalidUrlException();
+      case 401:
+        throw AuthenticationException('');
+      case 408:
+        throw FetchDataException(response.data.toString());
+      case 409:
+        throw FetchDataException(response.data.toString());
+      default:
+        throw FetchDataException('${response.data}');
+    }
+  }
+
+  Future<dynamic> multiPartMediaApi(var data, String url, List<String>? imagePaths, var key) async {
     Utils.printLog(url);
     Utils.printLog(data);
     Utils.printLog(imagePaths);
@@ -139,12 +165,10 @@ class NetworkApiServices extends BaseApiServices {
       request.fields.addAll(data);
       request.headers['accesstoken'] = token;
 
-    // if (imagePaths != null && imagePaths.isNotEmpty) {
-    //   final files = await Future.wait(
-    //     imagePaths.map((path) => http.MultipartFile.fromPath(key, path)),
-    //   );
-    //   request.files.addAll(files);
-    // }
+      if (imagePaths != null && imagePaths.isNotEmpty) {
+        final files = await Future.wait(imagePaths.map((path) => http.MultipartFile.fromPath(key, path)));
+        request.files.addAll(files);
+      }
       final response = await request.send();
       final responseHttp = await http.Response.fromStream(response);
       expired(responseHttp);
@@ -233,14 +257,7 @@ class NetworkApiServices extends BaseApiServices {
     String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
 
     try {
-      final response = await http
-          .post(
-            Uri.parse(url),
-            headers: {'content-Type': "application/json", 'accesstoken': token, 'devicetype': "ANDROID"},
-
-            body: jsonEncode(data), //jsonEncode(data) //if raw form then we set jsonEncode if form the only data
-          )
-          .timeout(const Duration(seconds: 600));
+      final response = await http.post(Uri.parse(url), headers: {'content-Type': "application/json", 'accesstoken': token, 'devicetype': "ANDROID"}, body: jsonEncode(data)).timeout(const Duration(seconds: 600));
       expired(response);
       responseJson = returnResponse(response);
       Utils.printLog('Response: $response');
@@ -254,6 +271,45 @@ class NetworkApiServices extends BaseApiServices {
       throw AuthenticationException('');
     }
     Utils.printLog(responseJson);
+    return responseJson;
+  }
+
+  Future uploadFileToS3WithPresignedUrl(String presignedUrl, File file) async {
+    Utils.printLog("Presigned URL: $presignedUrl");
+    Utils.printLog("Uploading file: ${file.path}");
+    dynamic responseJson;
+    try {
+      final dio = Dio();
+
+      final response = await dio.put(
+        presignedUrl,
+        data: file.openRead(),
+        options: Options(headers: {"Content-Type": "video/mp4"}, sendTimeout: const Duration(seconds: 600), receiveTimeout: const Duration(seconds: 600)),
+      );
+
+      responseJson = returnDioResponse(response);
+      Utils.printLog('Response: $response');
+
+      if (response.statusCode == 200) {
+        Utils.printLog("✅ Upload successful");
+      } else {
+        Utils.printLog("❌ Upload failed: ${response.statusCode}");
+        throw Exception("Upload failed with status: ${response.statusCode}");
+      }
+    } on SocketException {
+      throw InternetException('');
+    } on TimeoutException {
+      throw RequestTimeOut('');
+    } on DioException catch (e) {
+      Utils.printLog("Dio error: ${e.message}");
+      throw UploadFailedException(e.message ?? "Upload failed");
+    } on UnauthorizedException {
+      throw AuthenticationException('');
+    } catch (e) {
+      Utils.printLog("Unexpected error: $e");
+      throw Exception("Unexpected error: $e");
+    }
+
     return responseJson;
   }
 }

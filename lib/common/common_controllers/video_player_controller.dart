@@ -19,6 +19,8 @@ class VideoPreviewController extends GetxController {
     setVideo(path.value);
   }
 
+  
+
   void setVideo(String path) {
     videoController = VideoPlayerController.file(File(path))
       ..initialize().then((_) {

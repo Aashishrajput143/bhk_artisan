@@ -9,7 +9,7 @@ import '../../common/Constants.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../../routes/routes_class.dart';
-import '../model/verifyOtpModel.dart';
+import '../model/verify_otp_model.dart';
 import '../repository/loginRepository.dart';
 import '../repository/otpRepository.dart';
 

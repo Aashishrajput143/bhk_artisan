@@ -41,13 +41,13 @@ class HomeScreen extends ParentWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('latitude : ${controller.locationController.latitude.value}', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-          Text('longitude : ${controller.locationController.longitude.value}', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-        ],
-      ),
+      //                       Row(
+      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //   children: [
+      //     Text('latitude : ${controller.locationController.latitude.value}', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+      //     Text('longitude : ${controller.locationController.longitude.value}', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+      //   ],
+      // ),
       16.kH,
                             //banner(context, w, h, controller),12.kH, categories(),20.kH,
                             salesGraph(context, w, h, controller), 12.kH, trendingProduct(w), 12.kH, product(w, controller),

@@ -34,3 +34,8 @@ class AuthenticationException extends AppExceptions {
   AuthenticationException([String? message])
       : super(message, 'Authorization Expired');
 }
+
+class UploadFailedException extends AppExceptions {
+  UploadFailedException([String? message])
+      : super(message, 'Upload Falied');
+}
