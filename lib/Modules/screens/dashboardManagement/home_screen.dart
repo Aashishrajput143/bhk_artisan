@@ -38,7 +38,21 @@ class HomeScreen extends ParentWidget {
                       commonCollection(h, w, controller),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [banner(context, w, h, controller),12.kH, categories(),20.kH, salesGraph(context, w, h, controller),  12.kH, trendingProduct(w),  12.kH, product(w,controller)]),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('latitude : ${controller.locationController.latitude.value}', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+          Text('longitude : ${controller.locationController.longitude.value}', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+        ],
+      ),
+      16.kH,
+                            //banner(context, w, h, controller),12.kH, categories(),20.kH,
+                            salesGraph(context, w, h, controller), 12.kH, trendingProduct(w), 12.kH, product(w, controller),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -46,7 +60,7 @@ class HomeScreen extends ParentWidget {
               ),
             ),
           ),
-          progressBarTransparent(controller.commonController.rxRequestStatus.value == Status.LOADING, h, w),
+          progressBarTransparent(controller.commonController.rxRequestStatus.value == Status.LOADING || controller.locationController.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
     );
@@ -63,11 +77,8 @@ PreferredSizeWidget appBarHome(Homecontroller controller) {
     centerTitle: false,
     titleSpacing: 2,
     leading: GestureDetector(
-      onTap: ()=>controller.commonController.selectedIndex.value=4,
-      child: controller.commonController.profileData.value.data?.avatar?.isNotEmpty??false? Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 7.0,vertical: 16.0),
-        child: commonCircleNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "",radius: 25),
-      ):Image.asset(appImages.profile),
+      onTap: () => controller.commonController.selectedIndex.value = 4,
+      child: controller.commonController.profileData.value.data?.avatar?.isNotEmpty ?? false ? Padding(padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 16.0), child: commonCircleNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "", radius: 25)) : Image.asset(appImages.profile),
     ),
     title: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -78,7 +89,7 @@ PreferredSizeWidget appBarHome(Homecontroller controller) {
           style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500),
         ),
         Text(
-          controller.commonController.profileData.value.data?.firstName??"User",
+          controller.commonController.profileData.value.data?.firstName ?? "User",
           style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
         ),
       ],
@@ -362,7 +373,7 @@ Widget categories() {
                   //       ),
                   5.kH,
                   Text(
-                    "collection${index+1}",
+                    "collection${index + 1}",
                     // controller.getCategoryModel.value.data?.docs?[index]
                     //         .categoryName ??
                     //     "",
@@ -427,7 +438,7 @@ Widget product(double w, Homecontroller controller) {
                 ),
                 10.kH,
                 Text(
-                  "Product${index+1}",
+                  "Product${index + 1}",
                   // controller.getProductModel.value.data
                   //         ?.docs?[index].productName ??
                   //     "",
@@ -439,7 +450,7 @@ Widget product(double w, Homecontroller controller) {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Category${index+1}",
+                      "Category${index + 1}",
                       // controller
                       //         .getProductModel
                       //         .value
@@ -452,7 +463,7 @@ Widget product(double w, Homecontroller controller) {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      "Subcategory${index+1}",
+                      "Subcategory${index + 1}",
                       // "(${controller.getProductModel.value.data?.docs?[index].brand?.brandName ?? ""})",
                       style: const TextStyle(fontSize: 12),
                     ),
@@ -526,7 +537,7 @@ Widget trendingProduct(double w) {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "product${index+1}",
+                      "product${index + 1}",
                       // controller.getTrendingProductModel.value.data?.docs?[index].productName ?? "",
                       style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),
                       textAlign: TextAlign.start,
@@ -599,7 +610,7 @@ Widget salesGraph(BuildContext context, double w, double h, Homecontroller contr
                     );
                   }).toList(),
                   controller.dropdownsold.value,
-                  w*0.43,
+                  w * 0.43,
                   h,
                   appColors.backgroundColor,
                   (value) {
@@ -621,7 +632,7 @@ Widget salesGraph(BuildContext context, double w, double h, Homecontroller contr
                     );
                   }).toList(),
                   controller.dropdownmonth.value,
-                  w*0.47,
+                  w * 0.47,
                   h,
                   appColors.backgroundColor,
                   (value) {
@@ -665,4 +676,3 @@ Widget salesGraph(BuildContext context, double w, double h, Homecontroller contr
     ),
   );
 }
-

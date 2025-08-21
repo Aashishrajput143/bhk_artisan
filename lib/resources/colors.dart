@@ -16,6 +16,8 @@ class AppColors {
   get cardBackground => const Color.fromARGB(255, 251, 249, 244);
   get popColor => const Color.fromARGB(255, 243, 241, 235);
   get drawerbackgroundColor => const Color.fromARGB(246, 244, 241, 234);
+  get acceptColor =>const Color.fromARGB(255, 54, 129, 56);
+  get declineColor => const Color.fromARGB(255, 189, 51, 41);
 
 
   get contentPrimary => getColor('#000000');

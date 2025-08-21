@@ -21,7 +21,7 @@ bool hasCompleted(int step, AddProductController controller) {
   if (step == 0) {
     if ((controller.selectedcategoryid.value?.isNotEmpty ?? false) && (controller.selectedsubcategoryid.value?.isNotEmpty ?? false) && (controller.nameController.value.text.isNotEmpty) && (controller.detaileddescriptionController.value.text.isNotEmpty)) return true;
   } else if (step == 1) {
-    if ((controller.mrpController.value.text.isNotEmpty) && (controller.quantityController.value.text.isNotEmpty) && (controller.materialController.value.text.isNotEmpty)) return true;
+    if ((controller.priceController.value.text.isNotEmpty) && (controller.quantityController.value.text.isNotEmpty) && (controller.materialController.value.text.isNotEmpty)) return true;
   }
   else if (step == 2) {
     if (controller.imagefiles.length>2 && controller.imagefiles.length<5) return true;

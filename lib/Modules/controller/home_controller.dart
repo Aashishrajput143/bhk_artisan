@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
+import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/utils/utils.dart';
@@ -33,6 +34,9 @@ class Homecontroller extends GetxController {
   var sliderController = CarouselSliderController();
 
   CommonScreenController commonController = Get.find();
+
+  LocationController locationController = Get.put(LocationController());
+
 
   var greetings = "Good Morning".obs;
 

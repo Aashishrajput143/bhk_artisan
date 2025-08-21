@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
@@ -88,36 +89,48 @@ Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
 }
 
 Widget orderContent(double h, double w, int index) {
-  return Container(
-    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-    decoration: BoxDecoration(
-      color: appColors.cardBackground,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: Colors.grey.shade300, width: 1.5),
-      boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          orderCardHeader(),
-          8.kH,
-          orderCardContent(index),
-          Divider(thickness: 1, color: Colors.grey[300]),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
+  return GestureDetector(
+    onTap: ()=>Get.toNamed(RoutesClass.ordersdetails),
+    child: Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+      decoration: BoxDecoration(
+        color: appColors.cardBackground,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade300, width: 1.5),
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            orderCardHeader(),
+            8.kH,
+            orderCardContent(index),
+            Divider(thickness: 1, color: Colors.grey[300]),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  buildOrderDetailColumn('Payment', '₹ 300.50'),
+                  buildOrderDetailColumn('Product ID', 'TST11414'),
+                  buildOrderDetailColumn('Order Qty.', '${index + 1}0'),
+                  if(index.isOdd) buildOrderDetailColumn('Delivery Status', 'Pending', color: appColors.brownDarkText),
+                ],
+              ),
+            ),
+            if(index.isEven)...[
+            4.kH,
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                buildOrderDetailColumn('Payment', '₹ 300.50'),
-                buildOrderDetailColumn('Product ID', 'TST11414'),
-                buildOrderDetailColumn('Qty.', '${index + 1}0'),
-                buildOrderDetailColumn('Order Status', 'Pending', color: const Color(0xFF5D2E17)),
+                commonButton(w * 0.4, 45, appColors.acceptColor, Colors.white, () {}, hint: "Accept"),
+                commonButton(w * 0.4, 45, appColors.declineColor, Colors.white, () {}, hint: "Decline"),
               ],
-            ),
-          ),
-        ],
+            ),]
+          ],
+        ),
       ),
     ),
   );
@@ -131,7 +144,7 @@ Widget orderCardHeader() {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Order ID #110516", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          Text("Estimated delivery on 16 Mar, 02:21 PM", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+          Text("Order to be completed by 16 Mar, 02:21 PM", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
         ],
       ),
       PopupMenuButton<String>(
@@ -187,14 +200,14 @@ Widget orderCardContent(int index) {
               'Pink Cotton T-shirt',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
             ),
-            4.kH,
-            Text('Colour : Red | Size : M', style: TextStyle(fontSize: 13, color: Colors.grey[700])),
+            // 4.kH,
+            // Text('Colour : Red | Size : M', style: TextStyle(fontSize: 13, color: Colors.grey[700])),
             4.kH,
             Row(
               children: [
                 Icon(Icons.circle, color: Colors.green, size: 8),
                 4.kW,
-                Text("Order is Confirmed", style: TextStyle(color: Colors.green, fontSize: 11)),
+                Text(index.isEven?"Order Needs Action!":"Order is Confirmed", style: TextStyle(color: Colors.green, fontSize: 11)),
               ],
             ),
             4.kH,

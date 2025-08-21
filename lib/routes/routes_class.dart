@@ -2,6 +2,8 @@ import 'package:bhk_artisan/Modules/screens/aadhar_verification_screen.dart';
 import 'package:bhk_artisan/Modules/screens/address_screen.dart';
 import 'package:bhk_artisan/Modules/screens/common_screen.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/add_product_screen.dart';
+import 'package:bhk_artisan/Modules/widgets/on_screen_video_screen.dart';
+import 'package:bhk_artisan/Modules/widgets/video_player_screen.dart';
 import 'package:bhk_artisan/binding/signupbinding.dart';
 import 'package:get/get.dart';
 
@@ -52,6 +54,8 @@ class RoutesClass {
   static String productdetail = '/productdetail';
   static String aadharVerification = '/aadharVerification';
   static String addresses = '/Addresses';
+  static String videoRecorder = '/videoRecorder';
+  static String videoPlayer = '/videoPlayer';
 
   static String termscondition = '/termscondition';
   static String privacypolicy = '/privacypolicy';
@@ -84,6 +88,8 @@ class RoutesClass {
   static String gotoFAQScreen() => faq;
   static String gotoAadharVerificationScreen() => aadharVerification;
   static String gotoAddressesScreen() => addresses;
+  static String gotoVideoRecorder()=> videoRecorder;
+  static String gotoVideoPlayerScreen()=>videoPlayer;
 
   static List<GetPage> routes = [
     GetPage(
@@ -167,6 +173,18 @@ class RoutesClass {
     GetPage(
       name: addproducts,
       page: () => const AddProductPage(),
+      transition: Transition.fade,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: videoRecorder,
+      page: () => VideoRecorderScreen(),
+      transition: Transition.fade,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: videoPlayer,
+      page: () => VideoPreviewPage(),
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 300),
     ),

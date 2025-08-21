@@ -6,7 +6,7 @@ class AppStrings {
   AppStrings._internal();
 
   //Splash Screen
-  String get appNameSplash=>"Bharthasth Kaushal";
+  String get appNameSplash=>"Bharathasth Kaushal";
 
   //login Screen
   String get email => 'Email';

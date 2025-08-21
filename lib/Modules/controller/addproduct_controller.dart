@@ -16,32 +16,42 @@ class AddProductController extends GetxController {
   final _api = ProductRepository();
 
   var nameController = TextEditingController().obs;
+  var timeController = TextEditingController().obs;
   var detaileddescriptionController = TextEditingController().obs;
   var netweightController = TextEditingController().obs;
   var quantityController = TextEditingController().obs;
   var materialController = TextEditingController().obs;
-  var mrpController = TextEditingController().obs;
-  var discountController = TextEditingController().obs;
+  var priceController = TextEditingController().obs;
+  var careController = TextEditingController().obs;
   var lengthController = TextEditingController().obs;
   var breadthController = TextEditingController().obs;
   var heightController = TextEditingController().obs;
-  var sellingController = TextEditingController().obs;
+  var totalPriceController = TextEditingController().obs;
+  var techniqueController = TextEditingController().obs;
+  var patternController = TextEditingController().obs;
 
   var nameFocusNode = FocusNode().obs;
+  var timeFocusNode = FocusNode().obs;
   var detaileddescriptionFocusNode = FocusNode().obs;
   var netweightFocusNode = FocusNode().obs;
   var quantityFocusNode = FocusNode().obs;
   var materialFocusNode = FocusNode().obs;
-  var mrpFocusNode = FocusNode().obs;
-  var discountFocusNode = FocusNode().obs;
+  var priceFocusNode = FocusNode().obs;
+  var careFocusNode = FocusNode().obs;
   var lengthFocusNode = FocusNode().obs;
   var breadthFocusNode = FocusNode().obs;
   var heightFocusNode = FocusNode().obs;
-  var sellingFocusNode = FocusNode().obs;
+  var totalPriceFocusNode = FocusNode().obs;
+  var techniqueFocusNode = FocusNode().obs;
+  var patternFocusNode = FocusNode().obs;
 
   var selectedcategoryid = Rxn<String>();
 
   var selectedsubcategoryid = Rxn<String>();
+
+  var selectedWashCare = Rxn<String>();
+
+  var selectedTexture = Rxn<String>();
 
   final RxList<ProductCategory> productCategories = <ProductCategory>[
     ProductCategory(categoryId: 1, categoryName: 'Handloom Sarees'),
@@ -81,7 +91,7 @@ class AddProductController extends GetxController {
   var selectedSize = Rxn<String>();
   var selectedSizecheck = "xs".obs;
 
-  var sellingprice = 0.0.obs;
+  var totalprice = 0.0.obs;
 
   final ImagePicker imgpicker = ImagePicker();
   var imagefiles = <String>[].obs;
@@ -90,20 +100,52 @@ class AddProductController extends GetxController {
 
   List<String> measureunits = ['cm', 'inches'];
 
-  void calculateSellingPrice() {
-    double? mrp = double.tryParse(mrpController.value.text);
-    double? discountPercentage = double.tryParse(discountController.value.text);
+  final List<String> washCareList = [
+  "Hand Wash",
+  "Machine Wash",
+  "Dry Clean Only",
+  "wipe with dry cloth",
+  "wipe with damp cloth",
+  "no washing required",
+];
 
-    if (mrp != null && discountPercentage != null) {
-      double discountAmount = mrp * (discountPercentage / 100);
-      sellingprice.value = mrp - discountAmount;
-      sellingController.value.text = sellingprice.value.toStringAsFixed(2);
-    }else if(mrp != null){
-      sellingController.value.text = mrpController.value.text;
+final List<String> textureList = [
+  "Matte",
+  "glossy",
+  "hand-polished",
+  "rough",
+  "smooth",
+];
+
+
+  // void calculateSellingPrice() {
+  //   double? mrp = double.tryParse(mrpController.value.text);
+  //   double? discountPercentage = double.tryParse(discountController.value.text);
+
+  //   if (mrp != null && discountPercentage != null) {
+  //     double discountAmount = mrp * (discountPercentage / 100);
+  //     sellingprice.value = mrp - discountAmount;
+  //     sellingController.value.text = sellingprice.value.toStringAsFixed(2);
+  //   }else if(mrp != null){
+  //     sellingController.value.text = mrpController.value.text;
+  //   } 
+  //   else {
+  //     sellingprice.value = 0.0;
+  //     sellingController.value.text = "0.0";
+  //   }
+  // }
+
+  void calculateTotalPrice() {
+    double? price = double.tryParse(priceController.value.text);
+    double? unit = double.tryParse(quantityController.value.text);
+
+    if (price != null && unit != null) {
+      totalprice.value = price * unit;
+      totalPriceController.value.text = totalprice.value.toStringAsFixed(2);
     } 
     else {
-      sellingprice.value = 0.0;
-      sellingController.value.text = "0.0";
+      totalprice.value = 0.0;
+      totalPriceController.value.text = "0.0";
     }
   }
 
@@ -140,14 +182,14 @@ class AddProductController extends GetxController {
   }
 
   bool validateForm() {
-    if((selectedcategoryid.value?.isNotEmpty??false)&&(selectedsubcategoryid.value?.isNotEmpty??false)&&(nameController.value.text.isNotEmpty)&&(detaileddescriptionController.value.text.isNotEmpty)&&(mrpController.value.text.isNotEmpty)&&(materialController.value.text.isNotEmpty)&&(quantityController.value.text.isNotEmpty)&&(imagefiles.length>2 && imagefiles.length<5)) return true;
+    if((selectedcategoryid.value?.isNotEmpty??false)&&(selectedsubcategoryid.value?.isNotEmpty??false)&&(nameController.value.text.isNotEmpty)&&(detaileddescriptionController.value.text.isNotEmpty)&&(priceController.value.text.isNotEmpty)&&(materialController.value.text.isNotEmpty)&&(quantityController.value.text.isNotEmpty)&&(imagefiles.length>=10)) return true;
     return false;
   }
 
   @override
   void onInit() {
     super.onInit();
-    sellingController.value.text = "0.0";
+    totalPriceController.value.text = "0.0";
     getCategoryApi();
     // getBrandApi();
     // getStoreApi();
@@ -223,8 +265,7 @@ class AddProductController extends GetxController {
         "categoryId": selectedcategoryid.value ?? "",
         "subCategoryId": selectedsubcategoryid.value ?? "",
         "description": detaileddescriptionController.value.text,
-        "mrp": mrpController.value.text,
-        if (discountController.value.text.isNotEmpty) "discount": discountController.value.text,
+        "price": priceController.value.text,
         "quantity": quantityController.value.text,
         "material": materialController.value.text,
         if (netweightController.value.text.isNotEmpty) "netWeight": getWeight(),

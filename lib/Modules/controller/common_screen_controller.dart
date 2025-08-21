@@ -43,7 +43,7 @@ class CommonScreenController extends GetxController {
   List<BottomNavigationBarItem> bottomNavigationItems = [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
     BottomNavigationBarItem(icon: Icon(Icons.inventory_2), label: 'Orders'),
-    BottomNavigationBarItem(icon: Icon(Icons.local_offer), label: 'Listing'),
+    BottomNavigationBarItem(icon: Icon(Icons.local_offer), label: 'Products'),
     BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Inventory'),
     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
   ];

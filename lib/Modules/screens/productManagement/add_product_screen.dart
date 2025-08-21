@@ -25,37 +25,35 @@ class AddProductPage extends ParentWidget {
           Scaffold(
             backgroundColor: appColors.backgroundColor,
             appBar: commonAppBar("Add Product"),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        5.kW,
-                        Icon(Icons.shopping_cart, size: 20.0, color: Colors.blue),
-                        10.kW,
-                        Text('Add Product', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    5.kH,
-                    Text(
-                      'Add a new product to your store.',
-                      style: TextStyle(fontSize: 11.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
-                    ),
-                    25.kH,
-                    buildCircle(controller.selectedIndex.value, controller.selectedIndex.value, controller),
-                    16.kH,
-                    if (controller.selectedIndex.value == 0) generalDetails(w, h, controller),
-                    if (controller.selectedIndex.value == 1) productDetails(w, h, controller),
-                    if (controller.selectedIndex.value == 2) mediaFiles(context, w, h, controller),
-                  ],
-                ),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      5.kW,
+                      Icon(Icons.shopping_cart, size: 20.0, color: Colors.blue),
+                      10.kW,
+                      Text('Add Product', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  5.kH,
+                  Text(
+                    'Add a new product to your store.',
+                    style: TextStyle(fontSize: 11.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
+                  ),
+                  25.kH,
+                  buildCircle(controller.selectedIndex.value, controller.selectedIndex.value, controller),
+                  16.kH,
+                  if (controller.selectedIndex.value == 0) generalDetails(w, h, controller),
+                  if (controller.selectedIndex.value == 1) productDetails(w, h, controller),
+                  if (controller.selectedIndex.value == 2) mediaFiles(context, w, h, controller),
+                ],
               ),
             ),
             bottomNavigationBar: Padding(
-              padding: EdgeInsets.fromLTRB(16.0, 16, 16, h * 0.07),
+              padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.04),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -112,144 +110,209 @@ Widget commonComponent(String title, Widget component, {bool mandatory = true}) 
 }
 
 Widget generalDetails(double w, double h, AddProductController controller) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      commonComponent(
-        "Category",
-        commonDropdownButton(
-          controller.getCategoryModel.value.data?.docs?.map((item) {
-            return DropdownMenuItem<String>(
-              value: item.categoryId.toString(),
-              child: Text(item.categoryName ?? "", style: const TextStyle(fontSize: 14)),
-            );
-          }).toList(),
-          controller.selectedcategoryid.value,
-          w,
-          h,
-          appColors.backgroundColor,
-          (String? newValue) {
-            controller.selectedcategoryid.value = newValue;
-            print(controller.selectedcategoryid.value);
-            controller.selectedsubcategoryid.value = null;
-            controller.getSubCategoryApi();
-          },
-          hint: 'Select Category',
-          borderColor: appColors.border,
-        ),
+  return Expanded(
+    child: SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          commonComponent(
+            "Category",
+            commonDropdownButton(
+              controller.getCategoryModel.value.data?.docs?.map((item) {
+                return DropdownMenuItem<String>(
+                  value: item.categoryId.toString(),
+                  child: Text(item.categoryName ?? "", style: const TextStyle(fontSize: 14)),
+                );
+              }).toList(),
+              controller.selectedcategoryid.value,
+              w,
+              h,
+              appColors.backgroundColor,
+              (String? newValue) {
+                controller.selectedcategoryid.value = newValue;
+                print(controller.selectedcategoryid.value);
+                controller.selectedsubcategoryid.value = null;
+                controller.getSubCategoryApi();
+              },
+              hint: 'Select Category',
+              borderColor: appColors.border,
+            ),
+          ),
+          16.kH,
+          commonComponent(
+            "SubCategory",
+            commonDropdownButton(
+              controller.getSubcategoryModel.value.data?.docs?.map((item) {
+                return DropdownMenuItem<String>(
+                  value: item.categoryId.toString(),
+                  child: Text(item.categoryName ?? "", style: const TextStyle(fontSize: 14)),
+                );
+              }).toList(),
+              controller.selectedsubcategoryid.value,
+              w,
+              h,
+              appColors.backgroundColor,
+              (String? newValue) {
+                controller.selectedsubcategoryid.value = newValue;
+              },
+              hint: 'Select SubCategory',
+              borderColor: appColors.border,
+            ),
+          ),
+          16.kH,
+          commonComponent("Product Name", commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Product name', maxLines: 3)),
+          16.kH,
+          commonComponent("Time to Make", commonTextField(controller.timeController.value, controller.timeFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter how long it took to make (e.g. 2 days)')),
+          16.kH,
+          commonComponent("Description", commonDescriptionTextField(controller.detaileddescriptionController.value, controller.detaileddescriptionFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter a detailed description\neg. product history, culture, uniqueness...', maxLines: 8, minLines: 3)),
+        ],
       ),
-      16.kH,
-      commonComponent(
-        "SubCategory",
-        commonDropdownButton(
-          controller.getSubcategoryModel.value.data?.docs?.map((item) {
-            return DropdownMenuItem<String>(
-              value: item.categoryId.toString(),
-              child: Text(item.categoryName ?? "", style: const TextStyle(fontSize: 14)),
-            );
-          }).toList(),
-          controller.selectedsubcategoryid.value,
-          w,
-          h,
-          appColors.backgroundColor,
-          (String? newValue) {
-            controller.selectedsubcategoryid.value = newValue;
-          },
-          hint: 'Select SubCategory',
-          borderColor: appColors.border,
-        ),
-      ),
-      16.kH,
-      commonComponent("Product Name", commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your  Product name', maxLines: 3)),
-      16.kH,
-      commonComponent("Description", commonDescriptionTextField(controller.detaileddescriptionController.value, controller.detaileddescriptionFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter a detailed description here...', maxLines: 8, minLines: 3)),
-    ],
+    ),
   );
 }
 
 Widget productDetails(double w, double h, AddProductController controller) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      commonComponent("Maximum Retail Price (MRP)", commonTextField(controller.mrpController.value, controller.mrpFocusNode.value, w, onChange: (value)=>controller.sellingController.value.text=value, (value) {}, hint: 'Enter Maximum Retail Price', prefix: '₹ ')),
-      16.kH,
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  return Expanded(
+    child: SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: commonComponent("Discount(%)", commonTextField(controller.discountController.value, controller.discountFocusNode.value, w, (value) {}, onChange: (value) => controller.calculateSellingPrice(), hint: 'Enter discount', suffix: '%'), mandatory: false),
+          commonComponent("Product Price per Piece", commonTextField(controller.priceController.value, controller.priceFocusNode.value, w, onChange: (value) => controller.calculateTotalPrice(), (value) {}, hint: 'Enter Product Price per Piece', prefix: '₹ ')),
+          16.kH,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: commonComponent("Quantity", commonTextField(controller.quantityController.value, controller.quantityFocusNode.value, w, (value) {}, onChange: (value) => controller.calculateTotalPrice(), hint: 'Enter Quantity')),
+              ),
+              8.kW,
+              Expanded(child: commonComponent("Total Price", commonTextField(controller.totalPriceController.value, controller.totalPriceFocusNode.value, w, (value) {}, readonly: true), mandatory: false)),
+            ],
           ),
-          8.kW,
-          Expanded(child: commonComponent("Selling Price", commonTextField(controller.sellingController.value, controller.sellingFocusNode.value, w, (value) {}, readonly: true), mandatory: false)),
+          16.kH,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: commonComponent(
+                  "Finish/Texture",
+                  commonDropdownButton(
+                    controller.textureList.map((item) {
+                      return DropdownMenuItem<String>(
+                        value: item.toString(),
+                        child: Text(item, style: const TextStyle(fontSize: 14)),
+                      );
+                    }).toList(),
+                    controller.selectedTexture.value,
+                    w*0.5,
+                    h,
+                    appColors.backgroundColor,
+                    (String? newValue) {
+                      controller.selectedTexture.value = newValue;
+                    },
+                    hint: 'Select Texture',
+                    borderColor: appColors.border,
+                  ),
+                  mandatory: false,
+                ),
+              ),
+              8.kW,
+              Expanded(
+                child: commonComponent(
+                  "Wash Care",
+                  commonDropdownButton(
+                    controller.washCareList.map((item) {
+                      return DropdownMenuItem<String>(
+                        value: item.toString(),
+                        child: Text(item, style: const TextStyle(fontSize: 14)),
+                      );
+                    }).toList(),
+                    controller.selectedWashCare.value,
+                    w*0.5,
+                    h,
+                    appColors.backgroundColor,
+                    (String? newValue) {
+                      controller.selectedWashCare.value = newValue;
+                    },
+                    hint: 'Select Wash Care',
+                    borderColor: appColors.border,
+                  ),
+                  mandatory: false,
+                ),
+              ),
+            ],
+          ),
+          16.kH,
+          commonComponent("Material", commonTextField(controller.materialController.value, controller.materialFocusNode.value, w, (value) {}, hint: 'Enter Material Used', maxLines: 1)),
+          16.kH,
+          commonComponent(
+            mandatory: false,
+            "Net Weight (${controller.dropdownValues})",
+            Row(
+              children: [
+                Expanded(flex: 6, child: commonTextField(controller.netweightController.value, controller.netweightFocusNode.value, w, (value) {}, hint: 'Enter Net Weight(in ${controller.dropdownValues})')),
+                8.kW,
+                Expanded(
+                  flex: 2,
+                  child: commonDropdownButton(
+                    controller.weights.map((item) {
+                      return DropdownMenuItem<String>(
+                        value: item.toString(),
+                        child: Text(item, style: const TextStyle(fontSize: 14)),
+                      );
+                    }).toList(),
+                    controller.dropdownValues.value,
+                    w * 0.25,
+                    h,
+                    appColors.backgroundColor,
+                    (value) => controller.dropdownValues.value = value ?? "",
+                    borderColor: appColors.border,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          16.kH,
+          commonComponent(
+            mandatory: false,
+            "Dimension(in L*B*H) in ${controller.dropdownValue}",
+            Row(
+              children: [
+                Expanded(flex: 2, child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: 'Length')),
+                8.kW,
+                Expanded(flex: 2, child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: 'Breadth')),
+                8.kW,
+                Expanded(flex: 2, child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: 'Height')),
+                8.kW,
+                Expanded(
+                  flex: 3,
+                  child: commonDropdownButton(
+                    controller.measureunits.map((item) {
+                      return DropdownMenuItem<String>(
+                        value: item.toString(),
+                        child: Text(item, style: const TextStyle(fontSize: 14)),
+                      );
+                    }).toList(),
+                    controller.dropdownValue.value,
+                    w * 0.25,
+                    h,
+                    appColors.backgroundColor,
+                    (value) => controller.dropdownValue.value = value ?? "",
+                    borderColor: appColors.border,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          16.kH,
+          commonComponent("Technique Used", commonTextField(controller.techniqueController.value, controller.techniqueFocusNode.value, w, (value) {}, hint: 'Enter Crafting Technique'), mandatory: false),
+          16.kH,
+          commonComponent("Pattern Used", commonTextField(controller.patternController.value, controller.patternFocusNode.value, w, (value) {}, hint: 'Enter Pattern Used', maxLines: 3), mandatory: false),
         ],
       ),
-      16.kH,
-      commonComponent("Quantity", commonTextField(controller.quantityController.value, controller.quantityFocusNode.value, w, (value) {}, hint: 'Enter Quantity')),
-      16.kH,
-      commonComponent(
-        mandatory: false,
-        "Net Weight (${controller.dropdownValues})",
-        Row(
-          children: [
-            Expanded(flex: 6, child: commonTextField(controller.netweightController.value, controller.netweightFocusNode.value, w, (value) {}, hint: 'Enter Net Weight(in ${controller.dropdownValues})')),
-            8.kW,
-            Expanded(
-              flex: 2,
-              child: commonDropdownButton(
-                controller.weights.map((item) {
-                  return DropdownMenuItem<String>(
-                    value: item.toString(),
-                    child: Text(item, style: const TextStyle(fontSize: 14)),
-                  );
-                }).toList(),
-                controller.dropdownValues.value,
-                w * 0.25,
-                h,
-                appColors.backgroundColor,
-                (value) => controller.dropdownValues.value = value ?? "",
-                borderColor: appColors.border,
-              ),
-            ),
-          ],
-        ),
-      ),
-      16.kH,
-      commonComponent("Material", commonTextField(controller.materialController.value, controller.materialFocusNode.value, w, (value) {}, hint: 'Enter Material Used', maxLines: 3)),
-      16.kH,
-      commonComponent(
-        mandatory: false,
-        "Dimension(in L*B*H) in ${controller.dropdownValue}",
-        Row(
-          children: [
-            Expanded(flex: 2, child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: 'Length')),
-            8.kW,
-            Expanded(flex: 2, child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: 'Breadth')),
-            8.kW,
-            Expanded(flex: 2, child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: 'Height')),
-            8.kW,
-            Expanded(
-              flex: 3,
-              child: commonDropdownButton(
-                controller.measureunits.map((item) {
-                  return DropdownMenuItem<String>(
-                    value: item.toString(),
-                    child: Text(item, style: const TextStyle(fontSize: 14)),
-                  );
-                }).toList(),
-                controller.dropdownValue.value,
-                w * 0.25,
-                h,
-                appColors.backgroundColor,
-                (value) => controller.dropdownValue.value = value ?? "",
-                borderColor: appColors.border,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
+    ),
   );
 }
 
@@ -296,47 +359,42 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
         ),
       ),
       8.kH,
-      Text("Add up to 4 images to your product. Used to represent your product during checkout, in email, social sharing, and more.", style: TextStyle(color: Colors.grey[600])),
+      Text("Add up to 10 images to your product. Used to represent your product during checkout, in email, social sharing, and more.", style: TextStyle(color: Colors.grey[600])),
       20.kH,
       Text("Picked Files:"),
       Divider(),
-      if (controller.imagefiles.isNotEmpty) pickedfiles(w, h, controller),
+      if (controller.imagefiles.isNotEmpty) Padding(padding: const EdgeInsets.all(8.0), child: pickedfiles(w, h, controller)),
     ],
   );
 }
 
 Widget pickedfiles(double w, double h, AddProductController controller) {
-  return GridView.count(
-    crossAxisCount: 3,
-    shrinkWrap: true,
-    mainAxisSpacing: 20,
-    children: List.generate(growable: false, controller.imagefiles.length, (index) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          height: 250,
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  controller.imagefiles.removeAt(index);
-                },
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
-                    child: Padding(
-                      padding: EdgeInsets.all(2),
-                      child: Icon(Icons.close, size: 17, color: Colors.white),
-                    ),
+  return SizedBox(
+    height: h * 0.3,
+    child: GridView.builder(
+      itemCount: controller.imagefiles.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 20),
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return Column(
+          children: [
+            GestureDetector(
+              onTap: () => controller.imagefiles.removeAt(index),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
+                  child: const Padding(
+                    padding: EdgeInsets.all(2),
+                    child: Icon(Icons.close, size: 17, color: Colors.white),
                   ),
                 ),
               ),
-              Image.file(File(controller.imagefiles[index]), width: w * .25, height: h * .09),
-            ],
-          ),
-        ),
-      );
-    }),
+            ),
+            Image.file(File(controller.imagefiles[index]), width: w * .25, height: h * .09),
+          ],
+        );
+      },
+    ),
   );
 }

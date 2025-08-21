@@ -86,7 +86,6 @@ class UpdateProfileController extends GetxController {
             Utils.setBoolPreferenceValues(Constants.isNewUser, false);
             if (isNewUser.value) {
               Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
-              CommonMethods.showToast(value.message ?? "Profile Updated Successfully...", icon: Icons.check, bgColor: Colors.green);
             } else {
               Get.back();
               Get.back();
