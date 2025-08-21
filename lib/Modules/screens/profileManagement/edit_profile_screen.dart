@@ -9,6 +9,7 @@ import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,7 +27,7 @@ class EditProfile extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            appBar: commonAppBar("Update Profile",automaticallyImplyLeading:controller.isNewUser.value?false:true),
+            appBar: commonAppBar("Update Profile", automaticallyImplyLeading: controller.isNewUser.value ? false : true),
             body: Padding(
               padding: const EdgeInsets.all(20.0),
               child: SingleChildScrollView(
@@ -45,25 +46,32 @@ class EditProfile extends ParentWidget {
                     ),
                     20.kH,
                     content(w, h, controller),
-                    35.kH,
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, () => Get.back(), hint: "Cancel", radius: 30),
-                          commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, (){
-                            if(controller.validateForm()){
-                              controller.updateProfileApi();
-                            }else{
-                              CommonMethods.showToast("please fill all the mandatory fields");
-                            }
-                          }, hint: "Save", radius: 30),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
+              ),
+            ),
+            bottomNavigationBar: Padding(
+              padding: EdgeInsets.fromLTRB(20, 6, 20, h * 0.05),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, () => Get.back(), hint: "Cancel", radius: 30),
+                  commonButton(
+                    w * 0.3,
+                    45,
+                    appColors.contentButtonBrown,
+                    Colors.white,
+                    () {
+                      if (controller.validateForm()) {
+                        controller.updateProfileApi();
+                      } else {
+                        CommonMethods.showToast("please fill all the mandatory fields");
+                      }
+                    },
+                    hint: "Save",
+                    radius: 30,
+                  ),
+                ],
               ),
             ),
           ),
@@ -86,7 +94,7 @@ Widget profile(BuildContext context, double h, double w, UpdateProfileController
               borderRadius: BorderRadius.circular(100), // Half of container size
               child: controller.selectedImage.value != null
                   ? Image.file(File(controller.selectedImage.value ?? ""), width: 150, height: 150, fit: BoxFit.cover)
-                  : (controller.commonController.profileData.value.data?.avatar?.isNotEmpty??false)
+                  : (controller.commonController.profileData.value.data?.avatar?.isNotEmpty ?? false)
                   ? commonProfileNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "")
                   : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
             ),
@@ -134,7 +142,7 @@ Widget content(double w, double h, UpdateProfileController controller) {
       16.kH,
       commonComponent("Last Name", commonTextField(controller.lastNameController.value, controller.lastNameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Last name', maxLines: 1)),
       16.kH,
-      commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Email', maxLines: 1),mandatory: false),
+      commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Email', maxLines: 1), mandatory: false),
       16.kH,
       commonComponent(
         "Expertise",
@@ -154,6 +162,36 @@ Widget content(double w, double h, UpdateProfileController controller) {
           },
           hint: 'Select Expertise',
           borderColor: appColors.border,
+        ),
+      ),
+      6.kH,
+      ListTile(
+        minVerticalPadding: 0,
+        contentPadding: EdgeInsets.all(0),
+        title: Text('Introductory Video', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600)),
+        trailing: InkWell(
+          splashColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          onTap: () {
+            if (!controller.isIntroUploaded.value) Get.toNamed(RoutesClass.videoRecorder);
+          },
+          child: Container(
+            padding: EdgeInsets.all(12),
+            width: 140,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(Icons.video_call, size: 25, color: appColors.brownDarkText),
+                5.kW,
+                Text(
+                  controller.isIntroUploaded.value ? "Uploaded ✓" : 'Upload',
+                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: appColors.brownDarkText),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     ],

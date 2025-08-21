@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bhk_artisan/Modules/controller/updateprofilecontroller.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
@@ -9,6 +10,8 @@ class VideoPreviewController extends GetxController {
   var path = "".obs;
   var isMuted = false.obs;
 
+  UpdateProfileController updateProfileController = Get.put(UpdateProfileController());
+
   @override
   void onInit() {
     super.onInit();
@@ -17,23 +20,21 @@ class VideoPreviewController extends GetxController {
   }
 
   void setVideo(String path) {
-  videoController = VideoPlayerController.file(File(path))
-    ..initialize().then((_) {
-      isInitialized.value = true;
-      videoController.play();
-      isPlaying.value = true;
+    videoController = VideoPlayerController.file(File(path))
+      ..initialize().then((_) {
+        isInitialized.value = true;
+        videoController.play();
+        isPlaying.value = true;
 
-      videoController.addListener(() {
-        if (videoController.value.position >= videoController.value.duration &&
-            !videoController.value.isPlaying) {
-          isPlaying.value = false;
-          update();
-        }
+        videoController.addListener(() {
+          if (videoController.value.position >= videoController.value.duration && !videoController.value.isPlaying) {
+            isPlaying.value = false;
+            update();
+          }
+        });
+        update();
       });
-      update();
-    });
-}
-
+  }
 
   void togglePlayPause() {
     if (isPlaying.value) {
@@ -61,6 +62,11 @@ class VideoPreviewController extends GetxController {
     isPlaying.value = true;
   }
 
+  void submit(){
+    updateProfileController.isIntroUploaded.value=true;
+    Get.back();
+    Get.back();
+  }
 
   @override
   void onClose() {

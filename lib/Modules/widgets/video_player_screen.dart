@@ -48,10 +48,7 @@ class VideoPreviewPage extends ParentWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton:Padding(
           padding: EdgeInsets.fromLTRB(16.0,16,16,h*0.05),
-          child: commonButton(w, 50, appColors.contentButtonBrown, Colors.white, (){
-            Get.back();
-            Get.back();
-          },hint: "Submit",radius: 25),
+          child: commonButton(w, 50, appColors.contentButtonBrown, Colors.white, ()=>controller.submit(),hint: "Submit",radius: 25),
         ),
       ),
     );

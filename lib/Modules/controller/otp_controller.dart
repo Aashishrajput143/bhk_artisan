@@ -40,7 +40,6 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
   var identity = "".obs;
   Timer? timer;
   var countryCode = "".obs;
-  var isNewUser = false.obs;
 
   @override
   void onInit() {
@@ -51,9 +50,6 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
 
     if (Get.arguments['countryCode'] != null) {
       countryCode.value = Get.arguments['countryCode'];
-    }
-    if (Get.arguments['isNewUser'] != null) {
-      isNewUser.value = Get.arguments['isNewUser'];
     }
     animationController = AnimationController(vsync: this, duration: const Duration(seconds: 6))..repeat();
     print("${referenceId.value} ${identity.value} ${countryCode.value}");
@@ -84,7 +80,7 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
             setRxRequestStatus(Status.COMPLETED);
             setVerifyData(value);
             Utils.printLog("Response===> ${value.toString()}");
-            redirect();
+            redirect(value);
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus,showMessage: true);
@@ -122,12 +118,12 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
     }
   }
 
-  redirect() {
+  redirect(VerifyOTPModel value) {
     print("Statuscode======> ${verifyOTPData.value.statusCode}");
     Utils.savePreferenceValues(Constants.accessToken, "${verifyOTPData.value.data?.accessToken}");
 
     Utils.savePreferenceValues(Constants.email, "${verifyOTPData.value.data?.email}");
-    if (isNewUser.value) {
+    if (value.data?.isNewUser??false) {
       Utils.setBoolPreferenceValues(Constants.isNewUser, true);
       Get.offAllNamed(RoutesClass.editprofile, arguments: {"isNewUser": true});
     } else {

@@ -32,6 +32,7 @@ class Data {
   String? name;
   String? email;
   int? referenceId;
+  bool? isNewUser;
 
   Data(
       {this.accessToken,
@@ -39,7 +40,9 @@ class Data {
       this.group,
       this.name,
       this.email,
-      this.referenceId});
+      this.referenceId,
+      this.isNewUser
+      });
 
   Data.fromJson(Map<String, dynamic> json) {
     accessToken = json['accessToken'];
@@ -48,6 +51,7 @@ class Data {
     name = json['name'];
     email = json['email'];
     referenceId = json['referenceId'];
+    isNewUser = json['isNewUser'];
   }
 
   Map<String, dynamic> toJson() {
@@ -58,6 +62,7 @@ class Data {
     data['name'] = name;
     data['email'] = email;
     data['referenceId'] = referenceId;
+    data['isNewUser']= isNewUser;
     return data;
   }
 }

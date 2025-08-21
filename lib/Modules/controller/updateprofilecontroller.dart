@@ -26,6 +26,7 @@ class UpdateProfileController extends GetxController {
 
   var selectedExpertise = Rxn<String>();
   var isNewUser = false.obs;
+  var isIntroUploaded = false.obs;
 
   final RxList<Expertise> expertise = <Expertise>[Expertise(id: 1, name: 'HandLoom'), Expertise(id: 2, name: 'HandiCraft')].obs;
 
