@@ -24,6 +24,12 @@ class AppStrings {
   String get takeAPhoto => 'Take a Photo';
   String get removePhoto => 'Remove Photo';
 
+      // Upload Video Drawer
+  String get uploadVideo => 'Upload Video';
+  String get viewVideoLibrary => 'View Video Library';
+  String get takeAVideo => 'Take a Video';
+  String get removeVideo => 'Remove Video';
+
   //default
   String get alert => 'Alert';
   String get yourAuthExpired =>

@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'dart:ui' as ui;
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 
 var picker = ImagePicker().obs;
 
@@ -14,9 +17,17 @@ Future<void> pickImageFromGallery(Rxn<String> selectedImage, gallery) async {
     final double kb = bytes / 1024;
     final double mb = kb / 1024;
 
-    print('Image size: $bytes bytes');
-    print('Image size: ${kb.toStringAsFixed(2)} KB');
-    print('Image size: ${mb.toStringAsFixed(2)} MB');
+    debugPrint('Image size: $bytes bytes');
+    debugPrint('Image size: ${kb.toStringAsFixed(2)} KB');
+    debugPrint('Image size: ${mb.toStringAsFixed(2)} MB');
+
+    // Resolution
+    final data = await file.readAsBytes();
+    final ui.Image decodedImage = await decodeImageFromList(data);
+    final int width = decodedImage.width;
+    final int height = decodedImage.height;
+
+    debugPrint('Resolution: ${width}x$height');
   }
 }
 
@@ -30,7 +41,7 @@ Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles,bool fromGa
     } else {
       final XFile? pickedFile = await picker.value.pickImage(source: ImageSource.camera);
       if (pickedFile != null) {
-        print("ImageSingle: $pickedFile");
+        debugPrint("ImageSingle: $pickedFile");
         imageFiles.add(pickedFile.path);
       }
     }
@@ -41,14 +52,56 @@ Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles,bool fromGa
       final double kb = bytes / 1024;
       final double mb = kb / 1024;
 
-      print("Image: ${image.path}");
-      print('Size: $bytes bytes');
-      print('Size: ${kb.toStringAsFixed(2)} KB');
-      print('Size: ${mb.toStringAsFixed(2)} MB');
+     // Image resolution
+      final data = await file.readAsBytes();
+      final ui.Image decodedImage = await decodeImageFromList(data);
+      final int width = decodedImage.width;
+      final int height = decodedImage.height;
+
+      debugPrint("Image: ${image.path}");
+      debugPrint('Size: $bytes bytes');
+      debugPrint('Size: ${kb.toStringAsFixed(2)} KB');
+      debugPrint('Size: ${mb.toStringAsFixed(2)} MB');
+      debugPrint('Resolution: ${width}x$height');
     }
 
-    print("Total images: ${imageFiles.length}");
+    debugPrint("Total images: ${imageFiles.length}");
   } catch (e) {
-    print("Error: $e");
+    debugPrint("Error: $e");
+  }
+}
+
+Future<void> pickVideoFromGallery(Rxn<String> selectedVideo, bool fromGallery,{Future<void> Function()? onVideoPicked}) async {
+  final XFile? video = await picker.value.pickVideo(
+    source: fromGallery ? ImageSource.gallery : ImageSource.camera,
+    maxDuration: const Duration(seconds: 15),
+  );
+
+  if (video != null) {
+    selectedVideo.value = video.path;
+
+    final file = File(video.path);
+    final int bytes = await file.length();
+    final double kb = bytes / 1024;
+    final double mb = kb / 1024;
+
+    debugPrint('Video size: $bytes bytes');
+    debugPrint('Video size: ${kb.toStringAsFixed(2)} KB');
+    debugPrint('Video size: ${mb.toStringAsFixed(2)} MB');
+
+    // Get video resolution
+    final controller = VideoPlayerController.file(file);
+    await controller.initialize();
+
+    final int width = controller.value.size.width.toInt();
+    final int height = controller.value.size.height.toInt();
+
+    debugPrint('Video resolution: ${width}x$height');
+
+    await controller.dispose();
+
+    if (onVideoPicked != null) {
+      await onVideoPicked();
+    }
   }
 }

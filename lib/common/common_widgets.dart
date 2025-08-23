@@ -132,7 +132,7 @@ Future bottomDrawerMultiFile(BuildContext context, h, w, RxList<String> selected
   );
 }
 
-Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void Function()? onImageGallery, void Function()? onCamera, {bool isDeleteButton = false}) {
+Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void Function()? onImageGallery, void Function()? onCamera, {bool isDeleteButton = false,bool isVideo =false}) {
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -147,7 +147,7 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
               child: Text(
-                appStrings.uploadPhoto,
+               isVideo?appStrings.uploadVideo:appStrings.uploadPhoto,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
               ),
             ),
@@ -160,10 +160,10 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
                 onTap: onImageGallery,
                 child: Row(
                   children: [
-                    Icon(Icons.photo_library_outlined, size: 30, color: appColors.contentSecondary),
+                    Icon(isVideo ? Icons.video_library_outlined : Icons.photo_library_outlined, size: 30, color: appColors.contentSecondary),
                     const SizedBox(width: 10),
                     Text(
-                      appStrings.viewPhotoLibrary,
+                     isVideo?appStrings.viewVideoLibrary: appStrings.viewPhotoLibrary,
                       style: TextStyle(fontSize: 16, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.w600, color: appColors.contentSecondary),
                     ),
                   ],
@@ -182,7 +182,7 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
                     Icon(Icons.camera_alt_outlined, size: 30, color: appColors.contentSecondary),
                     const SizedBox(width: 10),
                     Text(
-                      appStrings.takeAPhoto,
+                     isVideo?appStrings.takeAVideo: appStrings.takeAPhoto,
                       style: TextStyle(fontSize: 16, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.w600, color: appColors.contentSecondary),
                     ),
                   ],
@@ -202,7 +202,7 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
                     selectedImage.value = null;
                   }
                 },
-                hint: appStrings.removePhoto,
+                hint:isVideo?appStrings.removeVideo: appStrings.removePhoto,
                 icon: Icons.delete,
                 borderColor: selectedImage.value != null ? appColors.brownDarkText : appColors.buttonStateDisabled,
               ),

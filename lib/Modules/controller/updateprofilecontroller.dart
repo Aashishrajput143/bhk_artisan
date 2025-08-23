@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
+import 'package:bhk_artisan/Modules/model/pre_signed_intro_video_model.dart' show PreSignedIntroVideoModel;
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/constants.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
@@ -8,7 +9,6 @@ import 'package:get/get.dart';
 import '../../common/CommonMethods.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
-import '../model/get_profile_model.dart';
 import '../model/update_profile_model.dart';
 import '../repository/profilerepository.dart';
 
@@ -16,6 +16,7 @@ class UpdateProfileController extends GetxController {
   CommonScreenController commonController = Get.put(CommonScreenController());
   final _api = ProfileRepository();
   var selectedImage = Rxn<String>();
+  var selectedIntroVideo = Rxn<String>();
 
   var firstNameController = TextEditingController().obs;
   var firstNameFocusNode = FocusNode().obs;
@@ -26,7 +27,8 @@ class UpdateProfileController extends GetxController {
 
   var selectedExpertise = Rxn<String>();
   var isNewUser = false.obs;
-  var isIntroUploaded = false.obs;
+  var isIntroUploaded = Rxn<String>();
+  var havingIntro = true.obs;
 
   final RxList<Expertise> expertise = <Expertise>[Expertise(id: 1, name: 'HandLoom'), Expertise(id: 2, name: 'HandiCraft')].obs;
 
@@ -60,14 +62,13 @@ class UpdateProfileController extends GetxController {
 
   final rxRequestStatus = Status.COMPLETED.obs;
   final updateProfileModel = UpdateProfileModel().obs;
-  final getProfileModel = GetProfileModel().obs;
+  final urlData = PreSignedIntroVideoModel().obs;
+
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
-
   void setupdateProfileModeldata(UpdateProfileModel value) => updateProfileModel.value = value;
-
-  void setGetprofiledata(GetProfileModel value) => getProfileModel.value = value;
+  void setUrlData(PreSignedIntroVideoModel value) => urlData.value = value;
 
   Future<void> updateProfileApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
@@ -92,15 +93,72 @@ class UpdateProfileController extends GetxController {
               Get.back();
               commonController.getProfileApi();
               CommonMethods.showToast(value.message ?? "Profile Updated Successfully...", icon: Icons.check, bgColor: Colors.green);
-
-              //Get.offAllNamed(RoutesClass.commonScreen);
-              //commonController.getProfileApi();
-              //commonController.selectedIndex.value = 4;
             }
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
           });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+
+
+  Future<void> getPreSignedIntroUrlApi() async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    Map<String, dynamic> data = {
+      "contentType": "video/",
+      "extension": "mp4",
+    };
+
+    if (connection == true) {
+      setRxRequestStatus(Status.LOADING);
+      
+      _api
+          .getPreSignedIntroUrlApi(data)
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setUrlData(value);
+            //CommonMethods.showToast(value.message);
+            Utils.printLog("Response===> ${value.toString()}");
+            addIntroVideoApi(value.data?.url??"",value.data?.key??"");
+          })
+          .onError((error, stackTrace) {
+            handleApiError(
+        error,stackTrace,
+        setError: setError,
+        setRxRequestStatus: setRxRequestStatus,
+      );
+    });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+
+  Future<void> addIntroVideoApi(String presignedUrl,String key) async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      setRxRequestStatus(Status.LOADING);
+      
+      _api
+          .addIntroVideoApi(selectedIntroVideo.value??"",presignedUrl)
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            //CommonMethods.showToast(value.message);
+            Utils.printLog("Response===> $value");
+            if(value)isIntroUploaded.value = "https://bhk-bucket-dev.s3.us-east-1.amazonaws.com/$key";
+          })
+          .onError((error, stackTrace) {
+            handleApiError(
+        error,stackTrace,
+        setError: setError,
+        setRxRequestStatus: setRxRequestStatus,
+      );
+    });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }

@@ -274,24 +274,28 @@ class NetworkApiServices extends BaseApiServices {
     return responseJson;
   }
 
-  Future uploadFileToS3WithPresignedUrl(String presignedUrl, File file) async {
+  Future<bool> uploadFileToS3WithPresignedUrl(String path, String presignedUrl) async {
     Utils.printLog("Presigned URL: $presignedUrl");
-    Utils.printLog("Uploading file: ${file.path}");
-    dynamic responseJson;
+    Utils.printLog("Uploading file: $path");
+
+    bool isUploaded = false;
+
     try {
-      final dio = Dio();
+      final file = File(path);
 
-      final response = await dio.put(
-        presignedUrl,
-        data: file.openRead(),
-        options: Options(headers: {"Content-Type": "video/mp4"}, sendTimeout: const Duration(seconds: 600), receiveTimeout: const Duration(seconds: 600)),
+      final bytes = await file.readAsBytes();
+      final response = await http.put(
+        Uri.parse(presignedUrl),
+        body: bytes,
+        headers: {
+          "Content-Type": "video/mp4",
+          "x-amz-server-side-encryption":"AES256"
+        },
       );
-
-      responseJson = returnDioResponse(response);
-      Utils.printLog('Response: $response');
 
       if (response.statusCode == 200) {
         Utils.printLog("✅ Upload successful");
+        isUploaded = true;
       } else {
         Utils.printLog("❌ Upload failed: ${response.statusCode}");
         throw Exception("Upload failed with status: ${response.statusCode}");
@@ -310,6 +314,6 @@ class NetworkApiServices extends BaseApiServices {
       throw Exception("Unexpected error: $e");
     }
 
-    return responseJson;
+    return isUploaded;
   }
 }

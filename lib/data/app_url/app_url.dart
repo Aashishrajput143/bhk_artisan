@@ -10,7 +10,8 @@ class AppUrl {
   static String loggedinuser = '$baseUrl/users/api/users/userdetails';
   static String updateprofile = '$baseUrl/users/api/users/updateprofile';
   static String register = '$baseUrl/api/user/register';
-
+  static String presignUrl = '$baseUrl/users/api/users/presign-url';
+  
   //get
   static String getcategory =
       '$baseUrl/product/api/category/main-categories?page=1&pageSize=10';

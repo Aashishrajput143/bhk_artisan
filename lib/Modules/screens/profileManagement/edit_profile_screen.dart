@@ -28,9 +28,9 @@ class EditProfile extends ParentWidget {
           Scaffold(
             backgroundColor: appColors.backgroundColor,
             appBar: commonAppBar("Update Profile", automaticallyImplyLeading: controller.isNewUser.value ? false : true),
-            body: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: SingleChildScrollView(
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -45,13 +45,13 @@ class EditProfile extends ParentWidget {
                       ],
                     ),
                     20.kH,
-                    content(w, h, controller),
+                    content(context, w, h, controller),
                   ],
                 ),
               ),
             ),
             bottomNavigationBar: Padding(
-              padding: EdgeInsets.fromLTRB(20, 6, 20, h * 0.05),
+              padding: EdgeInsets.fromLTRB(16, 6, 16, h * 0.04),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -135,7 +135,7 @@ Widget profile(BuildContext context, double h, double w, UpdateProfileController
   );
 }
 
-Widget content(double w, double h, UpdateProfileController controller) {
+Widget content(BuildContext context, double w, double h, UpdateProfileController controller) {
   return Column(
     children: [
       commonComponent("First Name", commonTextField(controller.firstNameController.value, controller.firstNameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your First name', maxLines: 1)),
@@ -165,6 +165,14 @@ Widget content(double w, double h, UpdateProfileController controller) {
         ),
       ),
       6.kH,
+      introVideoContent(context, w, h, controller),
+    ],
+  );
+}
+
+Widget introVideoContent(BuildContext context, double w, double h, UpdateProfileController controller) {
+  return Column(
+    children: [
       ListTile(
         minVerticalPadding: 0,
         contentPadding: EdgeInsets.all(0),
@@ -175,7 +183,26 @@ Widget content(double w, double h, UpdateProfileController controller) {
           focusColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onTap: () {
-            if (!controller.isIntroUploaded.value) Get.toNamed(RoutesClass.videoRecorder);
+            if(controller.havingIntro.value){
+              Get.toNamed(RoutesClass.videoPlayer,arguments: {'path': controller.isIntroUploaded.value});
+            }
+            else if (controller.isIntroUploaded.value?.isEmpty ?? true) {
+              bottomDrawer(
+                context,
+                h * 0.22,
+                w,
+                controller.selectedIntroVideo,
+                () {
+                  Get.back();
+                  pickVideoFromGallery(controller.selectedIntroVideo, true, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
+                },
+                () {
+                  Get.back();
+                  pickVideoFromGallery(controller.selectedIntroVideo, false, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
+                },
+                isVideo: true,
+              );
+            }
           },
           child: Container(
             padding: EdgeInsets.all(12),
@@ -186,7 +213,7 @@ Widget content(double w, double h, UpdateProfileController controller) {
                 Icon(Icons.video_call, size: 25, color: appColors.brownDarkText),
                 5.kW,
                 Text(
-                  controller.isIntroUploaded.value ? "Uploaded ✓" : 'Upload',
+                 controller.havingIntro.value?"View":  controller.isIntroUploaded.value?.isNotEmpty ?? false ? "Uploaded ✓" : 'Upload',
                   style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: appColors.brownDarkText),
                 ),
               ],

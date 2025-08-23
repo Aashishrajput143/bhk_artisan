@@ -6,12 +6,12 @@ class PreSignedIntroVideoModel {
 
   PreSignedIntroVideoModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -31,9 +31,9 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['url'] = this.url;
-    data['key'] = this.key;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['url'] = url;
+    data['key'] = key;
     return data;
   }
 }
