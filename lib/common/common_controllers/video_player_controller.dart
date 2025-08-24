@@ -53,6 +53,8 @@ class VideoPreviewController extends GetxController {
       isPlaying.value = videoController.value.isPlaying;
       isBuffering.value = videoController.value.isBuffering;
 
+      if(isPlaying.value) restart.value=false;
+
       if (position.value >= duration.value && !isPlaying.value) {
         isBuffering.value= false;
         showControls.value = true;
