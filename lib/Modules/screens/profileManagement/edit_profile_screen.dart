@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:bhk_artisan/Modules/screens/productManagement/add_product_screen.dart';
+import 'package:bhk_artisan/common/MyAlertDialog.dart';
+import 'package:bhk_artisan/common/common_back.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/commonmethods.dart';
 import 'package:bhk_artisan/common/get_image_photo_gallery.dart';
@@ -23,60 +25,68 @@ class EditProfile extends ParentWidget {
   Widget buildingView(BuildContext context, double h, double w) {
     UpdateProfileController controller = Get.put(UpdateProfileController());
     return Obx(
-      () => Stack(
-        children: [
-          Scaffold(
-            backgroundColor: appColors.backgroundColor,
-            appBar: commonAppBar("Update Profile", automaticallyImplyLeading: controller.isNewUser.value ? false : true),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      () => onBack(
+        Stack(
+          children: [
+            Scaffold(
+              backgroundColor: appColors.backgroundColor,
+              appBar: commonAppBar("Update Profile", automaticallyImplyLeading: false),
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      20.kH,
+                      profile(context, h, w, controller),
+                      20.kH,
+                      Row(
+                        children: [
+                          Icon(Icons.edit_document, size: 20.0, color: Colors.blue),
+                          10.kW,
+                          Text('Personal Information', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      20.kH,
+                      content(context, w, h, controller),
+                    ],
+                  ),
+                ),
+              ),
+              bottomNavigationBar: Padding(
+                padding: EdgeInsets.fromLTRB(16, 6, 16, h * 0.04),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    20.kH,
-                    profile(context, h, w, controller),
-                    20.kH,
-                    Row(
-                      children: [
-                        Icon(Icons.edit_document, size: 20.0, color: Colors.blue),
-                        10.kW,
-                        Text('Personal Information', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
-                      ],
+                    commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, () => MyAlertDialog.showDiscardChangesDialog(), hint: "Cancel", radius: 30),
+                    commonButton(
+                      w * 0.3,
+                      45,
+                      appColors.contentButtonBrown,
+                      Colors.white,
+                      () {
+                        if (controller.validateForm()) {
+                          controller.updateProfileApi();
+                        } else {
+                          CommonMethods.showToast("please fill all the mandatory fields");
+                        }
+                      },
+                      hint: "Save",
+                      radius: 30,
                     ),
-                    20.kH,
-                    content(context, w, h, controller),
                   ],
                 ),
               ),
             ),
-            bottomNavigationBar: Padding(
-              padding: EdgeInsets.fromLTRB(16, 6, 16, h * 0.04),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, () => Get.back(), hint: "Cancel", radius: 30),
-                  commonButton(
-                    w * 0.3,
-                    45,
-                    appColors.contentButtonBrown,
-                    Colors.white,
-                    () {
-                      if (controller.validateForm()) {
-                        controller.updateProfileApi();
-                      } else {
-                        CommonMethods.showToast("please fill all the mandatory fields");
-                      }
-                    },
-                    hint: "Save",
-                    radius: 30,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
-        ],
+            progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+          ],
+        ),
+        canPop: false,
+        (didPop, result) async {
+          if (!didPop) {
+            MyAlertDialog.showDiscardChangesDialog();
+          }
+        },
       ),
     );
   }
@@ -144,22 +154,88 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
       16.kH,
       commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Email', maxLines: 1), mandatory: false),
       16.kH,
+      Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: commonComponent(
+              "Category",
+              commonDropdownButton(
+                controller.casteCategory.map((item) {
+                  return DropdownMenuItem<String>(
+                    value: item.toString(),
+                    child: Text(item, style: const TextStyle(fontSize: 14)),
+                  );
+                }).toList(),
+                controller.selectedCategory.value,
+                w*0.5,
+                h,
+                appColors.backgroundColor,
+                (String? newValue) {
+                  controller.selectedCategory.value = newValue;
+                },
+                hint: 'Select Category',
+                borderColor: appColors.border,
+              ),
+            ),
+          ),
+          10.kW,
+          Expanded(flex: 3, child: commonComponent("Community", commonTextField(controller.communityController.value, controller.communityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Community', maxLines: 1))),
+        ],
+      ),
+      16.kH,
       commonComponent(
         "Expertise",
-        commonDropdownButton(
+        commonMultiDropdownButton(
           controller.expertise.map((item) {
             return DropdownMenuItem<String>(
-              value: item.name.toString(),
-              child: Text(item.name, style: const TextStyle(fontSize: 14)),
+              value: item.name,
+              child: StatefulBuilder(
+                builder: (context, setState) {
+                  final isSelected = controller.selectedMultiExpertise.contains(item.name);
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      if (isSelected) {
+                        controller.selectedMultiExpertise.remove(item.name);
+                      } else {
+                        controller.selectedMultiExpertise.add(item.name);
+                      }
+                      setState(() {});
+                    },
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          value: isSelected,
+                          checkColor: Colors.white,
+                          fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+                            if (states.contains(WidgetState.selected)) {
+                              return appColors.brownDarkText;
+                            }
+                            return Colors.white;
+                          }),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          onChanged: (value) {
+                            if (value == true) {
+                              controller.selectedMultiExpertise.add(item.name);
+                            } else {
+                              controller.selectedMultiExpertise.remove(item.name);
+                            }
+                            setState(() {});
+                          },
+                        ),
+                        Text(item.name, style: const TextStyle(fontSize: 14)),
+                      ],
+                    ),
+                  );
+                },
+              ),
             );
           }).toList(),
-          controller.selectedExpertise.value,
+          controller.selectedMultiExpertise,
           w,
           h,
           appColors.backgroundColor,
-          (String? newValue) {
-            controller.selectedExpertise.value = newValue;
-          },
           hint: 'Select Expertise',
           borderColor: appColors.border,
         ),
@@ -183,10 +259,9 @@ Widget introVideoContent(BuildContext context, double w, double h, UpdateProfile
           focusColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onTap: () {
-            if(controller.havingIntro.value){
-              Get.toNamed(RoutesClass.videoPlayer,arguments: {'path': controller.isIntroUploaded.value});
-            }
-            else if (controller.isIntroUploaded.value?.isEmpty ?? true) {
+            if (controller.havingIntro.value) {
+              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.isIntroUploaded.value});
+            } else if (controller.isIntroUploaded.value?.isEmpty ?? true) {
               bottomDrawer(
                 context,
                 h * 0.22,
@@ -213,7 +288,11 @@ Widget introVideoContent(BuildContext context, double w, double h, UpdateProfile
                 Icon(Icons.video_call, size: 25, color: appColors.brownDarkText),
                 5.kW,
                 Text(
-                 controller.havingIntro.value?"View":  controller.isIntroUploaded.value?.isNotEmpty ?? false ? "Uploaded ✓" : 'Upload',
+                  controller.havingIntro.value
+                      ? "View"
+                      : controller.isIntroUploaded.value?.isNotEmpty ?? false
+                      ? "Uploaded ✓"
+                      : 'Upload',
                   style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: appColors.brownDarkText),
                 ),
               ],

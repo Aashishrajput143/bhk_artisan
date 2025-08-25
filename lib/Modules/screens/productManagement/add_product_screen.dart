@@ -206,7 +206,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
                       );
                     }).toList(),
                     controller.selectedTexture.value,
-                    w*0.5,
+                    w * 0.5,
                     h,
                     appColors.backgroundColor,
                     (String? newValue) {
@@ -230,7 +230,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
                       );
                     }).toList(),
                     controller.selectedWashCare.value,
-                    w*0.5,
+                    w * 0.5,
                     h,
                     appColors.backgroundColor,
                     (String? newValue) {
@@ -307,7 +307,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
             ),
           ),
           16.kH,
-          commonComponent("Technique Used", commonTextField(controller.techniqueController.value, controller.techniqueFocusNode.value, w, (value) {}, hint: 'Enter Crafting Technique'), mandatory: false),
+          commonComponent("Art Used", commonTextField(controller.techniqueController.value, controller.techniqueFocusNode.value, w, (value) {}, hint: 'Enter Art Used'), mandatory: false),
           16.kH,
           commonComponent("Pattern Used", commonTextField(controller.patternController.value, controller.patternFocusNode.value, w, (value) {}, hint: 'Enter Pattern Used', maxLines: 3), mandatory: false),
         ],
@@ -345,7 +345,7 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
                   controller.imagefiles,
                   () {
                     Get.back();
-                    pickMultipleImagesFromGallery(controller.imagefiles, true);
+                    pickMultipleImagesFromGallery(controller.imagefiles, true, isValidate: true);
                   },
                   () {
                     Get.back();
@@ -383,15 +383,42 @@ Widget pickedfiles(double w, double h, AddProductController controller) {
               child: Align(
                 alignment: Alignment.topRight,
                 child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                  padding: EdgeInsets.all(3),
                   decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
-                  child: const Padding(
-                    padding: EdgeInsets.all(2),
-                    child: Icon(Icons.close, size: 17, color: Colors.white),
-                  ),
+                  child: Icon(Icons.close, size: 17, color: Colors.white),
                 ),
               ),
             ),
-            Image.file(File(controller.imagefiles[index]), width: w * .25, height: h * .09),
+            GestureDetector(
+              onTap: () => Get.dialog(
+                Dialog(
+                  insetPadding: EdgeInsets.all(16),
+                  backgroundColor: Colors.transparent,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () => Get.back(),
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
+                            child: Icon(Icons.close, size: 20, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      InteractiveViewer(
+                        child: Center(child: Image.file(File(controller.imagefiles[index]), fit: BoxFit.contain)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              child: Image.file(File(controller.imagefiles[index]), width: w * .2, height: h * .09, fit: BoxFit.fitWidth),
+            ),
           ],
         );
       },

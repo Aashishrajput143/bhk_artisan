@@ -1,38 +1,82 @@
+import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class MyAlertDialog extends StatefulWidget {
-  final String title;
-  final String content;
-  final List<Widget> actions;
-
-  const MyAlertDialog({super.key,
-    required this.title,
-    required this.content,
-    this.actions = const [],
-  });
-
-  @override
-  State<MyAlertDialog> createState() => _MyAlertDialogState();
-}
-
-class _MyAlertDialogState extends State<MyAlertDialog> {
-  double h=0.0;
-
-  double w=0.0;
-
-  @override
-  Widget build(BuildContext context) {
-      w=MediaQuery.of(context).size.width;
-    h=MediaQuery.of(context).size.height;
-    return  AlertDialog(
-      title: Text(
-        widget.title,
+class MyAlertDialog {
+  static void showlogoutDialog(Future<void> onLogout) {
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        title: Row(
+          children: [
+            Icon(Icons.logout, color: appColors.brownDarkText, size: 30),
+            8.kW,
+            Text("Confirm", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          ],
+        ),
+        content: Text("Are you sure you want to Logout?", style: TextStyle(fontSize: 14)),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text("CANCEL", style: TextStyle(color: appColors.brownDarkText)),
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.back();
+                  onLogout;
+                },
+                child: Text("YES", style: TextStyle(color: appColors.brownDarkText)),
+              ),
+            ],
+          ),
+        ],
       ),
-      actions: widget.actions,
-      content: Text(
-        widget.content,
-        // style: Theme.of(context).textTheme.body1,
+      barrierDismissible: false,
+    );
+  }
+
+  static void showDiscardChangesDialog() {
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        title: Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: appColors.brownDarkText, size: 30),
+            const SizedBox(width: 8),
+            const Text("Discard Changes", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          ],
+        ),
+        content: const Text("Are you sure you want to discard your changes?", style: TextStyle(fontSize: 14)),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Get.back(); 
+                },
+                child: Text("CANCEL", style: TextStyle(color: appColors.brownDarkText)),
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.back(); 
+                  Get.back();
+                },
+                child: Text("DISCARD", style: TextStyle(color: appColors.brownDarkText)),
+              ),
+            ],
+          ),
+        ],
       ),
+      barrierDismissible: false,
     );
   }
 }

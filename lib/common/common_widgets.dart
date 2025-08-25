@@ -20,7 +20,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../resources/colors.dart';
 import '../resources/font.dart';
 
-void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setError, Function(Status)? setRxRequestStatus, bool closeDialog = false,bool showMessage = false}) {
+void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setError, Function(Status)? setRxRequestStatus, bool closeDialog = false, bool showMessage = false}) {
   if (closeDialog) {
     Get.back();
   }
@@ -33,7 +33,7 @@ void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setErr
       var errorResponse = json.decode(error.toString());
 
       if (errorResponse is Map && errorResponse.containsKey('message')) {
-        if(showMessage) {
+        if (showMessage) {
           CommonMethods.showToast(errorResponse['message']);
         }
       } else {
@@ -64,8 +64,8 @@ Widget commonProfileNetworkImage(String url, {double? width, double? height, Box
   return AvatarWithBlurHash().avatarWithBlurHash(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, width: 150, height: 150);
 }
 
-Widget commonCircleNetworkImage(String url, {double radius=22}) {
-  return AvatarWithBlurHash().circleAvatarWithBlurHash(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url,radius: radius);
+Widget commonCircleNetworkImage(String url, {double radius = 22}) {
+  return AvatarWithBlurHash().circleAvatarWithBlurHash(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, radius: radius);
 }
 
 Future bottomDrawerMultiFile(BuildContext context, h, w, RxList<String> selectedImages, void Function()? onImageGallery, void Function()? onCamera) {
@@ -132,7 +132,7 @@ Future bottomDrawerMultiFile(BuildContext context, h, w, RxList<String> selected
   );
 }
 
-Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void Function()? onImageGallery, void Function()? onCamera, {bool isDeleteButton = false,bool isVideo =false}) {
+Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void Function()? onImageGallery, void Function()? onCamera, {bool isDeleteButton = false, bool isVideo = false}) {
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -147,7 +147,7 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
               child: Text(
-               isVideo?appStrings.uploadVideo:appStrings.uploadPhoto,
+                isVideo ? appStrings.uploadVideo : appStrings.uploadPhoto,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
               ),
             ),
@@ -163,7 +163,7 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
                     Icon(isVideo ? Icons.video_library_outlined : Icons.photo_library_outlined, size: 30, color: appColors.contentSecondary),
                     const SizedBox(width: 10),
                     Text(
-                     isVideo?appStrings.viewVideoLibrary: appStrings.viewPhotoLibrary,
+                      isVideo ? appStrings.viewVideoLibrary : appStrings.viewPhotoLibrary,
                       style: TextStyle(fontSize: 16, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.w600, color: appColors.contentSecondary),
                     ),
                   ],
@@ -182,7 +182,7 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
                     Icon(Icons.camera_alt_outlined, size: 30, color: appColors.contentSecondary),
                     const SizedBox(width: 10),
                     Text(
-                     isVideo?appStrings.takeAVideo: appStrings.takeAPhoto,
+                      isVideo ? appStrings.takeAVideo : appStrings.takeAPhoto,
                       style: TextStyle(fontSize: 16, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.w600, color: appColors.contentSecondary),
                     ),
                   ],
@@ -202,7 +202,7 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
                     selectedImage.value = null;
                   }
                 },
-                hint:isVideo?appStrings.removeVideo: appStrings.removePhoto,
+                hint: isVideo ? appStrings.removeVideo : appStrings.removePhoto,
                 icon: Icons.delete,
                 borderColor: selectedImage.value != null ? appColors.brownDarkText : appColors.buttonStateDisabled,
               ),
@@ -396,8 +396,8 @@ Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selec
       borderRadius: BorderRadius.circular(8.0),
     ),
     child: DropdownButton2<String>(
-      hint: Text(hint),
-      style: TextStyle(fontSize: 14, color: Colors.black),
+      hint: Text(hint, style: const TextStyle(fontSize: 14,color: Colors.black)),
+      //style: TextStyle(fontSize: 14, color: Colors.black),
       value: selectedValue,
       items: items,
       onChanged: onChanged,
@@ -409,6 +409,33 @@ Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selec
       ),
       isExpanded: true,
       underline: const SizedBox(),
+    ),
+  );
+}
+
+Widget commonMultiDropdownButton(List<DropdownMenuItem<String>>? items, List<String> selectedItems, double width, double height, Color color, {String hint = '', Color borderColor = Colors.transparent}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+    decoration: BoxDecoration(
+      border: Border.all(color: borderColor, width: 1.5),
+      borderRadius: BorderRadius.circular(8.0),
+    ),
+    child: DropdownButtonHideUnderline(
+      child: DropdownButton2<String>(
+        isExpanded: true,
+        hint: Text(
+          selectedItems.isEmpty ? hint : selectedItems.join(", "),
+          style: const TextStyle(fontSize: 14,color: Colors.black),
+          overflow: TextOverflow.ellipsis,
+        ),
+        items: items,
+        onChanged: (_) {},
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: height * .4,
+          width: width * .9,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
+        ),
+      ),
     ),
   );
 }

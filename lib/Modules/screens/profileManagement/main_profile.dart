@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/common/MyAlertDialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -45,7 +46,7 @@ class MainProfile extends ParentWidget {
                   buildProfileOptionCard('Privacy & Policy', 'Read how we protect your personal data', Icons.privacy_tip, () => Get.toNamed(RoutesClass.privacypolicy)),
                   buildProfileOptionCard('Terms & Conditions', 'Review the terms of using our services', Icons.description, () => Get.toNamed(RoutesClass.termscondition)),
                   buildProfileOptionCard('Settings', 'Edit Profile, Manage your profile', Icons.settings_outlined, () => Get.toNamed(RoutesClass.setting)),
-                  buildProfileOptionCard('Logout', 'Sign out from your account', Icons.logout, () => showlogoutDialog(controller)),
+                  buildProfileOptionCard('Logout', 'Sign out from your account', Icons.logout, () =>MyAlertDialog.showlogoutDialog(controller.logOutApi())),
                 ],
               ),
             ),
@@ -69,42 +70,6 @@ class MainProfile extends ParentWidget {
       ],
     );
   }
-}
-
-void showlogoutDialog(ProfileController controller) {
-  Get.dialog(
-    AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      title: Row(
-        children: [
-          Icon(Icons.logout, color: Colors.orange, size: 30),
-          8.kW,
-          Text("Confirm", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-        ],
-      ),
-      content: Text("Are you sure you want to Logout?"),
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: Text("CANCEL", style: TextStyle(color: Colors.pink)),
-            ),
-            TextButton(
-              onPressed: () {
-                controller.logOutApi();
-              },
-              child: Text("YES", style: TextStyle(color: Colors.pink)),
-            ),
-          ],
-        ),
-      ],
-    ),
-    barrierDismissible: false,
-  );
 }
 
 Widget buildProfileOptionCard(String title, String subtitle, IconData icon, void Function()? onTap) {

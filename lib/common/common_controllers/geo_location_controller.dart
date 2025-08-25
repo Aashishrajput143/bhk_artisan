@@ -1,15 +1,19 @@
 import 'package:bhk_artisan/data/response/status.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationController extends GetxController {
   var latitude = 0.0.obs;
   var longitude = 0.0.obs;
+  var address = "".obs;
+
   @override
   void onInit() {
     super.onInit();
     getCurrentLocation();
   }
+
   final rxRequestStatus = Status.COMPLETED.obs;
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
@@ -18,7 +22,6 @@ class LocationController extends GetxController {
   Future<void> getCurrentLocation() async {
     setRxRequestStatus(Status.LOADING);
 
-    // Check permission
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -45,19 +48,36 @@ class LocationController extends GetxController {
       return;
     }
 
-  Position position = await Geolocator.getCurrentPosition(
-    locationSettings: LocationSettings(
-      accuracy: LocationAccuracy.best, 
-      distanceFilter: 0,
-    ),
-  );
+    Position position = await Geolocator.getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.best, distanceFilter: 0));
 
     latitude.value = position.latitude;
     longitude.value = position.longitude;
 
     print("latitude===>${latitude.value}");
     print("longitude===>${longitude.value}");
-    
+
+    await getAddressFromLatLng(position);
+
     setRxRequestStatus(Status.COMPLETED);
+  }
+
+  Future<void> getAddressFromLatLng(Position position) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        address.value =
+            "${place.name}, ${place.street}, ${place.subLocality}, ${place.locality}, "
+            "${place.administrativeArea}, ${place.postalCode}, ${place.country}";
+
+        print("Full Address===> ${address.value}");
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }

@@ -53,26 +53,6 @@ class AddProductController extends GetxController {
 
   var selectedTexture = Rxn<String>();
 
-  final RxList<ProductCategory> productCategories = <ProductCategory>[
-    ProductCategory(categoryId: 1, categoryName: 'Handloom Sarees'),
-    ProductCategory(categoryId: 2, categoryName: 'Cotton Fabric'),
-    ProductCategory(categoryId: 3, categoryName: 'Silk Fabric'),
-    ProductCategory(categoryId: 4, categoryName: 'Handmade Bags'),
-    ProductCategory(categoryId: 5, categoryName: 'Wooden Crafts'),
-    ProductCategory(categoryId: 6, categoryName: 'Terracotta Items'),
-    ProductCategory(categoryId: 7, categoryName: 'Brassware'),
-    ProductCategory(categoryId: 8, categoryName: 'Hand-painted Art'),
-    ProductCategory(categoryId: 9, categoryName: 'Jute Products'),
-    ProductCategory(categoryId: 10, categoryName: 'Bamboo & Cane Items'),
-    ProductCategory(categoryId: 11, categoryName: 'Embroidery Work'),
-    ProductCategory(categoryId: 12, categoryName: 'Macrame Crafts'),
-    ProductCategory(categoryId: 13, categoryName: 'Woolen Shawls'),
-    ProductCategory(categoryId: 14, categoryName: 'Block Printed Textiles'),
-    ProductCategory(categoryId: 15, categoryName: 'Ceramic Pottery'),
-    ProductCategory(categoryId: 16, categoryName: 'Handwoven Rugs'),
-    ProductCategory(categoryId: 17, categoryName: 'Tribal Jewelry'),
-  ].obs;
-
   var colorController = TextEditingController().obs;
   var colorFocusNode = FocusNode().obs;
 
@@ -288,11 +268,4 @@ final List<String> textureList = [
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
   }
-}
-
-class ProductCategory {
-  final int categoryId;
-  final String categoryName;
-
-  ProductCategory({required this.categoryId, required this.categoryName});
 }

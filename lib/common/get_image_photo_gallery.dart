@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:bhk_artisan/common/CommonMethods.dart';
+import 'package:bhk_artisan/resources/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -31,14 +33,46 @@ Future<void> pickImageFromGallery(Rxn<String> selectedImage, gallery) async {
   }
 }
 
-Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles,bool fromGallery) async {
+Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromGallery, {bool isValidate = false}) async {
   try {
     List<XFile> pickedFiles = [];
 
     if (fromGallery) {
-      pickedFiles = await picker.value.pickMultipleMedia();
-      imageFiles.addAll(pickedFiles.map((file) => file.path));
-    } else {
+  pickedFiles = await picker.value.pickMultipleMedia();
+
+  if (isValidate) {
+    bool formatErrorShown = false;
+    bool sizeErrorShown = false;
+
+    for (var file in pickedFiles) {
+      File files = File(file.path);
+
+      bool validateFormat = Validator.validateImagesPath(files);
+      bool validateSize = Validator.validateImagesSize(files,2);
+
+      if (!validateFormat && !formatErrorShown) {
+        CommonMethods.showToast(
+          "Only JPG, JPEG, PNG formats are allowed",
+          icon: Icons.warning,
+          bgColor: Colors.red,
+        );
+        formatErrorShown = true;
+      } else if (!validateSize && !sizeErrorShown) {
+        CommonMethods.showToast(
+          "Images size should be less than 2 MB",
+          icon: Icons.warning,
+          bgColor: Colors.red,
+        );
+        sizeErrorShown = true;
+      } else if (validateFormat && validateSize) {
+        imageFiles.add(file.path);
+      }
+    }
+  } else {
+    imageFiles.addAll(pickedFiles.map((file) => file.path));
+  }
+}
+ else {
       final XFile? pickedFile = await picker.value.pickImage(source: ImageSource.camera);
       if (pickedFile != null) {
         debugPrint("ImageSingle: $pickedFile");
@@ -52,7 +86,7 @@ Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles,bool fromGa
       final double kb = bytes / 1024;
       final double mb = kb / 1024;
 
-     // Image resolution
+      // Image resolution
       final data = await file.readAsBytes();
       final ui.Image decodedImage = await decodeImageFromList(data);
       final int width = decodedImage.width;
@@ -71,11 +105,8 @@ Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles,bool fromGa
   }
 }
 
-Future<void> pickVideoFromGallery(Rxn<String> selectedVideo, bool fromGallery,{Future<void> Function()? onVideoPicked}) async {
-  final XFile? video = await picker.value.pickVideo(
-    source: fromGallery ? ImageSource.gallery : ImageSource.camera,
-    maxDuration: const Duration(seconds: 15),
-  );
+Future<void> pickVideoFromGallery(Rxn<String> selectedVideo, bool fromGallery, {Future<void> Function()? onVideoPicked}) async {
+  final XFile? video = await picker.value.pickVideo(source: fromGallery ? ImageSource.gallery : ImageSource.camera, maxDuration: const Duration(seconds: 15));
 
   if (video != null) {
     selectedVideo.value = video.path;

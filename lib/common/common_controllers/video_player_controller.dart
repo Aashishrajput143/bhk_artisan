@@ -112,14 +112,14 @@ class VideoPreviewController extends GetxController {
     });
   }
 
-  void resetHideTimer() {
-    showControls.value = true;
+  void resetHideTimer({bool control = true}) {
+    showControls.value = control;
     startHideTimer();
   }
 
   void onUserTap() {
     if (showControls.value) {
-      resetHideTimer();
+      resetHideTimer(control: false);
     } else {
       showControls.value = true;
       startHideTimer();

@@ -126,8 +126,8 @@ class AddressScreen extends ParentWidget {
     );
   }
 
-  Future bottomDrawer(BuildContext context, double h, double w, AddressController controller) {
-    return showModalBottomSheet(
+  void bottomDrawer(BuildContext context, double h, double w, AddressController controller) {
+    showModalBottomSheet(
       context: context,
       isDismissible: false,
       backgroundColor: appColors.drawerbackgroundColor,
@@ -221,7 +221,10 @@ class AddressScreen extends ParentWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: commonButton(double.infinity, 50, appColors.contentButtonBrown, Colors.white, () {}, fontSize: 17, radius: 12, hint: "Add Address"),
+                  child: commonButton(double.infinity, 50, appColors.contentButtonBrown, Colors.white, () {
+                    Get.back();
+                    Get.back();
+                  }, fontSize: 17, radius: 12, hint: "Add Address"),
                 ),
                 10.kH,
               ],
