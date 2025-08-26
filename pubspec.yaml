@@ -74,6 +74,7 @@ dependencies:
   chewie: ^1.12.1
   geocoding: ^4.0.0
   path: ^1.9.1
+  flutter_svg: ^2.2.0
 
 dev_dependencies:
   flutter_test:

@@ -359,7 +359,7 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
         ),
       ),
       8.kH,
-      Text("Add up to 10 images to your product. Used to represent your product during checkout, in email, social sharing, and more.", style: TextStyle(color: Colors.grey[600])),
+      Text("Upload up to 10 images to showcase your product. These images will be displayed during Auctions and social sharing. Please ensure each file is no larger than 2 MB, and use one of the supported formats: JPG, JPEG, or PNG.", style: TextStyle(color: Colors.grey[600])),
       20.kH,
       Text("Picked Files:"),
       Divider(),

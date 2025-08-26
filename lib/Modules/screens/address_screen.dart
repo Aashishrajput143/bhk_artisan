@@ -5,11 +5,10 @@ import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/font.dart';
-import 'package:bhk_artisan/resources/inputformatter.dart';
-import 'package:bhk_artisan/resources/strings.dart';
+import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class AddressScreen extends ParentWidget {
@@ -18,41 +17,51 @@ class AddressScreen extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     AddressController controller = Get.put(AddressController());
-    return Stack(
+    return Obx(()=> Stack(
       children: [
         Scaffold(
           backgroundColor: appColors.backgroundColor,
-          appBar: commonAppBar("Manage Addresses"),
-          body: SingleChildScrollView(
+          appBar: commonAppBar("Manage Address"),
+          body: controller.hasAddress.value? ListView.builder(
+            shrinkWrap: true,
+            itemCount: controller.addresses.length,
+            itemBuilder: (context, index) {
+              final address = controller.addresses[index];
+              return orderContent(context,h, w, address,controller);
+            },
+          ):Center(child: Padding(
+            padding: EdgeInsets.only(top: h*0.15),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return orderContent(h, w, index);
-                  },
+                SvgPicture.asset(appImages.emptyMap,color: appColors.brownbuttonBg),
+                Text(
+                  "Your Address is Empty",
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
+                4.kH,
+                Text("No address added yet. Keeping your profile\nsafe starts with adding your address. ",style: TextStyle(fontSize: 14, color: appColors.contentSecondary),textAlign: TextAlign.center,)
               ],
             ),
-          ),
-          floatingActionButton: Padding(
+          )),
+          floatingActionButton: controller.hasAddress.value? Padding(
             padding: EdgeInsets.only(bottom: h * 0.03, right: 10),
             child: FloatingActionButton(
               backgroundColor: appColors.contentButtonBrown,
               onPressed: () => bottomDrawer(context, h * 0.8, w, controller),
               child: const Icon(Icons.add, color: Colors.white),
             ),
+          ):Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: commonButton(w, 45, appColors.contentButtonBrown, Colors.white, ()=> bottomDrawer(context, h * 0.8, w, controller),hint: "Add Address"),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButtonLocation: controller.hasAddress.value?FloatingActionButtonLocation.endFloat:FloatingActionButtonLocation.centerFloat,
         ),
-        //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.height),
+        // progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING,h, w),
       ],
-    );
+    ));
   }
 
-  Widget orderContent(double h, double w, int index) {
+  Widget orderContent(BuildContext context, double h, double w, AddressModel address,AddressController controller) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
       decoration: BoxDecoration(
@@ -61,11 +70,11 @@ class AddressScreen extends ParentWidget {
         border: Border.all(color: Colors.grey.shade300, width: 1.5),
         boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
       ),
-      child: Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8), child: orderCardHeader(index)),
+      child: Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8), child: orderCardHeader(context,h,w,address,controller)),
     );
   }
 
-  Widget orderCardHeader(int index) {
+  Widget orderCardHeader(BuildContext context,double h,double w, AddressModel address, AddressController controller) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,9 +82,9 @@ class AddressScreen extends ParentWidget {
         ListTile(
           contentPadding: EdgeInsets.all(0),
           leading: Icon(
-            index == 0
+            address.id == "1"
                 ? Icons.home
-                : index == 1
+                : address.id == "2"
                 ? Icons.business_center
                 : Icons.location_city,
             size: 25,
@@ -84,14 +93,10 @@ class AddressScreen extends ParentWidget {
           title: Row(
             children: [
               Text(
-                index == 0
-                    ? "Home"
-                    : index == 1
-                    ? "Work"
-                    : "Others",
+                address.title,
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              if(index==0)...[
+              if(address.isDefault)...[
               10.kW,
               commonContainer("Default", appColors.brownDarkText,isBrown: true,pH: 14,borderWidth: 1)]
             ],
@@ -100,25 +105,25 @@ class AddressScreen extends ParentWidget {
             color: appColors.popColor,
             onSelected: (value) {
               if (value == 'Delete') {
-                // Get.toNamed(RoutesClass.gotoOrderDetailsScreen());
+                controller.deleteAddress(address.id);
               } else if (value == 'Edit') {
-                // Get.toNamed(RoutesClass.gotoOrderTrackingScreen());
+                bottomDrawer(context, h * 0.8, w, controller);
               } else if (value == 'markasDefault') {
-                // Get.toNamed(RoutesClass.gotoOrderTrackingScreen());
+                controller.markAsDefault(address.id);
               }
             },
             icon: Icon(Icons.more_vert, color: Colors.grey[700]),
             itemBuilder: (BuildContext context) => [const PopupMenuItem(value: 'markasDefault', child: Text('Mark As Default')), const PopupMenuItem(value: 'Delete', child: Text('Delete')), const PopupMenuItem(value: 'Edit', child: Text('Edit'))],
           ),
         ),
-        6.kH,
-        Text(
-          "Rajesh Singh",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-        ),
+        // 6.kH,
+        // Text(
+        //   address.name,
+        //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+        // ),
         8.kH,
         Text(
-          "U-270, New South Wales (NSW),New Delhi, 110059, India",
+          address.fullAddress,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentdescBrownColor),
         ),
         8.kH,
@@ -166,39 +171,19 @@ class AddressScreen extends ParentWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        commonComponent("Name", commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Name', maxLines: 1)),
-                        16.kH,
-                        commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Email', maxLines: 1), mandatory: false),
-                        16.kH,
-                        commonComponent(
-                          "Phone Number",
-                          phoneTextField(
-                            controller.phoneController.value,
-                            controller.phoneFocusNode.value,
-                            w,
-                            onCountryChanged: (country) {
-                              print('Country changed to: ${country.dialCode}');
-                              controller.phoneController.value.text = "";
-                            },
-                            onCountryCodeChange: (phone) {
-                              controller.countryCode.value = phone.countryCode;
-                              if (phone.number.isNotEmpty) {
-                                controller.emailController.value.text = "";
-                              }
-                            },
-                            hint: appStrings.phone,
-                            inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
-                          ),
-                        ),
                         commonComponent("House/Flat/Building", commonTextField(controller.flatNameController.value, controller.flatFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your house/Flat/Building', maxLines: 1)),
                         16.kH,
                         commonComponent("Street/Area/Locality", commonTextField(controller.streetNameController.value, controller.streetFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Street/Area/Locality', maxLines: 1)),
                         16.kH,
                         commonComponent("LandMark", commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter LandMark', maxLines: 1), mandatory: false),
                         16.kH,
-                        commonComponent("Location", commonLocation(controller.countryValue, controller.stateValue, controller.cityValue, onCountryChanged: (value) => controller.countryValue.value = value, onStateChanged: (value) => controller.stateValue.value = value, onCityChanged: (value) => controller.cityValue.value = value, height: 2)),
+                        commonComponent("City", commonTextField(controller.cityController.value, controller.cityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your City', maxLines: 1,readonly: true)),
                         16.kH,
-                        commonComponent("PinCode", commonTextField(controller.pinController.value, controller.pinFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Pin Code', maxLines: 1, maxLength: 6)),
+                        commonComponent("State", commonTextField(controller.stateController.value, controller.stateFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your State', maxLines: 1,readonly: true)),
+                        16.kH,
+                        commonComponent("Country", commonTextField(controller.countryController.value, controller.countryFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Country', maxLines: 1,readonly: true)),
+                        16.kH,
+                        commonComponent("PinCode", commonTextField(controller.pinController.value, controller.pinFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Pin Code', maxLines: 1, maxLength: 6,readonly: true)),
                         20.kH,
                         commonComponent(
                           "AddressType",
@@ -207,9 +192,9 @@ class AddressScreen extends ParentWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                radioButtonObjective(controller.type, appColors.brownDarkText, appColors.contentPrimary, "Home", () => controller.type.value = "Home"),
-                                radioButtonObjective(controller.type, appColors.brownDarkText, appColors.contentPrimary, "Work", () => controller.type.value = "Work"),
-                                radioButtonObjective(controller.type, appColors.brownDarkText, appColors.contentPrimary, "Others", () => controller.type.value = "Others"),
+                                commonIconTags(borderColor: controller.type.value == "Home"?appColors.brownDarkText : appColors.border,controller.type.value == "Home"?appColors.brownDarkText : appColors.contentPrimary, Icons.home,onTap:()=>controller.type.value = "Home",hint: "Home",bold: true,),
+                                commonIconTags(borderColor: controller.type.value == "Work"?appColors.brownDarkText : appColors.border,controller.type.value == "Work"?appColors.brownDarkText : appColors.contentPrimary, Icons.business_center,onTap:()=>controller.type.value = "Work",hint: "Work",bold: true,),
+                                commonIconTags(borderColor: controller.type.value == "Others"?appColors.brownDarkText : appColors.border,controller.type.value == "Others"?appColors.brownDarkText : appColors.contentPrimary, Icons.location_city,onTap:()=>controller.type.value = "Others",hint: "Others",bold: true,)
                               ],
                             ),
                           ),
@@ -224,7 +209,7 @@ class AddressScreen extends ParentWidget {
                   child: commonButton(double.infinity, 50, appColors.contentButtonBrown, Colors.white, () {
                     Get.back();
                     Get.back();
-                  }, fontSize: 17, radius: 12, hint: "Add Address"),
+                  }, fontSize: 17, radius: 12, hint: "Confirm Address"),
                 ),
                 10.kH,
               ],

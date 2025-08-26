@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 class LocationController extends GetxController {
   var latitude = 0.0.obs;
   var longitude = 0.0.obs;
+  var place = Rxn<Placemark>();
   var address = "".obs;
 
   @override
@@ -69,10 +70,10 @@ class LocationController extends GetxController {
       );
 
       if (placemarks.isNotEmpty) {
-        Placemark place = placemarks.first;
+        place.value = placemarks.first;
         address.value =
-            "${place.name}, ${place.street}, ${place.subLocality}, ${place.locality}, "
-            "${place.administrativeArea}, ${place.postalCode}, ${place.country}";
+            "${place.value?.name}, ${place.value?.street}, ${place.value?.subLocality}, ${place.value?.locality}, "
+            "${place.value?.administrativeArea}, ${place.value?.postalCode}, ${place.value?.country}";
 
         print("Full Address===> ${address.value}");
       }

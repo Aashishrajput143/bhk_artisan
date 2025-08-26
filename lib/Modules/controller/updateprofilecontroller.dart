@@ -34,7 +34,7 @@ class UpdateProfileController extends GetxController {
 
   var isNewUser = false.obs;
   var isIntroUploaded = Rxn<String>();
-  var havingIntro = true.obs;
+  var havingIntro = false.obs;
 
   final RxList<Expertise> expertise = <Expertise>[Expertise(id: 1, name: 'HandLoom'), Expertise(id: 2, name: 'HandiCraft')].obs;
 

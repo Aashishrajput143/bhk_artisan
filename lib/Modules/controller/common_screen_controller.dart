@@ -2,6 +2,8 @@ import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
 import 'package:bhk_artisan/Modules/repository/profilerepository.dart';
 import 'package:bhk_artisan/Modules/screens/dashboardManagement/home_screen.dart';
 import 'package:bhk_artisan/common/CommonMethods.dart';
+import 'package:bhk_artisan/common/Constants.dart';
+import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
@@ -22,6 +24,8 @@ class CommonScreenController extends GetxController {
   void onInit() {
     super.onInit();
     getProfileApi();
+    Get.put(LocationController());
+
   }
 
   int changeIndex() {
@@ -68,6 +72,8 @@ class CommonScreenController extends GetxController {
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
             setProfileData(value);
+             Utils.savePreferenceValues(Constants.userId, "${value.data?.id}");
+             debugPrint("user_id===>${value.data?.id}");
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> ${value.toString()}");
           })

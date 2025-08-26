@@ -232,6 +232,7 @@ Widget commonTextField(
   String prefix = "",
   String suffix = "",
   double fontSize = 12,
+  bool isLabel = false,
   TextInputType keyboardType = TextInputType.text,
   TextInputAction textInputAction = TextInputAction.done,
   List<TextInputFormatter>? inputFormatters,
@@ -252,10 +253,11 @@ Widget commonTextField(
         cursorColor: isWhite ? Colors.white : appColors.contentPlaceholderPrimary,
         style: TextStyle(color: isWhite ? Colors.white : appColors.contentPrimary),
         decoration: InputDecoration(
-          labelText: hint,
+          labelText:isLabel? hint:null,
+          hint: Text(hint,style: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize)),
           prefixText: prefix,
           suffixText: suffix,
-          labelStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize),
+          labelStyle:isLabel?  TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize):null,
           alignLabelWithHint: true,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
@@ -774,18 +776,26 @@ Widget commonOutlinedButtonIcon(double width, double height, Color color, VoidCa
   );
 }
 
-Widget commonColorTags(Color backgroundColor, Color color, {Color borderColor = Colors.transparent, bool bold = false, double fontSize = 16, double padding = 4.0, double vPadding = 0.0, String hint = '', double radius = 12}) {
-  return Container(
-    decoration: BoxDecoration(
-      color: backgroundColor,
-      borderRadius: BorderRadius.circular(radius),
-      border: Border.all(color: borderColor, width: 1),
-    ),
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: vPadding),
-      child: Text(
-        hint,
-        style: TextStyle(fontSize: fontSize, fontFamily: bold ? appFonts.NunitoBold : appFonts.NunitoMedium, fontWeight: FontWeight.w600, color: color),
+Widget commonIconTags(Color color, IconData icon, {Color borderColor = Colors.transparent, bool bold = false, double fontSize = 16, double padding = 10.0, double vPadding = 4.0, String hint = '', double radius = 18,void Function()? onTap}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(color: borderColor, width: 2.5),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: padding, vertical: vPadding),
+        child: Row(
+          children: [
+            Icon(icon,size: 20,color: color),
+            8.kW,
+            Text(
+              hint,
+              style: TextStyle(fontSize: fontSize, fontFamily: bold ? appFonts.NunitoBold : appFonts.NunitoMedium, fontWeight: FontWeight.w600, color: color),
+            ),
+          ],
+        ),
       ),
     ),
   );

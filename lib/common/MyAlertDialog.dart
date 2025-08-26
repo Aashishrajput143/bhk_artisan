@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MyAlertDialog {
-  static void showlogoutDialog(Future<void> onLogout) {
+  static void showlogoutDialog(Future<void> Function() onLogout) {
     Get.dialog(
       AlertDialog(
         backgroundColor: Colors.white,
@@ -30,7 +30,7 @@ class MyAlertDialog {
               TextButton(
                 onPressed: () {
                   Get.back();
-                  onLogout;
+                  onLogout();
                 },
                 child: Text("YES", style: TextStyle(color: appColors.brownDarkText)),
               ),

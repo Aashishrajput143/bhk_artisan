@@ -1,7 +1,4 @@
 import 'dart:io';
-
-import 'package:bhk_artisan/common/CommonMethods.dart';
-import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 
 class Validator {
@@ -55,7 +52,6 @@ class Validator {
         age--;
       }
 
-      // Validate age
       if (age < requiredAge) {
         return "Age Restriction -  Must be $requiredAge or older to sign up.";
       } else {

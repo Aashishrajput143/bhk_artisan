@@ -3,7 +3,7 @@ class Constants {
   static const String deviceToken = "deviceToken";
   static const String keepLoggedIn = "keepLoggedIn";
   static const String keepRememberIn = "keepRememberIn";
-  static const String isCheckedWalkthrough = "isCheckedWalkthrough";
+  static const String defaultAddress = "defaultAddress";
   static const String firstName = "firstName";
   static const String lastName = "lastName";
   static const String email = "email";
