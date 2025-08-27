@@ -1,11 +1,18 @@
+import 'package:bhk_artisan/Modules/model/add_address_model.dart';
+import 'package:bhk_artisan/Modules/repository/address_repository.dart';
 import 'package:bhk_artisan/common/Constants.dart';
 import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
+import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/commonmethods.dart';
+import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddressController extends GetxController {
+  final _api = AddressRepository();
+
   var cityController = TextEditingController().obs;
   var stateController = TextEditingController().obs;
   var countryController = TextEditingController().obs;
@@ -23,6 +30,7 @@ class AddressController extends GetxController {
   var pinFocusNode = FocusNode().obs;
 
   var hasAddress = false.obs;
+  var addressType = "Home".obs;
 
   LocationController locationController = Get.put(LocationController());
 
@@ -87,7 +95,50 @@ class AddressController extends GetxController {
     addresses.removeWhere((a) => a.id == id);
   }
 
-  var type = "Home".obs;
+  final rxRequestStatus = Status.COMPLETED.obs;
+  final addAddressModel = AddAddressModel().obs;
+  void setError(String value) => error.value = value;
+  RxString error = ''.obs;
+  void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
+
+  void setaddAddressModeldata(AddAddressModel value) => addAddressModel.value = value;
+
+  Future<void> addAddressApi() async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      setRxRequestStatus(Status.LOADING);
+
+      Map<String, dynamic> data = {
+        "houseNo": flatNameController.value.text,
+        "street": streetNameController.value.text,
+        "city": cityController.value.text,
+        "state": stateController.value.text,
+        "country": countryController.value.text,
+        "postalCode": pinController.value.text,
+        "addressType": addressType.value,
+        if (lanMarkController.value.text.isNotEmpty) "landmark": lanMarkController.value.text,
+        "latitude":locationController.latitude.value,
+        "longitude":locationController.longitude.value
+      };
+
+      _api
+          .addAddressApi(data)
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setaddAddressModeldata(value);
+            Utils.printLog("Response===> ${value.toString()}");
+            Get.back();
+            CommonMethods.showToast("Product Added Successfully...",icon: Icons.check,bgColor: Colors.green);
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
 }
 
 class AddressModel {

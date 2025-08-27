@@ -1,5 +1,5 @@
 import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
-import 'package:bhk_artisan/Modules/repository/profilerepository.dart';
+import 'package:bhk_artisan/Modules/repository/profile_repository.dart';
 import 'package:bhk_artisan/Modules/screens/dashboardManagement/home_screen.dart';
 import 'package:bhk_artisan/common/CommonMethods.dart';
 import 'package:bhk_artisan/common/Constants.dart';

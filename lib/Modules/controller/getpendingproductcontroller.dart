@@ -7,7 +7,7 @@ import '../../common/CommonMethods.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../model/getproductmodel.dart';
-import '../repository/productrepository.dart';
+import '../repository/product_repository.dart';
 
 class GetPendingProductController extends GetxController {
   final repository = ProductRepository();

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bhk_artisan/Modules/repository/loginRepository.dart';
+import 'package:bhk_artisan/Modules/repository/login_repository.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:bhk_artisan/Modules/controller/logincontroller.dart';
 import 'package:bhk_artisan/Modules/screens/login_screen.dart';
@@ -12,7 +12,7 @@ import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../model/get_profile_model.dart';
 import '../model/logout_model.dart';
-import '../repository/profilerepository.dart';
+import '../repository/profile_repository.dart';
 
 class Appbardrawercontroller extends GetxController {
   final repository = LoginRepository();

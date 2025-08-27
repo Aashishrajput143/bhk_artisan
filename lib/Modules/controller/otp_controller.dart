@@ -10,7 +10,7 @@ import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../../routes/routes_class.dart';
 import '../model/verify_otp_model.dart';
-import '../repository/loginRepository.dart';
+import '../repository/login_repository.dart';
 
 class OtpController extends GetxController with GetSingleTickerProviderStateMixin {
   final _api = LoginRepository();

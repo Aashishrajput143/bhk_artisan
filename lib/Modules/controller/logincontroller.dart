@@ -8,7 +8,7 @@ import '../../common/CommonMethods.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../../routes/routes_class.dart';
-import '../repository/loginRepository.dart';
+import '../repository/login_repository.dart';
 
 class LoginController extends GetxController with GetSingleTickerProviderStateMixin {
   var emailController = TextEditingController().obs;

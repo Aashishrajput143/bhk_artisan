@@ -9,7 +9,7 @@ import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import '../repository/productrepository.dart';
+import '../repository/product_repository.dart';
 
 class AddProductController extends GetxController {
   var selectedIndex = 0.obs;

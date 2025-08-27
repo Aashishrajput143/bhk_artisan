@@ -190,9 +190,9 @@ class AddressScreen extends ParentWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                commonIconTags(borderColor: controller.type.value == "Home"?appColors.brownDarkText : appColors.border,controller.type.value == "Home"?appColors.brownDarkText : appColors.contentPrimary, Icons.home,onTap:()=>controller.type.value = "Home",hint: "Home",bold: true,),
-                                commonIconTags(borderColor: controller.type.value == "Work"?appColors.brownDarkText : appColors.border,controller.type.value == "Work"?appColors.brownDarkText : appColors.contentPrimary, Icons.business_center,onTap:()=>controller.type.value = "Work",hint: "Work",bold: true,),
-                                commonIconTags(borderColor: controller.type.value == "Others"?appColors.brownDarkText : appColors.border,controller.type.value == "Others"?appColors.brownDarkText : appColors.contentPrimary, Icons.location_city,onTap:()=>controller.type.value = "Others",hint: "Others",bold: true,)
+                                commonIconTags(borderColor: controller.addressType.value == "Home"?appColors.brownDarkText : appColors.border,controller.addressType.value == "Home"?appColors.brownDarkText : appColors.contentPrimary, Icons.home,onTap:()=>controller.addressType.value = "Home",hint: "Home",bold: true,),
+                                commonIconTags(borderColor: controller.addressType.value == "Work"?appColors.brownDarkText : appColors.border,controller.addressType.value == "Work"?appColors.brownDarkText : appColors.contentPrimary, Icons.business_center,onTap:()=>controller.addressType.value = "Work",hint: "Work",bold: true,),
+                                commonIconTags(borderColor: controller.addressType.value == "Others"?appColors.brownDarkText : appColors.border,controller.addressType.value == "Others"?appColors.brownDarkText : appColors.contentPrimary, Icons.location_city,onTap:()=>controller.addressType.value = "Others",hint: "Others",bold: true,)
                               ],
                             ),
                           ),

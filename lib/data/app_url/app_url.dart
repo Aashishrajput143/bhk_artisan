@@ -11,6 +11,9 @@ class AppUrl {
   static String updateprofile = '$baseUrl/users/api/users/updateprofile';
   static String register = '$baseUrl/api/user/register';
   static String presignUrl = '$baseUrl/users/api/users/presign-url';
+
+  //address
+  static String addAddress = '$baseUrl/users/api/users/addAddress';
   
   //get
   static String getcategory =

@@ -7,7 +7,7 @@ import '../../common/CommonMethods.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../model/ordersmodel.dart';
-import '../repository/orderrepository.dart';
+import '../repository/order_repository.dart';
 
 class GetOrderController extends GetxController {
   final repository = OrderRepository();

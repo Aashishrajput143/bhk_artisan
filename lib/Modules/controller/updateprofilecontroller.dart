@@ -11,7 +11,7 @@ import '../../common/CommonMethods.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../model/update_profile_model.dart';
-import '../repository/profilerepository.dart';
+import '../repository/profile_repository.dart';
 
 class UpdateProfileController extends GetxController {
   CommonScreenController commonController = Get.put(CommonScreenController());
