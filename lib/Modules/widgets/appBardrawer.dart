@@ -38,11 +38,11 @@ Widget appDrawer(BuildContext context, double h, double w) {
                   }),
                   commonListTile(Icons.store, 'My Stores', () {
                     Get.back();
-                    Get.toNamed(RoutesClass.gotoStoreScreen());
+                    //Get.toNamed(RoutesClass.gotoStoreScreen());
                   }),
                   commonListTile(Icons.branding_watermark_outlined, 'Explore Brands', () {
                     Get.back();
-                    Get.toNamed(RoutesClass.gotoBrandScreen());
+                    //Get.toNamed(RoutesClass.gotoBrandScreen());
                   }),
                   Divider(),
                   title("My ACCOUNT"),

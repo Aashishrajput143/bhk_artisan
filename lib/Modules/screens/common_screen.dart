@@ -65,52 +65,49 @@ class CommonScreen extends ParentWidget {
   }
 }
 
-  void showExitDialog() {
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        title: Row(
-          children: [
-            Icon(Icons.help_outline, color: Colors.orange, size: 30),
-            SizedBox(width: 8),
-            Text("Confirm Exit...!!!",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-          ],
-        ),
-        content: Text("Are you sure you want to exit?"),
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Get.back(); // Close dialog without doing anything
-                },
-                child: Text("CANCEL", style: TextStyle(color: Colors.pink)),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Get.back(); // Close dialog and stay in the app
-                    },
-                    child: Text("NO", style: TextStyle(color: Colors.pink)),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      SystemNavigator.pop();
-                    },
-                    child: Text("YES", style: TextStyle(color: Colors.pink)),
-                  ),
-                ],
-              )
-            ],
-          )
+void showExitDialog() {
+  Get.dialog(
+    AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      title: Row(
+        children: [
+          Icon(Icons.help_outline, color: Colors.orange, size: 30),
+          SizedBox(width: 8),
+          Text("Confirm Exit...!!!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
         ],
       ),
-      barrierDismissible: false,
-    );
-  }
+      content: Text("Are you sure you want to exit?"),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+              onPressed: () {
+                Get.back(); // Close dialog without doing anything
+              },
+              child: Text("CANCEL", style: TextStyle(color: Colors.pink)),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Get.back(); // Close dialog and stay in the app
+                  },
+                  child: Text("NO", style: TextStyle(color: Colors.pink)),
+                ),
+                TextButton(
+                  onPressed: () {
+                    SystemNavigator.pop();
+                  },
+                  child: Text("YES", style: TextStyle(color: Colors.pink)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
+    barrierDismissible: false,
+  );
+}

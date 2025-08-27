@@ -1,5 +1,6 @@
 import 'package:bhk_artisan/Modules/model/login_model.dart';
 import 'package:bhk_artisan/Modules/model/logout_model.dart';
+import 'package:bhk_artisan/Modules/model/verify_otp_model.dart';
 
 import '../../data/app_url/app_url.dart';
 import '../../data/network/network_api_services.dart';
@@ -10,6 +11,11 @@ class LoginRepository {
   Future<LoginModel> logInApi(var data) async {
     dynamic response = await _apiServices.postEncodeApi(data, AppUrl.login);
     return LoginModel.fromJson(response);
+  }
+
+  Future<VerifyOTPModel> verifyOtpApi(var data) async {
+    dynamic response = await _apiServices.postEncodeApi(data, AppUrl.verifyOtp);
+    return VerifyOTPModel.fromJson(response);
   }
 
   Future<LogoutModel> logoutApi() async {

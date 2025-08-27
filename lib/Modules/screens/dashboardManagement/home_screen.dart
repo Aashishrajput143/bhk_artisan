@@ -8,7 +8,6 @@ import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
@@ -184,117 +183,6 @@ Widget commonContainer(double w, String count, Color? color, Color colorValues, 
         16.kH,
         Padding(
           padding: const EdgeInsets.only(left: 5),
-          child: Text(
-            count,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget banner(BuildContext context, double w, double h, Homecontroller controller) {
-  return Column(
-    children: [
-      CarouselSlider(
-        items: controller.bannerItems
-            .map(
-              (item) => SizedBox(
-                width: double.infinity,
-                height: h,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                  child: ClipRRect(
-                    child: Container(
-                      height: h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        image: DecorationImage(image: AssetImage(item["imagePath"]!), fit: BoxFit.fill),
-                      ),
-                      // child: Padding(
-                      //   padding: const EdgeInsets.all(16.0),
-                      //   child: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Text(
-                      //         item["title"]!,
-                      //         style: const TextStyle(color: Color.fromARGB(255, 117, 78, 63), fontWeight: FontWeight.bold, fontSize: 16),
-                      //       ),
-                      //       8.kH,
-                      //       Text(item["subtitle"]!, style: const TextStyle(color: Color.fromARGB(255, 153, 119, 106))),
-                      //       Spacer(),
-                      //       commonButton(100, 38, Colors.brown, Colors.white, (){},hint: 'BID Now',radius: 16)
-                      //     ],
-                      //   ),
-                      // ),
-                    ),
-                  ),
-                ),
-              ),
-            )
-            .toList(),
-        carouselController: controller.sliderController,
-        options: CarouselOptions(
-          autoPlay: true,
-          autoPlayInterval: const Duration(seconds: 3),
-          height: 190,
-          enlargeCenterPage: true,
-          viewportFraction: 1.0,
-          aspectRatio: 2.0,
-          onPageChanged: (index, reason) {
-            controller.currentIndex.value = index;
-          },
-        ),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: controller.bannerItems.asMap().entries.map((entry) {
-          return GestureDetector(
-            onTap: () => controller.sliderController.animateToPage(entry.key),
-            child: Container(
-              width: 20.0,
-              height: 8.0,
-              margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
-              decoration: BoxDecoration(shape: BoxShape.circle, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black).withOpacity(controller.currentIndex == entry.key ? 0.9 : 0.4)),
-            ),
-          );
-        }).toList(),
-      ),
-    ],
-  );
-}
-
-Widget cards(double w, Color color, Color lightColor, IconData icon, String title, String count) {
-  return Container(
-    margin: const EdgeInsets.all(12.0),
-    width: w * 0.455,
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: lightColor,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 5, offset: const Offset(0, 3))],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            CircleAvatar(
-              radius: 12,
-              backgroundColor: color.withValues(alpha: 0.2),
-              child: Icon(icon, color: color, size: 16),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(5.0, 0, 0, 0),
           child: Text(
             count,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black),

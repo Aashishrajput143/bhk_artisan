@@ -55,19 +55,27 @@ class OtpScreen extends ParentWidget {
                         6.kH,
                         controller.startTime.value > 0
                             ? Text(
-                              '${appStrings.reSendCode}${controller.startTime.value} sec',
-                              style: TextStyle(fontSize: 14, color: Colors.white),
-                              textAlign: TextAlign.center,
-                            )
+                                '${appStrings.reSendCode}${controller.startTime.value} sec',
+                                style: TextStyle(fontSize: 14, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              )
                             : resendOtp(context, controller),
                         30.kH,
-                        commonButton(w, 45, appColors.brownbuttonBg, Colors.white, () {
-                          if(controller.otp.value.length==6){
-                            controller.otpVerificationApi();
-                          }else{
-                             CommonMethods.showToast("Please Enter OTP");
-                          }
-                        }, hint: appStrings.verifyPhoneNumber, radius: 30),
+                        commonButton(
+                          w,
+                          45,
+                          appColors.brownbuttonBg,
+                          Colors.white,
+                          () {
+                            if (controller.otp.value.length == 6) {
+                              controller.otpVerificationApi();
+                            } else {
+                              CommonMethods.showToast("Please Enter OTP");
+                            }
+                          },
+                          hint: appStrings.verifyPhoneNumber,
+                          radius: 30,
+                        ),
                         Align(
                           alignment: Alignment.topLeft,
                           child: TextButton(

@@ -11,11 +11,9 @@ import '../../resources/strings.dart';
 import '../../routes/routes_class.dart';
 import '../model/verify_otp_model.dart';
 import '../repository/loginRepository.dart';
-import '../repository/otpRepository.dart';
 
 class OtpController extends GetxController with GetSingleTickerProviderStateMixin {
-  final _api = OtpRepository();
-  final _apiLogin = LoginRepository();
+  final _api = LoginRepository();
   var checkInternetValue = false.obs();
   final verifyOTPData = VerifyOTPModel().obs;
   dynamic errorMessage;
@@ -99,7 +97,7 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
       setRxRequestStatus(Status.LOADING);
 
       Map<String, dynamic> data = {"identity": identity.value, "user_group": "ARTISAN", if (identity.value.isNotEmpty) "countryCode": countryCode.value};
-      _apiLogin
+      _api
           .logInApi(data)
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);

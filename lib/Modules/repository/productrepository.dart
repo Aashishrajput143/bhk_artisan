@@ -1,10 +1,8 @@
 import 'package:bhk_artisan/data/app_url/app_url.dart';
 import 'package:bhk_artisan/data/network/network_api_services.dart';
 import '../model/add_product_model.dart';
-import '../model/getbrandModel.dart';
 import '../model/get_category_model.dart';
 import '../model/getproductmodel.dart';
-import '../model/getstoremodel.dart';
 import '../model/get_subcategory_model.dart';
 import '../model/productdetailsmodel.dart';
 
@@ -20,17 +18,6 @@ class ProductRepository {
     dynamic response =
         await _apiServices.getApi("${AppUrl.getsubcategory}$cateId");
     return GetSubCategoryModel.fromJson(response);
-  }
-
-  Future<GetBrandModel> getbrandApi(var page) async {
-    dynamic response =
-        await _apiServices.getApi("${AppUrl.getbrand}$page&pageSize=20");
-    return GetBrandModel.fromJson(response);
-  }
-
-  Future<GetStoreModel> getstoreApi() async {
-    dynamic response = await _apiServices.getApi(AppUrl.getstore);
-    return GetStoreModel.fromJson(response);
   }
 
   Future<AddProductModel> addproductApi(var data, var path) async {
