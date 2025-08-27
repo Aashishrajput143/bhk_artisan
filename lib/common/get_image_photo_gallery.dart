@@ -38,41 +38,32 @@ Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromG
     List<XFile> pickedFiles = [];
 
     if (fromGallery) {
-  pickedFiles = await picker.value.pickMultipleMedia();
+      pickedFiles = await picker.value.pickMultiImage();
 
-  if (isValidate) {
-    bool formatErrorShown = false;
-    bool sizeErrorShown = false;
+      if (isValidate) {
+        bool formatErrorShown = false;
+        bool sizeErrorShown = false;
 
-    for (var file in pickedFiles) {
-      File files = File(file.path);
+        for (var file in pickedFiles) {
+          File files = File(file.path);
 
-      bool validateFormat = Validator.validateImagesPath(files);
-      bool validateSize = Validator.validateImagesSize(files,2);
+          bool validateFormat = Validator.validateImagesPath(files);
+          bool validateSize = Validator.validateImagesSize(files, 2);
 
-      if (!validateFormat && !formatErrorShown) {
-        CommonMethods.showToast(
-          "Only JPG, JPEG, PNG formats are allowed",
-          icon: Icons.warning,
-          bgColor: Colors.red,
-        );
-        formatErrorShown = true;
-      } else if (!validateSize && !sizeErrorShown) {
-        CommonMethods.showToast(
-          "Images size should be less than 2 MB",
-          icon: Icons.warning,
-          bgColor: Colors.red,
-        );
-        sizeErrorShown = true;
-      } else if (validateFormat && validateSize) {
-        imageFiles.add(file.path);
+          if (!validateFormat && !formatErrorShown) {
+            CommonMethods.showToast("Only JPG, JPEG, PNG formats are allowed", icon: Icons.warning, bgColor: Colors.red);
+            formatErrorShown = true;
+          } else if (!validateSize && !sizeErrorShown) {
+            CommonMethods.showToast("Images size should be less than 2 MB", icon: Icons.warning, bgColor: Colors.red);
+            sizeErrorShown = true;
+          } else if (validateFormat && validateSize) {
+            imageFiles.add(file.path);
+          }
+        }
+      } else {
+        imageFiles.addAll(pickedFiles.map((file) => file.path));
       }
-    }
-  } else {
-    imageFiles.addAll(pickedFiles.map((file) => file.path));
-  }
-}
- else {
+    } else {
       final XFile? pickedFile = await picker.value.pickImage(source: ImageSource.camera);
       if (pickedFile != null) {
         debugPrint("ImageSingle: $pickedFile");

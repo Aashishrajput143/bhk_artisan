@@ -618,13 +618,11 @@ Widget bottomText() {
           TextSpan(
             text: 'Privacy Policy\n',
             style: TextStyle(color: appColors.contentAccent),
-            // Add gesture recognizer if needed
           ),
           TextSpan(text: ' and '),
           TextSpan(
             text: 'Terms of Service',
             style: TextStyle(color: appColors.contentAccent),
-            // Add gesture recognizer if needed
           ),
           TextSpan(text: '.'),
         ],
@@ -933,5 +931,42 @@ Widget commonPressed(double width, double height, Color backgroundColor, Color c
         ),
       ),
     ),
+  );
+}
+
+Widget commonContainer(String title, Color color,{ bool isBrown = false, double pH = 10, double borderWidth = 2}) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: pH, vertical: 5),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color:isBrown?appColors.brownDarkText: Colors.grey.shade300, width: borderWidth),
+    ),
+    child: Text(
+      title,
+      style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 10),
+    ),
+  );
+}
+
+Widget commonComponent(String title, Widget component, {bool mandatory = true}) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          if (mandatory) ...[
+            Text(
+              " *",
+              style: TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ],
+      ),
+      5.kH,
+      component,
+    ],
   );
 }

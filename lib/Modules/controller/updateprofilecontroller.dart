@@ -2,6 +2,7 @@ import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/pre_signed_intro_video_model.dart' show PreSignedIntroVideoModel;
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/constants.dart';
+import 'package:bhk_artisan/resources/enums/caste_category_enum.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -22,23 +23,22 @@ class UpdateProfileController extends GetxController {
   var firstNameFocusNode = FocusNode().obs;
   var lastNameController = TextEditingController().obs;
   var lastNameFocusNode = FocusNode().obs;
-   var communityController = TextEditingController().obs;
-   var communityFocusNode = FocusNode().obs;
+  var communityController = TextEditingController().obs;
+  var communityFocusNode = FocusNode().obs;
   var emailController = TextEditingController().obs;
   var emailFocusNode = FocusNode().obs;
 
   var selectedExpertise = Rxn<String>();
   var selectedMultiExpertise = <String>[].obs;
 
-  var selectedCategory = Rxn<String>();
-
   var isNewUser = false.obs;
-  var isIntroUploaded = Rxn<String>();
+  var introUploaded = Rxn<String>();
   var havingIntro = false.obs;
 
   final RxList<Expertise> expertise = <Expertise>[Expertise(id: 1, name: 'HandLoom'), Expertise(id: 2, name: 'HandiCraft')].obs;
 
-  final RxList<String> casteCategory = ["General","OBC","SC/ST","Others"].obs;
+  final Rx<UserCasteCategory?> selectedCategory = Rx<UserCasteCategory?>(null);
+  final List<UserCasteCategory> casteCategories = UserCasteCategory.values;
 
   @override
   void onInit() {
@@ -59,6 +59,7 @@ class UpdateProfileController extends GetxController {
     firstNameController.value.text = commonController.profileData.value.data?.firstName ?? "";
     lastNameController.value.text = commonController.profileData.value.data?.lastName ?? "";
     emailController.value.text = commonController.profileData.value.data?.email ?? "";
+    communityController.value.text = commonController.profileData.value.data?.subCaste ?? "";
 
     String? profileExpertise = commonController.profileData.value.data?.expertizeField;
 
@@ -73,6 +74,27 @@ class UpdateProfileController extends GetxController {
         }
       }
     }
+
+    String? casteCategoryValue = commonController.profileData.value.data?.userCasteCategory;
+
+    if (casteCategoryValue != null && casteCategoryValue.isNotEmpty) {
+      try {
+        selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == casteCategoryValue, orElse: () => UserCasteCategory.OTHER);
+      } catch (e) {
+        selectedCategory.value = UserCasteCategory.OTHER;
+      }
+    } else {
+      selectedCategory.value = UserCasteCategory.OTHER;
+    }
+
+    String? introVideo = commonController.profileData.value.data?.introVideo;
+
+    if(introVideo?.isNotEmpty??false){
+      havingIntro.value = true;
+      introUploaded.value = introVideo;
+    }
+
+    
 
     // if (expertise.any((e) => e.name == profileExpertise)) {
     //   selectedExpertise.value = profileExpertise;
@@ -95,7 +117,15 @@ class UpdateProfileController extends GetxController {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
-    Map<String, String> data = {if (firstNameController.value.text.isNotEmpty) "firstName": firstNameController.value.text, if (lastNameController.value.text.isNotEmpty) "lastName": lastNameController.value.text, if (emailController.value.text.isNotEmpty) "email": emailController.value.text, if (selectedMultiExpertise.isNotEmpty) "expertizeField": selectedMultiExpertise.join(",")};
+    Map<String, String> data = {
+      if (firstNameController.value.text.isNotEmpty) "firstName": firstNameController.value.text,
+      if (lastNameController.value.text.isNotEmpty) "lastName": lastNameController.value.text,
+      if (emailController.value.text.isNotEmpty) "email": emailController.value.text,
+      if (selectedMultiExpertise.isNotEmpty) "expertizeField": selectedMultiExpertise.join(","),
+      if (introUploaded.isNotEmpty ?? false) "introVideo": introUploaded.value ?? "",
+      if (selectedCategory.value?.categoryValue.isNotEmpty ?? false) "user_caste_category": selectedCategory.value?.categoryValue ?? "",
+      if (communityController.value.text.isNotEmpty) "subCaste": communityController.value.text,
+    };
 
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
@@ -163,7 +193,7 @@ class UpdateProfileController extends GetxController {
             setRxRequestStatus(Status.COMPLETED);
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> $value");
-            if (value) isIntroUploaded.value = "https://bhk-bucket-dev.s3.us-east-1.amazonaws.com/$key";
+            if (value) introUploaded.value = "https://bhk-bucket-dev.s3.us-east-1.amazonaws.com/$key";
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

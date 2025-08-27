@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:bhk_artisan/Modules/screens/productManagement/add_product_screen.dart';
 import 'package:bhk_artisan/common/MyAlertDialog.dart';
 import 'package:bhk_artisan/common/common_back.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
@@ -10,6 +9,7 @@ import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/caste_category_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -140,31 +140,41 @@ Widget profile(BuildContext context, double h, double w, UpdateProfileController
       Text("Maximum file size : 5 MB*", style: TextStyle(color: appColors.contentdescBrownColor)),
       Text("Accepted file types : jpg, png, jpeg", style: TextStyle(color: appColors.contentdescBrownColor)),
       10.kH,
-      commonButtonIcon(100, 40,backgroundColor: appColors.brownbuttonBg, Colors.white, () {
-            if (controller.havingIntro.value) {
-              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.isIntroUploaded.value});
-            } else if (controller.isIntroUploaded.value?.isEmpty ?? true) {
-              bottomDrawer(
-                context,
-                h * 0.22,
-                w,
-                controller.selectedIntroVideo,
-                () {
-                  Get.back();
-                  pickVideoFromGallery(controller.selectedIntroVideo, true, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
-                },
-                () {
-                  Get.back();
-                  pickVideoFromGallery(controller.selectedIntroVideo, false, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
-                },
-                isVideo: true,
-              );
-            }
-          }, icon: Icons.video_call,hint: controller.havingIntro.value
-                      ? "View Intro"
-                      : controller.isIntroUploaded.value?.isNotEmpty ?? false
-                      ? "Uploaded ✓"
-                      : 'Upload Intro',forward: false,radius: 25)
+      commonButtonIcon(
+        100,
+        40,
+        backgroundColor: appColors.brownbuttonBg,
+        Colors.white,
+        () {
+          if (controller.havingIntro.value) {
+            Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.introUploaded.value});
+          } else if (controller.introUploaded.value?.isEmpty ?? true) {
+            bottomDrawer(
+              context,
+              h * 0.22,
+              w,
+              controller.selectedIntroVideo,
+              () {
+                Get.back();
+                pickVideoFromGallery(controller.selectedIntroVideo, true, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
+              },
+              () {
+                Get.back();
+                pickVideoFromGallery(controller.selectedIntroVideo, false, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
+              },
+              isVideo: true,
+            );
+          }
+        },
+        icon: Icons.video_call,
+        hint: controller.havingIntro.value
+            ? "View Intro"
+            : controller.introUploaded.value?.isNotEmpty ?? false
+            ? "Uploaded ✓"
+            : 'Upload Intro',
+        forward: false,
+        radius: 25,
+      ),
     ],
   );
 }
@@ -187,18 +197,20 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
                 child: commonComponent(
                   "Category",
                   commonDropdownButton(
-                    controller.casteCategory.map((item) {
+                    controller.casteCategories.map((item) {
                       return DropdownMenuItem<String>(
-                        value: item.toString(),
-                        child: Text(item, style: const TextStyle(fontSize: 14)),
+                        value: item.categoryValue.toString(),
+                        child: Text(item.displayName, style: const TextStyle(fontSize: 14)),
                       );
                     }).toList(),
-                    controller.selectedCategory.value,
-                    w*0.5,
+                    controller.selectedCategory.value?.categoryValue,
+                    w * 0.5,
                     h,
                     appColors.backgroundColor,
                     (String? newValue) {
-                      controller.selectedCategory.value = newValue;
+                      if (newValue != null) {
+                        controller.selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == newValue);
+                      }
                     },
                     hint: 'Select Category',
                     borderColor: appColors.border,
@@ -287,8 +299,8 @@ Widget introVideoContent(BuildContext context, double w, double h, UpdateProfile
           highlightColor: Colors.transparent,
           onTap: () {
             if (controller.havingIntro.value) {
-              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.isIntroUploaded.value});
-            } else if (controller.isIntroUploaded.value?.isEmpty ?? true) {
+              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.introUploaded.value});
+            } else if (controller.introUploaded.value?.isEmpty ?? true) {
               bottomDrawer(
                 context,
                 h * 0.22,
@@ -317,7 +329,7 @@ Widget introVideoContent(BuildContext context, double w, double h, UpdateProfile
                 Text(
                   controller.havingIntro.value
                       ? "View"
-                      : controller.isIntroUploaded.value?.isNotEmpty ?? false
+                      : controller.introUploaded.value?.isNotEmpty ?? false
                       ? "Uploaded ✓"
                       : 'Upload',
                   style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: appColors.brownDarkText),

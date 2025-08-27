@@ -1,6 +1,4 @@
 import 'package:bhk_artisan/Modules/controller/address_controller.dart';
-import 'package:bhk_artisan/Modules/screens/productManagement/add_product_screen.dart';
-import 'package:bhk_artisan/Modules/screens/productManagement/my_products.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -52,7 +50,7 @@ class AddressScreen extends ParentWidget {
             ),
           ):Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: commonButton(w, 45, appColors.contentButtonBrown, Colors.white, ()=> bottomDrawer(context, h * 0.8, w, controller),hint: "Add Address"),
+            child: commonButton(w, 47, appColors.contentButtonBrown, Colors.white, ()=> bottomDrawer(context, h * 0.8, w, controller),hint: "Add Address"),
           ),
           floatingActionButtonLocation: controller.hasAddress.value?FloatingActionButtonLocation.endFloat:FloatingActionButtonLocation.centerFloat,
         ),
@@ -206,7 +204,7 @@ class AddressScreen extends ParentWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: commonButton(double.infinity, 50, appColors.contentButtonBrown, Colors.white, () {
+                  child: commonButton(double.infinity, 47, appColors.contentButtonBrown, Colors.white, () {
                     Get.back();
                     Get.back();
                   }, fontSize: 17, radius: 12, hint: "Confirm Address"),

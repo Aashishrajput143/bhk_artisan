@@ -64,13 +64,7 @@ class AddProductPage extends ParentWidget {
                       w * 0.2,
                       48,
                       Colors.white,
-                      () {
-                        if (controller.validateForm()) {
-                          controller.addProductApi();
-                        } else {
-                          CommonMethods.showToast("Please fill all the mandatory fields!", icon: Icons.warning_amber_rounded, bgColor: appColors.contentButtonBrown);
-                        }
-                      },
+                      () => controller.validateForm() ? controller.addProductApi() : CommonMethods.showToast("Please fill all the mandatory fields!", icon: Icons.warning_amber_rounded),
                       hint: "Submit",
                       radius: 25,
                       backgroundColor: appColors.contentButtonBrown,
@@ -84,29 +78,6 @@ class AddProductPage extends ParentWidget {
       ),
     );
   }
-}
-
-Widget commonComponent(String title, Widget component, {bool mandatory = true}) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-          if (mandatory) ...[
-            Text(
-              " *",
-              style: TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ],
-      ),
-      5.kH,
-      component,
-    ],
-  );
 }
 
 Widget generalDetails(double w, double h, AddProductController controller) {
@@ -370,11 +341,11 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
 
 Widget pickedfiles(double w, double h, AddProductController controller) {
   return SizedBox(
-    height: h * 0.3,
+    height: h * 0.27,
     child: GridView.builder(
       itemCount: controller.imagefiles.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 20),
-      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 16),
+      physics: const AlwaysScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return Column(
           children: [
@@ -383,17 +354,17 @@ Widget pickedfiles(double w, double h, AddProductController controller) {
               child: Align(
                 alignment: Alignment.topRight,
                 child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-                  padding: EdgeInsets.all(3),
+                  margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                  padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
-                  child: Icon(Icons.close, size: 17, color: Colors.white),
+                  child: const Icon(Icons.close, size: 17, color: Colors.white),
                 ),
               ),
             ),
             GestureDetector(
               onTap: () => Get.dialog(
                 Dialog(
-                  insetPadding: EdgeInsets.all(16),
+                  insetPadding: const EdgeInsets.all(16),
                   backgroundColor: Colors.transparent,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -403,10 +374,10 @@ Widget pickedfiles(double w, double h, AddProductController controller) {
                         child: Align(
                           alignment: Alignment.topRight,
                           child: Container(
-                            margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                            padding: EdgeInsets.all(8),
+                            margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                            padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
-                            child: Icon(Icons.close, size: 20, color: Colors.white),
+                            child: const Icon(Icons.close, size: 20, color: Colors.white),
                           ),
                         ),
                       ),

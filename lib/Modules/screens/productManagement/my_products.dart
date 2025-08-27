@@ -156,20 +156,6 @@ Widget cornerTag(double w, int index) {
   );
 }
 
-Widget commonContainer(String title, Color color,{ bool isBrown = false, double pH = 10, double borderWidth = 2}) {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: pH, vertical: 5),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color:isBrown?appColors.brownDarkText: Colors.grey.shade300, width: borderWidth),
-    ),
-    child: Text(
-      title,
-      style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 10),
-    ),
-  );
-}
-
 Widget emptyScreen(double w, double h) {
   return Column(
     children: [
