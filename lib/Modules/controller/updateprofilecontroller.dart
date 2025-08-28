@@ -51,7 +51,7 @@ class UpdateProfileController extends GetxController {
   }
 
   bool validateForm() {
-    if ((firstNameController.value.text.isNotEmpty) && (lastNameController.value.text.isNotEmpty) && (selectedMultiExpertise.isNotEmpty)) return true;
+    if ((firstNameController.value.text.isNotEmpty) && (lastNameController.value.text.isNotEmpty) && (selectedMultiExpertise.isNotEmpty)&& (introUploaded.value !=null)&& (communityController.value.text.isNotEmpty)&& (selectedCategory.value !=null)) return true;
     return false;
   }
 

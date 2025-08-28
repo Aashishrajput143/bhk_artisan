@@ -50,14 +50,14 @@ class AddressScreen extends ParentWidget {
                     ),
                   ),
             floatingActionButton: controller.getAddressModel.value.data?.isNotEmpty ?? true
-                ? Padding(
+                ? (controller.getAddressModel.value.data?.length??0)<=3? Padding(
                     padding: EdgeInsets.only(bottom: h * 0.03, right: 10),
                     child: FloatingActionButton(
                       backgroundColor: appColors.contentButtonBrown,
                       onPressed: () => bottomDrawer(context, h * 0.8, w, controller),
                       child: const Icon(Icons.add, color: Colors.white),
                     ),
-                  )
+                  ):SizedBox()
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: commonButton(w, 47, appColors.contentButtonBrown, Colors.white, () => bottomDrawer(context, h * 0.8, w, controller), hint: "Add Address"),
@@ -136,135 +136,140 @@ class AddressScreen extends ParentWidget {
       isScrollControlled: true,
       builder: (context) {
         return Obx(
-          () => Container(
-            padding: const EdgeInsets.all(25),
-            height: h,
-            width: w,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  horizontalTitleGap: 0,
-                  contentPadding: EdgeInsets.all(0),
-                  title: Text(
-                    "Address Details",
-                    style: TextStyle(fontSize: 18, color: appColors.contentPrimary, fontFamily: appFonts.robotoSlabBold, fontWeight: FontWeight.bold),
-                  ),
-                  leading: Icon(Icons.place, size: 25.0, color: appColors.brownDarkText),
-                  trailing: GestureDetector(
-                    onTap: () => Get.back(),
-                    child: SizedBox(width: 40, height: 40, child: Icon(Icons.close, size: 30, color: appColors.contentPrimary)),
-                  ),
-                ),
-                const Divider(height: 1),
-                10.kH,
-                Text(
-                  'Complete Address would assists better\n us in serving you...',
-                  style: TextStyle(fontSize: 13.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
-                ),
-                20.kH,
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        commonComponent("House/Flat/Building", commonTextField(controller.flatNameController.value, controller.flatFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your house/Flat/Building', maxLines: 1)),
-                        16.kH,
-                        commonComponent("Street/Area/Locality", commonTextField(controller.streetNameController.value, controller.streetFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Street/Area/Locality', maxLines: 1)),
-                        16.kH,
-                        commonComponent("LandMark", commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter LandMark', maxLines: 1), mandatory: false),
-                        16.kH,
-                        commonComponent("City", commonTextField(controller.cityController.value, controller.cityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your City', maxLines: 1, readonly: true)),
-                        16.kH,
-                        commonComponent("State", commonTextField(controller.stateController.value, controller.stateFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your State', maxLines: 1, readonly: true)),
-                        16.kH,
-                        commonComponent("Country", commonTextField(controller.countryController.value, controller.countryFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Country', maxLines: 1, readonly: true)),
-                        16.kH,
-                        commonComponent("PinCode", commonTextField(controller.pinController.value, controller.pinFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Pin Code', maxLines: 1, maxLength: 6, readonly: true)),
-                        20.kH,
-                        commonComponent(
-                          "AddressType",
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                commonIconTags(
-                                  borderColor: controller.isAddressTypeNotExists(AddressType.HOME)
-                                      ? controller.addressType.value == AddressType.HOME
-                                            ? appColors.brownDarkText
-                                            : appColors.border
-                                      : appColors.border,
-                                  controller.isAddressTypeNotExists(AddressType.HOME)
-                                      ? controller.addressType.value == AddressType.HOME
-                                            ? appColors.brownDarkText
-                                            : appColors.contentPrimary
-                                      : appColors.buttonTextStateDisabled,
-                                  Icons.home,
-                                  onTap: () => controller.isAddressTypeNotExists(AddressType.HOME) ? controller.addressType.value = AddressType.HOME : null,
-                                  hint: "Home",
-                                  bold: true,
-                                ),
-                                commonIconTags(
-                                  borderColor: controller.isAddressTypeNotExists(AddressType.OFFICE)
-                                      ? controller.addressType.value == AddressType.OFFICE
-                                            ? appColors.brownDarkText
-                                            : appColors.border
-                                      : appColors.border,
-                                  controller.isAddressTypeNotExists(AddressType.OFFICE)
-                                      ? controller.addressType.value == AddressType.OFFICE
-                                            ? appColors.brownDarkText
-                                            : appColors.contentPrimary
-                                      : appColors.buttonTextStateDisabled,
-                                  Icons.business_center,
-                                  onTap: () => controller.isAddressTypeNotExists(AddressType.OFFICE) ? controller.addressType.value = AddressType.OFFICE : null,
-                                  hint: "Work",
-                                  bold: true,
-                                ),
-                                commonIconTags(
-                                  borderColor: controller.isAddressTypeNotExists(AddressType.OTHERS)
-                                      ? controller.addressType.value == AddressType.OTHERS
-                                            ? appColors.brownDarkText
-                                            : appColors.border
-                                      : appColors.border,
-                                  controller.isAddressTypeNotExists(AddressType.OTHERS)
-                                      ? controller.addressType.value == AddressType.OTHERS
-                                            ? appColors.brownDarkText
-                                            : appColors.contentPrimary
-                                      : appColors.buttonTextStateDisabled,
-                                  Icons.location_city,
-                                  onTap: () => controller.isAddressTypeNotExists(AddressType.OTHERS) ? controller.addressType.value = AddressType.OTHERS : null,
-                                  hint: "Others",
-                                  bold: true,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        20.kH,
-                        squareCheckBoxWithLabel(
-                          controller.hasDefault.value,
-                          (val) {
-                            controller.hasDefault.value = val;
-                            print("Checkbox changed: $val");
-                          },
-                          label: "Mark as Default",
-                          checkedColor: appColors.brownDarkText,
-                          uncheckedColor: Colors.transparent,
-                          borderColor: appColors.brownDarkText,
-                        ),
-                        20.kH,
-                      ],
+          () => Stack(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(25),
+                height: h,
+                width: w,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      horizontalTitleGap: 0,
+                      contentPadding: EdgeInsets.all(0),
+                      title: Text(
+                        "Address Details",
+                        style: TextStyle(fontSize: 18, color: appColors.contentPrimary, fontFamily: appFonts.robotoSlabBold, fontWeight: FontWeight.bold),
+                      ),
+                      leading: Icon(Icons.place, size: 25.0, color: appColors.brownDarkText),
+                      trailing: GestureDetector(
+                        onTap: () => Get.back(),
+                        child: SizedBox(width: 40, height: 40, child: Icon(Icons.close, size: 30, color: appColors.contentPrimary)),
+                      ),
                     ),
-                  ),
+                    const Divider(height: 1),
+                    10.kH,
+                    Text(
+                      'Complete Address would assists better\n us in serving you...',
+                      style: TextStyle(fontSize: 13.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
+                    ),
+                    20.kH,
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            commonComponent("House/Flat/Building", commonTextField(controller.flatNameController.value, controller.flatFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your house/Flat/Building', maxLines: 1)),
+                            16.kH,
+                            commonComponent("Street/Area/Locality", commonTextField(controller.streetNameController.value, controller.streetFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Street/Area/Locality', maxLines: 1)),
+                            16.kH,
+                            commonComponent("LandMark", commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter LandMark', maxLines: 1), mandatory: false),
+                            16.kH,
+                            commonComponent("City", commonTextField(controller.cityController.value, controller.cityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your City', maxLines: 1, readonly: true)),
+                            16.kH,
+                            commonComponent("State", commonTextField(controller.stateController.value, controller.stateFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your State', maxLines: 1, readonly: true)),
+                            16.kH,
+                            commonComponent("Country", commonTextField(controller.countryController.value, controller.countryFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Country', maxLines: 1, readonly: true)),
+                            16.kH,
+                            commonComponent("PinCode", commonTextField(controller.pinController.value, controller.pinFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Pin Code', maxLines: 1, maxLength: 6, readonly: true)),
+                            20.kH,
+                            commonComponent(
+                              "AddressType",
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    commonIconTags(
+                                      borderColor: controller.isAddressTypeNotExists(AddressType.HOME)
+                                          ? controller.addressType.value == AddressType.HOME
+                                                ? appColors.brownDarkText
+                                                : appColors.border
+                                          : appColors.border,
+                                      controller.isAddressTypeNotExists(AddressType.HOME)
+                                          ? controller.addressType.value == AddressType.HOME
+                                                ? appColors.brownDarkText
+                                                : appColors.contentPrimary
+                                          : appColors.buttonTextStateDisabled,
+                                      Icons.home,
+                                      onTap: () => controller.isAddressTypeNotExists(AddressType.HOME) ? controller.addressType.value = AddressType.HOME : null,
+                                      hint: "Home",
+                                      bold: true,
+                                    ),
+                                    commonIconTags(
+                                      borderColor: controller.isAddressTypeNotExists(AddressType.OFFICE)
+                                          ? controller.addressType.value == AddressType.OFFICE
+                                                ? appColors.brownDarkText
+                                                : appColors.border
+                                          : appColors.border,
+                                      controller.isAddressTypeNotExists(AddressType.OFFICE)
+                                          ? controller.addressType.value == AddressType.OFFICE
+                                                ? appColors.brownDarkText
+                                                : appColors.contentPrimary
+                                          : appColors.buttonTextStateDisabled,
+                                      Icons.business_center,
+                                      onTap: () => controller.isAddressTypeNotExists(AddressType.OFFICE) ? controller.addressType.value = AddressType.OFFICE : null,
+                                      hint: "Work",
+                                      bold: true,
+                                    ),
+                                    commonIconTags(
+                                      borderColor: controller.isAddressTypeNotExists(AddressType.OTHERS)
+                                          ? controller.addressType.value == AddressType.OTHERS
+                                                ? appColors.brownDarkText
+                                                : appColors.border
+                                          : appColors.border,
+                                      controller.isAddressTypeNotExists(AddressType.OTHERS)
+                                          ? controller.addressType.value == AddressType.OTHERS
+                                                ? appColors.brownDarkText
+                                                : appColors.contentPrimary
+                                          : appColors.buttonTextStateDisabled,
+                                      Icons.location_city,
+                                      onTap: () => controller.isAddressTypeNotExists(AddressType.OTHERS) ? controller.addressType.value = AddressType.OTHERS : null,
+                                      hint: "Others",
+                                      bold: true,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            20.kH,
+                            squareCheckBoxWithLabel(
+                              controller.hasDefault.value,
+                              (val) {
+                                controller.hasDefault.value = val;
+                                print("Checkbox changed: $val");
+                              },
+                              label: "Mark as Default",
+                              checkedColor: appColors.brownDarkText,
+                              uncheckedColor: Colors.transparent,
+                              borderColor: appColors.brownDarkText,
+                            ),
+                            20.kH,
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: commonButton(double.infinity, 47, appColors.contentButtonBrown, Colors.white, () => controller.validateForm() ? controller.addAddressApi() : null, fontSize: 17, radius: 12, hint: "Confirm Address"),
+                    ),
+                    10.kH,
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: commonButton(double.infinity, 47, appColors.contentButtonBrown, Colors.white, () => controller.validateForm() ? controller.addAddressApi() : null, fontSize: 17, radius: 12, hint: "Confirm Address"),
-                ),
-                10.kH,
-              ],
-            ),
+              ),
+              progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING || controller.locationController.rxRequestStatus.value == Status.LOADING, h, w)
+            ],
           ),
         );
       },
