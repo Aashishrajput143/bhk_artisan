@@ -253,11 +253,14 @@ Widget commonTextField(
         cursorColor: isWhite ? Colors.white : appColors.contentPlaceholderPrimary,
         style: TextStyle(color: isWhite ? Colors.white : appColors.contentPrimary),
         decoration: InputDecoration(
-          labelText:isLabel? hint:null,
-          hint: Text(hint,style: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize)),
+          labelText: isLabel ? hint : null,
+          hint: Text(
+            hint,
+            style: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize),
+          ),
           prefixText: prefix,
           suffixText: suffix,
-          labelStyle:isLabel?  TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize):null,
+          labelStyle: isLabel ? TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
           alignLabelWithHint: true,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
@@ -398,7 +401,7 @@ Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selec
       borderRadius: BorderRadius.circular(8.0),
     ),
     child: DropdownButton2<String>(
-      hint: Text(hint, style: const TextStyle(fontSize: 14,color: Colors.black)),
+      hint: Text(hint, style: const TextStyle(fontSize: 14, color: Colors.black)),
       //style: TextStyle(fontSize: 14, color: Colors.black),
       value: selectedValue,
       items: items,
@@ -427,7 +430,7 @@ Widget commonMultiDropdownButton(List<DropdownMenuItem<String>>? items, List<Str
         isExpanded: true,
         hint: Text(
           selectedItems.isEmpty ? hint : selectedItems.join(", "),
-          style: const TextStyle(fontSize: 14,color: Colors.black),
+          style: const TextStyle(fontSize: 14, color: Colors.black),
           overflow: TextOverflow.ellipsis,
         ),
         items: items,
@@ -564,28 +567,45 @@ Widget phoneTextField(
   );
 }
 
-Widget checkBox(bool value, double scale, double radius, double border, Color selectedColor, Color selectedFillColor, Color fillColor, Color borderColor, ValueChanged<bool?> onChanged) {
-  return Transform.scale(
-    scale: scale,
-    child: Checkbox(
-      value: value,
-      onChanged: onChanged,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radius), // Set border radius
-      ),
-      side: WidgetStateBorderSide.resolveWith(
-        (states) => BorderSide(
-          color: states.contains(WidgetState.selected) ? borderColor : borderColor,
-          width: border, // Border width
+Widget squareCheckBoxWithLabel(
+  bool value,
+  ValueChanged<bool> onChanged, {
+  String label = "Mark as default",
+  double size = 21,
+  double radius = 5,
+  Color borderColor = Colors.grey,
+  Color checkedColor = Colors.blue,
+  Color uncheckedColor = Colors.white,
+  TextStyle? labelStyle,
+}) {
+  return GestureDetector(
+    onTap: () => onChanged(!value),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: value ? checkedColor : uncheckedColor,
+            borderRadius: BorderRadius.circular(radius),
+            border: Border.all(color: borderColor, width: 2),
+          ),
+          child: value
+              ? const Icon(Icons.check, size: 16, color: Colors.white) // ✅ you can replace with square
+              : null,
         ),
-      ),
-      fillColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected) ? selectedFillColor : fillColor),
-      checkColor: selectedColor,
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      visualDensity: VisualDensity.compact,
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: labelStyle ??
+              const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        ),
+      ],
     ),
   );
 }
+
 
 Widget commonButton(double width, double height, Color backgroundColor, Color color, VoidCallback? onChanged, {String hint = '', double radius = 12, double paddingVertical = 0, double paddingHorizontal = 0, double fontSize = 16, Color borderColor = Colors.transparent}) {
   return ElevatedButton(
@@ -774,7 +794,7 @@ Widget commonOutlinedButtonIcon(double width, double height, Color color, VoidCa
   );
 }
 
-Widget commonIconTags(Color color, IconData icon, {Color borderColor = Colors.transparent, bool bold = false, double fontSize = 16, double padding = 10.0, double vPadding = 4.0, String hint = '', double radius = 18,void Function()? onTap}) {
+Widget commonIconTags(Color color, IconData icon, {Color borderColor = Colors.transparent, bool bold = false, double fontSize = 16, double padding = 10.0, double vPadding = 4.0, String hint = '', double radius = 18, void Function()? onTap}) {
   return GestureDetector(
     onTap: onTap,
     child: Container(
@@ -786,7 +806,7 @@ Widget commonIconTags(Color color, IconData icon, {Color borderColor = Colors.tr
         padding: EdgeInsets.symmetric(horizontal: padding, vertical: vPadding),
         child: Row(
           children: [
-            Icon(icon,size: 20,color: color),
+            Icon(icon, size: 20, color: color),
             8.kW,
             Text(
               hint,
@@ -934,12 +954,12 @@ Widget commonPressed(double width, double height, Color backgroundColor, Color c
   );
 }
 
-Widget commonContainer(String title, Color color,{ bool isBrown = false, double pH = 10, double borderWidth = 2}) {
+Widget commonContainer(String title, Color color, {bool isBrown = false, double pH = 10, double borderWidth = 2}) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: pH, vertical: 5),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(color:isBrown?appColors.brownDarkText: Colors.grey.shade300, width: borderWidth),
+      border: Border.all(color: isBrown ? appColors.brownDarkText : Colors.grey.shade300, width: borderWidth),
     ),
     child: Text(
       title,

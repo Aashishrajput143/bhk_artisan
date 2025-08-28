@@ -34,3 +34,19 @@ extension UserCasteCategoryValueExtension on UserCasteCategory {
     }
   }
 }
+
+UserCasteCategory? parseUserCasteCategory(String? value) {
+  switch (value) {
+    case "GENERAL":
+      return UserCasteCategory.GENERAL;
+    case "OBC":
+      return UserCasteCategory.OBC;
+    case "SC/ST":
+      return UserCasteCategory.SC_ST;
+    case "OTHER":
+      return UserCasteCategory.OTHER;
+    default:
+      return null;
+  }
+}
+

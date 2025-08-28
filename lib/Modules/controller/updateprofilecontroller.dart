@@ -81,10 +81,10 @@ class UpdateProfileController extends GetxController {
       try {
         selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == casteCategoryValue, orElse: () => UserCasteCategory.OTHER);
       } catch (e) {
-        selectedCategory.value = UserCasteCategory.OTHER;
+       selectedCategory.value = null;
       }
     } else {
-      selectedCategory.value = UserCasteCategory.OTHER;
+      selectedCategory.value = null;
     }
 
     String? introVideo = commonController.profileData.value.data?.introVideo;

@@ -1,7 +1,10 @@
 import 'package:bhk_artisan/Modules/controller/address_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/address_type_enum.dart';
 import 'package:bhk_artisan/resources/font.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -15,51 +18,59 @@ class AddressScreen extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     AddressController controller = Get.put(AddressController());
-    return Obx(()=> Stack(
-      children: [
-        Scaffold(
-          backgroundColor: appColors.backgroundColor,
-          appBar: commonAppBar("Manage Address"),
-          body: controller.hasAddress.value? ListView.builder(
-            shrinkWrap: true,
-            itemCount: controller.addresses.length,
-            itemBuilder: (context, index) {
-              final address = controller.addresses[index];
-              return orderContent(context,h, w, address,controller);
-            },
-          ):Center(child: Padding(
-            padding: EdgeInsets.only(top: h*0.15),
-            child: Column(
-              children: [
-                SvgPicture.asset(appImages.emptyMap,color: appColors.brownbuttonBg),
-                Text(
-                  "Your Address is Empty",
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                4.kH,
-                Text("No address added yet. Keeping your profile\nsafe starts with adding your address. ",style: TextStyle(fontSize: 14, color: appColors.contentSecondary),textAlign: TextAlign.center,)
-              ],
-            ),
-          )),
-          floatingActionButton: controller.hasAddress.value? Padding(
-            padding: EdgeInsets.only(bottom: h * 0.03, right: 10),
-            child: FloatingActionButton(
-              backgroundColor: appColors.contentButtonBrown,
-              onPressed: () => bottomDrawer(context, h * 0.8, w, controller),
-              child: const Icon(Icons.add, color: Colors.white),
-            ),
-          ):Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: commonButton(w, 47, appColors.contentButtonBrown, Colors.white, ()=> bottomDrawer(context, h * 0.8, w, controller),hint: "Add Address"),
+    return Obx(
+      () => Stack(
+        children: [
+          Scaffold(
+            backgroundColor: appColors.backgroundColor,
+            appBar: commonAppBar("Manage Address"),
+            body: controller.getAddressModel.value.data?.isNotEmpty ?? true
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.getAddressModel.value.data?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      return orderContent(context, h, w, index, controller);
+                    },
+                  )
+                : Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: h * 0.15),
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(appImages.emptyMap, color: appColors.brownbuttonBg),
+                          Text("Your Address is Empty", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          4.kH,
+                          Text(
+                            "No address added yet. Keeping your profile\nsafe starts with adding your address. ",
+                            style: TextStyle(fontSize: 14, color: appColors.contentSecondary),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+            floatingActionButton: controller.getAddressModel.value.data?.isNotEmpty ?? true
+                ? Padding(
+                    padding: EdgeInsets.only(bottom: h * 0.03, right: 10),
+                    child: FloatingActionButton(
+                      backgroundColor: appColors.contentButtonBrown,
+                      onPressed: () => bottomDrawer(context, h * 0.8, w, controller),
+                      child: const Icon(Icons.add, color: Colors.white),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: commonButton(w, 47, appColors.contentButtonBrown, Colors.white, () => bottomDrawer(context, h * 0.8, w, controller), hint: "Add Address"),
+                  ),
+            floatingActionButtonLocation: controller.getAddressModel.value.data?.isNotEmpty ?? true ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.centerFloat,
           ),
-          floatingActionButtonLocation: controller.hasAddress.value?FloatingActionButtonLocation.endFloat:FloatingActionButtonLocation.centerFloat,
-        ),
-        // progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING,h, w),
-      ],
-    ));
+          progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+        ],
+      ),
+    );
   }
 
-  Widget orderContent(BuildContext context, double h, double w, AddressModel address,AddressController controller) {
+  Widget orderContent(BuildContext context, double h, double w, int index, AddressController controller) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
       decoration: BoxDecoration(
@@ -68,50 +79,38 @@ class AddressScreen extends ParentWidget {
         border: Border.all(color: Colors.grey.shade300, width: 1.5),
         boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
       ),
-      child: Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8), child: orderCardHeader(context,h,w,address,controller)),
+      child: Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8), child: orderCardHeader(context, h, w, index, controller)),
     );
   }
 
-  Widget orderCardHeader(BuildContext context,double h,double w, AddressModel address, AddressController controller) {
+  Widget orderCardHeader(BuildContext context, double h, double w, int index, AddressController controller) {
+    final address = controller.getAddressModel.value.data?[index];
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-          contentPadding: EdgeInsets.all(0),
-          leading: Icon(
-            address.id == "1"
-                ? Icons.home
-                : address.id == "2"
-                ? Icons.business_center
-                : Icons.location_city,
-            size: 25,
-            color: appColors.brownDarkText,
-          ),
+          contentPadding: EdgeInsets.zero,
+          leading: Icon((address?.addressType ?? "OTHERS").toAddressType().icon, size: 25, color: appColors.brownDarkText),
           title: Row(
             children: [
-              Text(
-                address.title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              if(address.isDefault)...[
-              10.kW,
-              commonContainer("Default", appColors.brownDarkText,isBrown: true,pH: 14,borderWidth: 1)]
+              Text((address?.addressType ?? "OTHERS").toAddressType().displayName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              if (address?.isDefault ?? false) ...[10.kW, commonContainer("Default", appColors.brownDarkText, isBrown: true, pH: 14, borderWidth: 1.5)],
             ],
           ),
           trailing: PopupMenuButton<String>(
             color: appColors.popColor,
             onSelected: (value) {
               if (value == 'Delete') {
-                controller.deleteAddress(address.id);
+                // controller.deleteAddress((address?.id ?? "").toString());
               } else if (value == 'Edit') {
                 bottomDrawer(context, h * 0.8, w, controller);
               } else if (value == 'markasDefault') {
-                controller.markAsDefault(address.id);
+                // controller.markAsDefault((address?.id ?? "").toString());
               }
             },
             icon: Icon(Icons.more_vert, color: Colors.grey[700]),
-            itemBuilder: (BuildContext context) => [const PopupMenuItem(value: 'markasDefault', child: Text('Mark As Default')), const PopupMenuItem(value: 'Delete', child: Text('Delete')), const PopupMenuItem(value: 'Edit', child: Text('Edit'))],
+            itemBuilder: (BuildContext context) => const [PopupMenuItem(value: 'markasDefault', child: Text('Mark As Default')), PopupMenuItem(value: 'Delete', child: Text('Delete')), PopupMenuItem(value: 'Edit', child: Text('Edit'))],
           ),
         ),
         // 6.kH,
@@ -121,7 +120,7 @@ class AddressScreen extends ParentWidget {
         // ),
         8.kH,
         Text(
-          address.fullAddress,
+          controller.getFullAddress(controller.getAddressModel.value, index),
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentdescBrownColor),
         ),
         8.kH,
@@ -175,13 +174,13 @@ class AddressScreen extends ParentWidget {
                         16.kH,
                         commonComponent("LandMark", commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter LandMark', maxLines: 1), mandatory: false),
                         16.kH,
-                        commonComponent("City", commonTextField(controller.cityController.value, controller.cityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your City', maxLines: 1,readonly: true)),
+                        commonComponent("City", commonTextField(controller.cityController.value, controller.cityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your City', maxLines: 1, readonly: true)),
                         16.kH,
-                        commonComponent("State", commonTextField(controller.stateController.value, controller.stateFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your State', maxLines: 1,readonly: true)),
+                        commonComponent("State", commonTextField(controller.stateController.value, controller.stateFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your State', maxLines: 1, readonly: true)),
                         16.kH,
-                        commonComponent("Country", commonTextField(controller.countryController.value, controller.countryFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Country', maxLines: 1,readonly: true)),
+                        commonComponent("Country", commonTextField(controller.countryController.value, controller.countryFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Country', maxLines: 1, readonly: true)),
                         16.kH,
-                        commonComponent("PinCode", commonTextField(controller.pinController.value, controller.pinFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Pin Code', maxLines: 1, maxLength: 6,readonly: true)),
+                        commonComponent("PinCode", commonTextField(controller.pinController.value, controller.pinFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Pin Code', maxLines: 1, maxLength: 6, readonly: true)),
                         20.kH,
                         commonComponent(
                           "AddressType",
@@ -190,12 +189,69 @@ class AddressScreen extends ParentWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                commonIconTags(borderColor: controller.addressType.value == "Home"?appColors.brownDarkText : appColors.border,controller.addressType.value == "Home"?appColors.brownDarkText : appColors.contentPrimary, Icons.home,onTap:()=>controller.addressType.value = "Home",hint: "Home",bold: true,),
-                                commonIconTags(borderColor: controller.addressType.value == "Work"?appColors.brownDarkText : appColors.border,controller.addressType.value == "Work"?appColors.brownDarkText : appColors.contentPrimary, Icons.business_center,onTap:()=>controller.addressType.value = "Work",hint: "Work",bold: true,),
-                                commonIconTags(borderColor: controller.addressType.value == "Others"?appColors.brownDarkText : appColors.border,controller.addressType.value == "Others"?appColors.brownDarkText : appColors.contentPrimary, Icons.location_city,onTap:()=>controller.addressType.value = "Others",hint: "Others",bold: true,)
+                                commonIconTags(
+                                  borderColor: controller.isAddressTypeNotExists(AddressType.HOME)
+                                      ? controller.addressType.value == AddressType.HOME
+                                            ? appColors.brownDarkText
+                                            : appColors.border
+                                      : appColors.border,
+                                  controller.isAddressTypeNotExists(AddressType.HOME)
+                                      ? controller.addressType.value == AddressType.HOME
+                                            ? appColors.brownDarkText
+                                            : appColors.contentPrimary
+                                      : appColors.buttonTextStateDisabled,
+                                  Icons.home,
+                                  onTap: () => controller.isAddressTypeNotExists(AddressType.HOME) ? controller.addressType.value = AddressType.HOME : null,
+                                  hint: "Home",
+                                  bold: true,
+                                ),
+                                commonIconTags(
+                                  borderColor: controller.isAddressTypeNotExists(AddressType.OFFICE)
+                                      ? controller.addressType.value == AddressType.OFFICE
+                                            ? appColors.brownDarkText
+                                            : appColors.border
+                                      : appColors.border,
+                                  controller.isAddressTypeNotExists(AddressType.OFFICE)
+                                      ? controller.addressType.value == AddressType.OFFICE
+                                            ? appColors.brownDarkText
+                                            : appColors.contentPrimary
+                                      : appColors.buttonTextStateDisabled,
+                                  Icons.business_center,
+                                  onTap: () => controller.isAddressTypeNotExists(AddressType.OFFICE) ? controller.addressType.value = AddressType.OFFICE : null,
+                                  hint: "Work",
+                                  bold: true,
+                                ),
+                                commonIconTags(
+                                  borderColor: controller.isAddressTypeNotExists(AddressType.OTHERS)
+                                      ? controller.addressType.value == AddressType.OTHERS
+                                            ? appColors.brownDarkText
+                                            : appColors.border
+                                      : appColors.border,
+                                  controller.isAddressTypeNotExists(AddressType.OTHERS)
+                                      ? controller.addressType.value == AddressType.OTHERS
+                                            ? appColors.brownDarkText
+                                            : appColors.contentPrimary
+                                      : appColors.buttonTextStateDisabled,
+                                  Icons.location_city,
+                                  onTap: () => controller.isAddressTypeNotExists(AddressType.OTHERS) ? controller.addressType.value = AddressType.OTHERS : null,
+                                  hint: "Others",
+                                  bold: true,
+                                ),
                               ],
                             ),
                           ),
+                        ),
+                        20.kH,
+                        squareCheckBoxWithLabel(
+                          controller.hasDefault.value,
+                          (val) {
+                            controller.hasDefault.value = val;
+                            print("Checkbox changed: $val");
+                          },
+                          label: "Mark as Default",
+                          checkedColor: appColors.brownDarkText,
+                          uncheckedColor: Colors.transparent,
+                          borderColor: appColors.brownDarkText,
                         ),
                         20.kH,
                       ],
@@ -204,10 +260,7 @@ class AddressScreen extends ParentWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: commonButton(double.infinity, 47, appColors.contentButtonBrown, Colors.white, () {
-                    Get.back();
-                    Get.back();
-                  }, fontSize: 17, radius: 12, hint: "Confirm Address"),
+                  child: commonButton(double.infinity, 47, appColors.contentButtonBrown, Colors.white, () => controller.validateForm() ? controller.addAddressApi() : null, fontSize: 17, radius: 12, hint: "Confirm Address"),
                 ),
                 10.kH,
               ],

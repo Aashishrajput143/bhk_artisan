@@ -19,13 +19,12 @@ import '../screens/profileManagement/main_profile.dart';
 class CommonScreenController extends GetxController {
   final _api = ProfileRepository();
   var selectedIndex = 0.obs;
-  
+
   @override
   void onInit() {
     super.onInit();
     getProfileApi();
     Get.put(LocationController());
-
   }
 
   int changeIndex() {
@@ -59,8 +58,6 @@ class CommonScreenController extends GetxController {
   RxString error = ''.obs;
   void setError(String value) => error.value = value;
 
-
-
   Future<void> getProfileApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
@@ -72,18 +69,14 @@ class CommonScreenController extends GetxController {
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
             setProfileData(value);
-             Utils.savePreferenceValues(Constants.userId, "${value.data?.id}");
-             debugPrint("user_id===>${value.data?.id}");
+            Utils.savePreferenceValues(Constants.userId, "${value.data?.id}");
+            debugPrint("user_id===>${value.data?.id}");
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> ${value.toString()}");
           })
           .onError((error, stackTrace) {
-            handleApiError(
-        error,stackTrace,
-        setError: setError,
-        setRxRequestStatus: setRxRequestStatus,
-      );
-    });
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }

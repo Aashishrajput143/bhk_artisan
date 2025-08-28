@@ -2,6 +2,7 @@ import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/caste_category_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
@@ -33,10 +34,11 @@ class ViewProfile extends ParentWidget {
                 ],
               ),
               16.kH,
-              commonCards("First Name", controller.profileData.value.data?.firstName ?? "Please set your First Name", Icons.person_outline),
-              commonCards("First Name", controller.profileData.value.data?.lastName ?? "Please set your Last Name", Icons.person_outline),
-              commonCards("Phone Number", "${controller.profileData.value.data?.countryCode??"Please set your Phone Number"} ${controller.profileData.value.data?.phoneNo??""}", Icons.phone_outlined),
-              commonCards("Email", controller.profileData.value.data?.email ?? "Please set your Email", Icons.email_outlined),
+              commonCards("First Name", controller.profileData.value.data?.firstName ?? "", Icons.person_outline),
+              commonCards("First Name", controller.profileData.value.data?.lastName ?? "", Icons.person_outline),
+              commonCards("Phone Number", "${controller.profileData.value.data?.countryCode ?? ""} ${controller.profileData.value.data?.phoneNo ?? ""}", Icons.phone_outlined),
+              if (controller.profileData.value.data?.email != null) commonCards("Email", controller.profileData.value.data?.email ?? "", Icons.email_outlined),
+              commonCards("Caste Category", "${parseUserCasteCategory(controller.profileData.value.data?.userCasteCategory)?.displayName}  ( ${controller.profileData.value.data?.subCaste} )", Icons.people_outline),
               commonCards("Expertise", controller.profileData.value.data?.expertizeField ?? "Please set your Expertise", Icons.work_outline),
             ],
           ),
@@ -47,7 +49,7 @@ class ViewProfile extends ParentWidget {
 
   Widget commonCards(String title, String subtitle, IconData icon) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
         leading: Icon(icon, color: Colors.black),
         title: Text(title, style: TextStyle(color: Colors.grey)),
@@ -63,7 +65,7 @@ class ViewProfile extends ParentWidget {
         Center(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
-            child: controller.profileData.value.data?.avatar?.isNotEmpty ?? false ?commonProfileNetworkImage(controller.profileData.value.data?.avatar ?? "") : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
+            child: controller.profileData.value.data?.avatar?.isNotEmpty ?? false ? commonProfileNetworkImage(controller.profileData.value.data?.avatar ?? "") : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
           ),
         ),
       ],

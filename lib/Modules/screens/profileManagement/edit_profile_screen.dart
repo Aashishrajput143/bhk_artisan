@@ -190,7 +190,8 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
           16.kH,
           commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Email', maxLines: 1), mandatory: false),
           16.kH,
-          Row(
+          if(controller.isNewUser.value)...[
+            Row(
             children: [
               Expanded(
                 flex: 3,
@@ -222,6 +223,7 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
             ],
           ),
           16.kH,
+          ],
           commonComponent(
             "Expertise",
             commonMultiDropdownButton(
