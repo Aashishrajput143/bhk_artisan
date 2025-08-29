@@ -66,7 +66,7 @@ class AddressController extends GetxController {
     stateController.value.text = getAddressModel.value.data?[index].state ?? "";
     countryController.value.text = getAddressModel.value.data?[index].country ?? "";
     pinController.value.text = getAddressModel.value.data?[index].postalCode ?? "";
-    //lanMarkController.value.text = getAddressModel.value.data?[index].??"";
+    lanMarkController.value.text = getAddressModel.value.data?[index].landmark??"";
   }
 
   bool isAddressTypeNotExists(AddressType type) {
@@ -84,6 +84,7 @@ class AddressController extends GetxController {
 
     addIfNotEmpty(address.data?[index].houseNo);
     addIfNotEmpty(address.data?[index].street);
+    addIfNotEmpty(address.data?[index].landmark);
     addIfNotEmpty(address.data?[index].city);
     addIfNotEmpty(address.data?[index].state);
     addIfNotEmpty(address.data?[index].postalCode);

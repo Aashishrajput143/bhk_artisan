@@ -155,7 +155,17 @@ class NetworkApiServices extends BaseApiServices {
         throw FetchDataException(response.body);
       case 409:
         throw FetchDataException(response.body);
+      case 502:
+        throw FetchDataException('Server error: 502 Bad Gateway. Please try again later.');
+      case 503:
+        throw FetchDataException('Server unavailable: 503 Service Unavailable. Please try again later.');
+      case 504:
+        throw FetchDataException('Server timeout: 504 Gateway Timeout. Please try again later.');
       default:
+        // Handle all other 5xx errors
+        if (response.statusCode >= 500 && response.statusCode < 600) {
+          throw FetchDataException('Server error: ${response.statusCode}. Please try again later.');
+        }
         throw FetchDataException(' ${response.body}');
     }
   }
