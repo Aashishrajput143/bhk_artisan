@@ -27,7 +27,7 @@ class SplashController extends GetxController with GetSingleTickerProviderStateM
                 if (value == true)
                   {
                     Future.delayed(const Duration(seconds: 5), () {
-                      Get.offAllNamed(RoutesClass.editprofile);
+                      Get.offAllNamed(RoutesClass.login);
                     }),
                   }
                 else

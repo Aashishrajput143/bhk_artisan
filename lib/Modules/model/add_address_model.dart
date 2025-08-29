@@ -28,6 +28,7 @@ class Data {
   String? country;
   String? state;
   String? addressType;
+  String? landmark;
   User? user;
   dynamic latitude;
   dynamic longitude;
@@ -46,6 +47,7 @@ class Data {
       this.user,
       this.latitude,
       this.longitude,
+      this.landmark,
       this.id,
       this.createdAt});
 
@@ -61,6 +63,7 @@ class Data {
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     latitude = json['latitude'];
     longitude = json['longitude'];
+    landmark = json['landmark'];
     id = json['id'];
     createdAt = json['createdAt'];
   }
@@ -79,6 +82,7 @@ class Data {
       data['user'] = this.user!.toJson();
     }
     data['latitude'] = this.latitude;
+    data['landmark']=this.landmark;
     data['longitude'] = this.longitude;
     data['id'] = this.id;
     data['createdAt'] = this.createdAt;

@@ -11,8 +11,13 @@ class AddressRepository {
     return AddAddressModel.fromJson(response);
   }
 
-  Future<GetAddressModel> getAddressApi(var userId) async {
-    dynamic response = await _apiServices.getApi("${AppUrl.getAddress}$userId");
+  Future<AddAddressModel> editAddressApi(var data,var id) async {
+    dynamic response = await _apiServices.putEncodeApi(data,"${AppUrl.editAddress}$id");
+    return AddAddressModel.fromJson(response);
+  }
+
+  Future<GetAddressModel> getAddressApi() async {
+    dynamic response = await _apiServices.getApi(AppUrl.getAddress);
     return GetAddressModel.fromJson(response);
   }
 }

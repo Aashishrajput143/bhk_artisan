@@ -63,7 +63,7 @@ class NetworkApiServices extends BaseApiServices {
 
     try {
       final uri = Uri.parse(url).replace(queryParameters: {'page': page, 'status': status, 'search': search});
-      final response = await http.get(uri, headers: {'Accept': 'application/json', 'Authorization': token}).timeout(const Duration(seconds: 600));
+      final response = await http.get(uri, headers: {'Accept': 'application/json', 'accesstoken': token}).timeout(const Duration(seconds: 600));
       expired(response);
       responseJson = returnResponse(response);
     } on SocketException {
@@ -91,12 +91,43 @@ class NetworkApiServices extends BaseApiServices {
       final response = await http
           .post(
             Uri.parse(url),
-            headers: {'Accept': 'application/json', 'Authorization': token},
+            headers: {'Accept': 'application/json', 'accesstoken': token},
             body: data, //jsonEncode(data) //if raw form then we set jsonEncode if form the only data
           )
           .timeout(const Duration(seconds: 600));
       expired(response);
       responseJson = returnResponse(response);
+      Utils.printLog('Response: $response');
+    } on SocketException {
+      throw InternetException('');
+    } on RequestTimeOut {
+      throw RequestTimeOut('');
+    } on TimeoutException {
+      throw RequestTimeOut('');
+    } on UnauthorizedException {
+      throw AuthenticationException('');
+    }
+    Utils.printLog(responseJson);
+    return responseJson;
+  }
+
+  Future putEncodeApi(data, String url) async {
+    Utils.printLog(url);
+    Utils.printLog(data);
+    dynamic responseJson;
+    String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
+
+    try {
+      final response = await http
+          .put(
+            Uri.parse(url),
+            headers: {'content-Type': "application/json", 'accesstoken': token},
+            body: jsonEncode(data), //jsonEncode(data) //if raw form then we set jsonEncode if form the only data
+          )
+          .timeout(const Duration(seconds: 600));
+      expired(response);
+      responseJson = returnResponse(response);
+
       Utils.printLog('Response: $response');
     } on SocketException {
       throw InternetException('');

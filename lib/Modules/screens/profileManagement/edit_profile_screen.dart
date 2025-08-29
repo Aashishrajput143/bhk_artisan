@@ -31,24 +31,26 @@ class EditProfile extends ParentWidget {
             Scaffold(
               backgroundColor: appColors.backgroundColor,
               appBar: commonAppBar("Update Profile", automaticallyImplyLeading: false),
-              body: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    20.kH,
-                    profile(context, h, w, controller),
-                    20.kH,
-                    Row(
-                      children: [
-                        Icon(Icons.edit_document, size: 20.0, color: Colors.blue),
-                        10.kW,
-                        Text('Personal Information', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    20.kH,
-                    content(context, w, h, controller),
-                  ],
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      20.kH,
+                      profile(context, h, w, controller),
+                      20.kH,
+                      Row(
+                        children: [
+                          Icon(Icons.edit_document, size: 20.0, color: Colors.blue),
+                          10.kW,
+                          Text('Personal Information', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      20.kH,
+                      content(context, w, h, controller),
+                    ],
+                  ),
                 ),
               ),
               bottomNavigationBar: Padding(
@@ -180,110 +182,106 @@ Widget profile(BuildContext context, double h, double w, UpdateProfileController
 }
 
 Widget content(BuildContext context, double w, double h, UpdateProfileController controller) {
-  return Expanded(
-    child: SingleChildScrollView(
-      child: Column(
+  return Column(
+    children: [
+      commonComponent("First Name", commonTextField(controller.firstNameController.value, controller.firstNameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your First name', maxLines: 1)),
+      16.kH,
+      commonComponent("Last Name", commonTextField(controller.lastNameController.value, controller.lastNameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Last name', maxLines: 1)),
+      16.kH,
+      commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Email', maxLines: 1), mandatory: false),
+      16.kH,
+      if(controller.isNewUser.value)...[
+        Row(
         children: [
-          commonComponent("First Name", commonTextField(controller.firstNameController.value, controller.firstNameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your First name', maxLines: 1)),
-          16.kH,
-          commonComponent("Last Name", commonTextField(controller.lastNameController.value, controller.lastNameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Last name', maxLines: 1)),
-          16.kH,
-          commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Email', maxLines: 1), mandatory: false),
-          16.kH,
-          if(controller.isNewUser.value)...[
-            Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: commonComponent(
-                  "Category",
-                  commonDropdownButton(
-                    controller.casteCategories.map((item) {
-                      return DropdownMenuItem<String>(
-                        value: item.categoryValue.toString(),
-                        child: Text(item.displayName, style: const TextStyle(fontSize: 14)),
-                      );
-                    }).toList(),
-                    controller.selectedCategory.value?.categoryValue,
-                    w * 0.5,
-                    h,
-                    appColors.backgroundColor,
-                    (String? newValue) {
-                      if (newValue != null) {
-                        controller.selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == newValue);
-                      }
-                    },
-                    hint: 'Select Category',
-                    borderColor: appColors.border,
-                  ),
-                ),
+          Expanded(
+            flex: 3,
+            child: commonComponent(
+              "Category",
+              commonDropdownButton(
+                controller.casteCategories.map((item) {
+                  return DropdownMenuItem<String>(
+                    value: item.categoryValue.toString(),
+                    child: Text(item.displayName, style: const TextStyle(fontSize: 14)),
+                  );
+                }).toList(),
+                controller.selectedCategory.value?.categoryValue,
+                w * 0.5,
+                h,
+                appColors.backgroundColor,
+                (String? newValue) {
+                  if (newValue != null) {
+                    controller.selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == newValue);
+                  }
+                },
+                hint: 'Select Category',
+                borderColor: appColors.border,
               ),
-              10.kW,
-              Expanded(flex: 3, child: commonComponent("Community", commonTextField(controller.communityController.value, controller.communityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Community', maxLines: 1))),
-            ],
-          ),
-          16.kH,
-          ],
-          commonComponent(
-            "Expertise",
-            commonMultiDropdownButton(
-              controller.expertise.map((item) {
-                return DropdownMenuItem<String>(
-                  value: item.name,
-                  child: StatefulBuilder(
-                    builder: (context, setState) {
-                      final isSelected = controller.selectedMultiExpertise.contains(item.name);
-                      return GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          if (isSelected) {
-                            controller.selectedMultiExpertise.remove(item.name);
-                          } else {
-                            controller.selectedMultiExpertise.add(item.name);
-                          }
-                          setState(() {});
-                        },
-                        child: Row(
-                          children: [
-                            Checkbox(
-                              value: isSelected,
-                              checkColor: Colors.white,
-                              fillColor: WidgetStateProperty.resolveWith<Color>((states) {
-                                if (states.contains(WidgetState.selected)) {
-                                  return appColors.brownDarkText;
-                                }
-                                return Colors.white;
-                              }),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                              onChanged: (value) {
-                                if (value == true) {
-                                  controller.selectedMultiExpertise.add(item.name);
-                                } else {
-                                  controller.selectedMultiExpertise.remove(item.name);
-                                }
-                                setState(() {});
-                              },
-                            ),
-                            Text(item.name, style: const TextStyle(fontSize: 14)),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                );
-              }).toList(),
-              controller.selectedMultiExpertise,
-              w,
-              h,
-              appColors.backgroundColor,
-              hint: 'Select Expertise',
-              borderColor: appColors.border,
             ),
           ),
-          6.kH,
+          10.kW,
+          Expanded(flex: 3, child: commonComponent("Community", commonTextField(controller.communityController.value, controller.communityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Community', maxLines: 1))),
         ],
       ),
-    ),
+      16.kH,
+      ],
+      commonComponent(
+        "Expertise",
+        commonMultiDropdownButton(
+          controller.expertise.map((item) {
+            return DropdownMenuItem<String>(
+              value: item.name,
+              child: StatefulBuilder(
+                builder: (context, setState) {
+                  final isSelected = controller.selectedMultiExpertise.contains(item.name);
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      if (isSelected) {
+                        controller.selectedMultiExpertise.remove(item.name);
+                      } else {
+                        controller.selectedMultiExpertise.add(item.name);
+                      }
+                      setState(() {});
+                    },
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          value: isSelected,
+                          checkColor: Colors.white,
+                          fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+                            if (states.contains(WidgetState.selected)) {
+                              return appColors.brownDarkText;
+                            }
+                            return Colors.white;
+                          }),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          onChanged: (value) {
+                            if (value == true) {
+                              controller.selectedMultiExpertise.add(item.name);
+                            } else {
+                              controller.selectedMultiExpertise.remove(item.name);
+                            }
+                            setState(() {});
+                          },
+                        ),
+                        Text(item.name, style: const TextStyle(fontSize: 14)),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          }).toList(),
+          controller.selectedMultiExpertise,
+          w,
+          h,
+          appColors.backgroundColor,
+          hint: 'Select Expertise',
+          borderColor: appColors.border,
+        ),
+      ),
+      6.kH,
+    ],
   );
 }
 

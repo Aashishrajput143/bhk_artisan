@@ -23,11 +23,11 @@ extension AddressTypeValueExtension on AddressType {
   String get addressValue {
     switch (this) {
       case AddressType.HOME:
-        return "Home";
+        return "HOME";
       case AddressType.OFFICE:
-        return "Office";
+        return "OFFICE";
       case AddressType.OTHERS:
-        return "Others";
+        return "OTHERS";
     }
   }
 }

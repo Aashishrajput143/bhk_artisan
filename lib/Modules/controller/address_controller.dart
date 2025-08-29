@@ -1,7 +1,6 @@
 import 'package:bhk_artisan/Modules/model/add_address_model.dart';
 import 'package:bhk_artisan/Modules/model/get_address_model.dart';
 import 'package:bhk_artisan/Modules/repository/address_repository.dart';
-import 'package:bhk_artisan/common/Constants.dart';
 import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/commonmethods.dart';
@@ -40,6 +39,7 @@ class AddressController extends GetxController {
   void onInit() {
     super.onInit();
     getAddressApi();
+    locationController.getCurrentLocation();
     if (locationController.place.value != null) {
       loadLocation();
     }
@@ -50,12 +50,23 @@ class AddressController extends GetxController {
 
   void loadLocation() {
     flatNameController.value.text = locationController.place.value?.name ?? "";
-    streetNameController.value.text = locationController.place.value?.street ?? "";
-    lanMarkController.value.text = locationController.place.value?.subLocality ?? "";
+    streetNameController.value.text = locationController.place.value?.subLocality ?? "";
     cityController.value.text = locationController.place.value?.locality ?? "";
     stateController.value.text = locationController.place.value?.administrativeArea ?? "";
     countryController.value.text = locationController.place.value?.country ?? "";
     pinController.value.text = locationController.place.value?.postalCode ?? "";
+  }
+
+  void getLocationApi(int index) {
+    hasDefault.value = getAddressModel.value.data?[index].isDefault ?? false;
+    addressType.value = (getAddressModel.value.data?[index].addressType ?? "OTHERS").toAddressType();
+    flatNameController.value.text = getAddressModel.value.data?[index].houseNo ?? "";
+    streetNameController.value.text = getAddressModel.value.data?[index].street ?? "";
+    cityController.value.text = getAddressModel.value.data?[index].city ?? "";
+    stateController.value.text = getAddressModel.value.data?[index].state ?? "";
+    countryController.value.text = getAddressModel.value.data?[index].country ?? "";
+    pinController.value.text = getAddressModel.value.data?[index].postalCode ?? "";
+    //lanMarkController.value.text = getAddressModel.value.data?[index].??"";
   }
 
   bool isAddressTypeNotExists(AddressType type) {
@@ -96,8 +107,22 @@ class AddressController extends GetxController {
     }
   }
 
+  bool isAddressTypeSelectable(AddressType type, {String? editingId}) {
+    if (editingId != null && editingId.isNotEmpty) {
+      final editingAddress = getAddressModel.value.data?.firstWhereOrNull((e) => e.id.toString() == editingId);
+
+      if (editingAddress != null) {
+        return editingAddress.addressType?.toUpperCase().toAddressType() == type;
+      }
+      return false;
+    }
+
+    return isAddressTypeNotExists(type);
+  }
+
   final rxRequestStatus = Status.COMPLETED.obs;
   final getAddressModel = GetAddressModel().obs;
+  final editAddressModel = AddAddressModel().obs;
   final addAddressModel = AddAddressModel().obs;
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
@@ -105,6 +130,7 @@ class AddressController extends GetxController {
 
   void setgetAddressModeldata(GetAddressModel value) => getAddressModel.value = value;
   void setaddAddressModeldata(AddAddressModel value) => addAddressModel.value = value;
+  void seteditAddressModeldata(AddAddressModel value) => editAddressModel.value = value;
 
   Future<void> getAddressApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
@@ -112,15 +138,61 @@ class AddressController extends GetxController {
 
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
-      String? userId = await Utils.getPreferenceValues(Constants.userId);
-
       _api
-          .getAddressApi(userId ?? "46")
+          .getAddressApi()
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
             setgetAddressModeldata(value);
             Utils.printLog("Response===> ${value.toString()}");
             setDisabledAddressType();
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+
+  Future<void> editAddressApi(var id, {bool isDefault = false}) async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      setRxRequestStatus(Status.LOADING);
+
+      Map<String, dynamic> data = {};
+
+      if (isDefault) {
+        data = {"isDefault": true};
+      } else {
+        data = {
+          "isDefault": hasDefault.value,
+          "houseNo": flatNameController.value.text,
+          "street": streetNameController.value.text,
+          "city": cityController.value.text,
+          "state": stateController.value.text,
+          "country": countryController.value.text,
+          "postalCode": pinController.value.text,
+          "addressType": addressType.value.addressValue,
+          if (lanMarkController.value.text.isNotEmpty) "landmark": lanMarkController.value.text,
+          "latitude": locationController.latitude.value,
+          "longitude": locationController.longitude.value,
+        };
+      }
+
+      _api
+          .editAddressApi(data, id)
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            seteditAddressModeldata(value);
+            Utils.printLog("Response===> ${value.toString()}");
+            Utils.printLog("Response===> ${value.toString()}");
+            getAddressApi();
+            if(!isDefault){
+              Get.back();
+              CommonMethods.showToast("Address Updated Successfully...", icon: Icons.check, bgColor: Colors.green);
+            }
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
@@ -167,18 +239,5 @@ class AddressController extends GetxController {
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
-  }
-}
-
-class AddressModel {
-  final String id;
-  final String title;
-  final String fullAddress;
-  final bool isDefault;
-
-  AddressModel({required this.id, required this.title, required this.fullAddress, this.isDefault = false});
-
-  AddressModel copyWith({bool? isDefault}) {
-    return AddressModel(id: id, title: title, fullAddress: fullAddress, isDefault: isDefault ?? this.isDefault);
   }
 }

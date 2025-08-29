@@ -14,7 +14,8 @@ class AppUrl {
 
   //address
   static String addAddress = '$baseUrl/users/api/users/addAddress';
-  static String getAddress = '$baseUrl/users/api/users/addresses?id=';
+  static String editAddress = '$baseUrl/users/api/users/updateAddress/';
+  static String getAddress = '$baseUrl/users/api/users/addresses_self';
   
   //get
   static String getcategory =

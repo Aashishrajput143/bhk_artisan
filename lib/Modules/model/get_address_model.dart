@@ -35,6 +35,7 @@ class Data {
   String? country;
   String? state;
   String? addressType;
+  String? landmark;
   double? latitude;
   double? longitude;
 
@@ -50,6 +51,7 @@ class Data {
       this.state,
       this.addressType,
       this.latitude,
+      this.landmark,
       this.longitude});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -62,6 +64,7 @@ class Data {
     city = json['city'];
     country = json['country'];
     state = json['state'];
+    landmark = json['landmark'];
     addressType = json['addressType'];
     latitude = json['latitude'];
     longitude = json['longitude'];
@@ -79,6 +82,7 @@ class Data {
     data['country'] = this.country;
     data['state'] = this.state;
     data['addressType'] = this.addressType;
+    data['landmark'] = this.landmark;
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
     return data;
