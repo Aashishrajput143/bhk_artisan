@@ -335,6 +335,7 @@ Widget commonDescriptionTextField(
   double radius = 8,
   double borderWidth = 1,
   double fontSize = 12,
+  bool isLabel = false,
   void Function(String)? onChange,
   TextInputType keyboardType = TextInputType.multiline,
   TextInputAction textInputAction = TextInputAction.newline,
@@ -348,7 +349,6 @@ Widget commonDescriptionTextField(
           setState(() {});
         }
       });
-
       int maxLinesCalc = focusNode.hasFocus ? minLines : maxLines;
       return TextField(
         controller: controller,
@@ -366,8 +366,12 @@ Widget commonDescriptionTextField(
         cursorColor: isWhite ? Colors.white : appColors.contentPlaceholderPrimary,
         style: TextStyle(color: isWhite ? Colors.white : appColors.contentPrimary),
         decoration: InputDecoration(
-          labelText: hint,
-          labelStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize),
+          labelText: isLabel ? hint : null,
+          hint: Text(
+            hint,
+            style: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize),
+          ),
+          labelStyle: isLabel ? TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
           alignLabelWithHint: true,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),

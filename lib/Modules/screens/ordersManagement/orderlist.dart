@@ -90,7 +90,7 @@ Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
 
 Widget orderContent(double h, double w, int index) {
   return GestureDetector(
-    onTap: ()=>Get.toNamed(RoutesClass.ordersdetails),
+    onTap: () => Get.toNamed(RoutesClass.ordersdetails),
     child: Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
       decoration: BoxDecoration(
@@ -116,19 +116,20 @@ Widget orderContent(double h, double w, int index) {
                   buildOrderDetailColumn('Payment', '₹ 300.50'),
                   buildOrderDetailColumn('Product ID', 'TST11414'),
                   buildOrderDetailColumn('Order Qty.', '${index + 1}0'),
-                  if(index.isOdd) buildOrderDetailColumn('Delivery Status', 'Pending', color: appColors.brownDarkText),
+                  if (index.isOdd) buildOrderDetailColumn('Delivery Status', 'Pending', color: appColors.brownDarkText),
                 ],
               ),
             ),
-            if(index.isEven)...[
-            4.kH,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                commonButton(w * 0.4, 45, appColors.acceptColor, Colors.white, () {}, hint: "Accept"),
-                commonButton(w * 0.4, 45, appColors.declineColor, Colors.white, () {}, hint: "Decline"),
-              ],
-            ),]
+            if (index.isEven) ...[
+              4.kH,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonButton(w * 0.4, 45, appColors.acceptColor, Colors.white, () {}, hint: "Accept"),
+                  commonButton(w * 0.4, 45, appColors.declineColor, Colors.white, () {}, hint: "Decline"),
+                ],
+              ),
+            ],
           ],
         ),
       ),
@@ -200,18 +201,16 @@ Widget orderCardContent(int index) {
               'Pink Cotton T-shirt',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
             ),
-            // 4.kH,
-            // Text('Colour : Red | Size : M', style: TextStyle(fontSize: 13, color: Colors.grey[700])),
             4.kH,
             Row(
               children: [
                 Icon(Icons.circle, color: Colors.green, size: 8),
                 4.kW,
-                Text(index.isEven?"Order Needs Action!":"Order is Confirmed", style: TextStyle(color: Colors.green, fontSize: 11)),
+                Text(index.isEven ? "Order Needs Action!" : "Order is Confirmed", style: TextStyle(color: Colors.green, fontSize: 11)),
               ],
             ),
             4.kH,
-            Text("Order Date : 16 Mar, 23:06:51 AM", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+            Text("Order Assigned : 16 Mar, 23:06:51 AM", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
           ],
         ),
       ),

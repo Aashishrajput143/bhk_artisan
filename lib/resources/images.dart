@@ -21,6 +21,9 @@ class AppImages {
   String get dashboardbanner1 => 'assets/images/banner1.jpeg';
   String get dashboardbanner2 => 'assets/images/banner2.jpeg';
   String get aadharbanner => 'assets/images/aadhar_banner.png';
+  String get cube => 'assets/images/cube.png';
+  String get info => 'assets/images/info.png';
+  String get user => 'assets/images/user.png';
   String get emptyMap =>'assets/images/empty_map.svg';
 
   static final AppImages _appImages = AppImages._internal();

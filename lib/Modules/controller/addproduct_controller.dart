@@ -162,7 +162,7 @@ final List<String> textureList = [
   }
 
   bool validateForm() {
-    if((selectedcategoryid.value?.isNotEmpty??false)&&(selectedsubcategoryid.value?.isNotEmpty??false)&&(nameController.value.text.isNotEmpty)&&(detaileddescriptionController.value.text.isNotEmpty)&&(priceController.value.text.isNotEmpty)&&(materialController.value.text.isNotEmpty)&&(quantityController.value.text.isNotEmpty)&&(imagefiles.length>=10)) return true;
+    if((selectedcategoryid.value?.isNotEmpty??false)&&(selectedsubcategoryid.value?.isNotEmpty??false)&&(nameController.value.text.isNotEmpty)&&(detaileddescriptionController.value.text.isNotEmpty)&&(priceController.value.text.isNotEmpty)&& (timeController.value.text.isNotEmpty)&&(materialController.value.text.isNotEmpty)&&(quantityController.value.text.isNotEmpty)&&(imagefiles.length>=4)) return true;
     return false;
   }
 
@@ -171,11 +171,6 @@ final List<String> textureList = [
     super.onInit();
     totalPriceController.value.text = "0.0";
     getCategoryApi();
-    // getBrandApi();
-    // getStoreApi();
-    // if (producteditId == true) {
-    //   getproductDetailsApi(productId);
-    // }
   }
 
   final rxRequestStatus = Status.COMPLETED.obs;
@@ -245,9 +240,14 @@ final List<String> textureList = [
         "categoryId": selectedcategoryid.value ?? "",
         "subCategoryId": selectedsubcategoryid.value ?? "",
         "description": detaileddescriptionController.value.text,
-        "price": priceController.value.text,
+        "produtPricePerPiece": priceController.value.text,
         "quantity": quantityController.value.text,
         "material": materialController.value.text,
+        "timeToMake":timeController.value.text,
+        if (selectedTexture.value?.isNotEmpty??false)"texture":selectedTexture.value??"",
+        if (selectedWashCare.value?.isNotEmpty??false)"washCare":selectedWashCare.value??"",
+        if (techniqueController.value.text.isNotEmpty)"artUsed":techniqueController.value.text,
+        if (patternController.value.text.isNotEmpty)"patternUsed":patternController.value.text,
         if (netweightController.value.text.isNotEmpty) "netWeight": getWeight(),
         if (lengthController.value.text.isNotEmpty && breadthController.value.text.isNotEmpty && heightController.value.text.isNotEmpty) "dimension": getDimensions(),
       };

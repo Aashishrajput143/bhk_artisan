@@ -17,79 +17,92 @@ class VideoPreviewPage extends ParentWidget {
         appBar: controller.isFullscreen.value ? null : commonAppBar("Introductory Video"),
         body: controller.isInitialized.value
             ? Center(
-                child: GestureDetector(
-                  onTap: controller.onUserTap,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      AspectRatio(aspectRatio: controller.videoController.value.aspectRatio, child: VideoPlayer(controller.videoController)),
-                      if (controller.isBuffering.value) CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
-                      if (controller.showControls.value && controller.isBuffering.value == false)
-                        GestureDetector(
-                          onTap: () {
-                            if (controller.restart.value) {
-                              controller.replayVideo();
-                            } else {
-                              controller.togglePlayPause();
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
-                            padding: const EdgeInsets.all(12),
-                            child: Icon(controller.restart.value?Icons.replay:controller.isPlaying.value ? Icons.pause : Icons.play_arrow, color: Colors.white, size: 40),
-                          ),
-                        ),
-                      if (controller.showControls.value)
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            color: Colors.black.withValues(alpha: 0.5),
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                SliderTheme(
-                                  data: SliderTheme.of(context).copyWith(trackHeight: 2, thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6), overlayShape: const RoundSliderOverlayShape(overlayRadius: 12)),
-                                  child: Slider(
-                                    padding: EdgeInsets.only(top: 6),
-                                    min: 0,
-                                    max: controller.duration.value.inSeconds.toDouble(),
-                                    value: controller.position.value.inSeconds.toDouble().clamp(0, controller.duration.value.inSeconds.toDouble()),
-                                    onChanged: (value) {
-                                      controller.seekTo(Duration(seconds: value.toInt()));
-                                    },
-                                    activeColor: Colors.red,
-                                    inactiveColor: Colors.white24,
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(controller.isMuted.value ? Icons.volume_off : Icons.volume_up, color: Colors.white, size: 22),
-                                      onPressed: controller.toggleMute,
-                                    ),
-                                    Text("${controller.formatDuration(controller.position.value)} / ${controller.formatDuration(controller.duration.value)}", style: const TextStyle(color: Colors.white, fontSize: 12)),
-                                    const Spacer(),
-                                    !controller.restart.value?IconButton(
-                                      icon: Icon(Icons.replay, color: Colors.white, size: 22),
-                                      onPressed: controller.replayVideo,
-                                    ):SizedBox(),
-                                    IconButton(
-                                      icon: Icon(controller.isFullscreen.value ? Icons.fullscreen_exit : Icons.fullscreen, color: Colors.white, size: 22),
-                                      onPressed: controller.toggleFullscreen,
-                                    ),
-                                  ],
-                                ),
-                              ],
+                child: SizedBox.expand(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: controller.onUserTap,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AspectRatio(aspectRatio: controller.videoController.value.aspectRatio, child: VideoPlayer(controller.videoController)),
+                        if (controller.isBuffering.value) CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                        if (controller.showControls.value && controller.isBuffering.value == false)
+                          GestureDetector(
+                            onTap: () {
+                              if (controller.restart.value) {
+                                controller.replayVideo();
+                              } else {
+                                controller.togglePlayPause();
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
+                              padding: const EdgeInsets.all(12),
+                              child: Icon(
+                                controller.restart.value
+                                    ? Icons.replay
+                                    : controller.isPlaying.value
+                                    ? Icons.pause
+                                    : Icons.play_arrow,
+                                color: Colors.white,
+                                size: 40,
+                              ),
                             ),
                           ),
-                        ),
-                    ],
+                        if (controller.showControls.value)
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              color: Colors.black.withValues(alpha: 0.5),
+                              padding: EdgeInsets.fromLTRB(8,8,8,controller.isFullscreen.value?h * 0.02: h * 0.04),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(trackHeight: 2, thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6), overlayShape: const RoundSliderOverlayShape(overlayRadius: 12)),
+                                    child: Slider(
+                                      padding: EdgeInsets.only(top: 6),
+                                      min: 0,
+                                      max: controller.duration.value.inSeconds.toDouble(),
+                                      value: controller.position.value.inSeconds.toDouble().clamp(0, controller.duration.value.inSeconds.toDouble()),
+                                      onChanged: (value) {
+                                        controller.seekTo(Duration(seconds: value.toInt()));
+                                      },
+                                      activeColor: Colors.red,
+                                      inactiveColor: Colors.white24,
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(controller.isMuted.value ? Icons.volume_off : Icons.volume_up, color: Colors.white, size: 22),
+                                        onPressed: controller.toggleMute,
+                                      ),
+                                      Text("${controller.formatDuration(controller.position.value)} / ${controller.formatDuration(controller.duration.value)}", style: const TextStyle(color: Colors.white, fontSize: 12)),
+                                      const Spacer(),
+                                      !controller.restart.value
+                                          ? IconButton(
+                                              icon: Icon(Icons.replay, color: Colors.white, size: 22),
+                                              onPressed: controller.replayVideo,
+                                            )
+                                          : SizedBox(),
+                                      IconButton(
+                                        icon: Icon(controller.isFullscreen.value ? Icons.fullscreen_exit : Icons.fullscreen, color: Colors.white, size: 22),
+                                        onPressed: controller.toggleFullscreen,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               )
