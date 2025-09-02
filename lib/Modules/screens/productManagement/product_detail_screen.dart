@@ -42,12 +42,12 @@ class ProductDetailScreen extends ParentWidget {
       children: [
         Container(
           height: h * 0.4,
-          color: Colors.blueGrey.shade100,
+          decoration: BoxDecoration(color: Colors.blueGrey.shade100, borderRadius: BorderRadius.circular(12)),
           child: Column(
             children: [
               CarouselSlider(
                 items: controller.productItems.isNotEmpty
-                    ? controller.productItems.last["imagePath"]
+                    ? controller.productItems.first["imagePath"]
                           .map<Widget>(
                             (item) => Container(
                               width: w * 0.9,
@@ -58,7 +58,7 @@ class ProductDetailScreen extends ParentWidget {
                           )
                           .toList()
                     : [],
-                carouselController: controller.slidercontroller.value,
+                carouselController: controller.slidercontroller,
                 options: CarouselOptions(
                   height: h * 0.38,
                   enlargeCenterPage: true,
@@ -76,14 +76,39 @@ class ProductDetailScreen extends ParentWidget {
         SizedBox(
           height: h * 0.095,
           child: ListView.builder(
+            controller: controller.thumbnailScrollController,
             scrollDirection: Axis.horizontal,
-            itemCount: controller.productItems.last["imagePath"].length,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: controller.productItems.first["imagePath"].length,
             itemBuilder: (context, index) {
-              String item = controller.productItems.last["imagePath"][index];
+              String item = controller.productItems.first["imagePath"][index];
               return Obx(
                 () => GestureDetector(
                   onTap: () {
-                    controller.slidercontroller.value.animateToPage(index);
+                    int current = controller.currentIndex.value;
+                    int tapped = index;
+                    int diff = tapped - current;
+
+                    // Always move carousel to tapped image
+                    controller.slidercontroller.animateToPage(tapped);
+
+                    double itemWidth = w * 0.165 + 16; // thumbnail width + margin
+                    double currentOffset = controller.thumbnailScrollController.offset;
+                    double maxScrollExtent = controller.thumbnailScrollController.position.maxScrollExtent;
+
+                    if (diff > 0) {
+                      // Forward tap → scroll forward by 1 step
+                      double targetOffset = currentOffset + itemWidth;
+                      if (targetOffset > maxScrollExtent) targetOffset = maxScrollExtent;
+
+                      controller.thumbnailScrollController.animateTo(targetOffset, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+                    } else if (diff < 0) {
+                      // Backward tap → scroll backward by 1 step
+                      double targetOffset = currentOffset - itemWidth;
+                      if (targetOffset < 0) targetOffset = 0;
+
+                      controller.thumbnailScrollController.animateTo(targetOffset, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+                    }
                   },
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -112,7 +137,11 @@ class ProductDetailScreen extends ParentWidget {
           controller.productItems.isNotEmpty ? controller.productItems.last["title"] : "",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
         ),
-        8.kH,
+        Text(
+          "Product ID: BHKP00016",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPending),
+        ),
+        12.kH,
         Text(
           controller.productItems.isNotEmpty ? controller.productItems.last["description"] : "",
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),

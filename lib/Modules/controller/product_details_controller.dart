@@ -1,10 +1,13 @@
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProductDetailsController extends GetxController {
   var currentIndex = 0.obs;
-  var slidercontroller = CarouselSliderController().obs;
+  var slidercontroller = CarouselSliderController();
+
+  ScrollController thumbnailScrollController = ScrollController();
 
   var productItems = <Map<String, dynamic>>[].obs;
 
