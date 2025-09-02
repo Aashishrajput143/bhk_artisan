@@ -21,11 +21,7 @@ class AppUrl {
   static String getcategory =
       '$baseUrl/product/api/category/main-categories?page=1&pageSize=10';
   static String getsubcategory = '$baseUrl/product/api/category/getsubcategory/';
-  static String getbrand = '$baseUrl/api/brand/getall?page=';
-  static String getbranddetails = '$baseUrl/api/brand/getby/';
-  static String getstoredetails = '$baseUrl/api/store/getby/';
-  static String getstore = '$baseUrl/api/store/getall?page=';
-  static String getproductlisting = '$baseUrl/api/product/productlisting';
+  static String getproductlisting = '$baseUrl/product/api/product/artisan_added_by_self?';
   static String getproduct = '$baseUrl/api/product/productdetails/';
   static String orders = '$baseUrl/api/order/totalorder';
   static String todayorder = '$baseUrl/api/order/todayorder';
@@ -33,7 +29,5 @@ class AppUrl {
   static String color = '$baseUrl/api/attribute/getattribute';
 
   //post
-  static String addbrand = '$baseUrl/api/brand/add';
-  static String addstore = '$baseUrl/api/store/addstore';
   static String addproduct = '$baseUrl/product/api/product/addproduct';
 }

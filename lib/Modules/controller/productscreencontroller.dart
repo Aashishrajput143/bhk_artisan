@@ -2,32 +2,28 @@ import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'getpendingproductcontroller.dart';
 import 'getproductcontroller.dart';
 
 class ProductController extends GetxController
     with GetSingleTickerProviderStateMixin {
   late TabController tabController;
 
-  GetPendingProductController controller =
-      Get.put(GetPendingProductController());
-  GetProductController approvedcontroller = Get.put(GetProductController());
+  GetProductController controller = Get.put(GetProductController());
 
   @override
   void onInit() {
     super.onInit();
+    //controller.getProductApi("APPROVED");
     tabController = TabController(vsync: this, length: 3);
     tabController.addListener(() {
       Utils.closeKeyboard(Get.context!);
 
       if (tabController.index == 0) {
-        //approvedcontroller.getProductApi();
-        print("1");
+        controller.getProductApi("APPROVED");
       } else if (tabController.index == 1) {
-        //controller.getPendingProductApi();
-        print("2");
+        controller.getProductApi("PENDING");
       } else if (tabController.index == 2) {
-        print("3");
+        controller.getProductApi("DISAPPROVED");
       }
     });
   }

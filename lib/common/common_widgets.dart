@@ -823,6 +823,26 @@ Widget commonIconTags(Color color, IconData icon, {Color borderColor = Colors.tr
   );
 }
 
+Widget commonTags(Color color,{Color borderColor = Colors.transparent,Color bg = Colors.transparent, bool bold = false, double fontSize = 16, double padding = 10.0, double vPadding = 4.0, String hint = '', double radius = 18, void Function()? onTap}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(color: borderColor, width: 2),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: padding, vertical: vPadding),
+        child: Text(
+          hint,
+          style: TextStyle(fontSize: fontSize, fontFamily: bold ? appFonts.NunitoBold : appFonts.NunitoMedium, fontWeight: FontWeight.w600, color: color),
+        ),
+      ),
+    ),
+  );
+}
+
 Widget radioButtonObjective(Rx<String> selectedValue, Color selectedColor, Color textColor, String hint, VoidCallback? onTap, {double borderRadius = 12}) {
   return Obx(
     () => GestureDetector(
@@ -889,6 +909,8 @@ Widget checkButtonObjective(
     ),
   );
 }
+
+
 
 Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged, bool autoFocus = true, Color backgroundColor = Colors.grey}) {
   return PinCodeTextField(

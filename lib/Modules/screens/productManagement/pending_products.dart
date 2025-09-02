@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/controller/getproductcontroller.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/my_products.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/main.dart';
@@ -8,14 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../data/response/status.dart';
-import '../../controller/getpendingproductcontroller.dart';
 
 class PendingProducts extends ParentWidget {
   const PendingProducts({super.key});
 
   @override
   Widget buildingView(BuildContext context, double h, double w) {
-    GetPendingProductController controller = Get.put(GetPendingProductController());
+    GetProductController controller = Get.put(GetProductController());
     return Obx(
       () => Stack(
         children: [
@@ -23,7 +23,7 @@ class PendingProducts extends ParentWidget {
             backgroundColor: appColors.backgroundColor,
             body: RefreshIndicator(
               color: Colors.brown,
-              onRefresh: controller.productRefresh,
+              onRefresh: ()=>controller.productRefresh("PENDING"),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -32,7 +32,7 @@ class PendingProducts extends ParentWidget {
                     8.kH,
                     controller.isData.value
                         ? Expanded(
-                          child: ListView.builder(
+                            child: ListView.builder(
                               shrinkWrap: true,
                               itemCount: 6,
                               itemBuilder: (context, index) {
@@ -46,7 +46,7 @@ class PendingProducts extends ParentWidget {
                                 );
                               },
                             ),
-                        )
+                          )
                         : emptyScreen(w, h),
                   ],
                 ),

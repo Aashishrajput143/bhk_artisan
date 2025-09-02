@@ -240,7 +240,7 @@ final List<String> textureList = [
         "categoryId": selectedcategoryid.value ?? "",
         "subCategoryId": selectedsubcategoryid.value ?? "",
         "description": detaileddescriptionController.value.text,
-        "produtPricePerPiece": priceController.value.text,
+        "productPricePerPiece": priceController.value.text,
         "quantity": quantityController.value.text,
         "material": materialController.value.text,
         "timeToMake":timeController.value.text,

@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/controller/getproductcontroller.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/my_products.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/main.dart';
@@ -6,16 +7,14 @@ import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../data/response/status.dart';
-import '../../controller/getpendingproductcontroller.dart';
 
 class CancelProducts extends ParentWidget {
   const CancelProducts({super.key});
 
   @override
   Widget buildingView(BuildContext context, double h, double w) {
-    GetPendingProductController controller = Get.put(GetPendingProductController());
+    GetProductController controller = Get.put(GetProductController());
     return Obx(
       () => Stack(
         children: [
@@ -23,7 +22,7 @@ class CancelProducts extends ParentWidget {
             backgroundColor: appColors.backgroundColor,
             body: RefreshIndicator(
               color: Colors.brown,
-              onRefresh: controller.productRefresh,
+              onRefresh: ()=>controller.productRefresh("DISAPPROVED"),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(

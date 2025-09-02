@@ -9,7 +9,6 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart' as dio;
 
 import '../../common/constants.dart';
 
@@ -167,30 +166,6 @@ class NetworkApiServices extends BaseApiServices {
           throw FetchDataException('Server error: ${response.statusCode}. Please try again later.');
         }
         throw FetchDataException(' ${response.body}');
-    }
-  }
-
-  dynamic returnDioResponse(dio.Response response) {
-    switch (response.statusCode) {
-      case 200:
-        if (response.data != null && response.data.toString().isNotEmpty) {
-          try {
-            return response.data is String ? jsonDecode(response.data) : response.data;
-          } catch (e) {
-            return response.data;
-          }
-        }
-        return null;
-      case 400:
-        throw InvalidUrlException();
-      case 401:
-        throw AuthenticationException('');
-      case 408:
-        throw FetchDataException(response.data.toString());
-      case 409:
-        throw FetchDataException(response.data.toString());
-      default:
-        throw FetchDataException('${response.data}');
     }
   }
 

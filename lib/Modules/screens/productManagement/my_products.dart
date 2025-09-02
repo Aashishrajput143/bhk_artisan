@@ -25,7 +25,7 @@ class MyProducts extends ParentWidget {
             backgroundColor: appColors.backgroundColor,
             body: RefreshIndicator(
               color: Colors.brown,
-              onRefresh: controller.productRefresh,
+              onRefresh: ()=>controller.productRefresh("APPROVED"),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -40,6 +40,7 @@ class MyProducts extends ParentWidget {
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
+                                    Get.toNamed(RoutesClass.productDetails);
                                     // Get.toNamed(RoutesClass.gotoProductDetailScreen(), arguments: {"productid": controller.getProductModel.value.data?.docs?[index].productId ?? 0})?.then((onValue) {
                                     //   controller.getPendingProductApi();
                                     // });

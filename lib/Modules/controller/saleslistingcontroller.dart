@@ -6,7 +6,7 @@ import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:get/get.dart';
 
-import '../model/salesgraphmodel.dart';
+import '../model/sales_graph_model.dart';
 import '../repository/sales_repository.dart';
 
 class SalesListingController extends GetxController {
