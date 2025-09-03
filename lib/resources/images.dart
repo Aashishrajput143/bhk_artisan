@@ -25,6 +25,8 @@ class AppImages {
   String get info => 'assets/images/info.png';
   String get user => 'assets/images/user.png';
   String get emptyMap =>'assets/images/empty_map.svg';
+  String get hammer =>'assets/images/hammer.png';
+  String get check =>'assets/images/check.png';
 
   static final AppImages _appImages = AppImages._internal();
   factory AppImages() {

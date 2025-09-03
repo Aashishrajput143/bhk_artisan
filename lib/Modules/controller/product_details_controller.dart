@@ -11,12 +11,15 @@ class ProductDetailsController extends GetxController {
 
   var productItems = <Map<String, dynamic>>[].obs;
 
+  var thumbMargin = 0.obs;
+
   @override
   void onInit() {
     super.onInit();
+
     productItems.addAll([
       {
-        "imagePath": [appImages.product1, appImages.product2, appImages.product3, appImages.product4,appImages.product5,appImages.product6,appImages.product7],
+        "imagePath": [appImages.product1, appImages.product2, appImages.product3, appImages.product4, appImages.product5, appImages.product6, appImages.product7],
         "title": "Handcrafted Artisan Ceramic Vase Collection",
         "description": "Discover the beauty of handcrafted artisan ceramic vases, meticulously crafted by skilled artisans. Each vase in this collection showcases unique designs and exquisite craftsmanship, making them perfect for adding a touch of elegance to your home decor. Whether you're looking for a statement piece or a subtle accent, our ceramic vases are sure to impress.",
         "price": 15000,
