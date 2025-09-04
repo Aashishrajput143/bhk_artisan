@@ -1,6 +1,4 @@
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/myUtils.dart';
-import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
@@ -9,7 +7,7 @@ import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controller/ordercontroller.dart';
+import '../../controller/get_order_controller.dart';
 
 class OrderList extends ParentWidget {
   const OrderList({super.key});
@@ -25,21 +23,21 @@ class OrderList extends ParentWidget {
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                controller.getorderModel.value.data?.isNotEmpty ?? false
+                controller.hasData.value
                     ? emptyScreen(w, h)
                     : Expanded(
                         child: ListView.builder(
                           itemCount: 4,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            return orderContent(h, w, index);
+                            return Obx(()=> orderContent(h, w, index,controller));
                           },
                         ),
                       ),
               ],
             ),
           ),
-          progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),
+          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),
         ],
       ),
     );
@@ -88,7 +86,7 @@ Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
   );
 }
 
-Widget orderContent(double h, double w, int index) {
+Widget orderContent(double h, double w, int index,GetOrderController controller) {
   return GestureDetector(
     onTap: () => Get.toNamed(RoutesClass.ordersdetails),
     child: Container(
@@ -116,17 +114,17 @@ Widget orderContent(double h, double w, int index) {
                   buildOrderDetailColumn('Payment', '₹ 300.50'),
                   buildOrderDetailColumn('Product ID', 'TST11414'),
                   buildOrderDetailColumn('Order Qty.', '${index + 1}0'),
-                  if (index.isOdd) buildOrderDetailColumn('Delivery Status', 'Pending', color: appColors.brownDarkText),
+                  if (controller.isAccepted[index].value||controller.isDeclined[index].value) buildOrderDetailColumn('Order Status', controller.isDeclined[index].value?"Declined":'Approved', color: controller.isDeclined[index].value?appColors.declineColor:appColors.acceptColor),
                 ],
               ),
             ),
-            if (index.isEven) ...[
+            if (!controller.isAccepted[index].value&&!controller.isDeclined[index].value) ...[
               4.kH,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  commonButton(w * 0.4, 45, appColors.acceptColor, Colors.white, () {}, hint: "Accept"),
-                  commonButton(w * 0.4, 45, appColors.declineColor, Colors.white, () {}, hint: "Decline"),
+                  commonButton(w * 0.4, 45, appColors.acceptColor, Colors.white, () =>controller.isAccepted[index].value=true, hint: "Accept"),
+                  commonButton(w * 0.4, 45, appColors.declineColor, Colors.white, ()  =>controller.isDeclined[index].value=true, hint: "Decline"),
                 ],
               ),
             ],

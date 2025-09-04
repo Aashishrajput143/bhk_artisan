@@ -10,14 +10,19 @@ import '../repository/product_repository.dart';
 
 class GetProductController extends GetxController {
   final _api = ProductRepository();
-  var isData = true.obs;
 
   final rxRequestStatus = Status.COMPLETED.obs;
-  final getProductModel = ProductListingModel().obs;
+  final getApprovedProductModel = ProductListingModel().obs;
+  final getPendingProductModel = ProductListingModel().obs;
+  final getDisapprovedProductModel = ProductListingModel().obs;
+
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
+
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
-  void setGetproductdata(ProductListingModel value) => getProductModel.value = value;
+  void setApprovedProductdata(ProductListingModel value) => getApprovedProductModel.value = value;
+  void setPendingProductdata(ProductListingModel value) => getPendingProductModel.value = value;
+  void setDisapprovedProductdata(ProductListingModel value) => getDisapprovedProductModel.value = value;
 
   @override
   onInit() {
@@ -29,18 +34,24 @@ class GetProductController extends GetxController {
     getProductApi(status);
   }
 
-  Future<void> getProductApi(var status) async {
+  Future<void> getProductApi(var status, {bool isLoader = true}) async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
     if (connection == true) {
-      setRxRequestStatus(Status.LOADING);
+      if (isLoader) setRxRequestStatus(Status.LOADING);
       _api
           .getproductApi(status)
           .then((value) {
-            setRxRequestStatus(Status.COMPLETED);
-            setGetproductdata(value);
-            Utils.printLog("Response===> ${value.toString()}");
+            if (isLoader) setRxRequestStatus(Status.COMPLETED);
+            if (status == "APPROVED") {
+              setApprovedProductdata(value);
+            } else if (status == "PENDING") {
+              setPendingProductdata(value);
+            } else if (status == "DISAPPROVED") {
+              setDisapprovedProductdata(value);
+            }
+            Utils.printLog("Response ${value.toString()}");
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

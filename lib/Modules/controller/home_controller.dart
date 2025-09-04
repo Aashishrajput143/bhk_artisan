@@ -1,9 +1,20 @@
 import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
+import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
+import 'package:bhk_artisan/Modules/repository/product_repository.dart';
+import 'package:bhk_artisan/Modules/screens/dashboardManagement/home_screen.dart';
+import 'package:bhk_artisan/common/CommonMethods.dart';
+import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/strings.dart';
+import 'package:bhk_artisan/utils/utils.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Homecontroller extends GetxController {
+  final _api = ProductRepository();
+
+  var screen = HomeScreen();
 
   var sliderController = CarouselSliderController();
   CommonScreenController commonController = Get.find();
@@ -11,15 +22,15 @@ class Homecontroller extends GetxController {
   var greetings = "Good Morning".obs;
 
   var chartData = <Map<String, dynamic>>[
-  {"month": "Jan", "sales": 120},
-  {"month": "Feb", "sales": 150},
-  {"month": "Mar", "sales": 180},
-  {"month": "Apr", "sales": 100},
-  {"month": "May", "sales": 210},
-  {"month": "Jun", "sales": 160},
-  {"month": "Jul", "sales": 250},
-  {"month": "Aug", "sales": 300},
-];
+    {"month": "Jan", "sales": 120},
+    {"month": "Feb", "sales": 150},
+    {"month": "Mar", "sales": 180},
+    {"month": "Apr", "sales": 100},
+    {"month": "May", "sales": 210},
+    {"month": "Jun", "sales": 160},
+    {"month": "Jul", "sales": 250},
+    {"month": "Aug", "sales": 300},
+  ];
 
   int currentYear = DateTime.now().year;
   RxDouble scrollPosition = 0.0.obs;
@@ -33,7 +44,6 @@ class Homecontroller extends GetxController {
 
   List<String> salesfilter = ['Product sales', 'Units sold'];
 
-
   void updateScrollPosition(double position, double maxExtent) {
     if (position == 0.0) {
       scrollPosition.value = scrollPosition.value + 10.0;
@@ -42,52 +52,9 @@ class Homecontroller extends GetxController {
     maxScrollExtent.value = maxExtent;
   }
 
-  void showSuccessDialog() {
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-              child: Icon(Icons.check, color: Colors.white, size: 30),
-            ),
-            SizedBox(height: 20),
-            // Success Title
-            Text(
-              "Success!",
-              style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            // Success Message
-            Text(
-              "You have successfully logged into the system",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.7)),
-            ),
-            SizedBox(height: 20),
-            // Go to Main Screen Button
-            ElevatedButton(
-              onPressed: () {
-                Get.back(); // Close the dialog and navigate to the main screen
-                // Navigate to the main screen
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 118, 60, 31),
-                minimumSize: Size(double.infinity, 45),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              child: Text("Go to Dashboard", style: TextStyle(fontSize: 16, color: Colors.white)),
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-    );
+  void initState(){
+    setGreeting();
+    getProductApi("APPROVED", isLoader:getApprovedProductModel.value.data?.docs?.isEmpty ?? true? true : false);
   }
 
   void setGreeting() {
@@ -123,31 +90,42 @@ class Homecontroller extends GetxController {
     });
 
     setGreeting();
-
-    // getCategoryApi();
-
-    // getSalesApi();
-    // getTodayorderApi();
-    // getBrandApi();
-    // getProductApi();
-    // getTrendingProductApi();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (isDialog) {
-        showSuccessDialog();
+       screen.showSuccessDialog();
       }
     });
   }
 
-  Future<void> dashboardRefresh() async {
-    // Simulate network fetch or database query
-    await Future.delayed(Duration(seconds: 2));
-    // Update the list of items and refresh the UI
-    // getCategoryApi();
-    // getBrandApi();
-    // getSalesApi();
-    // getTodayorderApi();
-    // getProductApi();
-    // getTrendingProductApi();
-    // print("items.length");
+  Future<void> dashboardRefresh() async {}
+
+  final rxRequestStatus = Status.COMPLETED.obs;
+  final getApprovedProductModel = ProductListingModel().obs;
+
+  void setError(String value) => error.value = value;
+  RxString error = ''.obs;
+
+  void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
+  void setApprovedProductdata(ProductListingModel value) => getApprovedProductModel.value = value;
+
+  Future<void> getProductApi(var status, {bool isLoader = true}) async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      if (isLoader) setRxRequestStatus(Status.LOADING);
+      _api
+          .getproductApi(status)
+          .then((value) {
+            if (isLoader) setRxRequestStatus(Status.COMPLETED);
+            setApprovedProductdata(value);
+            Utils.printLog("Response ${value.toString()}");
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
   }
 }

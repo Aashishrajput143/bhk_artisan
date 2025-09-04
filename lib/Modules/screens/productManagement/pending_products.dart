@@ -4,6 +4,7 @@ import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +17,7 @@ class PendingProducts extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetProductController controller = Get.put(GetProductController());
+    controller.getProductApi("PENDING", isLoader: controller.getPendingProductModel.value.data?.docs?.isNotEmpty ?? false ? false : true);
     return Obx(
       () => Stack(
         children: [
@@ -23,26 +25,26 @@ class PendingProducts extends ParentWidget {
             backgroundColor: appColors.backgroundColor,
             body: RefreshIndicator(
               color: Colors.brown,
-              onRefresh: ()=>controller.productRefresh("PENDING"),
+              onRefresh: () => controller.productRefresh("PENDING"),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     8.kH,
-                    controller.isData.value
+                    controller.getPendingProductModel.value.data?.docs?.isNotEmpty ?? true
                         ? Expanded(
                             child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: 6,
+                              itemCount: controller.getPendingProductModel.value.data?.docs?.length ?? 0,
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
-                                    // Get.toNamed(RoutesClass.gotoProductDetailScreen(), arguments: {"productid": controller.getProductModel.value.data?.docs?[index].productId ?? 0})?.then((onValue) {
-                                    //   controller.getPendingProductApi();
-                                    // });
+                                    Get.toNamed(RoutesClass.productDetails,arguments: controller.getPendingProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                                      controller.getProductApi("PENDING", isLoader: false);
+                                    });
                                   },
-                                  child: Stack(children: [commonCard(w, h, index), cornerTag(w, index)]),
+                                  child: Stack(children: [commonCard(w, h, controller.getPendingProductModel.value.data?.docs?[index]), cornerTag(w, controller.getPendingProductModel.value.data?.docs?[index])]),
                                 );
                               },
                             ),

@@ -16,6 +16,8 @@ import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:pie_chart/pie_chart.dart' as pie;
+import 'package:syncfusion_flutter_charts/charts.dart' as chart;
 
 import '../resources/colors.dart';
 import '../resources/font.dart';
@@ -56,6 +58,26 @@ PreferredSizeWidget commonAppBar(String title, {bool automaticallyImplyLeading =
     iconTheme: const IconThemeData(color: Colors.white),
     centerTitle: true,
     automaticallyImplyLeading: automaticallyImplyLeading,
+    title: Text(title.toUpperCase(), style: const TextStyle(fontSize: 16, color: Colors.white)),
+  );
+}
+
+PreferredSizeWidget appBarTab({required TabController? tabController,required List<Widget> tabs,required String title}
+) {
+  return AppBar(
+    flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
+    bottom: TabBar(
+      controller: tabController,
+      labelColor: Colors.white,
+      unselectedLabelColor: Colors.white,
+      indicatorColor: appColors.brownDarkText,
+      indicatorWeight: 4,
+      tabs: tabs,
+      labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, height: 1.7),
+    ),
+    centerTitle: true,
+    automaticallyImplyLeading: true,
+    iconTheme: const IconThemeData(color: Colors.white),
     title: Text(title.toUpperCase(), style: const TextStyle(fontSize: 16, color: Colors.white)),
   );
 }
@@ -1016,3 +1038,70 @@ Widget commonComponent(String title, Widget component, {bool mandatory = true}) 
     ],
   );
 }
+
+Widget pieChart(double w, RxMap<String, double> data, String title, List<Color> colorList, {pie.ChartType chartType = pie.ChartType.disc, double topPadding = 16, double bottomPadding = 16}) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+          child: Text(title, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+        ),
+        pie.PieChart(
+          dataMap: data,
+          chartRadius: w / 3.2,
+          chartType: chartType,
+          legendOptions: pie.LegendOptions(
+            legendPosition: pie.LegendPosition.bottom,
+            showLegends: true,
+            legendShape: BoxShape.circle,
+            showLegendsInRow: true,
+            legendTextStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+          ),
+          chartValuesOptions: const pie.ChartValuesOptions(showChartValuesInPercentage: false, showChartValues: true, showChartValueBackground: false, decimalPlaces: 0),
+          colorList: colorList,
+        ),
+      ],
+    );
+  }
+
+  Widget sfCartesianChartChart(double h,List<Map<String, dynamic>>? data, String title, {double topPadding = 16, double bottomPadding = 16, Color? backgroundColor = Colors.transparent}) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+          child: Text(title, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(
+          height: h*0.3,
+          child:chart.SfCartesianChart(
+            backgroundColor: backgroundColor,
+            primaryXAxis: chart.CategoryAxis(
+              edgeLabelPlacement: chart.EdgeLabelPlacement.shift,
+              interval: 1, // Show every month
+              labelRotation: 45, // Optional: Rotates text to prevent overlapping
+            ),
+            // primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1.8),
+            //legend: Legend(isVisible: true),
+            tooltipBehavior: chart.TooltipBehavior(enable: true),
+            series: <chart.CartesianSeries<Map<String, dynamic>, String>>[
+              chart.ColumnSeries<Map<String, dynamic>, String>(
+                dataSource: data,
+                xValueMapper: (Map<String, dynamic> sales, _) => sales['month'] as String,
+                yValueMapper: (Map<String, dynamic> sales, _) => sales['sales'] as num,
+                //name: 'Sales',
+                gradient: AppGradients.graphGradient,
+                dataLabelSettings: chart.DataLabelSettings(isVisible: true, labelAlignment: chart.ChartDataLabelAlignment.outer),
+                dataLabelMapper: (Map<String, dynamic> sales, _) {
+                  final value = sales['sales'] as num;
+                  return value != 0 ? value.toString() : null;
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }

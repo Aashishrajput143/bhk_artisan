@@ -36,7 +36,6 @@ class RoutesClass {
   static String setting = '/setting';
   static String editprofile = '/editprofile';
   static String viewprofile = '/viewprofile';
-  static String productdetail = '/productdetail';
   static String aadharVerification = '/aadharVerification';
   static String addresses = '/Addresses';
   static String videoRecorder = '/videoRecorder';
@@ -62,7 +61,6 @@ class RoutesClass {
   static String gotoSettingScreen() => setting;
   static String gotoEditProfileScreen() => editprofile;
   static String gotoViewProfileScreen() => viewprofile;
-  static String gotoProductDetailScreen() => productdetail;
   static String gotoTermsConditionScreen() => termscondition;
   static String gotoPrivacyPolicyScreen() => privacypolicy;
   static String gotoFAQScreen() => faq;

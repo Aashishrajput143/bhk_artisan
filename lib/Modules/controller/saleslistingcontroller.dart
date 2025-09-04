@@ -12,11 +12,16 @@ import '../repository/sales_repository.dart';
 class SalesListingController extends GetxController {
   final salesrepository = SalesRepository();
   var chartData = <Map<String, dynamic>>[].obs;
+  var productPieData = <String, double>{}.obs;
+  var orderPieData = <String, double>{}.obs;
+
   int currentYear = DateTime.now().year;
 
   @override
   void onInit() {
     fetchChartData();
+    fetchProductPieData();
+    fetchOrderPieData();
     super.onInit();
   }
 
@@ -31,6 +36,24 @@ class SalesListingController extends GetxController {
       {"month": "Jul", "sales": 700},
       {"month": "Aug", "sales": 800},
     ];
+  }
+
+  void fetchProductPieData() {
+    productPieData.value = {
+            "Pending": 10,
+            "Approved": 50,
+            "Disapproved": 05,
+          };
+  }
+
+  void fetchOrderPieData() {
+    orderPieData.value = {
+            "Pending": 07,
+            "Approved": 12,
+            "Declined": 05,
+            "Completed": 40,
+            "Delivered": 100,
+          };
   }
 
   void setError(String value) => error.value = value;

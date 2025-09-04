@@ -1,10 +1,10 @@
+import 'package:bhk_artisan/Modules/model/product_details_model.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/data/app_url/app_url.dart';
 import 'package:bhk_artisan/data/network/network_api_services.dart';
 import '../model/add_product_model.dart';
 import '../model/get_category_model.dart';
 import '../model/get_subcategory_model.dart';
-import '../model/product_details_model.dart';
 
 class ProductRepository {
   final _apiServices = NetworkApiServices();
@@ -31,7 +31,7 @@ class ProductRepository {
     return ProductListingModel.fromJson(response);
   }
 
-  Future<ProductDetailsModel> getproductdetailsApi(productId) async {
+  Future<ProductDetailsModel> getproductDetailsApi(var productId) async {
     dynamic response =
         await _apiServices.getApi("${AppUrl.getproduct}$productId");
     return ProductDetailsModel.fromJson(response);

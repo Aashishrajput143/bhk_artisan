@@ -21,8 +21,8 @@ class AppUrl {
   static String getcategory =
       '$baseUrl/product/api/category/main-categories?page=1&pageSize=10';
   static String getsubcategory = '$baseUrl/product/api/category/getsubcategory/';
-  static String getproductlisting = '$baseUrl/product/api/product/artisan_added_by_self?';
-  static String getproduct = '$baseUrl/api/product/productdetails/';
+  static String getproductlisting = '$baseUrl/product/api/product/artisan/get_products?';
+  static String getproduct = '$baseUrl/product/api/product/productdetails/';
   static String orders = '$baseUrl/api/order/totalorder';
   static String todayorder = '$baseUrl/api/order/todayorder';
   static String salesgraph = '$baseUrl/api/order/totalsales?year=';

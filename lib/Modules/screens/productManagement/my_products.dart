@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/main.dart';
@@ -18,6 +19,7 @@ class MyProducts extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetProductController controller = Get.put(GetProductController());
+    if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false) controller.getProductApi("APPROVED", isLoader: false);
     return Obx(
       () => Stack(
         children: [
@@ -25,27 +27,29 @@ class MyProducts extends ParentWidget {
             backgroundColor: appColors.backgroundColor,
             body: RefreshIndicator(
               color: Colors.brown,
-              onRefresh: ()=>controller.productRefresh("APPROVED"),
+              onRefresh: () => controller.productRefresh("APPROVED"),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (controller.isData.value) headerButton(),
-                    controller.isData.value
+                    if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty??false) headerButton(controller),
+                    controller.getApprovedProductModel.value.data?.docs?.isNotEmpty??true
                         ? Expanded(
                             child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: 6,
+                              itemCount: controller.getApprovedProductModel.value.data?.docs?.length ?? 0,
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
-                                    Get.toNamed(RoutesClass.productDetails);
+                                    Get.toNamed(RoutesClass.productDetails,arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                                      controller.getProductApi("APPROVED", isLoader: false);
+                                    });
                                     // Get.toNamed(RoutesClass.gotoProductDetailScreen(), arguments: {"productid": controller.getProductModel.value.data?.docs?[index].productId ?? 0})?.then((onValue) {
                                     //   controller.getPendingProductApi();
                                     // });
                                   },
-                                  child: Stack(children: [commonCard(w, h, index), cornerTag(w, index)]),
+                                  child: Stack(children: [commonCard(w, h, controller.getApprovedProductModel.value.data?.docs?[index]), cornerTag(w, controller.getApprovedProductModel.value.data?.docs?[index])]),
                                 );
                               },
                             ),
@@ -55,7 +59,7 @@ class MyProducts extends ParentWidget {
                 ),
               ),
             ),
-            bottomNavigationBar: controller.isData.value ? null : addButton(w, h),
+            bottomNavigationBar: controller.getApprovedProductModel.value.data?.docs?.isNotEmpty??true ? null : addButton(w, h, controller),
           ),
           progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
@@ -63,7 +67,7 @@ class MyProducts extends ParentWidget {
     );
   }
 
-  Widget headerButton() {
+  Widget headerButton(GetProductController controller) {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0, bottom: 8),
       child: Row(
@@ -72,7 +76,9 @@ class MyProducts extends ParentWidget {
           const Text('My Products', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
           InkWell(
             onTap: () {
-              Get.toNamed(RoutesClass.addproducts);
+              Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
+                controller.getProductApi("PENDING");
+              });
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center, // Center the content
@@ -92,8 +98,7 @@ class MyProducts extends ParentWidget {
   }
 }
 
-Widget commonCard(double w, double h, int index) {
-  List product = [appImages.product1, appImages.product2, appImages.product3, appImages.product4, appImages.product5, appImages.product6];
+Widget commonCard(double w, double h, ProductDocs? list) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 8.0),
     decoration: BoxDecoration(
@@ -106,11 +111,24 @@ Widget commonCard(double w, double h, int index) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClipRRect(
-          //borderRadius: BorderRadius.circular(8.0),
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0)),
           child: Container(
             color: Colors.brown.shade100,
-            child: Image.asset(product[index], width: 100, height: 115, fit: BoxFit.fill),
+            child: Image.network(
+              list?.images?.isNotEmpty == true ? list!.images!.first.imageUrl ?? "" : "",
+              width: 100,
+              height: 115,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: 100,
+                  height: 115,
+                  color: Colors.grey.shade300,
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.broken_image, color: Colors.grey, size: 40),
+                );
+              },
+            ),
           ),
         ),
         10.kH,
@@ -122,12 +140,12 @@ Widget commonCard(double w, double h, int index) {
               children: [
                 SizedBox(
                   width: w * 0.4,
-                  child: Text(StringLimiter.limitCharacters("Product${index+1}", 35), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  child: Text(StringLimiter.limitCharacters(list?.productName??"", 35), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                 ),
                 5.kH,
-                Text(StringLimiter.limitCharacters("Material${index+1}", 35), style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                Text(StringLimiter.limitCharacters(list?.material??"", 35), style: TextStyle(fontSize: 12, color: Colors.grey[700])),
                 5.kH,
-                Row(children: [commonContainer("Category", Colors.deepPurple), 8.kW, commonContainer("Subcategory", appColors.brownDarkText)]),
+                Row(children: [commonContainer(list?.category?.categoryName??"", Colors.deepPurple), 8.kW, commonContainer(list?.subCategory?.categoryName??"", appColors.brownDarkText)]),
               ],
             ),
           ),
@@ -137,7 +155,7 @@ Widget commonCard(double w, double h, int index) {
   );
 }
 
-Widget cornerTag(double w, int index) {
+Widget cornerTag(double w, ProductDocs? list) {
   return Positioned(
     right: 0,
     top: 10,
@@ -149,7 +167,7 @@ Widget cornerTag(double w, int index) {
         borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), bottomLeft: Radius.circular(10.0)),
       ),
       child: Text(
-        "₹ 200$index",
+        "₹ ${double.parse(list?.productPricePerPiece ?? "0") * (list?.quantity ?? 0)}",
         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
         textAlign: TextAlign.center,
       ),
@@ -186,7 +204,7 @@ Widget emptyScreen(double w, double h) {
   );
 }
 
-Widget addButton(double w, double h) {
+Widget addButton(double w, double h, GetProductController controller) {
   return Padding(
     padding: EdgeInsets.only(left: w * 0.1, right: w * 0.1, bottom: h * 0.1),
     child: commonButton(
@@ -194,8 +212,8 @@ Widget addButton(double w, double h) {
       50,
       appColors.contentButtonBrown,
       Colors.white,
-      () => Get.toNamed(RoutesClass.gotoaddProductScreen(), arguments: {"productid": 0, "producteditid": false})?.then((onValue) {
-        //controller.getProductApi();
+      () => Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
+        controller.getProductApi("PENDING", isLoader: false);
       }),
       radius: 30,
       hint: 'Add New Product',

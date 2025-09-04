@@ -1,34 +1,47 @@
+import 'package:bhk_artisan/Modules/controller/orderdetailscontroller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class OrderDetailsPage extends ParentWidget {
   const OrderDetailsPage({super.key});
 
   @override
   Widget buildingView(BuildContext context, double h, double w) {
-    return Scaffold(
-      backgroundColor: appColors.backgroundColor,
-      appBar: commonAppBar("Order Details"),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(16,20,16,8),
-        child: SingleChildScrollView(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(), 6.kH, orderCardHeader(), 6.kH, orderDescription(), 6.kH, orderRequirement(h, w)]),
+    GetOrderDetailsController controller = Get.put(GetOrderDetailsController());
+    return Obx(
+      () => Scaffold(
+        backgroundColor: appColors.backgroundColor,
+        appBar: commonAppBar("Order Details"),
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+          child: SingleChildScrollView(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(), 6.kH, orderCardHeader(), 6.kH, orderDescription(), 6.kH, orderRequirement(h, w)]),
+          ),
         ),
+        bottomNavigationBar: bottomButtons(h, w, controller),
       ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.fromLTRB(16.0,4,16,h*0.03),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            commonButton(w * 0.44, 50, appColors.acceptColor, Colors.white, () {}, hint: "Accept"),
-            commonButton(w * 0.44, 50, appColors.declineColor, Colors.white, () {}, hint: "Decline"),
-          ],
-        ),
-      ),
+    );
+  }
+
+  Widget bottomButtons(double h, double w, GetOrderDetailsController controller) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.03),
+      child: (!controller.isAccepted.value && !controller.isDeclined.value)
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                commonButton(w * 0.44, 50, appColors.acceptColor, Colors.white, () =>controller.isAccepted.value=true, hint: "Accept"),
+                commonButton(w * 0.44, 50, appColors.declineColor, Colors.white, () =>controller.isDeclined.value=true, hint: "Decline"),
+              ],
+            )
+          : controller.isAccepted.value
+          ? commonButton(w * 0.44, 50, appColors.contentButtonBrown, Colors.white, () {}, hint: "Mark As Completed")
+          : commonButton(w * 0.44, 50, appColors.contentBrownLinearColor1, appColors.contentPrimary, () {}, hint: "Declined"),
     );
   }
 
