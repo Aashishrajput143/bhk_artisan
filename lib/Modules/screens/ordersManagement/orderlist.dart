@@ -30,7 +30,7 @@ class OrderList extends ParentWidget {
                           itemCount: 4,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            return Obx(()=> orderContent(h, w, index,controller));
+                            return Obx(() => orderContent(h, w, index, controller));
                           },
                         ),
                       ),
@@ -71,6 +71,58 @@ class OrderList extends ParentWidget {
       ],
     );
   }
+
+  Widget orderContent(double h, double w, int index, GetOrderController controller) {
+    return GestureDetector(
+      onTap: () {
+        controller.index.value = index;
+        Get.toNamed(RoutesClass.ordersdetails);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+        decoration: BoxDecoration(
+          color: appColors.cardBackground,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.grey.shade300, width: 1.5),
+          boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              orderCardHeader(),
+              8.kH,
+              orderCardContent(index),
+              Divider(thickness: 1, color: Colors.grey[300]),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    buildOrderDetailColumn('Payment', '₹ 300.50'),
+                    buildOrderDetailColumn('Product ID', 'TST11414'),
+                    buildOrderDetailColumn('Order Qty.', '${index + 1}0'),
+                    if (controller.isAccepted[index].value || controller.isDeclined[index].value) buildOrderDetailColumn('Order Status', controller.isDeclined[index].value ? "Declined" : 'Approved', color: controller.isDeclined[index].value ? appColors.declineColor : appColors.acceptColor),
+                  ],
+                ),
+              ),
+              if (!controller.isAccepted[index].value && !controller.isDeclined[index].value) ...[
+                4.kH,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    commonButton(w * 0.4, 45, appColors.acceptColor, Colors.white, () => controller.isAccepted[index].value = true, hint: "Accept"),
+                    commonButton(w * 0.4, 45, appColors.declineColor, Colors.white, () => controller.isDeclined[index].value = true, hint: "Decline"),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
@@ -83,55 +135,6 @@ Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color ?? Colors.black87),
       ),
     ],
-  );
-}
-
-Widget orderContent(double h, double w, int index,GetOrderController controller) {
-  return GestureDetector(
-    onTap: () => Get.toNamed(RoutesClass.ordersdetails),
-    child: Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      decoration: BoxDecoration(
-        color: appColors.cardBackground,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300, width: 1.5),
-        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            orderCardHeader(),
-            8.kH,
-            orderCardContent(index),
-            Divider(thickness: 1, color: Colors.grey[300]),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  buildOrderDetailColumn('Payment', '₹ 300.50'),
-                  buildOrderDetailColumn('Product ID', 'TST11414'),
-                  buildOrderDetailColumn('Order Qty.', '${index + 1}0'),
-                  if (controller.isAccepted[index].value||controller.isDeclined[index].value) buildOrderDetailColumn('Order Status', controller.isDeclined[index].value?"Declined":'Approved', color: controller.isDeclined[index].value?appColors.declineColor:appColors.acceptColor),
-                ],
-              ),
-            ),
-            if (!controller.isAccepted[index].value&&!controller.isDeclined[index].value) ...[
-              4.kH,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  commonButton(w * 0.4, 45, appColors.acceptColor, Colors.white, () =>controller.isAccepted[index].value=true, hint: "Accept"),
-                  commonButton(w * 0.4, 45, appColors.declineColor, Colors.white, ()  =>controller.isDeclined[index].value=true, hint: "Decline"),
-                ],
-              ),
-            ],
-          ],
-        ),
-      ),
-    ),
   );
 }
 

@@ -3,25 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-class ProductController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class ProductController extends GetxController with GetSingleTickerProviderStateMixin {
   late TabController tabController;
+  var initialIndex = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
-    //controller.getProductApi("APPROVED");
-    tabController = TabController(vsync: this, length: 3);
+    tabController = TabController(vsync: this, length: 3, initialIndex: initialIndex.value);
     tabController.addListener(() {
       Utils.closeKeyboard(Get.context!);
-      // if (tabController.index == 0) {
-      //   controller.getProductApi("APPROVED");
-      // } else if (tabController.index == 1) {
-      //   controller.getProductApi("PENDING");
-      // } else if (tabController.index == 2) {
-      //   controller.getProductApi("DISAPPROVED");
-      // }
     });
+  }
+
+  void changeTab(int index) {
+    initialIndex.value = index;
+    tabController.animateTo(index);
   }
 
   @override
@@ -30,3 +27,5 @@ class ProductController extends GetxController
     super.onClose();
   }
 }
+
+

@@ -191,6 +191,10 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
       commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Email', maxLines: 1), mandatory: false),
       16.kH,
       if(controller.isNewUser.value)...[
+      commonComponent("GST Number", commonTextField(controller.gstController.value, controller.gstFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter GST Number (if Organisation)', maxLines: 1), mandatory: false),
+      ],
+      16.kH,
+      if(controller.isNewUser.value)...[
         Row(
         children: [
           Expanded(

@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
+import 'package:bhk_artisan/Modules/controller/productscreencontroller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
 import 'package:bhk_artisan/Modules/screens/dashboardManagement/home_screen.dart';
@@ -18,6 +19,7 @@ class Homecontroller extends GetxController {
 
   var sliderController = CarouselSliderController();
   CommonScreenController commonController = Get.find();
+  ProductController productController = Get.put(ProductController());
 
   var greetings = "Good Morning".obs;
 

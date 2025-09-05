@@ -5,21 +5,20 @@ class OrderController extends GetxController
     with GetSingleTickerProviderStateMixin {
   late TabController tabController;
 
+  var initialIndex = 0.obs;
+
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(vsync: this, length: 2);
+    tabController = TabController(vsync: this, length: 2, initialIndex: initialIndex.value);
     tabController.addListener(() {
       Utils.closeKeyboard(Get.context!);
-      //GetOrderController controller = Get.put(GetOrderController());
-
-      if (tabController.index == 0) {
-        //controller.getOrdersApi();
-        print("active");
-      } else if (tabController.index == 1) {
-        print("jjjj");
-      }
     });
+  }
+
+  void changeTab(int index) {
+    initialIndex.value = index;
+    tabController.animateTo(index);
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/utils/utils.dart';
@@ -15,6 +16,8 @@ class GetProductController extends GetxController {
   final getApprovedProductModel = ProductListingModel().obs;
   final getPendingProductModel = ProductListingModel().obs;
   final getDisapprovedProductModel = ProductListingModel().obs;
+
+  CommonScreenController commonController = Get.find();
 
   void setError(String value) => error.value = value;
   RxString error = ''.obs;

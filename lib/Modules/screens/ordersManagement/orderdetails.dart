@@ -31,15 +31,15 @@ class OrderDetailsPage extends ParentWidget {
   Widget bottomButtons(double h, double w, GetOrderDetailsController controller) {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.03),
-      child: (!controller.isAccepted.value && !controller.isDeclined.value)
+      child: (!controller.orderController.isAccepted[controller.orderController.index.value].value && !controller.orderController.isDeclined[controller.orderController.index.value].value)
           ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonButton(w * 0.44, 50, appColors.acceptColor, Colors.white, () =>controller.isAccepted.value=true, hint: "Accept"),
-                commonButton(w * 0.44, 50, appColors.declineColor, Colors.white, () =>controller.isDeclined.value=true, hint: "Decline"),
+                commonButton(w * 0.44, 50, appColors.acceptColor, Colors.white, () =>controller.orderController.isAccepted[controller.orderController.index.value].value=true, hint: "Accept"),
+                commonButton(w * 0.44, 50, appColors.declineColor, Colors.white, () =>controller.orderController.isDeclined[controller.orderController.index.value].value=true, hint: "Decline"),
               ],
             )
-          : controller.isAccepted.value
+          : controller.orderController.isAccepted[controller.orderController.index.value].value
           ? commonButton(w * 0.44, 50, appColors.contentButtonBrown, Colors.white, () {}, hint: "Mark As Completed")
           : commonButton(w * 0.44, 50, appColors.contentBrownLinearColor1, appColors.contentPrimary, () {}, hint: "Declined"),
     );

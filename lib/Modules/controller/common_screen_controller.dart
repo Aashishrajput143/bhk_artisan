@@ -1,6 +1,9 @@
+import 'package:bhk_artisan/Modules/controller/orderscreencontroller.dart';
+import 'package:bhk_artisan/Modules/controller/productscreencontroller.dart';
 import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
 import 'package:bhk_artisan/Modules/repository/profile_repository.dart';
 import 'package:bhk_artisan/Modules/screens/dashboardManagement/home_screen.dart';
+import 'package:bhk_artisan/Modules/screens/inventorymanagement/inventory.dart';
 import 'package:bhk_artisan/common/CommonMethods.dart';
 import 'package:bhk_artisan/common/Constants.dart';
 import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
@@ -11,7 +14,6 @@ import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../screens/inventorymanagement/inventory.dart';
 import '../screens/ordersManagement/order_screen.dart';
 import '../screens/productManagement/product_screen.dart';
 import '../screens/profileManagement/main_profile.dart';
@@ -19,6 +21,9 @@ import '../screens/profileManagement/main_profile.dart';
 class CommonScreenController extends GetxController {
   final _api = ProfileRepository();
   var selectedIndex = 0.obs;
+
+  ProductController productController = Get.put(ProductController());
+  OrderController orderController = Get.put(OrderController());
 
   @override
   void onInit() {
@@ -35,6 +40,12 @@ class CommonScreenController extends GetxController {
     }
   }
 
+  void onTap(index){
+    if(index==2)productController.changeTab(0);
+    if(index==1)orderController.changeTab(0);
+    selectedIndex.value = index;
+  }
+
   final List<Widget> pages = [
     const HomeScreen(), //index=0
     const OrderScreen(), //index=1
@@ -47,7 +58,8 @@ class CommonScreenController extends GetxController {
     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
     BottomNavigationBarItem(icon: Icon(Icons.inventory_2), label: 'Orders'),
     BottomNavigationBarItem(icon: Icon(Icons.local_offer), label: 'Products'),
-    BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Inventory'),
+    // BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Inventory'),
+    BottomNavigationBarItem(icon: Icon(Icons.local_shipping), label: 'Logistics'),
     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
   ];
 

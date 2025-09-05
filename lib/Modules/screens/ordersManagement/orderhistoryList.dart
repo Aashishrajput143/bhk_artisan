@@ -27,122 +27,16 @@ class OrderListHistory extends ParentWidget {
                     : Expanded(
                         child: ListView.builder(
                           itemCount: 4,
+                          shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            return Card(
-                              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                              elevation: 4,
-                              shadowColor: Colors.grey.withOpacity(0.3),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Order ID #110516", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                            Text("Estimated delivery on 16 Mar, 02:21 PM", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-                                          ],
-                                        ),
-                                        PopupMenuButton<String>(
-                                          onSelected: (value) {
-                                            // Handle the action based on selected menu item
-                                            if (value == 'View Details') {
-                                              Get.toNamed(RoutesClass.gotoOrderDetailsScreen());
-                                            } else if (value == 'Track Order') {
-                                              Get.toNamed(RoutesClass.gotoOrderTrackingScreen());
-                                            } else if (value == 'View Invoice') {
-                                              // Code for contacting support
-                                            }
-                                          },
-                                          icon: Icon(Icons.more_vert, color: Colors.grey[700]),
-                                          itemBuilder: (BuildContext context) => [PopupMenuItem(value: 'View Details', child: Text('View Details')), PopupMenuItem(value: 'Track Order', child: Text('Track Order')), PopupMenuItem(value: 'View Invoice', child: Text('View Invoice'))],
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(12),
-                                          child: Container(
-                                            padding: EdgeInsets.all(5),
-                                            color: Colors.grey.shade200, // Set your desired background color here
-                                            child: Image.asset(
-                                              appImages.product5,
-                                              height: 50, // Adjusted size to match the design
-                                              width: 50,
-                                              fit: BoxFit.contain,
-                                              errorBuilder: (context, error, stackTrace) {
-                                                return SizedBox(
-                                                  width: 50,
-                                                  height: 50,
-                                                  child: Center(
-                                                    child: Text("No Image", style: TextStyle(fontSize: 11), textAlign: TextAlign.center),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Pink Cotton T-shirt',
-                                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
-                                              ),
-                                              SizedBox(height: 4),
-                                              Text('Colour : Red | Size : M', style: TextStyle(fontSize: 13, color: Colors.grey[700])),
-                                              SizedBox(height: 4),
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.circle, color: Colors.green, size: 8),
-                                                  SizedBox(width: 4),
-                                                  Text("Order is Confirmed", style: TextStyle(color: Colors.green, fontSize: 11)),
-                                                ],
-                                              ),
-                                              SizedBox(height: 4),
-                                              Text("Order Date : 16 Mar, 23:06:51 AM", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(thickness: 1, color: Colors.grey[300]),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          buildOrderDetailColumn('Payment', '₹ 300.50'),
-                                          buildOrderDetailColumn('Product ID', 'TST11414'),
-                                          buildOrderDetailColumn('Qty.', '1'),
-                                          buildOrderDetailColumn('Order Status', 'Pending', color: const Color(0xFF5D2E17)),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
+                            return orderContent(h, w, index, controller);
                           },
                         ),
                       ),
               ],
             ),
           ),
-          // progressBarTransparent(
-          //   controller.rxRequestStatus.value == Status.LOADING,
-          //   h,
-          //   w,
-          // ),
+          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),
         ],
       ),
     );
@@ -174,6 +68,45 @@ class OrderListHistory extends ParentWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget orderContent(double h, double w, int index, GetOrderController controller) {
+    return GestureDetector(
+      onTap: () => Get.toNamed(RoutesClass.ordersdetails),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+        decoration: BoxDecoration(
+          color: appColors.cardBackground,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.grey.shade300, width: 1.5),
+          boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              orderCardHeader(),
+              8.kH,
+              orderCardContent(index),
+              Divider(thickness: 1, color: Colors.grey[300]),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    buildOrderDetailColumn('Payment', '₹ 300.50'),
+                    buildOrderDetailColumn('Product ID', 'TST11414'),
+                    buildOrderDetailColumn('Order Qty.', '${index + 1}0'),
+                    buildOrderDetailColumn('Order Status', 'Delivered', color: appColors.brownDarkText),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

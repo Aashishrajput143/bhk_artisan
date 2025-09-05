@@ -27,6 +27,8 @@ class UpdateProfileController extends GetxController {
   var communityFocusNode = FocusNode().obs;
   var emailController = TextEditingController().obs;
   var emailFocusNode = FocusNode().obs;
+  var gstController = TextEditingController().obs;
+  var gstFocusNode = FocusNode().obs;
 
   var selectedExpertise = Rxn<String>();
   var selectedMultiExpertise = <String>[].obs;

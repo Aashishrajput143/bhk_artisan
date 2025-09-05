@@ -38,7 +38,7 @@ class HomeScreen extends ParentWidget {
                       commonCollection(h, w, controller),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, trendingProduct(w), 12.kH, product(w, controller)]),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, trendingProduct(w), 12.kH, product(w, controller), 20.kH]),
                       ),
                     ],
                   ),
@@ -212,6 +212,7 @@ class HomeScreen extends ParentWidget {
               InkWell(
                 onTap: () {
                   controller.commonController.selectedIndex.value = 2;
+                  controller.productController.changeTab(0);
                 },
                 child: Text('View All>', style: TextStyle(fontSize: 14.0, color: Colors.brown)),
               ),

@@ -6,6 +6,8 @@ class GetOrderController extends GetxController {
   var isDeclined = List.generate(4, (_) => false.obs);
   var hasData = false.obs;
 
+  var index = 0.obs;
+
   Future<void> ordersRefresh() async {
   }
 }

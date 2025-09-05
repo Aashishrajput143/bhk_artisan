@@ -33,8 +33,8 @@ class MyProducts extends ParentWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty??false) headerButton(controller),
-                    controller.getApprovedProductModel.value.data?.docs?.isNotEmpty??true
+                    if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false) headerButton(controller),
+                    controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true
                         ? Expanded(
                             child: ListView.builder(
                               shrinkWrap: true,
@@ -42,12 +42,9 @@ class MyProducts extends ParentWidget {
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
-                                    Get.toNamed(RoutesClass.productDetails,arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                                    Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
                                       controller.getProductApi("APPROVED", isLoader: false);
                                     });
-                                    // Get.toNamed(RoutesClass.gotoProductDetailScreen(), arguments: {"productid": controller.getProductModel.value.data?.docs?[index].productId ?? 0})?.then((onValue) {
-                                    //   controller.getPendingProductApi();
-                                    // });
                                   },
                                   child: Stack(children: [commonCard(w, h, controller.getApprovedProductModel.value.data?.docs?[index]), cornerTag(w, controller.getApprovedProductModel.value.data?.docs?[index])]),
                                 );
@@ -59,7 +56,7 @@ class MyProducts extends ParentWidget {
                 ),
               ),
             ),
-            bottomNavigationBar: controller.getApprovedProductModel.value.data?.docs?.isNotEmpty??true ? null : addButton(w, h, controller),
+            bottomNavigationBar: controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true ? null : addButton(w, h, controller),
           ),
           progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
@@ -73,21 +70,22 @@ class MyProducts extends ParentWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('My Products', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+          Text('My Products', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
           InkWell(
             onTap: () {
               Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
+                controller.commonController.productController.changeTab(1);
                 controller.getProductApi("PENDING");
               });
             },
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center, // Center the content
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.add, color: Colors.brown, size: 24.0),
+                Icon(Icons.add, color: appColors.brownDarkText, size: 24.0),
                 2.kW,
                 Text(
                   'Add Product',
-                  style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold, fontSize: 14),
+                  style: TextStyle(color: appColors.brownDarkText, fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ],
             ),
@@ -100,7 +98,7 @@ class MyProducts extends ParentWidget {
 
 Widget commonCard(double w, double h, ProductDocs? list) {
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 8.0),
+    margin: EdgeInsets.symmetric(vertical: 8.0),
     decoration: BoxDecoration(
       color: appColors.cardBackground,
       borderRadius: BorderRadius.circular(10),
@@ -111,7 +109,7 @@ Widget commonCard(double w, double h, ProductDocs? list) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClipRRect(
-          borderRadius: const BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0)),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0)),
           child: Container(
             color: Colors.brown.shade100,
             child: Image.network(
@@ -140,12 +138,12 @@ Widget commonCard(double w, double h, ProductDocs? list) {
               children: [
                 SizedBox(
                   width: w * 0.4,
-                  child: Text(StringLimiter.limitCharacters(list?.productName??"", 35), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  child: Text(StringLimiter.limitCharacters(list?.productName ?? "", 35), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                 ),
                 5.kH,
-                Text(StringLimiter.limitCharacters(list?.material??"", 35), style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                Text(StringLimiter.limitCharacters(list?.material ?? "", 35), style: TextStyle(fontSize: 12, color: Colors.grey[700])),
                 5.kH,
-                Row(children: [commonContainer(list?.category?.categoryName??"", Colors.deepPurple), 8.kW, commonContainer(list?.subCategory?.categoryName??"", appColors.brownDarkText)]),
+                Row(children: [commonContainer(list?.category?.categoryName ?? "", Colors.deepPurple), 8.kW, commonContainer(list?.subCategory?.categoryName ?? "", appColors.brownDarkText)]),
               ],
             ),
           ),
@@ -213,6 +211,7 @@ Widget addButton(double w, double h, GetProductController controller) {
       appColors.contentButtonBrown,
       Colors.white,
       () => Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
+        controller.commonController.productController.changeTab(1);
         controller.getProductApi("PENDING", isLoader: false);
       }),
       radius: 30,

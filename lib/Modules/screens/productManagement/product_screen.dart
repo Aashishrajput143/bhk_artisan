@@ -25,7 +25,7 @@ class ProductScreen extends StatelessWidget {
       ),
       body: DefaultTabController(
         length: 2,
-        initialIndex: 0,
+        initialIndex: controller.initialIndex.value,
         child: Column(
           children: [
             Expanded(

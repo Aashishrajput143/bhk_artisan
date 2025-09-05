@@ -51,7 +51,7 @@ class CommonScreen extends ParentWidget {
                     selectedIconTheme: IconThemeData(size: 28, color: appColors.contentBrown),
                     unselectedLabelStyle: TextStyle(fontSize: 12, fontFamily: appFonts.NunitoRegular, color: appColors.buttonTextStateDisabled),
                     selectedItemColor: appColors.contentBrown,
-                    onTap: (index) => controller.selectedIndex.value = index,
+                    onTap: (index) => controller.onTap(index),
                     elevation: 0.0,
                   ),
                 ),
