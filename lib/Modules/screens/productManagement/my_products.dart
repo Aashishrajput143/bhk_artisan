@@ -206,7 +206,7 @@ Widget emptyScreen(double w, double h) {
 
 Widget addButton(double w, double h, GetProductController controller) {
   return Padding(
-    padding: EdgeInsets.only(left: w * 0.1, right: w * 0.1, bottom: h * 0.1),
+    padding: EdgeInsets.only(left: w * 0.1, right: w * 0.1, bottom: h * 0.03),
     child: commonButton(
       w,
       50,
