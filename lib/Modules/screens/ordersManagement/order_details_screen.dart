@@ -3,6 +3,7 @@ import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,9 +18,9 @@ class OrderDetailsPage extends ParentWidget {
       () => Scaffold(
         backgroundColor: appColors.backgroundColor,
         appBar: commonAppBar("Order Details"),
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-          child: SingleChildScrollView(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(), 6.kH, orderCardHeader(), 6.kH, orderDescription(), 6.kH, orderRequirement(h, w)]),
           ),
         ),
@@ -40,7 +41,7 @@ class OrderDetailsPage extends ParentWidget {
               ],
             )
           : controller.orderController.isAccepted[controller.orderController.index.value].value
-          ? commonButton(w * 0.44, 50, appColors.contentButtonBrown, Colors.white, () {}, hint: "Mark As Completed")
+          ? commonButton(w * 0.44, 50, appColors.contentButtonBrown, Colors.white, () =>Get.toNamed(RoutesClass.uploadOrderImage), hint: "Mark As Completed")
           : commonButton(w * 0.44, 50, appColors.contentBrownLinearColor1, appColors.contentPrimary, () {}, hint: "Declined"),
     );
   }

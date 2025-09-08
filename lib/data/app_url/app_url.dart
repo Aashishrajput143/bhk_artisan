@@ -30,4 +30,5 @@ class AppUrl {
 
   //post
   static String addproduct = '$baseUrl/product/api/product/addproduct';
+  static String uploadOrderImage = '$baseUrl/product/api/product/addproduct';
 }

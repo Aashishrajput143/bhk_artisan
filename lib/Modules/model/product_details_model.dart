@@ -6,12 +6,12 @@ class ProductDetailsModel {
 
   ProductDetailsModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -92,7 +92,7 @@ class Data {
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
-        images!.add(new Images.fromJson(v));
+        images!.add(Images.fromJson(v));
       });
     }
     categoryId = json['categoryId'];
@@ -101,32 +101,32 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['product_id'] = this.productId;
-    data['product_name'] = this.productName;
-    data['description'] = this.description;
-    data['quantity'] = this.quantity;
-    data['material'] = this.material;
-    data['discount'] = this.discount;
-    data['netWeight'] = this.netWeight;
-    data['dimension'] = this.dimension;
-    data['productPricePerPiece'] = this.productPricePerPiece;
-    data['timeToMake'] = this.timeToMake;
-    data['texture'] = this.texture;
-    data['washCare'] = this.washCare;
-    data['artUsed'] = this.artUsed;
-    data['patternUsed'] = this.patternUsed;
-    data['createdAt'] = this.createdAt;
-    data['product_status'] = this.productStatus;
-    data['admin_approval_status'] = this.adminApprovalStatus;
-    data['adminRemarks'] = this.adminRemarks;
-    data['updatedAt'] = this.updatedAt;
-    if (this.images != null) {
-      data['images'] = this.images!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['product_id'] = productId;
+    data['product_name'] = productName;
+    data['description'] = description;
+    data['quantity'] = quantity;
+    data['material'] = material;
+    data['discount'] = discount;
+    data['netWeight'] = netWeight;
+    data['dimension'] = dimension;
+    data['productPricePerPiece'] = productPricePerPiece;
+    data['timeToMake'] = timeToMake;
+    data['texture'] = texture;
+    data['washCare'] = washCare;
+    data['artUsed'] = artUsed;
+    data['patternUsed'] = patternUsed;
+    data['createdAt'] = createdAt;
+    data['product_status'] = productStatus;
+    data['admin_approval_status'] = adminApprovalStatus;
+    data['adminRemarks'] = adminRemarks;
+    data['updatedAt'] = updatedAt;
+    if (images != null) {
+      data['images'] = images!.map((v) => v.toJson()).toList();
     }
-    data['categoryId'] = this.categoryId;
-    data['subCategoryId'] = this.subCategoryId;
-    data['artisanId'] = this.artisanId;
+    data['categoryId'] = categoryId;
+    data['subCategoryId'] = subCategoryId;
+    data['artisanId'] = artisanId;
     return data;
   }
 }
@@ -141,8 +141,8 @@ class Images {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['imageUrl'] = this.imageUrl;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['imageUrl'] = imageUrl;
     return data;
   }
 }

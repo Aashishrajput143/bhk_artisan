@@ -169,6 +169,41 @@ class NetworkApiServices extends BaseApiServices {
     }
   }
 
+  Future<dynamic> multiPartImageOnlyApi(String url, List<String> imagePaths, String key) async {
+    Utils.printLog(url);
+    Utils.printLog(imagePaths);
+
+    dynamic responseJson;
+    String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
+
+    try {
+      var request = http.MultipartRequest("POST", Uri.parse(url));
+      request.headers['accesstoken'] = token;
+
+      if (imagePaths.isNotEmpty) {
+        final files = await Future.wait(imagePaths.map((path) => http.MultipartFile.fromPath(key, path)));
+        request.files.addAll(files);
+      }
+
+      final response = await request.send();
+      final responseHttp = await http.Response.fromStream(response);
+
+      expired(responseHttp);
+      responseJson = returnResponse(responseHttp);
+    } on SocketException {
+      throw InternetException('');
+    } on RequestTimeOut {
+      throw RequestTimeOut('');
+    } on TimeoutException {
+      throw RequestTimeOut('');
+    } on UnauthorizedException {
+      throw AuthenticationException('');
+    }
+
+    Utils.printLog(responseJson);
+    return responseJson;
+  }
+
   Future<dynamic> multiPartMediaApi(var data, String url, List<String>? imagePaths, var key) async {
     Utils.printLog(url);
     Utils.printLog(data);
@@ -300,14 +335,7 @@ class NetworkApiServices extends BaseApiServices {
       final file = File(path);
 
       final bytes = await file.readAsBytes();
-      final response = await http.put(
-        Uri.parse(presignedUrl),
-        body: bytes,
-        headers: {
-          "Content-Type": "video/mp4",
-          "x-amz-server-side-encryption":"AES256"
-        },
-      );
+      final response = await http.put(Uri.parse(presignedUrl), body: bytes, headers: {"Content-Type": "video/mp4", "x-amz-server-side-encryption": "AES256"});
 
       if (response.statusCode == 200) {
         Utils.printLog("✅ Upload successful");

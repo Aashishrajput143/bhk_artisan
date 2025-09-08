@@ -1,6 +1,6 @@
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
@@ -25,40 +25,42 @@ class MyProducts extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            body: RefreshIndicator(
-              color: Colors.brown,
-              onRefresh: () => controller.productRefresh("APPROVED"),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false) headerButton(controller),
-                    controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true
-                        ? Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: controller.getApprovedProductModel.value.data?.docs?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
-                                      controller.getProductApi("APPROVED", isLoader: false);
-                                    });
-                                  },
-                                  child: Stack(children: [commonCard(w, h, controller.getApprovedProductModel.value.data?.docs?[index]), cornerTag(w, controller.getApprovedProductModel.value.data?.docs?[index])]),
-                                );
-                              },
-                            ),
-                          )
-                        : emptyScreen(w, h),
-                  ],
-                ),
-              ),
-            ),
+            body: controller.rxRequestStatus.value == Status.LOADING
+                ? shimmerMyProducts(w, h)
+                : RefreshIndicator(
+                    color: Colors.brown,
+                    onRefresh: () => controller.productRefresh("APPROVED"),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false) headerButton(controller),
+                          controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true
+                              ? Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: controller.getApprovedProductModel.value.data?.docs?.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                                            controller.getProductApi("APPROVED", isLoader: false);
+                                          });
+                                        },
+                                        child: Stack(children: [commonCard(w, h, controller.getApprovedProductModel.value.data?.docs?[index]), cornerTag(w, controller.getApprovedProductModel.value.data?.docs?[index])]),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : emptyScreen(w, h),
+                        ],
+                      ),
+                    ),
+                  ),
             bottomNavigationBar: controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true ? null : addButton(w, h, controller),
           ),
-          progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
     );

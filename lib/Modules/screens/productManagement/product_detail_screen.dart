@@ -1,5 +1,7 @@
 import 'package:bhk_artisan/Modules/controller/product_details_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -31,7 +33,7 @@ class ProductDetailScreen extends ParentWidget {
               ),
             ),
           ),
-          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+          progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
     );

@@ -11,7 +11,7 @@ import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'buildstepcircle.dart';
+import 'build_step_circle.dart';
 
 class AddProductPage extends ParentWidget {
   const AddProductPage({super.key});
@@ -374,7 +374,7 @@ Widget pickedfiles(double w, double h, AddProductController controller) {
                         child: Align(
                           alignment: Alignment.topRight,
                           child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                            margin: const EdgeInsets.symmetric(vertical: 6),
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
                             child: const Icon(Icons.close, size: 20, color: Colors.white),
@@ -382,7 +382,9 @@ Widget pickedfiles(double w, double h, AddProductController controller) {
                         ),
                       ),
                       InteractiveViewer(
-                        child: Center(child: Image.file(File(controller.imagefiles[index]), fit: BoxFit.contain)),
+                        child: Center(
+                          child: Image.file(File(controller.imagefiles[index]), height: h * 0.6, width: w * 0.9, fit: BoxFit.cover),
+                        ),
                       ),
                     ],
                   ),

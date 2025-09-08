@@ -6,12 +6,12 @@ class GetProfileModel {
 
   GetProfileModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -90,28 +90,28 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['countryCode'] = this.countryCode;
-    data['email'] = this.email;
-    data['phoneNo'] = this.phoneNo;
-    data['id'] = this.id;
-    data['avatar'] = this.avatar;
-    data['isEmailVerified'] = this.isEmailVerified;
-    data['isPhoneNoVerified'] = this.isPhoneNoVerified;
-    data['roleName'] = this.roleName;
-    data['user_group'] = this.userGroup;
-    data['expertizeField'] = this.expertizeField;
-    data['status'] = this.status;
-    data['aadhaarNumber'] = this.aadhaarNumber;
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
-    data['subCaste'] = this.subCaste;
-    data['user_caste_category'] = this.userCasteCategory;
-    data['religion'] = this.religion;
-    data['introVideo'] = this.introVideo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['countryCode'] = countryCode;
+    data['email'] = email;
+    data['phoneNo'] = phoneNo;
+    data['id'] = id;
+    data['avatar'] = avatar;
+    data['isEmailVerified'] = isEmailVerified;
+    data['isPhoneNoVerified'] = isPhoneNoVerified;
+    data['roleName'] = roleName;
+    data['user_group'] = userGroup;
+    data['expertizeField'] = expertizeField;
+    data['status'] = status;
+    data['aadhaarNumber'] = aadhaarNumber;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
+    data['subCaste'] = subCaste;
+    data['user_caste_category'] = userCasteCategory;
+    data['religion'] = religion;
+    data['introVideo'] = introVideo;
     return data;
   }
 }

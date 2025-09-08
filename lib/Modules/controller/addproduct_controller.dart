@@ -8,7 +8,6 @@ import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import '../repository/product_repository.dart';
 
 class AddProductController extends GetxController {
@@ -73,47 +72,15 @@ class AddProductController extends GetxController {
 
   var totalprice = 0.0.obs;
 
-  final ImagePicker imgpicker = ImagePicker();
   var imagefiles = <String>[].obs;
 
   List<String> weights = ['gm', 'kg'];
 
   List<String> measureunits = ['cm', 'inches'];
 
-  final List<String> washCareList = [
-  "Hand Wash",
-  "Machine Wash",
-  "Dry Clean Only",
-  "wipe with dry cloth",
-  "wipe with damp cloth",
-  "no washing required",
-];
+  final List<String> washCareList = ["Hand Wash", "Machine Wash", "Dry Clean Only", "wipe with dry cloth", "wipe with damp cloth", "no washing required"];
 
-final List<String> textureList = [
-  "Matte",
-  "glossy",
-  "hand-polished",
-  "rough",
-  "smooth",
-];
-
-
-  // void calculateSellingPrice() {
-  //   double? mrp = double.tryParse(mrpController.value.text);
-  //   double? discountPercentage = double.tryParse(discountController.value.text);
-
-  //   if (mrp != null && discountPercentage != null) {
-  //     double discountAmount = mrp * (discountPercentage / 100);
-  //     sellingprice.value = mrp - discountAmount;
-  //     sellingController.value.text = sellingprice.value.toStringAsFixed(2);
-  //   }else if(mrp != null){
-  //     sellingController.value.text = mrpController.value.text;
-  //   } 
-  //   else {
-  //     sellingprice.value = 0.0;
-  //     sellingController.value.text = "0.0";
-  //   }
-  // }
+  final List<String> textureList = ["Matte", "glossy", "hand-polished", "rough", "smooth"];
 
   void calculateTotalPrice() {
     double? price = double.tryParse(priceController.value.text);
@@ -122,8 +89,7 @@ final List<String> textureList = [
     if (price != null && unit != null) {
       totalprice.value = price * unit;
       totalPriceController.value.text = totalprice.value.toStringAsFixed(2);
-    } 
-    else {
+    } else {
       totalprice.value = 0.0;
       totalPriceController.value.text = "0.0";
     }
@@ -162,7 +128,17 @@ final List<String> textureList = [
   }
 
   bool validateForm() {
-    if((selectedcategoryid.value?.isNotEmpty??false)&&(selectedsubcategoryid.value?.isNotEmpty??false)&&(nameController.value.text.isNotEmpty)&&(detaileddescriptionController.value.text.isNotEmpty)&&(priceController.value.text.isNotEmpty)&& (timeController.value.text.isNotEmpty)&&(materialController.value.text.isNotEmpty)&&(quantityController.value.text.isNotEmpty)&&(imagefiles.length>=4)) return true;
+    if ((selectedcategoryid.value?.isNotEmpty ?? false) &&
+        (selectedsubcategoryid.value?.isNotEmpty ?? false) &&
+        (nameController.value.text.isNotEmpty) &&
+        (detaileddescriptionController.value.text.isNotEmpty) &&
+        (priceController.value.text.isNotEmpty) &&
+        (timeController.value.text.isNotEmpty) &&
+        (materialController.value.text.isNotEmpty) &&
+        (quantityController.value.text.isNotEmpty) &&
+        (imagefiles.length >= 4)) {
+      return true;
+    }
     return false;
   }
 
@@ -243,11 +219,11 @@ final List<String> textureList = [
         "productPricePerPiece": priceController.value.text,
         "quantity": quantityController.value.text,
         "material": materialController.value.text,
-        "timeToMake":timeController.value.text,
-        if (selectedTexture.value?.isNotEmpty??false)"texture":selectedTexture.value??"",
-        if (selectedWashCare.value?.isNotEmpty??false)"washCare":selectedWashCare.value??"",
-        if (techniqueController.value.text.isNotEmpty)"artUsed":techniqueController.value.text,
-        if (patternController.value.text.isNotEmpty)"patternUsed":patternController.value.text,
+        "timeToMake": timeController.value.text,
+        if (selectedTexture.value?.isNotEmpty ?? false) "texture": selectedTexture.value ?? "",
+        if (selectedWashCare.value?.isNotEmpty ?? false) "washCare": selectedWashCare.value ?? "",
+        if (techniqueController.value.text.isNotEmpty) "artUsed": techniqueController.value.text,
+        if (patternController.value.text.isNotEmpty) "patternUsed": patternController.value.text,
         if (netweightController.value.text.isNotEmpty) "netWeight": getWeight(),
         if (lengthController.value.text.isNotEmpty && breadthController.value.text.isNotEmpty && heightController.value.text.isNotEmpty) "dimension": getDimensions(),
       };
@@ -259,7 +235,7 @@ final List<String> textureList = [
             setaddProductModeldata(value);
             Utils.printLog("Response===> ${value.toString()}");
             Get.back();
-            CommonMethods.showToast("Product Added Successfully...",icon: Icons.check,bgColor: Colors.green);
+            CommonMethods.showToast("Product Added Successfully...", icon: Icons.check, bgColor: Colors.green);
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

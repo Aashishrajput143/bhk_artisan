@@ -1,11 +1,11 @@
-import 'package:bhk_artisan/Modules/screens/ordersManagement/orderhistoryList.dart';
+import 'package:bhk_artisan/Modules/screens/ordersManagement/order_history_List.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/orderscreencontroller.dart';
-import 'orderlist.dart';
+import 'order_list_screen.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({super.key});

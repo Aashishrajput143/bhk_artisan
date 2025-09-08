@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/Modules/controller/address_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -24,7 +25,9 @@ class AddressScreen extends ParentWidget {
           Scaffold(
             backgroundColor: appColors.backgroundColor,
             appBar: commonAppBar("Manage Address"),
-            body: controller.getAddressModel.value.data?.isNotEmpty ?? true
+            body: controller.rxRequestStatus.value == Status.LOADING
+                ? shimmerAddressScreen(h, w)
+                : controller.getAddressModel.value.data?.isNotEmpty ?? true
                 ? ListView.builder(
                     shrinkWrap: true,
                     itemCount: controller.getAddressModel.value.data?.length ?? 0,
@@ -71,7 +74,7 @@ class AddressScreen extends ParentWidget {
                   ),
             floatingActionButtonLocation: controller.getAddressModel.value.data?.isNotEmpty ?? true ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.centerFloat,
           ),
-          progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
     );
@@ -98,10 +101,14 @@ class AddressScreen extends ParentWidget {
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
+          minVerticalPadding: 0,
           leading: Icon((address?.addressType ?? "OTHERS").toAddressType().icon, size: 25, color: appColors.brownDarkText),
           title: Row(
             children: [
-              Text((address?.addressType ?? "OTHERS").toAddressType().displayName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                (address?.addressType ?? "OTHERS").toAddressType().displayName,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: appColors.contentPending),
+              ),
               if (address?.isDefault ?? false) ...[10.kW, commonContainer("Default", appColors.brownDarkText, isBrown: true, pH: 14, borderWidth: 1.5)],
             ],
           ),
@@ -114,11 +121,11 @@ class AddressScreen extends ParentWidget {
                 controller.getLocationApi(index);
                 bottomDrawer(context, h * 0.8, w, controller, id: (controller.getAddressModel.value.data?[index].id ?? 0).toString());
               } else if (value == 'markasDefault') {
-                controller.editAddressApi((controller.getAddressModel.value.data?[index].id ?? 0).toString(),isDefault: true);
+                controller.editAddressApi((controller.getAddressModel.value.data?[index].id ?? 0).toString(), isDefault: true);
               }
             },
             icon: Icon(Icons.more_vert, color: Colors.grey[700]),
-            itemBuilder: (BuildContext context) => [if (!(controller.getAddressModel.value.data?[index].isDefault??false))PopupMenuItem(value: 'markasDefault', child: Text('Mark As Default')), PopupMenuItem(value: 'Delete', child: Text('Delete')), PopupMenuItem(value: 'Edit', child: Text('Edit'))],
+            itemBuilder: (BuildContext context) => [if (!(controller.getAddressModel.value.data?[index].isDefault ?? false)) PopupMenuItem(value: 'markasDefault', child: Text('Mark As Default')), PopupMenuItem(value: 'Delete', child: Text('Delete')), PopupMenuItem(value: 'Edit', child: Text('Edit'))],
           ),
         ),
         // 6.kH,
@@ -126,10 +133,9 @@ class AddressScreen extends ParentWidget {
         //   address.name,
         //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         // ),
-        8.kH,
         Text(
           controller.getFullAddress(controller.getAddressModel.value, index),
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentdescBrownColor),
+          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         ),
         8.kH,
       ],

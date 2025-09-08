@@ -2,8 +2,7 @@ import 'package:bhk_artisan/Modules/controller/home_controller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/gradient.dart';
-import 'package:bhk_artisan/common/myUtils.dart';
-import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
@@ -25,7 +24,7 @@ class HomeScreen extends ParentWidget {
       () => Stack(
         children: [
           Scaffold(
-            appBar: appBarHome(controller),
+            appBar: controller.commonController.profileData.value.data?.firstName?.isNotEmpty ?? false ? appBarHome(controller) : shimmerAppBarHome(w),
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: controller.dashboardRefresh,
@@ -38,7 +37,7 @@ class HomeScreen extends ParentWidget {
                       commonCollection(h, w, controller),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, trendingProduct(w), 12.kH, product(w, controller), 20.kH]),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, trendingProduct(w), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false ? product(w, controller) : shimmerProduct(w), 20.kH]),
                       ),
                     ],
                   ),
@@ -46,7 +45,7 @@ class HomeScreen extends ParentWidget {
               ),
             ),
           ),
-          progressBarTransparent(controller.commonController.rxRequestStatus.value == Status.LOADING, h, w),
+          //progressBarTransparent(controller.commonController.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
     );
@@ -116,9 +115,7 @@ class HomeScreen extends ParentWidget {
       actions: [
         IconButton(
           icon: const Icon(Icons.notifications_none, color: Colors.white),
-          onPressed: () {
-            Get.toNamed(RoutesClass.notifications);
-          },
+          onPressed: () => Get.toNamed(RoutesClass.notifications),
         ),
       ],
     );
@@ -284,7 +281,6 @@ class HomeScreen extends ParentWidget {
         Text(list?.subCategory?.categoryName ?? "", style: TextStyle(fontSize: 12, color: appColors.brownDarkText)),
         3.kH,
         Text(list?.material ?? "", style: TextStyle(color: appColors.contentPending, fontSize: 13)),
-        
       ],
     );
   }

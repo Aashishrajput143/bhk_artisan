@@ -1,6 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/getproductcontroller.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/my_products.dart';
-import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
@@ -22,7 +22,9 @@ class CancelProducts extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            body: RefreshIndicator(
+            body:controller.rxRequestStatus.value == Status.LOADING
+                ? shimmerMyProducts(w, h)
+                :  RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.productRefresh("DISAPPROVED"),
               child: Padding(
@@ -54,8 +56,7 @@ class CancelProducts extends ParentWidget {
               ),
             ),
           ),
-          // Progress bar overlay
-          progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),
+          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),
         ],
       ),
     );

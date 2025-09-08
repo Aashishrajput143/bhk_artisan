@@ -9,14 +9,14 @@ class GetAddressModel {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -71,20 +71,20 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['createdAt'] = this.createdAt;
-    data['isDefault'] = this.isDefault;
-    data['street'] = this.street;
-    data['houseNo'] = this.houseNo;
-    data['postalCode'] = this.postalCode;
-    data['city'] = this.city;
-    data['country'] = this.country;
-    data['state'] = this.state;
-    data['addressType'] = this.addressType;
-    data['landmark'] = this.landmark;
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createdAt'] = createdAt;
+    data['isDefault'] = isDefault;
+    data['street'] = street;
+    data['houseNo'] = houseNo;
+    data['postalCode'] = postalCode;
+    data['city'] = city;
+    data['country'] = country;
+    data['state'] = state;
+    data['addressType'] = addressType;
+    data['landmark'] = landmark;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
     return data;
   }
 }

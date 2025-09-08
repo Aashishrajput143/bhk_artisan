@@ -1,5 +1,5 @@
 import 'package:bhk_artisan/Modules/controller/get_order_controller.dart';
-import 'package:bhk_artisan/Modules/screens/ordersManagement/orderlist.dart';
+import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';

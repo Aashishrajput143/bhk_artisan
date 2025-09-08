@@ -1,6 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/getproductcontroller.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/my_products.dart';
-import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
@@ -23,40 +23,42 @@ class PendingProducts extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            body: RefreshIndicator(
-              color: Colors.brown,
-              onRefresh: () => controller.productRefresh("PENDING"),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    8.kH,
-                    controller.getPendingProductModel.value.data?.docs?.isNotEmpty ?? true
-                        ? Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: controller.getPendingProductModel.value.data?.docs?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(RoutesClass.productDetails,arguments: controller.getPendingProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
-                                      controller.getProductApi("PENDING", isLoader: false);
-                                    });
-                                  },
-                                  child: Stack(children: [commonCard(w, h, controller.getPendingProductModel.value.data?.docs?[index]), cornerTag(w, controller.getPendingProductModel.value.data?.docs?[index])]),
-                                );
-                              },
-                            ),
-                          )
-                        : emptyScreen(w, h),
-                  ],
-                ),
-              ),
-            ),
+            body: controller.rxRequestStatus.value == Status.LOADING
+                ? shimmerMyProducts(w, h)
+                : RefreshIndicator(
+                    color: Colors.brown,
+                    onRefresh: () => controller.productRefresh("PENDING"),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          8.kH,
+                          controller.getPendingProductModel.value.data?.docs?.isNotEmpty ?? true
+                              ? Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: controller.getPendingProductModel.value.data?.docs?.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Get.toNamed(RoutesClass.productDetails, arguments: controller.getPendingProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                                            controller.getProductApi("PENDING", isLoader: false);
+                                          });
+                                        },
+                                        child: Stack(children: [commonCard(w, h, controller.getPendingProductModel.value.data?.docs?[index]), cornerTag(w, controller.getPendingProductModel.value.data?.docs?[index])]),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : emptyScreen(w, h),
+                        ],
+                      ),
+                    ),
+                  ),
           ),
           // Progress bar overlay
-          progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),
+          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),
         ],
       ),
     );

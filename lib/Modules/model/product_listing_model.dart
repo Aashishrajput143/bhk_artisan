@@ -6,12 +6,12 @@ class ProductListingModel {
 
   ProductListingModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -41,7 +41,7 @@ class Data {
     if (json['docs'] != null) {
       docs = <ProductDocs>[];
       json['docs'].forEach((v) {
-        docs!.add(new ProductDocs.fromJson(v));
+        docs!.add(ProductDocs.fromJson(v));
       });
     }
     hasNextPage = json['hasNextPage'];
@@ -53,16 +53,16 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.docs != null) {
-      data['docs'] = this.docs!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (docs != null) {
+      data['docs'] = docs!.map((v) => v.toJson()).toList();
     }
-    data['hasNextPage'] = this.hasNextPage;
-    data['hasPrevPage'] = this.hasPrevPage;
-    data['limit'] = this.limit;
-    data['page'] = this.page;
-    data['totalDocs'] = this.totalDocs;
-    data['totalPages'] = this.totalPages;
+    data['hasNextPage'] = hasNextPage;
+    data['hasPrevPage'] = hasPrevPage;
+    data['limit'] = limit;
+    data['page'] = page;
+    data['totalDocs'] = totalDocs;
+    data['totalPages'] = totalPages;
     return data;
   }
 }
@@ -144,48 +144,48 @@ class ProductDocs {
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
-        images!.add(new Images.fromJson(v));
+        images!.add(Images.fromJson(v));
       });
     }
     category = json['category'] != null
-        ? new Category.fromJson(json['category'])
+        ? Category.fromJson(json['category'])
         : null;
     subCategory = json['subCategory'] != null
-        ? new Category.fromJson(json['subCategory'])
+        ? Category.fromJson(json['subCategory'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['product_id'] = this.productId;
-    data['bhkProductId'] = this.bhkProductId;
-    data['product_name'] = this.productName;
-    data['description'] = this.description;
-    data['productPricePerPiece'] = this.productPricePerPiece;
-    data['quantity'] = this.quantity;
-    data['material'] = this.material;
-    data['discount'] = this.discount;
-    data['netWeight'] = this.netWeight;
-    data['dimension'] = this.dimension;
-    data['product_status'] = this.productStatus;
-    data['admin_approval_status'] = this.adminApprovalStatus;
-    data['adminRemarks'] = this.adminRemarks;
-    data['createdByRole'] = this.createdByRole;
-    data['timeToMake'] = this.timeToMake;
-    data['texture'] = this.texture;
-    data['washCare'] = this.washCare;
-    data['artUsed'] = this.artUsed;
-    data['patternUsed'] = this.patternUsed;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    if (this.images != null) {
-      data['images'] = this.images!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['product_id'] = productId;
+    data['bhkProductId'] = bhkProductId;
+    data['product_name'] = productName;
+    data['description'] = description;
+    data['productPricePerPiece'] = productPricePerPiece;
+    data['quantity'] = quantity;
+    data['material'] = material;
+    data['discount'] = discount;
+    data['netWeight'] = netWeight;
+    data['dimension'] = dimension;
+    data['product_status'] = productStatus;
+    data['admin_approval_status'] = adminApprovalStatus;
+    data['adminRemarks'] = adminRemarks;
+    data['createdByRole'] = createdByRole;
+    data['timeToMake'] = timeToMake;
+    data['texture'] = texture;
+    data['washCare'] = washCare;
+    data['artUsed'] = artUsed;
+    data['patternUsed'] = patternUsed;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    if (images != null) {
+      data['images'] = images!.map((v) => v.toJson()).toList();
     }
-    if (this.category != null) {
-      data['category'] = this.category!.toJson();
+    if (category != null) {
+      data['category'] = category!.toJson();
     }
-    if (this.subCategory != null) {
-      data['subCategory'] = this.subCategory!.toJson();
+    if (subCategory != null) {
+      data['subCategory'] = subCategory!.toJson();
     }
     return data;
   }
@@ -217,13 +217,13 @@ class Images {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['imageId'] = this.imageId;
-    data['imageUrl'] = this.imageUrl;
-    data['imageOrder'] = this.imageOrder;
-    data['product_id'] = this.productId;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['imageId'] = imageId;
+    data['imageUrl'] = imageUrl;
+    data['imageOrder'] = imageOrder;
+    data['product_id'] = productId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }
@@ -263,16 +263,16 @@ class Category {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['category_id'] = this.categoryId;
-    data['category_name'] = this.categoryName;
-    data['type'] = this.type;
-    data['category_logo'] = this.categoryLogo;
-    data['description'] = this.description;
-    data['parent_id'] = this.parentId;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['isActive'] = this.isActive;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['category_id'] = categoryId;
+    data['category_name'] = categoryName;
+    data['type'] = type;
+    data['category_logo'] = categoryLogo;
+    data['description'] = description;
+    data['parent_id'] = parentId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['isActive'] = isActive;
     return data;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/model/add_product_model.dart';
 import 'package:bhk_artisan/data/app_url/app_url.dart';
 import 'package:bhk_artisan/data/network/network_api_services.dart';
 
@@ -15,5 +16,10 @@ class OrderRepository {
   Future<TodayOrdersModel> gettodayorderApi() async {
     dynamic response = await _apiServices.getApi(AppUrl.todayorder);
     return TodayOrdersModel.fromJson(response);
+  }
+
+  Future<AddProductModel> updateOrderImageApi(var path) async {
+    dynamic response = await _apiServices.multiPartImageOnlyApi(AppUrl.addproduct, path, "images");
+    return AddProductModel.fromJson(response);
   }
 }
