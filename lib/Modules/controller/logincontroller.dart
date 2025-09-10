@@ -11,8 +11,6 @@ import '../../routes/routes_class.dart';
 import '../repository/login_repository.dart';
 
 class LoginController extends GetxController with GetSingleTickerProviderStateMixin {
-  var emailController = TextEditingController().obs;
-  var emailFocusNode = FocusNode().obs;
   var phoneController = TextEditingController().obs;
   var passwordController = TextEditingController().obs;
   var countryCode = "".obs;
@@ -89,9 +87,9 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
       setRxRequestStatus(Status.LOADING);
 
       Map<String, dynamic> data = {
-        "identity": emailController.value.text.isNotEmpty ? emailController.value.text : phoneController.value.text,
+        "identity": phoneController.value.text,
         "user_group": "ARTISAN",
-        if (phoneController.value.text.isNotEmpty) "countryCode": countryCode.value // Assume you have the country code stored
+        if (phoneController.value.text.isNotEmpty) "countryCode": countryCode.value
       };
       _api.logInApi(data).then((value) {
         setRxRequestStatus(Status.COMPLETED);
@@ -122,6 +120,6 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
     print("redirect");
     Utils.savePreferenceValues(Constants.referenceId, "${logInData.value.data?.referenceId}");
     Utils.setBoolPreferenceValues(Constants.isNewUser, false);
-    Get.toNamed(RoutesClass.verify, arguments: {'referenceId': logInData.value.data?.referenceId, "identity": emailController.value.text.isNotEmpty ? emailController.value.text : phoneController.value.text, if (phoneController.value.text.isNotEmpty) "countryCode": countryCode.value});
+    Get.toNamed(RoutesClass.verify, arguments: {'referenceId': logInData.value.data?.referenceId, "identity": phoneController.value.text, if (phoneController.value.text.isNotEmpty) "countryCode": countryCode.value});
   }
 }

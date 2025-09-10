@@ -36,53 +36,57 @@ class NotificationScreen extends ParentWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final notification = controller.notifications[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    child: Dismissible(
-                      key: ValueKey(notification.id),
-                      direction: DismissDirection.horizontal,
-                      onDismissed: (direction) {
-                        controller.markAsRead(notification.id);
-                        Utils.printLog("Marked as read");
-                      },
-                      confirmDismiss: (direction) async {
-                        controller.markAsRead(notification.id);
-                        Utils.printLog("Marked as read");
-                        return false;
-                      },
-                      background: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Container(
-                          decoration: BoxDecoration(color: Colors.green.shade400, borderRadius: BorderRadius.circular(12)),
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text("Mark as Read", style: const TextStyle(color: Colors.white, fontSize: 16)),
-                              8.kW,
-                              const Icon(Icons.done, color: Colors.white, size: 28),
-                            ],
+                  return GestureDetector(
+                    onTap: ()=>controller.markAsRead(notification.id),
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: Dismissible(
+                        key: ValueKey(notification.id),
+                        direction: DismissDirection.horizontal,
+                        onDismissed: (direction) {
+                          controller.markAsRead(notification.id);
+                          Utils.printLog("Marked as read");
+                        },
+                        confirmDismiss: (direction) async {
+                          controller.markAsRead(notification.id);
+                          Utils.printLog("Marked as read");
+                          return false;
+                        },
+                        background: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.green.shade400, borderRadius: BorderRadius.circular(12)),
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("Mark as Read", style: const TextStyle(color: Colors.white, fontSize: 16)),
+                                8.kW,
+                                const Icon(Icons.done, color: Colors.white, size: 28),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      secondaryBackground: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Container(
-                          decoration: BoxDecoration(color: Colors.green.shade400, borderRadius: BorderRadius.circular(12)),
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(Icons.done, color: Colors.white, size: 28),
-                              8.kW,
-                              Text("Mark as Read", style: const TextStyle(color: Colors.white, fontSize: 16)),
-                            ],
+                        secondaryBackground: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.green.shade400, borderRadius: BorderRadius.circular(12)),
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                const Icon(Icons.done, color: Colors.white, size: 28),
+                                8.kW,
+                                Text("Mark as Read", style: const TextStyle(color: Colors.white, fontSize: 16)),
+                              ],
+                            ),
                           ),
                         ),
+                        child: notificationCard(img: appImages.profile, title: notification.title, time: controller.formatTimeAgo(notification.timestamp), desc: notification.message, type: notification.type, category: notification.category, id: notification.id, index: index, isRead: notification.isRead),
                       ),
-                      child: notificationCard(img: appImages.profile, title: notification.title, time: controller.formatTimeAgo(notification.timestamp), desc: notification.message, type: notification.type, category: notification.category, id: notification.id, index: index, isRead: notification.isRead),
                     ),
                   );
                 },
@@ -106,7 +110,7 @@ class NotificationScreen extends ParentWidget {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.14), blurRadius: 6, offset: const Offset(0, 8))],
       ),

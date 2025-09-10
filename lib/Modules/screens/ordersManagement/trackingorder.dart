@@ -1,67 +1,43 @@
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/main.dart';
+import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controller/trackordercontroller.dart';
-
-class OrderTrackingPage extends StatelessWidget {
+class OrderTrackingPage extends ParentWidget {
   const OrderTrackingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    OrderTrackingController controller = Get.put(OrderTrackingController());
+  Widget buildingView(BuildContext context, double h, double w) {
     return Scaffold(
+      backgroundColor: appColors.backgroundColor,
       appBar: commonAppBar("Track Order"),
       body: SingleChildScrollView(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * .89,
-          color: const Color.fromARGB(195, 247, 243, 233),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              // Order Summary Section
               Container(
-                margin: EdgeInsets.all(16),
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  border: Border.all(color: Colors.grey.shade300, width: 1.5),
+                  color: appColors.cardBackground,
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      blurRadius: 6,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
+                  boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Order Summary',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
+                    Text('Order Summary', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     SizedBox(height: 8),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Price",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            "₹ 200",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
+                          Text("Price", style: TextStyle(fontSize: 14)),
+                          Text("₹ 200", style: TextStyle(fontSize: 14)),
                         ],
                       ),
                     ),
@@ -70,18 +46,8 @@ class OrderTrackingPage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Tax",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            "₹ 20",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
+                          Text("Tax", style: TextStyle(fontSize: 14)),
+                          Text("₹ 20", style: TextStyle(fontSize: 14)),
                         ],
                       ),
                     ),
@@ -91,112 +57,33 @@ class OrderTrackingPage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Order Total",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "₹ 220",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          Text("Order Total", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                          Text("₹ 220", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-
-              // Timeline Section
+              20.kH,
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 16),
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(25),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: appColors.cardBackground,
+                  border: Border.all(color: Colors.grey.shade300, width: 1.5),
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      blurRadius: 6,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
+                  boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Timeline',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
+                    Text('Order Fulfillment Status', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     SizedBox(height: 16),
-                    controller.buildTimelineItem(
-                      date: "",
-                      status: 'FEB 19, 2024',
-                      time: '',
-                      isCompleted: true,
-                    ),
-                    controller.buildTimelineItem(
-                      status: 'Awaiting Shipping',
-                      time: '5:40 am',
-                      isCompleted: true,
-                    ),
-                    controller.buildTimelineItem(
-                      status: 'Marked as paid',
-                      time: '2:32 am',
-                      isCompleted: true,
-                    ),
-                    controller.buildTimelineItem(
-                      status: 'Payment Completed',
-                      time: '7:29 am',
-                      isCompleted: true,
-                    ),
-                    controller.buildTimelineItem(
-                      status: 'Order Received',
-                      description:
-                          'Your customer\'s order has been received and is now being processed by our team.',
-                      isCompleted: true,
-                      islast: true,
-                    ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    SizedBox(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          height: 47,
-                          width: 230,
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: WidgetStateProperty.all(
-                                    const Color.fromARGB(255, 118, 60, 31)),
-                                shape: WidgetStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30)))),
-                            child: const Text(
-                              'Mark as Shipped',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
+                    buildTimelineItem(status: "Order Received", date: 'SEP 09, 2025', isCompleted: true),
+                    buildTimelineItem(status: "Order Completed", date: 'SEP 09, 2025', isCompleted: false),
+                    buildTimelineItem(status: 'Logistics Pickup', date: 'SEP 09, 2025', isCompleted: false),
+                    buildTimelineItem(status: 'In Transit', date: 'SEP 09, 2025', isCompleted: false),
+                    buildTimelineItem(status: 'Order Delivered', date: 'FEB 19, 2024', description: 'Your order has been Successfully Delivered', isCompleted: false, islast: true),
                   ],
                 ),
               ),
@@ -204,6 +91,51 @@ class OrderTrackingPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildTimelineItem({String? date, String status = '', String time = '', String? description, bool isHeader = false, bool isCompleted = false, bool islast = false}) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            Icon(
+              isHeader
+                  ? Icons.calendar_today_outlined
+                  : isCompleted
+                  ? Icons.check_circle
+                  : Icons.access_time,
+              color: isHeader || isCompleted ? Colors.orange : Colors.grey,
+              size: 20,
+            ),
+            if (!islast) Container(height: Get.height*0.07, width: 2, color: Colors.grey.shade300),
+          ],
+        ),
+        12.kW,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    status,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: islast ? Colors.black : Colors.grey.shade700),
+                  ),
+                  if (date!.isNotEmpty) Text(date, style: TextStyle(fontSize: 13, color: appColors.contentPending)),
+                ],
+              ),
+              if (description != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Text(description, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

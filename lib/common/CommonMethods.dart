@@ -11,7 +11,7 @@ class CommonMethods {
   static String version = "";
   static Future<bool> checkInternetConnectivity() async {
     bool isConnected = await InternetConnectionChecker().hasConnection;
-/*    final Connectivity _connectivity = Connectivity();
+    /*    final Connectivity _connectivity = Connectivity();
 
     try {
       connectionStatus = (await _connectivity.checkConnectivity()).toString();
@@ -41,59 +41,44 @@ class CommonMethods {
   }
 
   static void moveCursorToastPos(TextEditingController textField) {
-    var cursorPos =
-        TextSelection.fromPosition(TextPosition(offset: textField.text.length));
+    var cursorPos = TextSelection.fromPosition(TextPosition(offset: textField.text.length));
     textField.selection = cursorPos;
   }
 
-static void showToast(String message, {IconData icon = Icons.info, Color bgColor = Colors.black87}) {
-  Get.showSnackbar(
-    GetSnackBar(
-      snackPosition: SnackPosition.TOP,
-      margin: const EdgeInsets.symmetric(vertical: 12),
-      borderRadius: 12,
-      backgroundColor: bgColor,
-      isDismissible: true,
-      dismissDirection: DismissDirection.up,
-      duration: const Duration(seconds: 3),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      messageText: Row(
-        children: [
-          Icon(icon, color: Colors.white, size: 22),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
+  static void showToast(String message, {IconData icon = Icons.info, Color bgColor = Colors.black87}) {
+    Get.showSnackbar(
+      GetSnackBar(
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.symmetric(vertical: 12),
+        borderRadius: 12,
+        backgroundColor: bgColor,
+        isDismissible: true,
+        dismissDirection: DismissDirection.up,
+        duration: const Duration(seconds: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        messageText: Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 22),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-
-  static void showProgress() {
-    Get.dialog(
-      const Center(
-        child: CircularProgressIndicator(
-          color: Colors.black,
+          ],
         ),
       ),
-      barrierDismissible: false,
-      useSafeArea: true,
     );
   }
 
-  static void inputFocusChange(
-      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+  static void showProgress() {
+    Get.dialog(const Center(child: CircularProgressIndicator(color: Colors.black)), barrierDismissible: false, useSafeArea: true);
+  }
+
+  static void inputFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
   }

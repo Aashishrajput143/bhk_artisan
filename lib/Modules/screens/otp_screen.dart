@@ -79,7 +79,7 @@ class OtpScreen extends ParentWidget {
                         Align(
                           alignment: Alignment.topLeft,
                           child: TextButton(
-                            onPressed: () => Get.offNamed(RoutesClass.gotoLoginScreen()),
+                            onPressed: () => Get.offNamed(RoutesClass.login),
                             child: Text(appStrings.editNumber, style: TextStyle(color: Colors.white)),
                           ),
                         ),

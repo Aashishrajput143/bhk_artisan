@@ -142,6 +142,40 @@ class AddProductController extends GetxController {
     return false;
   }
 
+  String? validateStringForm() {
+    if ((selectedcategoryid.value?.isEmpty ?? true) && (selectedsubcategoryid.value?.isEmpty ?? true) && (nameController.value.text.isEmpty) && (detaileddescriptionController.value.text.isEmpty) && (priceController.value.text.isEmpty) && (timeController.value.text.isEmpty) && (materialController.value.text.isEmpty) && (quantityController.value.text.isEmpty) && (imagefiles.isEmpty)) {
+      return "Please fill all mandatory Fields";
+    }
+    else if ((selectedcategoryid.value?.isEmpty ?? true)) {
+      return "Please Select the Category";
+    }
+    else if ((selectedsubcategoryid.value?.isEmpty ?? true)) {
+      return "Please Select the SubCategory";
+    }
+    else if ((nameController.value.text.isEmpty)) {
+      return "Please Enter the Product Name";
+    }
+    else if ((detaileddescriptionController.value.text.isEmpty)) {
+      return "Please Enter the Description";
+    }
+    else if ((priceController.value.text.isEmpty)) {
+      return "Please Enter the Enter Product Price per Piece";
+    }
+    else if ((timeController.value.text.isEmpty)) {
+      return "Please Enter how long it took to make (e.g. 2 days)";
+    }
+    else if ((materialController.value.text.isEmpty)) {
+      return "Please Enter Material Used";
+    }
+    else if ((quantityController.value.text.isEmpty)) {
+      return "Please Enter Quantity";
+    }
+    else if ((imagefiles.length>=4 && imagefiles.length<11)) {
+      return "Please Upload Min 4 and Max 10 Images";
+    }
+    return null;
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -168,7 +202,7 @@ class AddProductController extends GetxController {
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
       _api
-          .getcategoryApi()
+          .getcategoryApi(1, 20)
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
             setgetCategoryModeldata(value);

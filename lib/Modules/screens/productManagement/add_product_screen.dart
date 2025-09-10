@@ -64,7 +64,7 @@ class AddProductPage extends ParentWidget {
                       w * 0.2,
                       48,
                       Colors.white,
-                      () => controller.validateForm() ? controller.addProductApi() : CommonMethods.showToast("Please fill all the mandatory fields!", icon: Icons.warning_amber_rounded),
+                      () => controller.validateStringForm() == null ? controller.addProductApi() : CommonMethods.showToast(controller.validateStringForm() ?? "Please fill all the mandatory fields!", icon: Icons.warning_amber_rounded),
                       hint: "Submit",
                       radius: 25,
                       backgroundColor: appColors.contentButtonBrown,

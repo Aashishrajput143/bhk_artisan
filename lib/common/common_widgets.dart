@@ -62,8 +62,7 @@ PreferredSizeWidget commonAppBar(String title, {bool automaticallyImplyLeading =
   );
 }
 
-PreferredSizeWidget appBarTab({required TabController? tabController,required List<Widget> tabs,required String title}
-) {
+PreferredSizeWidget appBarTab({required TabController? tabController, required List<Widget> tabs, required String title}) {
   return AppBar(
     flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
     bottom: TabBar(
@@ -593,17 +592,7 @@ Widget phoneTextField(
   );
 }
 
-Widget squareCheckBoxWithLabel(
-  bool value,
-  ValueChanged<bool> onChanged, {
-  String label = "Mark as default",
-  double size = 21,
-  double radius = 5,
-  Color borderColor = Colors.grey,
-  Color checkedColor = Colors.blue,
-  Color uncheckedColor = Colors.white,
-  TextStyle? labelStyle,
-}) {
+Widget squareCheckBoxWithLabel(bool value, ValueChanged<bool> onChanged, {String label = "Mark as default", double size = 21, double radius = 5, Color borderColor = Colors.grey, Color checkedColor = Colors.blue, Color uncheckedColor = Colors.white, TextStyle? labelStyle}) {
   return GestureDetector(
     onTap: () => onChanged(!value),
     child: Row(
@@ -617,21 +606,14 @@ Widget squareCheckBoxWithLabel(
             borderRadius: BorderRadius.circular(radius),
             border: Border.all(color: borderColor, width: 2),
           ),
-          child: value
-              ? const Icon(Icons.check, size: 16, color: Colors.white) // ✅ you can replace with square
-              : null,
+          child: value ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
         ),
         const SizedBox(width: 8),
-        Text(
-          label,
-          style: labelStyle ??
-              const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-        ),
+        Text(label, style: labelStyle ?? const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
       ],
     ),
   );
 }
-
 
 Widget commonButton(double width, double height, Color backgroundColor, Color color, VoidCallback? onChanged, {String hint = '', double radius = 12, double paddingVertical = 0, double paddingHorizontal = 0, double fontSize = 16, Color borderColor = Colors.transparent}) {
   return ElevatedButton(
@@ -845,7 +827,7 @@ Widget commonIconTags(Color color, IconData icon, {Color borderColor = Colors.tr
   );
 }
 
-Widget commonTags(Color color,{Color borderColor = Colors.transparent,Color bg = Colors.transparent, bool bold = false, double fontSize = 16, double padding = 10.0, double vPadding = 4.0, String hint = '', double radius = 18, void Function()? onTap}) {
+Widget commonTags(Color color, {Color borderColor = Colors.transparent, Color bg = Colors.transparent, bool bold = false, double fontSize = 16, double padding = 10.0, double vPadding = 4.0, String hint = '', double radius = 18, void Function()? onTap}) {
   return GestureDetector(
     onTap: onTap,
     child: Container(
@@ -931,8 +913,6 @@ Widget checkButtonObjective(
     ),
   );
 }
-
-
 
 Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged, bool autoFocus = true, Color backgroundColor = Colors.grey}) {
   return PinCodeTextField(
@@ -1040,68 +1020,68 @@ Widget commonComponent(String title, Widget component, {bool mandatory = true}) 
 }
 
 Widget pieChart(double w, RxMap<String, double> data, String title, List<Color> colorList, {pie.ChartType chartType = pie.ChartType.disc, double topPadding = 16, double bottomPadding = 16}) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
-          child: Text(title, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+        child: Text(title, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+      ),
+      pie.PieChart(
+        dataMap: data,
+        chartRadius: w / 3.2,
+        chartType: chartType,
+        legendOptions: pie.LegendOptions(
+          legendPosition: pie.LegendPosition.bottom,
+          showLegends: true,
+          legendShape: BoxShape.circle,
+          showLegendsInRow: true,
+          legendTextStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
         ),
-        pie.PieChart(
-          dataMap: data,
-          chartRadius: w / 3.2,
-          chartType: chartType,
-          legendOptions: pie.LegendOptions(
-            legendPosition: pie.LegendPosition.bottom,
-            showLegends: true,
-            legendShape: BoxShape.circle,
-            showLegendsInRow: true,
-            legendTextStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
-          ),
-          chartValuesOptions: const pie.ChartValuesOptions(showChartValuesInPercentage: false, showChartValues: true, showChartValueBackground: false, decimalPlaces: 0),
-          colorList: colorList,
-        ),
-      ],
-    );
-  }
+        chartValuesOptions: const pie.ChartValuesOptions(showChartValuesInPercentage: false, showChartValues: true, showChartValueBackground: false, decimalPlaces: 0),
+        colorList: colorList,
+      ),
+    ],
+  );
+}
 
-  Widget sfCartesianChartChart(double h,List<Map<String, dynamic>>? data, String title, {double topPadding = 16, double bottomPadding = 16, Color? backgroundColor = Colors.transparent}) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
-          child: Text(title, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(
-          height: h*0.3,
-          child:chart.SfCartesianChart(
-            backgroundColor: backgroundColor,
-            primaryXAxis: chart.CategoryAxis(
-              edgeLabelPlacement: chart.EdgeLabelPlacement.shift,
-              interval: 1, // Show every month
-              labelRotation: 45, // Optional: Rotates text to prevent overlapping
-            ),
-            // primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1.8),
-            //legend: Legend(isVisible: true),
-            tooltipBehavior: chart.TooltipBehavior(enable: true),
-            series: <chart.CartesianSeries<Map<String, dynamic>, String>>[
-              chart.ColumnSeries<Map<String, dynamic>, String>(
-                dataSource: data,
-                xValueMapper: (Map<String, dynamic> sales, _) => sales['month'] as String,
-                yValueMapper: (Map<String, dynamic> sales, _) => sales['sales'] as num,
-                //name: 'Sales',
-                gradient: AppGradients.graphGradient,
-                dataLabelSettings: chart.DataLabelSettings(isVisible: true, labelAlignment: chart.ChartDataLabelAlignment.outer),
-                dataLabelMapper: (Map<String, dynamic> sales, _) {
-                  final value = sales['sales'] as num;
-                  return value != 0 ? value.toString() : null;
-                },
-              ),
-            ],
+Widget sfCartesianChartChart(double h, List<Map<String, dynamic>>? data, String title, {double topPadding = 16, double bottomPadding = 16, Color? backgroundColor = Colors.transparent}) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+        child: Text(title, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+      ),
+      SizedBox(
+        height: h * 0.3,
+        child: chart.SfCartesianChart(
+          backgroundColor: backgroundColor,
+          primaryXAxis: chart.CategoryAxis(
+            edgeLabelPlacement: chart.EdgeLabelPlacement.shift,
+            interval: 1, // Show every month
+            labelRotation: 45, // Optional: Rotates text to prevent overlapping
           ),
+          // primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1.8),
+          //legend: Legend(isVisible: true),
+          tooltipBehavior: chart.TooltipBehavior(enable: true),
+          series: <chart.CartesianSeries<Map<String, dynamic>, String>>[
+            chart.ColumnSeries<Map<String, dynamic>, String>(
+              dataSource: data,
+              xValueMapper: (Map<String, dynamic> sales, _) => sales['month'] as String,
+              yValueMapper: (Map<String, dynamic> sales, _) => sales['sales'] as num,
+              //name: 'Sales',
+              gradient: AppGradients.graphGradient,
+              dataLabelSettings: chart.DataLabelSettings(isVisible: true, labelAlignment: chart.ChartDataLabelAlignment.outer),
+              dataLabelMapper: (Map<String, dynamic> sales, _) {
+                final value = sales['sales'] as num;
+                return value != 0 ? value.toString() : null;
+              },
+            ),
+          ],
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}

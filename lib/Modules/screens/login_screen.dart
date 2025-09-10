@@ -61,9 +61,6 @@ class LoginScreen extends ParentWidget {
                       onCountryCodeChange: (phone) {
                         controller.errorMessage.value = "";
                         controller.countryCode.value = phone.countryCode;
-                        if (phone.number.isNotEmpty) {
-                          controller.emailController.value.text = "";
-                        }
                       },
                       isWhite: true,
                       radius: 25,
@@ -81,7 +78,7 @@ class LoginScreen extends ParentWidget {
                       appColors.brownbuttonBg,
                       Colors.white,
                       () {
-                        if (controller.emailController.value.text.isEmpty && controller.phoneController.value.text.isEmpty) {
+                        if (controller.phoneController.value.text.isEmpty) {
                           controller.errorMessage.value = appStrings.loginerrormessage;
                         } else {
                           controller.errorMessage.value = "";

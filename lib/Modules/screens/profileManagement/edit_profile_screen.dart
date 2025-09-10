@@ -65,10 +65,10 @@ class EditProfile extends ParentWidget {
                       appColors.contentButtonBrown,
                       Colors.white,
                       () {
-                        if (controller.validateForm()) {
+                        if (controller.validateStringForm() == null) {
                           controller.updateProfileApi();
                         } else {
-                          CommonMethods.showToast("please fill all the mandatory fields");
+                          CommonMethods.showToast(controller.validateStringForm() ?? "Please fill all the mandatory fields");
                         }
                       },
                       hint: "Save",
@@ -190,43 +190,41 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
       16.kH,
       commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Email', maxLines: 1), mandatory: false),
       16.kH,
-      if(controller.isNewUser.value)...[
-      commonComponent("GST Number", commonTextField(controller.gstController.value, controller.gstFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter GST Number (if Organisation)', maxLines: 1), mandatory: false),
-      ],
-      16.kH,
-      if(controller.isNewUser.value)...[
+      if (controller.isNewUser.value) ...[
+        commonComponent("GST Number", commonTextField(controller.gstController.value, controller.gstFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter GST Number (if Organisation)', maxLines: 1), mandatory: false),
+        16.kH,
         Row(
-        children: [
-          Expanded(
-            flex: 3,
-            child: commonComponent(
-              "Category",
-              commonDropdownButton(
-                controller.casteCategories.map((item) {
-                  return DropdownMenuItem<String>(
-                    value: item.categoryValue.toString(),
-                    child: Text(item.displayName, style: const TextStyle(fontSize: 14)),
-                  );
-                }).toList(),
-                controller.selectedCategory.value?.categoryValue,
-                w * 0.5,
-                h,
-                appColors.backgroundColor,
-                (String? newValue) {
-                  if (newValue != null) {
-                    controller.selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == newValue);
-                  }
-                },
-                hint: 'Select Category',
-                borderColor: appColors.border,
+          children: [
+            Expanded(
+              flex: 3,
+              child: commonComponent(
+                "Category",
+                commonDropdownButton(
+                  controller.casteCategories.map((item) {
+                    return DropdownMenuItem<String>(
+                      value: item.categoryValue.toString(),
+                      child: Text(item.displayName, style: const TextStyle(fontSize: 14)),
+                    );
+                  }).toList(),
+                  controller.selectedCategory.value?.categoryValue,
+                  w * 0.5,
+                  h,
+                  appColors.backgroundColor,
+                  (String? newValue) {
+                    if (newValue != null) {
+                      controller.selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == newValue);
+                    }
+                  },
+                  hint: 'Select Category',
+                  borderColor: appColors.border,
+                ),
               ),
             ),
-          ),
-          10.kW,
-          Expanded(flex: 3, child: commonComponent("Community", commonTextField(controller.communityController.value, controller.communityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Community', maxLines: 1))),
-        ],
-      ),
-      16.kH,
+            10.kW,
+            Expanded(flex: 3, child: commonComponent("Community", commonTextField(controller.communityController.value, controller.communityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Community', maxLines: 1))),
+          ],
+        ),
+        16.kH,
       ],
       commonComponent(
         "Expertise",

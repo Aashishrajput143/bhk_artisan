@@ -72,14 +72,14 @@ class OrderList extends ParentWidget {
     );
   }
 
-  Widget orderContent(double h, double w, int index, GetOrderController controller) {
+  Widget orderContent(double h, double w, int index, GetOrderController controller,{double hMargin = 8.0}) {
     return GestureDetector(
       onTap: () {
         controller.index.value = index;
         Get.toNamed(RoutesClass.ordersdetails);
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: hMargin),
         decoration: BoxDecoration(
           color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(16),

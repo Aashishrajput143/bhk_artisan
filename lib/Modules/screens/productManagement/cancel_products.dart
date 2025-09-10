@@ -1,4 +1,4 @@
-import 'package:bhk_artisan/Modules/controller/getproductcontroller.dart';
+import 'package:bhk_artisan/Modules/controller/get_product_controller.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/my_products.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';

@@ -9,8 +9,8 @@ import '../model/get_subcategory_model.dart';
 class ProductRepository {
   final _apiServices = NetworkApiServices();
 
-  Future<GetCategoryModel> getcategoryApi() async {
-    dynamic response = await _apiServices.getApi(AppUrl.getcategory);
+  Future<GetCategoryModel> getcategoryApi(var page,var toPage) async {
+    dynamic response = await _apiServices.getApi("${AppUrl.getcategory}$page&pageSize=$toPage");
     return GetCategoryModel.fromJson(response);
   }
 

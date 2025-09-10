@@ -20,4 +20,9 @@ class AddressRepository {
     dynamic response = await _apiServices.getApi(AppUrl.getAddress);
     return GetAddressModel.fromJson(response);
   }
+
+  Future<AddAddressModel> deleteAddressApi(var id) async {
+    dynamic response = await _apiServices.deleteEncodeApi("${AppUrl.deleteAddress}$id");
+    return AddAddressModel.fromJson(response);
+  }
 }

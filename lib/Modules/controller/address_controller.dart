@@ -55,6 +55,7 @@ class AddressController extends GetxController {
     stateController.value.text = locationController.place.value?.administrativeArea ?? "";
     countryController.value.text = locationController.place.value?.country ?? "";
     pinController.value.text = locationController.place.value?.postalCode ?? "";
+    lanMarkController.value.text = "";
   }
 
   void getLocationApi(int index) {
@@ -66,7 +67,7 @@ class AddressController extends GetxController {
     stateController.value.text = getAddressModel.value.data?[index].state ?? "";
     countryController.value.text = getAddressModel.value.data?[index].country ?? "";
     pinController.value.text = getAddressModel.value.data?[index].postalCode ?? "";
-    lanMarkController.value.text = getAddressModel.value.data?[index].landmark??"";
+    lanMarkController.value.text = getAddressModel.value.data?[index].landmark ?? "";
   }
 
   bool isAddressTypeNotExists(AddressType type) {
@@ -96,6 +97,27 @@ class AddressController extends GetxController {
   bool validateForm() {
     if ((flatNameController.value.text.isNotEmpty) && (streetNameController.value.text.isNotEmpty) && (cityController.value.text.isNotEmpty) && (stateController.value.text.isNotEmpty) && (countryController.value.text.isNotEmpty) && (pinController.value.text.isNotEmpty) && (addressType.value.addressValue.isNotEmpty)) return true;
     return false;
+  }
+
+  String? validateStringForm() {
+    if ((flatNameController.value.text.isEmpty) && (streetNameController.value.text.isEmpty) && (cityController.value.text.isEmpty) && (stateController.value.text.isEmpty) && (countryController.value.text.isEmpty) && (pinController.value.text.isEmpty) && (addressType.value.addressValue.isEmpty)) {
+      return "Please fill all mandatory Fields";
+    } else if (flatNameController.value.text.isEmpty) {
+      return "Please Enter your house/Flat/Building";
+    } else if (streetNameController.value.text.isEmpty) {
+      return "Please Enter your Street/Area/Locality";
+    } else if (cityController.value.text.isEmpty) {
+      return "Please Enter your City";
+    } else if (stateController.value.text.isEmpty) {
+      return "Please Enter your State";
+    } else if (countryController.value.text.isEmpty) {
+      return "Please Enter your Country";
+    } else if (pinController.value.text.isEmpty) {
+      return "Please Enter your Pin Code";
+    } else if (addressType.value.addressValue.isEmpty) {
+      return "Please Select your Address Type";
+    }
+    return null;
   }
 
   void setDisabledAddressType() {
@@ -133,16 +155,16 @@ class AddressController extends GetxController {
   void setaddAddressModeldata(AddAddressModel value) => addAddressModel.value = value;
   void seteditAddressModeldata(AddAddressModel value) => editAddressModel.value = value;
 
-  Future<void> getAddressApi() async {
+  Future<void> getAddressApi({bool isLoader = true}) async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
     if (connection == true) {
-      setRxRequestStatus(Status.LOADING);
+      if (isLoader) setRxRequestStatus(Status.LOADING);
       _api
           .getAddressApi()
           .then((value) {
-            setRxRequestStatus(Status.COMPLETED);
+            if (isLoader) setRxRequestStatus(Status.COMPLETED);
             setgetAddressModeldata(value);
             Utils.printLog("Response===> ${value.toString()}");
             setDisabledAddressType();
@@ -160,7 +182,7 @@ class AddressController extends GetxController {
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
     if (connection == true) {
-      setRxRequestStatus(Status.LOADING);
+      //setRxRequestStatus(Status.LOADING);
 
       Map<String, dynamic> data = {};
 
@@ -185,15 +207,37 @@ class AddressController extends GetxController {
       _api
           .editAddressApi(data, id)
           .then((value) {
-            setRxRequestStatus(Status.COMPLETED);
+            //setRxRequestStatus(Status.COMPLETED);
             seteditAddressModeldata(value);
             Utils.printLog("Response===> ${value.toString()}");
-            Utils.printLog("Response===> ${value.toString()}");
-            getAddressApi();
-            if(!isDefault){
+            getAddressApi(isLoader: false);
+            if (!isDefault) {
               Get.back();
               CommonMethods.showToast("Address Updated Successfully...", icon: Icons.check, bgColor: Colors.green);
             }
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+
+  Future<void> deleteAddressApi(var id, {bool loader = false}) async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      if (loader) setRxRequestStatus(Status.LOADING);
+      _api
+          .deleteAddressApi(id)
+          .then((value) {
+            if (loader) setRxRequestStatus(Status.COMPLETED);
+            seteditAddressModeldata(value);
+            Utils.printLog("Response===> ${value.toString()}");
+            getAddressApi(isLoader: false);
+            CommonMethods.showToast("Address Deleted Successfully...", icon: Icons.check, bgColor: Colors.green);
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

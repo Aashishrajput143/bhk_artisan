@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../data/response/status.dart';
-import '../../controller/getproductcontroller.dart';
+import '../../controller/get_product_controller.dart';
 
 class MyProducts extends ParentWidget {
   const MyProducts({super.key});
@@ -26,7 +26,7 @@ class MyProducts extends ParentWidget {
           Scaffold(
             backgroundColor: appColors.backgroundColor,
             body: controller.rxRequestStatus.value == Status.LOADING
-                ? shimmerMyProducts(w, h)
+                ? shimmerMyProducts(w, h,addproduct: true)
                 : RefreshIndicator(
                     color: Colors.brown,
                     onRefresh: () => controller.productRefresh("APPROVED"),
@@ -77,7 +77,7 @@ class MyProducts extends ParentWidget {
             onTap: () {
               Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
                 controller.commonController.productController.changeTab(1);
-                controller.getProductApi("PENDING");
+                controller.getProductApi("PENDING",isLoader: false);
               });
             },
             child: Row(

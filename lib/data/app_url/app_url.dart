@@ -1,5 +1,4 @@
 class AppUrl {
-
   //Staging
   static const String baseUrl = 'http://157.20.214.239';
 
@@ -16,10 +15,10 @@ class AppUrl {
   static String addAddress = '$baseUrl/users/api/users/addAddress';
   static String editAddress = '$baseUrl/users/api/users/updateAddress/';
   static String getAddress = '$baseUrl/users/api/users/addresses_self';
-  
+  static String deleteAddress = '$baseUrl/users/api/users/delete-address/';
+
   //get
-  static String getcategory =
-      '$baseUrl/product/api/category/main-categories?page=1&pageSize=10';
+  static String getcategory = '$baseUrl/product/api/category/main-categories?page=';
   static String getsubcategory = '$baseUrl/product/api/category/getsubcategory/';
   static String getproductlisting = '$baseUrl/product/api/product/artisan/get_products?';
   static String getproduct = '$baseUrl/product/api/product/productdetails/';

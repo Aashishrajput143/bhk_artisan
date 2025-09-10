@@ -10,10 +10,7 @@ Widget shimmerContainer({double width = double.infinity, double height = 100, do
     child: Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(radius),
-      ),
+      decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(radius)),
     ),
   );
 }
@@ -127,20 +124,21 @@ PreferredSizeWidget shimmerAppBarHome(double w) {
   );
 }
 
-Widget shimmerMyProducts(double w, double h) {
+Widget shimmerMyProducts(double w, double h, {bool addproduct = false}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 16.0, bottom: 8),
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey.shade300,
-            highlightColor: Colors.grey.shade100,
-            child: Container(width: w * 0.5, height: 24, color: Colors.grey),
+        if (addproduct)
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0, bottom: 8),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.grey.shade100,
+              child: Container(width: w * 0.5, height: 24, color: Colors.grey),
+            ),
           ),
-        ),
         Expanded(
           child: ListView.builder(
             itemCount: 6,
@@ -193,6 +191,74 @@ Widget shimmerMyProducts(double w, double h) {
         ),
       ],
     ),
+  );
+}
+
+Widget shimmerProductDetails(double h, double w) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          height: h * 0.43,
+          width: double.infinity,
+          decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
+        ),
+      ),
+      20.kH,
+      SizedBox(
+        height: h * 0.095,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.all(4),
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                child: Container(
+                  width: w * 0.2,
+                  decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+      Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(width: w * 0.6, height: 24, color: Colors.grey.shade300),
+            10.kH,
+            Container(width: w * 0.4, height: 18, color: Colors.grey.shade300),
+            12.kH,
+            Container(width: w * 0.9, height: 14, color: Colors.grey.shade300),
+            20.kH,
+            Container(width: w * 0.3, height: 22, color: Colors.grey.shade300),
+            10.kH,
+            Container(width: w * 0.5, height: 14, color: Colors.grey.shade300),
+            20.kH,
+            Container(width: w * 0.7, height: 18, color: Colors.grey.shade300),
+            16.kH,
+            Container(width: w * 0.8, height: 14, color: Colors.grey.shade300),
+            6.kH,
+            Container(width: w * 0.5, height: 15, color: Colors.grey.shade300),
+            16.kH,
+            Container(width: w * 0.8, height: 14, color: Colors.grey.shade300),
+            6.kH,
+            Container(width: w * 0.6, height: 15, color: Colors.grey.shade300),
+          ],
+        ),
+      ),
+    ],
   );
 }
 

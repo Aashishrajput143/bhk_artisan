@@ -4,6 +4,7 @@ import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/caste_category_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,22 @@ class ViewProfile extends ParentWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               getProfileImage(h, w, controller),
-              30.kH,
+              20.kH,
+              if (controller.profileData.value.data?.introVideo?.isNotEmpty ?? false)
+                commonButtonIcon(
+                  100,
+                  40,
+                  backgroundColor: appColors.brownbuttonBg,
+                  Colors.white,
+                  () {
+                    Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.profileData.value.data?.introVideo ?? ""});
+                  },
+                  icon: Icons.video_call,
+                  hint: "View Intro",
+                  forward: false,
+                  radius: 16,
+                ),
+              20.kH,
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -38,7 +54,7 @@ class ViewProfile extends ParentWidget {
               commonCards("Last Name", controller.profileData.value.data?.lastName ?? "", Icons.person_outline),
               commonCards("Phone Number", "${controller.profileData.value.data?.countryCode ?? ""} ${controller.profileData.value.data?.phoneNo ?? ""}", Icons.phone_outlined),
               if (controller.profileData.value.data?.email != null) commonCards("Email", controller.profileData.value.data?.email ?? "", Icons.email_outlined),
-              if(controller.profileData.value.data?.userCasteCategory!=null)commonCards("Caste Category", "${parseUserCasteCategory(controller.profileData.value.data?.userCasteCategory)?.displayName}  ( ${controller.profileData.value.data?.subCaste} )", Icons.people_outline),
+              if (controller.profileData.value.data?.userCasteCategory != null) commonCards("Caste Category", "${parseUserCasteCategory(controller.profileData.value.data?.userCasteCategory)?.displayName}  ( ${controller.profileData.value.data?.subCaste} )", Icons.people_outline),
               commonCards("Expertise", controller.profileData.value.data?.expertizeField ?? "Please set your Expertise", Icons.work_outline),
             ],
           ),

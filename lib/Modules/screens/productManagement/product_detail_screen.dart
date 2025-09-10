@@ -1,6 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/product_details_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -24,16 +24,18 @@ class ProductDetailScreen extends ParentWidget {
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(children: [productImageCarousel(h, w, controller), 20.kH, productTitleSection(h, w, controller)]),
-                  ],
-                ),
+                child: controller.rxRequestStatus.value == Status.LOADING
+                    ? shimmerProductDetails(h, w)
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(children: [productImageCarousel(h, w, controller), 20.kH, productTitleSection(h, w, controller)]),
+                        ],
+                      ),
               ),
             ),
           ),
-          progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
     );
@@ -45,10 +47,16 @@ class ProductDetailScreen extends ParentWidget {
         Column(
           children: [
             CarouselSlider(
-              items: controller.getProductModel.value.data?.images?.isNotEmpty??false
-                  ?  controller.getProductModel.value.data?.images
+              items: controller.getProductModel.value.data?.images?.isNotEmpty ?? false
+                  ? controller.getProductModel.value.data?.images
                         ?.map<Widget>(
-                          (image) => Container(color: Colors.blueGrey.shade100, child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(8)), child: Image.network(image.imageUrl??"", width: w * 0.9, fit: BoxFit.cover)))
+                          (image) => Container(
+                            color: Colors.blueGrey.shade100,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                              child: Image.network(image.imageUrl ?? "", width: w * 0.9, fit: BoxFit.cover),
+                            ),
+                          ),
                         )
                         .toList()
                   : [Container()],
@@ -62,15 +70,15 @@ class ProductDetailScreen extends ParentWidget {
                 onPageChanged: (index, reason) {
                   int current = controller.currentIndex.value;
                   controller.currentIndex.value = index;
-        
+
                   if (!controller.thumbnailScrollController.hasClients) return;
-        
+
                   double itemWidth = w * 0.165 + controller.thumbMargin.value;
                   double currentOffset = controller.thumbnailScrollController.offset;
                   double maxScroll = controller.thumbnailScrollController.position.maxScrollExtent;
-        
+
                   int diff = index - current;
-        
+
                   double targetOffset;
                   if (diff > 0) {
                     // moved forward
@@ -81,7 +89,7 @@ class ProductDetailScreen extends ParentWidget {
                   } else {
                     targetOffset = currentOffset;
                   }
-        
+
                   controller.thumbnailScrollController.animateTo(targetOffset, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
                 },
               ),
@@ -95,9 +103,9 @@ class ProductDetailScreen extends ParentWidget {
             controller: controller.thumbnailScrollController,
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
-            itemCount: controller.getProductModel.value.data?.images?.length??0,
+            itemCount: controller.getProductModel.value.data?.images?.length ?? 0,
             itemBuilder: (context, index) {
-              String image = controller.getProductModel.value.data?.images?[index].imageUrl??"";
+              String image = controller.getProductModel.value.data?.images?[index].imageUrl ?? "";
               return Obx(
                 () => GestureDetector(
                   onTap: () {
@@ -133,7 +141,13 @@ class ProductDetailScreen extends ParentWidget {
                       border: Border.all(color: controller.currentIndex.value == index ? appColors.brownDarkText : Colors.transparent, width: 2),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Container(color: Colors.blueGrey.shade100, child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(8)), child: Image.network(image, width: w * 0.165, fit: BoxFit.cover))),
+                    child: Container(
+                      color: Colors.blueGrey.shade100,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        child: Image.network(image, width: w * 0.165, fit: BoxFit.cover),
+                      ),
+                    ),
                   ),
                 ),
               );
@@ -149,28 +163,28 @@ class ProductDetailScreen extends ParentWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          controller.getProductModel.value.data?.productName??"",
+          controller.getProductModel.value.data?.productName ?? "",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
         ),
         Text(
-          "Product ID: BHKP${controller.getProductModel.value.data?.productId??"0"}",
+          "Product ID: BHKP${controller.getProductModel.value.data?.productId ?? "0"}",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPending),
         ),
         12.kH,
         Text(
-          controller.getProductModel.value.data?.description??"",
+          controller.getProductModel.value.data?.description ?? "",
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
         ),
         20.kH,
         Row(
           children: [
             Text(
-              "₹ ${double.parse(controller.getProductModel.value.data?.productPricePerPiece??"0") * (controller.getProductModel.value.data?.quantity??0)}",
+              "₹ ${double.parse(controller.getProductModel.value.data?.productPricePerPiece ?? "0") * (controller.getProductModel.value.data?.quantity ?? 0)}",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
             ),
             10.kW,
             Text(
-              "(₹ ${controller.getProductModel.value.data?.productPricePerPiece??"0"} per piece)",
+              "(₹ ${controller.getProductModel.value.data?.productPricePerPiece ?? "0"} per piece)",
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
             ),
           ],
@@ -190,7 +204,7 @@ class ProductDetailScreen extends ParentWidget {
               "Product Quantity",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
             ),
-            commonTags(appColors.contentPrimary, padding: 25, borderColor: appColors.contentButtonBrown, hint: "${controller.getProductModel.value.data?.quantity??0}"),
+            commonTags(appColors.contentPrimary, padding: 25, borderColor: appColors.contentButtonBrown, hint: "${controller.getProductModel.value.data?.quantity ?? 0}"),
           ],
         ),
         20.kH,
@@ -205,7 +219,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         6.kH,
         Text(
-          controller.getProductModel.value.data?.material??"",
+          controller.getProductModel.value.data?.material ?? "",
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         ),
         16.kH,
@@ -215,7 +229,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         6.kH,
         Text(
-          controller.getProductModel.value.data?.netWeight??"0 gm",
+          controller.getProductModel.value.data?.netWeight ?? "0 gm",
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         ),
         16.kH,
@@ -225,7 +239,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         6.kH,
         Text(
-          controller.getProductModel.value.data?.artUsed??"",
+          controller.getProductModel.value.data?.artUsed ?? "",
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         ),
         16.kH,
@@ -235,7 +249,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         6.kH,
         Text(
-          controller.getProductModel.value.data?.dimension??"0x0x0 cm",
+          controller.getProductModel.value.data?.dimension ?? "0x0x0 cm",
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         ),
         16.kH,
@@ -245,7 +259,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         6.kH,
         Text(
-          controller.getProductModel.value.data?.texture??"",
+          controller.getProductModel.value.data?.texture ?? "",
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         ),
         16.kH,
@@ -255,7 +269,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         6.kH,
         Text(
-          controller.getProductModel.value.data?.patternUsed??"",
+          controller.getProductModel.value.data?.patternUsed ?? "",
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         ),
         16.kH,
@@ -265,7 +279,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         6.kH,
         Text(
-          controller.getProductModel.value.data?.timeToMake??"",
+          controller.getProductModel.value.data?.timeToMake ?? "",
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         ),
         16.kH,
@@ -274,7 +288,7 @@ class ProductDetailScreen extends ParentWidget {
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
         ),
         6.kH,
-        commonTags(appColors.contentPrimary, bg: appColors.cardBackground2, padding: 12, hint: controller.getProductModel.value.data?.washCare??"", radius: 6),
+        commonTags(appColors.contentPrimary, bg: appColors.cardBackground2, padding: 12, hint: controller.getProductModel.value.data?.washCare ?? "", radius: 6),
         25.kH,
       ],
     );

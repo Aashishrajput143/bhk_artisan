@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/Modules/controller/address_controller.dart';
+import 'package:bhk_artisan/common/CommonMethods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
@@ -70,7 +71,14 @@ class AddressScreen extends ParentWidget {
                       : SizedBox()
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: commonButton(w, 47, appColors.contentButtonBrown, Colors.white, () => bottomDrawer(context, h * 0.8, w, controller), hint: "Add Address"),
+                    child: commonButton(w, 47, appColors.contentButtonBrown, Colors.white, () {
+                      if ((controller.getAddressModel.value.data?.isEmpty ?? true)) {
+                        controller.hasDefault.value = true;
+                      } else {
+                        controller.hasDefault.value = false;
+                      }
+                      bottomDrawer(context, h * 0.8, w, controller);
+                    }, hint: "Add Address"),
                   ),
             floatingActionButtonLocation: controller.getAddressModel.value.data?.isNotEmpty ?? true ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.centerFloat,
           ),
@@ -116,16 +124,20 @@ class AddressScreen extends ParentWidget {
             color: appColors.popColor,
             onSelected: (value) {
               if (value == 'Delete') {
-                // controller.deleteAddress((address?.id ?? "").toString());
+                if (address?.isDefault ?? false) {
+                  CommonMethods.showToast("Default address can't be deleted", icon: Icons.error, bgColor: appColors.declineColor);
+                } else {
+                  controller.deleteAddressApi((address?.id ?? 0).toString());
+                }
               } else if (value == 'Edit') {
                 controller.getLocationApi(index);
-                bottomDrawer(context, h * 0.8, w, controller, id: (controller.getAddressModel.value.data?[index].id ?? 0).toString());
+                bottomDrawer(context, h * 0.8, w, controller, id: (address?.id ?? 0).toString());
               } else if (value == 'markasDefault') {
-                controller.editAddressApi((controller.getAddressModel.value.data?[index].id ?? 0).toString(), isDefault: true);
+                controller.editAddressApi((address?.id ?? 0).toString(), isDefault: true);
               }
             },
             icon: Icon(Icons.more_vert, color: Colors.grey[700]),
-            itemBuilder: (BuildContext context) => [if (!(controller.getAddressModel.value.data?[index].isDefault ?? false)) PopupMenuItem(value: 'markasDefault', child: Text('Mark As Default')), PopupMenuItem(value: 'Delete', child: Text('Delete')), PopupMenuItem(value: 'Edit', child: Text('Edit'))],
+            itemBuilder: (BuildContext context) => [if (!(address?.isDefault ?? false)) PopupMenuItem(value: 'markasDefault', child: Text('Mark As Default')), PopupMenuItem(value: 'Delete', child: Text('Delete')), PopupMenuItem(value: 'Edit', child: Text('Edit'))],
           ),
         ),
         // 6.kH,
@@ -224,8 +236,10 @@ class AddressScreen extends ParentWidget {
                             squareCheckBoxWithLabel(
                               controller.hasDefault.value,
                               (val) {
-                                controller.hasDefault.value = val;
+                                if(controller.getAddressModel.value.data?.isNotEmpty??false){
+                                  controller.hasDefault.value = val;
                                 print("Checkbox changed: $val");
+                                }
                               },
                               label: "Mark as Default",
                               checkedColor: appColors.brownDarkText,
@@ -244,11 +258,11 @@ class AddressScreen extends ParentWidget {
                         47,
                         appColors.contentButtonBrown,
                         Colors.white,
-                        () => controller.validateForm()
+                        () => controller.validateStringForm() == null
                             ? (id.isNotEmpty && id != "0")
                                   ? controller.editAddressApi(id)
                                   : controller.addAddressApi()
-                            : null,
+                            : CommonMethods.showToast(controller.validateStringForm() ?? "please fill all the mandatory fields"),
                         fontSize: 17,
                         radius: 12,
                         hint: "Confirm Address",

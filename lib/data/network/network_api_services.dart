@@ -141,6 +141,30 @@ class NetworkApiServices extends BaseApiServices {
     return responseJson;
   }
 
+  Future deleteEncodeApi(String url) async {
+    Utils.printLog(url);
+    dynamic responseJson;
+    String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
+
+    try {
+      final response = await http.delete(Uri.parse(url), headers: {'content-Type': "application/json", 'accesstoken': token}).timeout(const Duration(seconds: 600));
+      expired(response);
+      responseJson = returnResponse(response);
+
+      Utils.printLog('Response: $response');
+    } on SocketException {
+      throw InternetException('');
+    } on RequestTimeOut {
+      throw RequestTimeOut('');
+    } on TimeoutException {
+      throw RequestTimeOut('');
+    } on UnauthorizedException {
+      throw AuthenticationException('');
+    }
+    Utils.printLog(responseJson);
+    return responseJson;
+  }
+
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:

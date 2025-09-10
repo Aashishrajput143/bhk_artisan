@@ -53,8 +53,35 @@ class UpdateProfileController extends GetxController {
   }
 
   bool validateForm() {
-    if ((firstNameController.value.text.isNotEmpty) && (lastNameController.value.text.isNotEmpty) && (selectedMultiExpertise.isNotEmpty)&& (introUploaded.value !=null)&& (communityController.value.text.isNotEmpty)&& (selectedCategory.value !=null)) return true;
+    if ((firstNameController.value.text.isNotEmpty) && (lastNameController.value.text.isNotEmpty) && (selectedMultiExpertise.isNotEmpty) && (introUploaded.value != null) && (communityController.value.text.isNotEmpty) && (selectedCategory.value != null)) return true;
     return false;
+  }
+
+  String? validateStringForm() {
+    if ((firstNameController.value.text.isEmpty) && (lastNameController.value.text.isEmpty) && (selectedMultiExpertise.isEmpty) && (introUploaded.value == null) && (communityController.value.text.isEmpty) && (selectedCategory.value == null)) {
+      return "Please fill all the mandatory fields";
+    } else if (firstNameController.value.text.isEmpty) {
+      return "Please Enter Your First Name";
+    }
+    else if (lastNameController.value.text.isEmpty) {
+      return "Please Enter Your Last Name";
+    }
+    else if (emailController.value.text.isEmpty) {
+      return "Please Enter Your Email";
+    }
+    else if (selectedMultiExpertise.isEmpty) {
+      return "Please Select Your Expertise";
+    }
+    else if (selectedCategory.value == null) {
+      return "Please Select Your Category";
+    }
+    else if (communityController.value.text.isEmpty) {
+      return "Please Enter Your Community";
+    }
+    else if (introUploaded.value == null) {
+      return "Please Upload Your Intro";
+    }
+    return null;
   }
 
   void loadData() {
@@ -83,7 +110,7 @@ class UpdateProfileController extends GetxController {
       try {
         selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == casteCategoryValue, orElse: () => UserCasteCategory.OTHER);
       } catch (e) {
-       selectedCategory.value = null;
+        selectedCategory.value = null;
       }
     } else {
       selectedCategory.value = null;
@@ -91,12 +118,10 @@ class UpdateProfileController extends GetxController {
 
     String? introVideo = commonController.profileData.value.data?.introVideo;
 
-    if(introVideo?.isNotEmpty??false){
+    if (introVideo?.isNotEmpty ?? false) {
       havingIntro.value = true;
       introUploaded.value = introVideo;
     }
-
-    
 
     // if (expertise.any((e) => e.name == profileExpertise)) {
     //   selectedExpertise.value = profileExpertise;

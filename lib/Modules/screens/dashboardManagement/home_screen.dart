@@ -1,5 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/home_controller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
+import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
@@ -37,7 +38,7 @@ class HomeScreen extends ParentWidget {
                       commonCollection(h, w, controller),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, trendingProduct(w), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false ? product(w, controller) : shimmerProduct(w), 20.kH]),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, getRecentOrder( w, h, controller), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false ? product(w, controller) : shimmerProduct(w), 20.kH]),
                       ),
                     ],
                   ),
@@ -231,6 +232,39 @@ class HomeScreen extends ParentWidget {
               },
               child: productCard(w, controller.getApprovedProductModel.value.data?.docs?[index]),
             );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget getRecentOrder(double w,double h, Homecontroller controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Recent Orders', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+              InkWell(
+                onTap: () {
+                  controller.commonController.selectedIndex.value = 1;
+                  controller.orderController.changeTab(0);
+                },
+                child: Text('View All>', style: TextStyle(fontSize: 14.0, color: Colors.brown)),
+              ),
+            ],
+          ),
+        ),
+        10.kH,
+        ListView.builder(
+          itemCount: 2,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return Obx(() => OrderList().orderContent(h, w, index, controller.getOrderController,hMargin: 0));
           },
         ),
       ],
