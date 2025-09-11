@@ -443,7 +443,7 @@ Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selec
   );
 }
 
-Widget commonMultiDropdownButton(List<DropdownMenuItem<String>>? items, List<String> selectedItems, double width, double height, Color color, {String hint = '', Color borderColor = Colors.transparent}) {
+Widget commonMultiDropdownButton(List<DropdownMenuItem<String>>? items, List<String> selectedItems, double width, double height, Color color, {String hint = '', Color borderColor = Colors.transparent, double? upOffset}) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 8.0),
     decoration: BoxDecoration(
@@ -461,8 +461,10 @@ Widget commonMultiDropdownButton(List<DropdownMenuItem<String>>? items, List<Str
         items: items,
         onChanged: (_) {},
         dropdownStyleData: DropdownStyleData(
-          maxHeight: height * .4,
+          maxHeight: height * .25,
           width: width * .9,
+          elevation: 4,
+          offset: Offset(0,upOffset?? height * .25),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
         ),
       ),
@@ -914,10 +916,11 @@ Widget checkButtonObjective(
   );
 }
 
-Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged, bool autoFocus = true, Color backgroundColor = Colors.grey}) {
+Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged, bool autoFocus = true, Color backgroundColor = Colors.grey,List<TextInputFormatter>? inputFormatters}) {
   return PinCodeTextField(
     appContext: context,
     length: length,
+    inputFormatters: inputFormatters??[],
     keyboardType: TextInputType.number,
     animationType: AnimationType.fade,
     autoFocus: autoFocus,

@@ -5,6 +5,7 @@ import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class AadharVerificationScreen extends ParentWidget {
@@ -47,7 +48,6 @@ class AadharVerificationScreen extends ParentWidget {
                     ],
                   ),
                 ),
-                //dnfijasf
               ],
             ),
           ),
@@ -84,7 +84,7 @@ Widget commonComponent(String title, Widget component, {bool mandatory = true}) 
 Widget aadhaarNumber(double w, double h, AadharVerificationController controller) {
   return Column(
     children: [
-      commonComponent("Aadhaar Number", commonTextField(controller.aadharController.value, controller.aadharFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your 16 Digits Aadhaar Number', maxLines: 1)),
+      commonComponent("Aadhaar Number", commonTextField(controller.aadharController.value, controller.aadharFocusNode.value, w, (value) {}, fontSize: 14,maxLength: 16,inputFormatters: [FilteringTextInputFormatter.digitsOnly], hint: 'Enter your 16 Digits Aadhaar Number', maxLines: 1)),
       30.kH,
       commonButton(w, 50, appColors.contentButtonBrown, Colors.white, () =>controller.otpComponent.value=true, hint: "Send OTP"),
     ],
@@ -94,7 +94,7 @@ Widget aadhaarNumber(double w, double h, AadharVerificationController controller
 Widget aadhaarOTP(BuildContext context, double w, double h, AadharVerificationController controller) {
   return Column(
     children: [
-      commonComponent("Aadhaar OTP", otpField(context, controller.otpController.value, 6, (pin) => controller.otp.value = pin.toString(),backgroundColor: appColors.backgroundColor,fieldHeight: 65,fieldWidth: 55,autoFocus: false)),
+      commonComponent("Aadhaar OTP", otpField(context, controller.otpController.value, 6, (pin) => controller.otp.value = pin.toString(),inputFormatters: [FilteringTextInputFormatter.digitsOnly],backgroundColor: appColors.backgroundColor,fieldHeight: 65,fieldWidth: 55,autoFocus: false)),
       20.kH,
       commonButton(w, 50, appColors.contentButtonBrown, Colors.white, () =>Get.back(), hint: "Verify OTP"),
     ],

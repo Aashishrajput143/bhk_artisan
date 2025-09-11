@@ -3,7 +3,7 @@ import 'package:bhk_artisan/Modules/controller/productscreencontroller.dart';
 import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
 import 'package:bhk_artisan/Modules/repository/profile_repository.dart';
 import 'package:bhk_artisan/Modules/screens/dashboardManagement/home_screen.dart';
-import 'package:bhk_artisan/Modules/screens/inventorymanagement/inventory.dart';
+import 'package:bhk_artisan/Modules/screens/logistics_screen.dart';
 import 'package:bhk_artisan/common/CommonMethods.dart';
 import 'package:bhk_artisan/common/Constants.dart';
 import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
@@ -50,7 +50,7 @@ class CommonScreenController extends GetxController {
     const HomeScreen(), //index=0
     const OrderScreen(), //index=1
     const ProductScreen(), //index=2
-    const Inventory(), //index=3
+    const LogisticsScreen(), //index=3
     const MainProfile(), //index=4
   ];
 

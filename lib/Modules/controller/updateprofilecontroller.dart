@@ -1,5 +1,7 @@
 import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
+import 'package:bhk_artisan/Modules/model/get_category_model.dart';
 import 'package:bhk_artisan/Modules/model/pre_signed_intro_video_model.dart' show PreSignedIntroVideoModel;
+import 'package:bhk_artisan/Modules/repository/product_repository.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/constants.dart';
 import 'package:bhk_artisan/resources/enums/caste_category_enum.dart';
@@ -16,6 +18,7 @@ import '../repository/profile_repository.dart';
 class UpdateProfileController extends GetxController {
   CommonScreenController commonController = Get.put(CommonScreenController());
   final _api = ProfileRepository();
+  final productApi = ProductRepository();
   var selectedImage = Rxn<String>();
   var selectedIntroVideo = Rxn<String>();
 
@@ -30,14 +33,11 @@ class UpdateProfileController extends GetxController {
   var gstController = TextEditingController().obs;
   var gstFocusNode = FocusNode().obs;
 
-  var selectedExpertise = Rxn<String>();
   var selectedMultiExpertise = <String>[].obs;
 
   var isNewUser = false.obs;
   var introUploaded = Rxn<String>();
   var havingIntro = false.obs;
-
-  final RxList<Expertise> expertise = <Expertise>[Expertise(id: 1, name: 'HandLoom'), Expertise(id: 2, name: 'HandiCraft')].obs;
 
   final Rx<UserCasteCategory?> selectedCategory = Rx<UserCasteCategory?>(null);
   final List<UserCasteCategory> casteCategories = UserCasteCategory.values;
@@ -50,6 +50,7 @@ class UpdateProfileController extends GetxController {
     } else {
       loadData();
     }
+    getCategoryApi();
   }
 
   bool validateForm() {
@@ -62,23 +63,17 @@ class UpdateProfileController extends GetxController {
       return "Please fill all the mandatory fields";
     } else if (firstNameController.value.text.isEmpty) {
       return "Please Enter Your First Name";
-    }
-    else if (lastNameController.value.text.isEmpty) {
+    } else if (lastNameController.value.text.isEmpty) {
       return "Please Enter Your Last Name";
-    }
-    else if (emailController.value.text.isEmpty) {
+    } else if (emailController.value.text.isEmpty) {
       return "Please Enter Your Email";
-    }
-    else if (selectedMultiExpertise.isEmpty) {
+    } else if (selectedMultiExpertise.isEmpty) {
       return "Please Select Your Expertise";
-    }
-    else if (selectedCategory.value == null) {
+    } else if (selectedCategory.value == null) {
       return "Please Select Your Category";
-    }
-    else if (communityController.value.text.isEmpty) {
+    } else if (communityController.value.text.isEmpty) {
       return "Please Enter Your Community";
-    }
-    else if (introUploaded.value == null) {
+    } else if (introUploaded.value == null) {
       return "Please Upload Your Intro";
     }
     return null;
@@ -90,23 +85,21 @@ class UpdateProfileController extends GetxController {
     emailController.value.text = commonController.profileData.value.data?.email ?? "";
     communityController.value.text = commonController.profileData.value.data?.subCaste ?? "";
 
-    String? profileExpertise = commonController.profileData.value.data?.expertizeField;
+    String? profileExpertise = commonController.profileData.value.data?.expertizeField ?? "";
 
     selectedMultiExpertise.clear();
 
-    if (profileExpertise != null && profileExpertise.isNotEmpty) {
+    if (profileExpertise.isNotEmpty) {
       final profileExpertiseList = profileExpertise.split(",").map((e) => e.trim()).toList();
 
       for (var item in profileExpertiseList) {
-        if (expertise.any((e) => e.name == item)) {
-          selectedMultiExpertise.add(item);
-        }
+        selectedMultiExpertise.add(item);
       }
     }
 
-    String? casteCategoryValue = commonController.profileData.value.data?.userCasteCategory;
+    String? casteCategoryValue = commonController.profileData.value.data?.userCasteCategory ?? "";
 
-    if (casteCategoryValue != null && casteCategoryValue.isNotEmpty) {
+    if (casteCategoryValue.isNotEmpty) {
       try {
         selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == casteCategoryValue, orElse: () => UserCasteCategory.OTHER);
       } catch (e) {
@@ -116,21 +109,16 @@ class UpdateProfileController extends GetxController {
       selectedCategory.value = null;
     }
 
-    String? introVideo = commonController.profileData.value.data?.introVideo;
+    String? introVideo = commonController.profileData.value.data?.introVideo ?? '';
 
-    if (introVideo?.isNotEmpty ?? false) {
+    if (introVideo.isNotEmpty) {
       havingIntro.value = true;
       introUploaded.value = introVideo;
     }
-
-    // if (expertise.any((e) => e.name == profileExpertise)) {
-    //   selectedExpertise.value = profileExpertise;
-    // } else {
-    //   selectedExpertise.value = null;
-    // }
   }
 
   final rxRequestStatus = Status.COMPLETED.obs;
+  final getCategoryModel = GetCategoryModel().obs;
   final updateProfileModel = UpdateProfileModel().obs;
   final urlData = PreSignedIntroVideoModel().obs;
 
@@ -139,6 +127,29 @@ class UpdateProfileController extends GetxController {
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
   void setupdateProfileModeldata(UpdateProfileModel value) => updateProfileModel.value = value;
   void setUrlData(PreSignedIntroVideoModel value) => urlData.value = value;
+  void setgetCategoryModeldata(GetCategoryModel value) => getCategoryModel.value = value;
+
+  Future<void> getCategoryApi() async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      setRxRequestStatus(Status.LOADING);
+      productApi
+          .getcategoryApi(1, 20)
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setgetCategoryModeldata(value);
+            //CommonMethods.showToast(value.message);
+            Utils.printLog("Response===> ${value.toString()}");
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
 
   Future<void> updateProfileApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();

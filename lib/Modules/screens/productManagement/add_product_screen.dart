@@ -8,8 +8,10 @@ import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/inputformatter.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'build_step_circle.dart';
 
@@ -132,11 +134,11 @@ Widget generalDetails(double w, double h, AddProductController controller) {
             ),
           ),
           16.kH,
-          commonComponent("Product Name", commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Product name', maxLines: 3)),
+          commonComponent("Product Name", commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Product name', maxLines: 3, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
           16.kH,
-          commonComponent("Time to Make", commonTextField(controller.timeController.value, controller.timeFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter how long it took to make (e.g. 2 days)')),
+          commonComponent("Time to Make (in days)", commonTextField(controller.timeController.value, controller.timeFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter how long it took to make', inputFormatters: [FilteringTextInputFormatter.digitsOnly],maxLength: 6)),
           16.kH,
-          commonComponent("Description", commonDescriptionTextField(controller.detaileddescriptionController.value, controller.detaileddescriptionFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter a detailed description\neg. product history, culture, uniqueness...', maxLines: 8, minLines: 3)),
+          commonComponent("Description", commonDescriptionTextField(controller.detaileddescriptionController.value, controller.detaileddescriptionFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter a detailed description\neg. product history, culture, uniqueness...', maxLines: 8, minLines: 3,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter()])),
         ],
       ),
     ),
@@ -150,16 +152,16 @@ Widget productDetails(double w, double h, AddProductController controller) {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          commonComponent("Product Price per Piece", commonTextField(controller.priceController.value, controller.priceFocusNode.value, w, onChange: (value) => controller.calculateTotalPrice(), (value) {}, hint: 'Enter Product Price per Piece', prefix: '₹ ')),
+          commonComponent("Product Price per Piece", commonTextField(controller.priceController.value, controller.priceFocusNode.value, w, onChange: (value) => controller.calculateTotalPrice(), (value) {},maxLength: 6, hint: 'Enter Product Price per Piece', prefix: '₹ ',inputFormatters: [FilteringTextInputFormatter.digitsOnly])),
           16.kH,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: commonComponent("Quantity", commonTextField(controller.quantityController.value, controller.quantityFocusNode.value, w, (value) {}, onChange: (value) => controller.calculateTotalPrice(), hint: 'Enter Quantity')),
+                child: commonComponent("Quantity", commonTextField(controller.quantityController.value, controller.quantityFocusNode.value, w, (value) {}, onChange: (value) => controller.calculateTotalPrice(),maxLength: 6, hint: 'Enter Quantity',inputFormatters: [FilteringTextInputFormatter.digitsOnly])),
               ),
               8.kW,
-              Expanded(child: commonComponent("Total Price", commonTextField(controller.totalPriceController.value, controller.totalPriceFocusNode.value, w, (value) {}, readonly: true), mandatory: false)),
+              Expanded(child: commonComponent("Total Price", commonTextField(controller.totalPriceController.value, controller.totalPriceFocusNode.value, w, (value) {}, readonly: true, prefix: '₹ ',inputFormatters: [FilteringTextInputFormatter.digitsOnly]), mandatory: false)),
             ],
           ),
           16.kH,
@@ -216,14 +218,14 @@ Widget productDetails(double w, double h, AddProductController controller) {
             ],
           ),
           16.kH,
-          commonComponent("Material", commonTextField(controller.materialController.value, controller.materialFocusNode.value, w, (value) {}, hint: 'Enter Material Used', maxLines: 1)),
+          commonComponent("Material", commonTextField(controller.materialController.value, controller.materialFocusNode.value, w, (value) {}, hint: 'Enter Material Used', maxLines: 1,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
           16.kH,
           commonComponent(
             mandatory: false,
             "Net Weight (${controller.dropdownValues})",
             Row(
               children: [
-                Expanded(flex: 6, child: commonTextField(controller.netweightController.value, controller.netweightFocusNode.value, w, (value) {}, hint: 'Enter Net Weight(in ${controller.dropdownValues})')),
+                Expanded(flex: 6, child: commonTextField(controller.netweightController.value, controller.netweightFocusNode.value, w, (value) {}, hint: 'Enter Net Weight(in ${controller.dropdownValues})',inputFormatters: [FilteringTextInputFormatter.digitsOnly],maxLength: 5)),
                 8.kW,
                 Expanded(
                   flex: 2,
@@ -251,11 +253,11 @@ Widget productDetails(double w, double h, AddProductController controller) {
             "Dimension(in L*B*H) in ${controller.dropdownValue}",
             Row(
               children: [
-                Expanded(flex: 2, child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: 'Length')),
+                Expanded(flex: 2, child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: 'Length',inputFormatters: [FilteringTextInputFormatter.digitsOnly],maxLength: 5)),
                 8.kW,
-                Expanded(flex: 2, child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: 'Breadth')),
+                Expanded(flex: 2, child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: 'Breadth',inputFormatters: [FilteringTextInputFormatter.digitsOnly],maxLength: 5)),
                 8.kW,
-                Expanded(flex: 2, child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: 'Height')),
+                Expanded(flex: 2, child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: 'Height',inputFormatters: [FilteringTextInputFormatter.digitsOnly],maxLength: 5)),
                 8.kW,
                 Expanded(
                   flex: 3,
@@ -278,9 +280,9 @@ Widget productDetails(double w, double h, AddProductController controller) {
             ),
           ),
           16.kH,
-          commonComponent("Art Used", commonTextField(controller.techniqueController.value, controller.techniqueFocusNode.value, w, (value) {}, hint: 'Enter Art Used'), mandatory: false),
+          commonComponent("Art Used", commonTextField(controller.techniqueController.value, controller.techniqueFocusNode.value, w, (value) {}, hint: 'Enter Art Used',inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
           16.kH,
-          commonComponent("Pattern Used", commonTextField(controller.patternController.value, controller.patternFocusNode.value, w, (value) {}, hint: 'Enter Pattern Used', maxLines: 3), mandatory: false),
+          commonComponent("Pattern Used", commonTextField(controller.patternController.value, controller.patternFocusNode.value, w, (value) {}, hint: 'Enter Pattern Used',inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)], maxLines: 3), mandatory: false),
         ],
       ),
     ),

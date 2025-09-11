@@ -27,6 +27,9 @@ class AppImages {
   String get emptyMap =>'assets/images/empty_map.svg';
   String get hammer =>'assets/images/hammer.png';
   String get check =>'assets/images/check.png';
+  String get cubeBox =>'assets/images/cube_box.png';
+  
+
 
   static final AppImages _appImages = AppImages._internal();
   factory AppImages() {

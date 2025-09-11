@@ -198,16 +198,6 @@ Widget shimmerProductDetails(double h, double w) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Shimmer.fromColors(
-        baseColor: Colors.grey.shade300,
-        highlightColor: Colors.grey.shade100,
-        child: Container(
-          height: h * 0.43,
-          width: double.infinity,
-          decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
-        ),
-      ),
-      20.kH,
       SizedBox(
         height: h * 0.095,
         child: ListView.builder(

@@ -10,6 +10,7 @@ import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../data/response/status.dart';
@@ -51,7 +52,7 @@ class OtpScreen extends ParentWidget {
                           textAlign: TextAlign.center,
                         ),
                         30.kH,
-                        otpField(context, controller.otpController.value, 6, (pin) => controller.otp.value = pin.toString()),
+                        otpField(context, controller.otpController.value, 6, (pin) => controller.otp.value = pin.toString(),inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
                         6.kH,
                         controller.startTime.value > 0
                             ? Text(

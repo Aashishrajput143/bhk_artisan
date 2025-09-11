@@ -9,8 +9,10 @@ import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/address_type_enum.dart';
 import 'package:bhk_artisan/resources/font.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/inputformatter.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
@@ -196,19 +198,19 @@ class AddressScreen extends ParentWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            commonComponent("House/Flat/Building", commonTextField(controller.flatNameController.value, controller.flatFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your house/Flat/Building', maxLines: 1)),
+                            commonComponent("House/Flat/Building", commonTextField(controller.flatNameController.value, controller.flatFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your house/Flat/Building', maxLines: 1,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
                             16.kH,
-                            commonComponent("Street/Area/Locality", commonTextField(controller.streetNameController.value, controller.streetFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Street/Area/Locality', maxLines: 1)),
+                            commonComponent("Street/Area/Locality", commonTextField(controller.streetNameController.value, controller.streetFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Street/Area/Locality', maxLines: 1,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
                             16.kH,
-                            commonComponent("LandMark", commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter LandMark', maxLines: 1), mandatory: false),
+                            commonComponent("LandMark", commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter LandMark', maxLines: 1,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
                             16.kH,
-                            commonComponent("City", commonTextField(controller.cityController.value, controller.cityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your City', maxLines: 1, readonly: true), mandatory: false),
+                            commonComponent("City", commonTextField(controller.cityController.value, controller.cityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your City', maxLines: 1, readonly: true,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
                             16.kH,
-                            commonComponent("State", commonTextField(controller.stateController.value, controller.stateFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your State', maxLines: 1, readonly: true), mandatory: false),
+                            commonComponent("State", commonTextField(controller.stateController.value, controller.stateFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your State', maxLines: 1, readonly: true,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
                             16.kH,
-                            commonComponent("Country", commonTextField(controller.countryController.value, controller.countryFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Country', maxLines: 1, readonly: true), mandatory: false),
+                            commonComponent("Country", commonTextField(controller.countryController.value, controller.countryFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Country', maxLines: 1, readonly: true,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
                             16.kH,
-                            commonComponent("PinCode", commonTextField(controller.pinController.value, controller.pinFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Pin Code', maxLines: 1, maxLength: 6, readonly: true), mandatory: false),
+                            commonComponent("PinCode", commonTextField(controller.pinController.value, controller.pinFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Pin Code', maxLines: 1, maxLength: 6, readonly: true,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
                             20.kH,
                             commonComponent(
                               "AddressType",

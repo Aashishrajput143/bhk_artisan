@@ -11,9 +11,11 @@ import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/caste_category_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/inputformatter.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../controller/updateprofilecontroller.dart';
@@ -55,27 +57,43 @@ class EditProfile extends ParentWidget {
               ),
               bottomNavigationBar: Padding(
                 padding: EdgeInsets.fromLTRB(16, 6, 16, h * 0.04),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, () => MyAlertDialog.showDiscardChangesDialog(), hint: "Cancel", radius: 30),
-                    commonButton(
-                      w * 0.3,
-                      45,
-                      appColors.contentButtonBrown,
-                      Colors.white,
-                      () {
-                        if (controller.validateStringForm() == null) {
-                          controller.updateProfileApi();
-                        } else {
-                          CommonMethods.showToast(controller.validateStringForm() ?? "Please fill all the mandatory fields");
-                        }
-                      },
-                      hint: "Save",
-                      radius: 30,
-                    ),
-                  ],
-                ),
+                child: controller.isNewUser.value
+                    ? commonButton(
+                        w,
+                        45,
+                        appColors.contentButtonBrown,
+                        Colors.white,
+                        () {
+                          if (controller.validateStringForm() == null) {
+                            controller.updateProfileApi();
+                          } else {
+                            CommonMethods.showToast(controller.validateStringForm() ?? "Please fill all the mandatory fields");
+                          }
+                        },
+                        hint: "Save",
+                        radius: 30,
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, () => MyAlertDialog.showDiscardChangesDialog(), hint: "Cancel", radius: 30),
+                          commonButton(
+                            w * 0.3,
+                            45,
+                            appColors.contentButtonBrown,
+                            Colors.white,
+                            () {
+                              if (controller.validateStringForm() == null) {
+                                controller.updateProfileApi();
+                              } else {
+                                CommonMethods.showToast(controller.validateStringForm() ?? "Please fill all the mandatory fields");
+                              }
+                            },
+                            hint: "Save",
+                            radius: 30,
+                          ),
+                        ],
+                      ),
               ),
             ),
             progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
@@ -184,14 +202,14 @@ Widget profile(BuildContext context, double h, double w, UpdateProfileController
 Widget content(BuildContext context, double w, double h, UpdateProfileController controller) {
   return Column(
     children: [
-      commonComponent("First Name", commonTextField(controller.firstNameController.value, controller.firstNameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your First name', maxLines: 1)),
+      commonComponent("First Name", commonTextField(controller.firstNameController.value, controller.firstNameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your First name', maxLines: 1,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
       16.kH,
-      commonComponent("Last Name", commonTextField(controller.lastNameController.value, controller.lastNameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Last name', maxLines: 1)),
+      commonComponent("Last Name", commonTextField(controller.lastNameController.value, controller.lastNameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Last name', maxLines: 1,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
       16.kH,
-      commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Email', maxLines: 1), mandatory: false),
+      commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Email', maxLines: 1,inputFormatters: [NoLeadingSpaceFormatter(),LengthLimitingTextInputFormatter(50)]), mandatory: false),
       16.kH,
       if (controller.isNewUser.value) ...[
-        commonComponent("GST Number", commonTextField(controller.gstController.value, controller.gstFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter GST Number (if Organisation)', maxLines: 1), mandatory: false),
+        commonComponent("GST Number", commonTextField(controller.gstController.value, controller.gstFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter GST Number (if Organisation)', maxLines: 1,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
         16.kH,
         Row(
           children: [
@@ -221,7 +239,7 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
               ),
             ),
             10.kW,
-            Expanded(flex: 3, child: commonComponent("Community", commonTextField(controller.communityController.value, controller.communityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Community', maxLines: 1))),
+            Expanded(flex: 3, child: commonComponent("Caste", commonTextField(controller.communityController.value, controller.communityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Caste', maxLines: 1,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]))),
           ],
         ),
         16.kH,
@@ -229,48 +247,42 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
       commonComponent(
         "Expertise",
         commonMultiDropdownButton(
-          controller.expertise.map((item) {
+          controller.getCategoryModel.value.data?.docs?.map((item) {
+            final isSelected = controller.selectedMultiExpertise.contains(item.categoryName);
             return DropdownMenuItem<String>(
-              value: item.name,
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  final isSelected = controller.selectedMultiExpertise.contains(item.name);
-                  return GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      if (isSelected) {
-                        controller.selectedMultiExpertise.remove(item.name);
-                      } else {
-                        controller.selectedMultiExpertise.add(item.name);
-                      }
-                      setState(() {});
-                    },
-                    child: Row(
-                      children: [
-                        Checkbox(
-                          value: isSelected,
-                          checkColor: Colors.white,
-                          fillColor: WidgetStateProperty.resolveWith<Color>((states) {
-                            if (states.contains(WidgetState.selected)) {
-                              return appColors.brownDarkText;
-                            }
-                            return Colors.white;
-                          }),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                          onChanged: (value) {
-                            if (value == true) {
-                              controller.selectedMultiExpertise.add(item.name);
-                            } else {
-                              controller.selectedMultiExpertise.remove(item.name);
-                            }
-                            setState(() {});
-                          },
-                        ),
-                        Text(item.name, style: const TextStyle(fontSize: 14)),
-                      ],
-                    ),
-                  );
+              value: item.categoryName,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  if (isSelected) {
+                    controller.selectedMultiExpertise.remove(item.categoryName);
+                  } else {
+                    controller.selectedMultiExpertise.add(item.categoryName ?? "");
+                  }
                 },
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: isSelected,
+                      checkColor: Colors.white,
+                      fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+                        if (states.contains(WidgetState.selected)) {
+                          return appColors.brownDarkText;
+                        }
+                        return Colors.white;
+                      }),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      onChanged: (value) {
+                        if (value == true) {
+                          controller.selectedMultiExpertise.add(item.categoryName ?? "");
+                        } else {
+                          controller.selectedMultiExpertise.remove(item.categoryName);
+                        }
+                      },
+                    ),
+                    Text(item.categoryName ?? "", style: const TextStyle(fontSize: 14)),
+                  ],
+                ),
               ),
             );
           }).toList(),
