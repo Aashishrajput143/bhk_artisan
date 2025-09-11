@@ -248,10 +248,9 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
         "Expertise",
         commonMultiDropdownButton(
           controller.getCategoryModel.value.data?.docs?.map((item) {
-            final isSelected = controller.selectedMultiExpertise.contains(item.categoryName);
             return DropdownMenuItem<String>(
               value: item.categoryName,
-              child: GestureDetector(
+              child:StatefulBuilder( builder: (context, setState) { final isSelected = controller.selectedMultiExpertise.contains(item.categoryName); return GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
                   if (isSelected) {
@@ -259,6 +258,7 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
                   } else {
                     controller.selectedMultiExpertise.add(item.categoryName ?? "");
                   }
+                  setState(() {});
                 },
                 child: Row(
                   children: [
@@ -278,13 +278,14 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
                         } else {
                           controller.selectedMultiExpertise.remove(item.categoryName);
                         }
+                        setState(() {});
                       },
                     ),
                     Text(item.categoryName ?? "", style: const TextStyle(fontSize: 14)),
                   ],
                 ),
-              ),
-            );
+              );}
+            ));
           }).toList(),
           controller.selectedMultiExpertise,
           w,

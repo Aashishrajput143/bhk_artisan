@@ -65,8 +65,6 @@ class UpdateProfileController extends GetxController {
       return "Please Enter Your First Name";
     } else if (lastNameController.value.text.isEmpty) {
       return "Please Enter Your Last Name";
-    } else if (emailController.value.text.isEmpty) {
-      return "Please Enter Your Email";
     } else if (selectedMultiExpertise.isEmpty) {
       return "Please Select Your Expertise";
     } else if (selectedCategory.value == null) {
@@ -88,14 +86,8 @@ class UpdateProfileController extends GetxController {
     String? profileExpertise = commonController.profileData.value.data?.expertizeField ?? "";
 
     selectedMultiExpertise.clear();
-
-    if (profileExpertise.isNotEmpty) {
-      final profileExpertiseList = profileExpertise.split(",").map((e) => e.trim()).toList();
-
-      for (var item in profileExpertiseList) {
-        selectedMultiExpertise.add(item);
-      }
-    }
+    selectedMultiExpertise.value = profileExpertise.split(",").map((e) => e.trim()).toList();
+    print(selectedMultiExpertise);
 
     String? casteCategoryValue = commonController.profileData.value.data?.userCasteCategory ?? "";
 
