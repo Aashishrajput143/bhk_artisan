@@ -81,7 +81,7 @@ class ViewProfile extends ParentWidget {
         Center(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
-            child: controller.profileData.value.data?.avatar?.isNotEmpty ?? false ? commonProfileNetworkImage(controller.profileData.value.data?.avatar ?? "") : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
+            child: controller.profileData.value.data?.avatar?.isNotEmpty ?? false ? commonProfileNetworkImage(controller.profileData.value.data?.avatar ?? "",width: 150,height: 150) : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
           ),
         ),
       ],

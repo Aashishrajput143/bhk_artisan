@@ -170,7 +170,7 @@ class AddProductController extends GetxController {
     else if ((quantityController.value.text.isEmpty)) {
       return "Please Enter Quantity";
     }
-    else if ((imagefiles.length>=4 && imagefiles.length<11)) {
+    else if ((imagefiles.length<4 && imagefiles.length>10)) {
       return "Please Upload Min 4 and Max 10 Images";
     }
     return null;

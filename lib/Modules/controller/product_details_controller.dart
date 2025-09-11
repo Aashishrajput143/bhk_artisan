@@ -13,7 +13,7 @@ class ProductDetailsController extends GetxController {
   final _api = ProductRepository();
   var currentIndex = 0.obs;
   var slidercontroller = CarouselSliderController();
-  var productId = Get.arguments??"";
+  var productId = Get.arguments ?? "";
 
   ScrollController thumbnailScrollController = ScrollController();
   var thumbMargin = 0.obs;
@@ -26,7 +26,7 @@ class ProductDetailsController extends GetxController {
 
   final rxRequestStatus = Status.COMPLETED.obs;
   final getProductModel = ProductDetailsModel().obs;
-  
+
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
 

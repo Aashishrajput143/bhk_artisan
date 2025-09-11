@@ -38,7 +38,7 @@ class HomeScreen extends ParentWidget {
                       commonCollection(h, w, controller),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, getRecentOrder( w, h, controller), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false ? product(w, controller) : shimmerProduct(w), 20.kH]),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, getRecentOrder(w, h, controller), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false ? product(w, controller) : shimmerProduct(w), 20.kH]),
                       ),
                     ],
                   ),
@@ -238,7 +238,7 @@ class HomeScreen extends ParentWidget {
     );
   }
 
-  Widget getRecentOrder(double w,double h, Homecontroller controller) {
+  Widget getRecentOrder(double w, double h, Homecontroller controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -264,7 +264,7 @@ class HomeScreen extends ParentWidget {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            return Obx(() => OrderList().orderContent(h, w, index, controller.getOrderController,hMargin: 0));
+            return Obx(() => OrderList().orderContent(h, w, index, controller.getOrderController, hMargin: 0));
           },
         ),
       ],
@@ -275,24 +275,7 @@ class HomeScreen extends ParentWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.network(
-            list?.images?.isNotEmpty == true ? list!.images!.first.imageUrl ?? "" : "",
-            width: w * 0.4,
-            height: 180,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                width: w * 0.4,
-                height: 180,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.grey.shade300),
-                alignment: Alignment.center,
-                child: const Icon(Icons.broken_image, color: Colors.grey, size: 40),
-              );
-            },
-          ),
-        ),
+        commonNetworkImage(list?.images?.isNotEmpty == true ? list!.images!.first.imageUrl ?? "" : "", width: w * 0.4, height: 180, fit: BoxFit.cover,borderRadius: BorderRadius.circular(12)),
         10.kH,
         Text(
           list?.productName ?? "",

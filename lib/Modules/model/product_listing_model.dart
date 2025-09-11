@@ -120,7 +120,7 @@ class ProductDocs {
       this.subCategory});
 
   ProductDocs.fromJson(Map<String, dynamic> json) {
-    productId = json['product_id'];
+    productId = json['productId'];
     bhkProductId = json['bhkProductId'];
     productName = json['product_name'];
     description = json['description'];
@@ -157,7 +157,7 @@ class ProductDocs {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['product_id'] = productId;
+    data['productId'] = productId;
     data['bhkProductId'] = bhkProductId;
     data['product_name'] = productName;
     data['description'] = description;
@@ -211,7 +211,7 @@ class Images {
     imageId = json['imageId'];
     imageUrl = json['imageUrl'];
     imageOrder = json['imageOrder'];
-    productId = json['product_id'];
+    productId = json['productId'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }
@@ -221,7 +221,7 @@ class Images {
     data['imageId'] = imageId;
     data['imageUrl'] = imageUrl;
     data['imageOrder'] = imageOrder;
-    data['product_id'] = productId;
+    data['productId'] = productId;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     return data;

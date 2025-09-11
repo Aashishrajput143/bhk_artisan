@@ -125,71 +125,59 @@ PreferredSizeWidget shimmerAppBarHome(double w) {
 }
 
 Widget shimmerMyProducts(double w, double h, {bool addproduct = false}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (addproduct)
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0, bottom: 8),
-            child: Shimmer.fromColors(
-              baseColor: Colors.grey.shade300,
-              highlightColor: Colors.grey.shade100,
-              child: Container(width: w * 0.5, height: 24, color: Colors.grey),
-            ),
-          ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              return Shimmer.fromColors(
-                baseColor: Colors.grey.shade300,
-                highlightColor: Colors.grey.shade100,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(10)),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 115,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0)),
-                        ),
-                      ),
-                      10.kW,
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(9.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+  return SizedBox(
+    height: h,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: 6,
+        itemBuilder: (context, index) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(10)),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 100,
+                    height: 115,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0)),
+                    ),
+                  ),
+                  10.kW,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(9.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(width: w * 0.4, height: 14, color: Colors.grey),
+                          5.kH,
+                          Container(width: w * 0.3, height: 12, color: Colors.grey),
+                          5.kH,
+                          Row(
                             children: [
-                              Container(width: w * 0.4, height: 14, color: Colors.grey),
-                              5.kH,
-                              Container(width: w * 0.3, height: 12, color: Colors.grey),
-                              5.kH,
-                              Row(
-                                children: [
-                                  Container(width: 60, height: 20, color: Colors.grey),
-                                  8.kW,
-                                  Container(width: 60, height: 20, color: Colors.grey),
-                                ],
-                              ),
+                              Container(width: 60, height: 20, color: Colors.grey),
+                              8.kW,
+                              Container(width: 60, height: 20, color: Colors.grey),
                             ],
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     ),
   );
 }
@@ -198,6 +186,16 @@ Widget shimmerProductDetails(double h, double w) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+      Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          height: h * 0.43,
+          width: double.infinity,
+          decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
+        ),
+      ),
+      20.kH,
       SizedBox(
         height: h * 0.095,
         child: ListView.builder(

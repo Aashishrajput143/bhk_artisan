@@ -81,8 +81,12 @@ PreferredSizeWidget appBarTab({required TabController? tabController, required L
   );
 }
 
-Widget commonProfileNetworkImage(String url, {double? width, double? height, BoxFit? fit}) {
-  return AvatarWithBlurHash().avatarWithBlurHash(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, width: 150, height: 150);
+Widget commonProfileNetworkImage(String url, {double? width, double? height, BoxFit? fit,String? defaultImage}) {
+  return AvatarWithBlurHash().avatarWithBlurHash(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, width: width, height: height,defaultImage: defaultImage);
+}
+
+Widget commonNetworkImage(String url, {double? width, double? height, BoxFit? fit,String? defaultImage,BorderRadius? borderRadius}) {
+  return AvatarWithBlurHash().avatarWithBlurHashIcon(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, width: width, height: height,borderRadius: borderRadius);
 }
 
 Widget commonCircleNetworkImage(String url, {double radius = 22}) {

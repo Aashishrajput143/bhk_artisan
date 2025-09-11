@@ -26,7 +26,7 @@ class MyProducts extends ParentWidget {
           Scaffold(
             backgroundColor: appColors.backgroundColor,
             body: controller.rxRequestStatus.value == Status.LOADING
-                ? shimmerMyProducts(w, h,addproduct: true)
+                ? shimmerMyProducts(w, h, addproduct: true)
                 : RefreshIndicator(
                     color: Colors.brown,
                     onRefresh: () => controller.productRefresh("APPROVED"),
@@ -38,21 +38,21 @@ class MyProducts extends ParentWidget {
                           if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false) headerButton(controller),
                           controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true
                               ? Expanded(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: controller.getApprovedProductModel.value.data?.docs?.length ?? 0,
-                                    itemBuilder: (context, index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
-                                            controller.getProductApi("APPROVED", isLoader: false);
-                                          });
-                                        },
-                                        child: Stack(children: [commonCard(w, h, controller.getApprovedProductModel.value.data?.docs?[index]), cornerTag(w, controller.getApprovedProductModel.value.data?.docs?[index])]),
-                                      );
-                                    },
-                                  ),
-                                )
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: controller.getApprovedProductModel.value.data?.docs?.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                                          controller.getProductApi("APPROVED", isLoader: false);
+                                        });
+                                      },
+                                      child: Stack(children: [commonCard(w, h, controller.getApprovedProductModel.value.data?.docs?[index]), cornerTag(w, controller.getApprovedProductModel.value.data?.docs?[index])]),
+                                    );
+                                  },
+                                ),
+                              )
                               : emptyScreen(w, h),
                         ],
                       ),
@@ -77,7 +77,7 @@ class MyProducts extends ParentWidget {
             onTap: () {
               Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
                 controller.commonController.productController.changeTab(1);
-                controller.getProductApi("PENDING",isLoader: false);
+                controller.getProductApi("PENDING", isLoader: false);
               });
             },
             child: Row(
@@ -110,26 +110,12 @@ Widget commonCard(double w, double h, ProductDocs? list) {
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ClipRRect(
+        commonNetworkImage(
+          list?.images?.isNotEmpty??true? list!.images!.first.imageUrl ?? "" : "",
+          width: 100,
+          height: 115,
+          fit: BoxFit.cover,
           borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0)),
-          child: Container(
-            color: Colors.brown.shade100,
-            child: Image.network(
-              list?.images?.isNotEmpty == true ? list!.images!.first.imageUrl ?? "" : "",
-              width: 100,
-              height: 115,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  width: 100,
-                  height: 115,
-                  color: Colors.grey.shade300,
-                  alignment: Alignment.center,
-                  child: const Icon(Icons.broken_image, color: Colors.grey, size: 40),
-                );
-              },
-            ),
-          ),
         ),
         10.kH,
         Expanded(

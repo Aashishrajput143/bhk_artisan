@@ -48,18 +48,8 @@ class ProductDetailScreen extends ParentWidget {
           children: [
             CarouselSlider(
               items: controller.getProductModel.value.data?.images?.isNotEmpty ?? false
-                  ? controller.getProductModel.value.data?.images
-                        ?.map<Widget>(
-                          (image) => Container(
-                            color: Colors.blueGrey.shade100,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.all(Radius.circular(8)),
-                              child: Image.network(image.imageUrl ?? "", width: w * 0.9, fit: BoxFit.cover),
-                            ),
-                          ),
-                        )
-                        .toList()
-                  : [Container()],
+                  ? controller.getProductModel.value.data?.images?.map<Widget>((image) => commonNetworkImage(image.imageUrl ?? "", width: w * 0.9, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))).toList()
+                  : [commonNetworkImage("", width: w * 0.9, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))],
               carouselController: controller.slidercontroller,
               options: CarouselOptions(
                 height: h * 0.43,
@@ -70,21 +60,15 @@ class ProductDetailScreen extends ParentWidget {
                 onPageChanged: (index, reason) {
                   int current = controller.currentIndex.value;
                   controller.currentIndex.value = index;
-
                   if (!controller.thumbnailScrollController.hasClients) return;
-
                   double itemWidth = w * 0.165 + controller.thumbMargin.value;
                   double currentOffset = controller.thumbnailScrollController.offset;
                   double maxScroll = controller.thumbnailScrollController.position.maxScrollExtent;
-
                   int diff = index - current;
-
                   double targetOffset;
                   if (diff > 0) {
-                    // moved forward
                     targetOffset = (currentOffset + itemWidth).clamp(0, maxScroll);
                   } else if (diff < 0) {
-                    // moved backward
                     targetOffset = (currentOffset - itemWidth).clamp(0, maxScroll);
                   } else {
                     targetOffset = currentOffset;
@@ -99,60 +83,65 @@ class ProductDetailScreen extends ParentWidget {
         10.kH,
         SizedBox(
           height: h * 0.095,
-          child: ListView.builder(
-            controller: controller.thumbnailScrollController,
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: controller.getProductModel.value.data?.images?.length ?? 0,
-            itemBuilder: (context, index) {
-              String image = controller.getProductModel.value.data?.images?[index].imageUrl ?? "";
-              return Obx(
-                () => GestureDetector(
-                  onTap: () {
-                    int current = controller.currentIndex.value;
-                    int tapped = index;
-                    controller.slidercontroller.animateToPage(tapped);
-
-                    if (!controller.thumbnailScrollController.hasClients) return;
-
-                    double itemWidth = w * 0.165 + controller.thumbMargin.value;
-                    double currentOffset = controller.thumbnailScrollController.offset;
-                    double maxScroll = controller.thumbnailScrollController.position.maxScrollExtent;
-
-                    int diff = tapped - current;
-
-                    double targetOffset;
-                    if (diff > 0) {
-                      // tapped forward
-                      targetOffset = (currentOffset + itemWidth).clamp(0, maxScroll);
-                    } else if (diff < 0) {
-                      // tapped backward
-                      targetOffset = (currentOffset - itemWidth).clamp(0, maxScroll);
-                    } else {
-                      targetOffset = currentOffset;
-                    }
-
-                    controller.thumbnailScrollController.animateTo(targetOffset, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: controller.currentIndex.value == index ? appColors.brownDarkText : Colors.transparent, width: 2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Container(
-                      color: Colors.blueGrey.shade100,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                        child: Image.network(image, width: w * 0.165, fit: BoxFit.cover),
+          child: controller.getProductModel.value.data?.images?.isNotEmpty ?? false
+              ? ListView.builder(
+                  controller: controller.thumbnailScrollController,
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: controller.getProductModel.value.data?.images?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    String image = controller.getProductModel.value.data?.images?[index].imageUrl ?? "";
+                    return Obx(
+                      () => GestureDetector(
+                        onTap: () {
+                          int current = controller.currentIndex.value;
+                          int tapped = index;
+                          controller.slidercontroller.animateToPage(tapped);
+                          if (!controller.thumbnailScrollController.hasClients) return;
+                          double itemWidth = w * 0.165 + controller.thumbMargin.value;
+                          double currentOffset = controller.thumbnailScrollController.offset;
+                          double maxScroll = controller.thumbnailScrollController.position.maxScrollExtent;
+                          int diff = tapped - current;
+                          double targetOffset;
+                          if (diff > 0) {
+                            targetOffset = (currentOffset + itemWidth).clamp(0, maxScroll);
+                          } else if (diff < 0) {
+                            targetOffset = (currentOffset - itemWidth).clamp(0, maxScroll);
+                          } else {
+                            targetOffset = currentOffset;
+                          }
+                          controller.thumbnailScrollController.animateTo(targetOffset, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: controller.currentIndex.value == index ? appColors.brownDarkText : Colors.transparent, width: 2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: commonNetworkImage(image, width: w * 0.165, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8))),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
+                )
+              : ListView.builder(
+                  controller: controller.thumbnailScrollController,
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.transparent, width: 2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: commonNetworkImage("", width: w * 0.185, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8))),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
       ],
     );
