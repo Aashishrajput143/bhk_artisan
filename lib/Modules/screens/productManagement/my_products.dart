@@ -10,7 +10,6 @@ import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../data/response/status.dart';
 import '../../controller/get_product_controller.dart';
 
 class MyProducts extends ParentWidget {
@@ -25,12 +24,12 @@ class MyProducts extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            body: controller.rxRequestStatus.value == Status.LOADING
-                ? shimmerMyProducts(w, h, addproduct: true)
-                : RefreshIndicator(
-                    color: Colors.brown,
-                    onRefresh: () => controller.productRefresh("APPROVED"),
-                    child: Padding(
+            body: RefreshIndicator(
+              color: Colors.brown,
+              onRefresh: () => controller.productRefresh("APPROVED"),
+              child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? true
+                  ? shimmerMyProducts(w, h, addproduct: true)
+                  : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,26 +37,26 @@ class MyProducts extends ParentWidget {
                           if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false) headerButton(controller),
                           controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true
                               ? Expanded(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: controller.getApprovedProductModel.value.data?.docs?.length ?? 0,
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
-                                          controller.getProductApi("APPROVED", isLoader: false);
-                                        });
-                                      },
-                                      child: Stack(children: [commonCard(w, h, controller.getApprovedProductModel.value.data?.docs?[index]), cornerTag(w, controller.getApprovedProductModel.value.data?.docs?[index])]),
-                                    );
-                                  },
-                                ),
-                              )
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: controller.getApprovedProductModel.value.data?.docs?.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                                            controller.getProductApi("APPROVED", isLoader: false);
+                                          });
+                                        },
+                                        child: Stack(children: [commonCard(w, h, controller.getApprovedProductModel.value.data?.docs?[index]), cornerTag(w, controller.getApprovedProductModel.value.data?.docs?[index])]),
+                                      );
+                                    },
+                                  ),
+                                )
                               : emptyScreen(w, h),
                         ],
                       ),
                     ),
-                  ),
+            ),
             bottomNavigationBar: controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true ? null : addButton(w, h, controller),
           ),
           //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
@@ -111,7 +110,7 @@ Widget commonCard(double w, double h, ProductDocs? list) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         commonNetworkImage(
-          list?.images?.isNotEmpty??true? list!.images!.first.imageUrl ?? "" : "",
+          list?.images?.isNotEmpty ?? true ? list!.images!.first.imageUrl ?? "" : "",
           width: 100,
           height: 115,
           fit: BoxFit.cover,

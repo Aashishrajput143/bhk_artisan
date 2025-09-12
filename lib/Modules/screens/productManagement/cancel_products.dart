@@ -8,7 +8,6 @@ import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../data/response/status.dart';
 
 class CancelProducts extends ParentWidget {
   const CancelProducts({super.key});
@@ -16,44 +15,44 @@ class CancelProducts extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetProductController controller = Get.put(GetProductController());
-      controller.getProductApi("DISAPPROVED", isLoader:controller.getDisapprovedProductModel.value.data?.docs?.isNotEmpty?? false? false:true);
+    controller.getProductApi("DISAPPROVED", isLoader: controller.getDisapprovedProductModel.value.data?.docs?.isNotEmpty ?? false ? false : true);
     return Obx(
       () => Stack(
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            body:controller.rxRequestStatus.value == Status.LOADING
-                ? shimmerMyProducts(w, h)
-                :  RefreshIndicator(
+            body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.productRefresh("DISAPPROVED"),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    8.kH,
-                    controller.getDisapprovedProductModel.value.data?.docs?.isNotEmpty??true
-                        ? Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: controller.getDisapprovedProductModel.value.data?.docs?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(RoutesClass.productDetails,arguments: controller.getDisapprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
-                                      controller.getProductApi("DISAPPROVED", isLoader: false);
-                                    });
-                                  },
-                                  child: Stack(children: [commonCard(w, h, controller.getDisapprovedProductModel.value.data?.docs?[index]), cornerTag(w, controller.getDisapprovedProductModel.value.data?.docs?[index])]),
-                                );
-                              },
-                            ),
-                          )
-                        : emptyScreen(w, h),
-                  ],
-                ),
-              ),
+              child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? true
+                  ? shimmerMyProducts(w, h)
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          8.kH,
+                          controller.getDisapprovedProductModel.value.data?.docs?.isNotEmpty ?? true
+                              ? Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: controller.getDisapprovedProductModel.value.data?.docs?.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Get.toNamed(RoutesClass.productDetails, arguments: controller.getDisapprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                                            controller.getProductApi("DISAPPROVED", isLoader: false);
+                                          });
+                                        },
+                                        child: Stack(children: [commonCard(w, h, controller.getDisapprovedProductModel.value.data?.docs?[index]), cornerTag(w, controller.getDisapprovedProductModel.value.data?.docs?[index])]),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : emptyScreen(w, h),
+                        ],
+                      ),
+                    ),
             ),
           ),
           //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),

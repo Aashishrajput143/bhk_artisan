@@ -30,7 +30,7 @@ class AddressScreen extends ParentWidget {
             appBar: commonAppBar("Manage Address"),
             body: controller.rxRequestStatus.value == Status.LOADING
                 ? shimmerAddressScreen(h, w)
-                : controller.getAddressModel.value.data?.isNotEmpty ?? true
+                : controller.getAddressModel.value.data?.isNotEmpty ?? false
                 ? ListView.builder(
                     shrinkWrap: true,
                     itemCount: controller.getAddressModel.value.data?.length ?? 0,
@@ -55,7 +55,7 @@ class AddressScreen extends ParentWidget {
                       ),
                     ),
                   ),
-            floatingActionButton: controller.getAddressModel.value.data?.isNotEmpty ?? true
+            floatingActionButton: controller.getAddressModel.value.data?.isNotEmpty ?? false
                 ? (controller.getAddressModel.value.data?.length ?? 0) < 3
                       ? Padding(
                           padding: EdgeInsets.only(bottom: h * 0.03, right: 10),

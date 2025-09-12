@@ -9,8 +9,6 @@ import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../data/response/status.dart';
-
 class PendingProducts extends ParentWidget {
   const PendingProducts({super.key});
 
@@ -23,12 +21,12 @@ class PendingProducts extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            body: controller.rxRequestStatus.value == Status.LOADING
-                ? shimmerMyProducts(w, h)
-                : RefreshIndicator(
-                    color: Colors.brown,
-                    onRefresh: () => controller.productRefresh("PENDING"),
-                    child: Padding(
+            body: RefreshIndicator(
+              color: Colors.brown,
+              onRefresh: () => controller.productRefresh("PENDING"),
+              child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? true
+                  ? shimmerMyProducts(w, h)
+                  : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +53,7 @@ class PendingProducts extends ParentWidget {
                         ],
                       ),
                     ),
-                  ),
+            ),
           ),
           // Progress bar overlay
           //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),

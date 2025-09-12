@@ -103,7 +103,9 @@ class Homecontroller extends GetxController {
     });
   }
 
-  Future<void> dashboardRefresh() async {}
+  Future<void> dashboardRefresh() async {
+    initState();
+  }
 
   final rxRequestStatus = Status.COMPLETED.obs;
   final getApprovedProductModel = ProductListingModel().obs;

@@ -20,7 +20,7 @@ class OrderTrackingPage extends ParentWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(children: [logisticCardHeader(), 20.kH, logisticStatus(), 20.kH, logisticExpected(w, "Expected Pickup on SEP 09, 2025")]),
+          child: Column(children: [logisticCardHeader(), 20.kH, logisticStatus(), 20.kH, logisticExpected(w, "Expected Pickup on SEP 12, 2025")]),
         ),
       ),
     );
@@ -40,11 +40,11 @@ class OrderTrackingPage extends ParentWidget {
         children: [
           Text('Order Fulfillment Status', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           SizedBox(height: 16),
-          buildTimelineItem(status: "Order Received", date: 'SEP 09, 2025', isCompleted: true),
-          buildTimelineItem(status: "Order Completed", date: 'SEP 09, 2025', isCompleted: true),
-          buildTimelineItem(status: 'Awaiting Pickup', date: 'SEP 09, 2025', isCompleted: false),
-          buildTimelineItem(status: 'In Transit', date: 'SEP 09, 2025', isCompleted: false),
-          buildTimelineItem(status: 'Order Delivered', date: 'FEB 19, 2024', description: 'Your order has been Successfully Delivered', isCompleted: false, islast: true),
+          buildTimelineItem(status: "Order Received", date: 'AUG 15, 2025', isCompleted: true),
+          buildTimelineItem(status: "Order Completed", date: 'SEP 10, 2025', isCompleted: true),
+          buildTimelineItem(status: 'Awaiting Pickup', date: 'SEP 12, 2025', isCompleted: false),
+          buildTimelineItem(status: 'In Transit', date: 'SEP 14, 2025', isCompleted: false),
+          buildTimelineItem(status: 'Order Delivered', date: 'SEP 20, 2024', description: 'Your order has been Successfully Delivered', isCompleted: false, islast: true),
         ],
       ),
     );

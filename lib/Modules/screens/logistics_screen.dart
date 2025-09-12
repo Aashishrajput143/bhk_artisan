@@ -25,7 +25,7 @@ class LogisticsScreen extends ParentWidget {
     },
     {
       "orderId": "#110517",
-      "productName": "Blue Denim Jeans",
+      "productName": "Banarsi Silk Saree",
       "status": "Picked",
       "shipper": "Sunil Sharma",
       "recipient": "Priya Verma",

@@ -1,7 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/product_details_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
-import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -24,7 +23,7 @@ class ProductDetailScreen extends ParentWidget {
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: controller.rxRequestStatus.value == Status.LOADING
+                child: controller.getProductModel.value.data?.productName?.isEmpty ?? true
                     ? shimmerProductDetails(h, w)
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
