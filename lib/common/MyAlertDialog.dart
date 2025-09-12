@@ -42,35 +42,37 @@ class MyAlertDialog {
     );
   }
 
-  static void showDiscardChangesDialog() {
+  static void showAlertDialog({String? title, IconData? icon, String? subtitle, Function()? onPressed, String? buttonHint, Color? color}) {
     Get.dialog(
       AlertDialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         title: Row(
           children: [
-            Icon(Icons.warning_amber_rounded, color: appColors.brownDarkText, size: 30),
+            Icon(icon ?? Icons.warning_amber_rounded, color: appColors.brownDarkText, size: 30),
             const SizedBox(width: 8),
-            const Text("Discard Changes", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            Text(title ?? "Discard Changes", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ],
         ),
-        content: const Text("Are you sure you want to discard your changes?", style: TextStyle(fontSize: 14)),
+        content: Text(subtitle ?? "Are you sure you want to discard your changes?", style: TextStyle(fontSize: 14)),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextButton(
                 onPressed: () {
-                  Get.back(); 
+                  Get.back();
                 },
                 child: Text("CANCEL", style: TextStyle(color: appColors.brownDarkText)),
               ),
               TextButton(
-                onPressed: () {
-                  Get.back(); 
-                  Get.back();
-                },
-                child: Text("DISCARD", style: TextStyle(color: appColors.brownDarkText)),
+                onPressed:
+                    onPressed ??
+                    () {
+                      Get.back();
+                      Get.back();
+                    },
+                child: Text(buttonHint ?? "DISCARD", style: TextStyle(color: color ?? appColors.brownDarkText)),
               ),
             ],
           ),

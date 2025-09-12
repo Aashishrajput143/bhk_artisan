@@ -76,7 +76,7 @@ class EditProfile extends ParentWidget {
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, () => MyAlertDialog.showDiscardChangesDialog(), hint: "Cancel", radius: 30),
+                          commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, () => MyAlertDialog.showAlertDialog(), hint: "Cancel", radius: 30),
                           commonButton(
                             w * 0.3,
                             45,
@@ -102,7 +102,7 @@ class EditProfile extends ParentWidget {
         canPop: false,
         (didPop, result) async {
           if (!didPop) {
-            MyAlertDialog.showDiscardChangesDialog();
+            MyAlertDialog.showAlertDialog();
           }
         },
       ),

@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/Modules/controller/orderdetailscontroller.dart';
+import 'package:bhk_artisan/common/MyAlertDialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -36,12 +37,46 @@ class OrderDetailsPage extends ParentWidget {
           ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonButton(w * 0.44, 50, appColors.acceptColor, Colors.white, () =>controller.orderController.isAccepted[controller.orderController.index.value].value=true, hint: "Accept"),
-                commonButton(w * 0.44, 50, appColors.declineColor, Colors.white, () =>controller.orderController.isDeclined[controller.orderController.index.value].value=true, hint: "Decline"),
+                commonButton(
+                  w * 0.4,
+                  45,
+                  appColors.acceptColor,
+                  Colors.white,
+                  () => MyAlertDialog.showAlertDialog(
+                    onPressed: () {
+                      Get.back();
+                      controller.orderController.isAccepted[controller.orderController.index.value].value = true;
+                    },
+                    icon: Icons.inventory_2,
+                    title: "Accept Order",
+                    subtitle: "Are you Sure you want to accept this order?",
+                    color: appColors.acceptColor,
+                    buttonHint: "Accept",
+                  ),
+                  hint: "Accept",
+                ),
+                commonButton(
+                  w * 0.4,
+                  45,
+                  appColors.declineColor,
+                  Colors.white,
+                  () => MyAlertDialog.showAlertDialog(
+                    onPressed: () {
+                      Get.back();
+                      controller.orderController.isDeclined[controller.orderController.index.value].value = true;
+                    },
+                    icon: Icons.inventory_2,
+                    title: "Decline Order",
+                    subtitle: "Are you Sure you want to decline this order?",
+                    color: appColors.declineColor,
+                    buttonHint: "Decline",
+                  ),
+                  hint: "Decline",
+                ),
               ],
             )
           : controller.orderController.isAccepted[controller.orderController.index.value].value
-          ? commonButton(w * 0.44, 50, appColors.contentButtonBrown, Colors.white, () =>Get.toNamed(RoutesClass.uploadOrderImage), hint: "Mark As Completed")
+          ? commonButton(w * 0.44, 50, appColors.contentButtonBrown, Colors.white, () => Get.toNamed(RoutesClass.uploadOrderImage), hint: "Mark As Completed")
           : commonButton(w * 0.44, 50, appColors.contentBrownLinearColor1, appColors.contentPrimary, () {}, hint: "Declined"),
     );
   }

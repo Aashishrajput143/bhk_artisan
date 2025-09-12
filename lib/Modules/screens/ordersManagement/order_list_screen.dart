@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/common/MyAlertDialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -72,7 +73,7 @@ class OrderList extends ParentWidget {
     );
   }
 
-  Widget orderContent(double h, double w, int index, GetOrderController controller,{double hMargin = 8.0}) {
+  Widget orderContent(double h, double w, int index, GetOrderController controller, {double hMargin = 8.0}) {
     return GestureDetector(
       onTap: () {
         controller.index.value = index;
@@ -112,8 +113,42 @@ class OrderList extends ParentWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    commonButton(w * 0.4, 45, appColors.acceptColor, Colors.white, () => controller.isAccepted[index].value = true, hint: "Accept"),
-                    commonButton(w * 0.4, 45, appColors.declineColor, Colors.white, () => controller.isDeclined[index].value = true, hint: "Decline"),
+                    commonButton(
+                      w * 0.4,
+                      45,
+                      appColors.acceptColor,
+                      Colors.white,
+                      () => MyAlertDialog.showAlertDialog(
+                        onPressed: () {
+                          Get.back();
+                          controller.isAccepted[index].value = true;
+                        },
+                        icon: Icons.inventory_2,
+                        title: "Accept Order",
+                        subtitle: "Are you Sure you want to accept this order?",
+                        color: appColors.acceptColor,
+                        buttonHint: "Accept",
+                      ),
+                      hint: "Accept",
+                    ),
+                    commonButton(
+                      w * 0.4,
+                      45,
+                      appColors.declineColor,
+                      Colors.white,
+                      () => MyAlertDialog.showAlertDialog(
+                        onPressed: () {
+                          Get.back();
+                          controller.isDeclined[index].value = true;
+                        },
+                        icon: Icons.inventory_2,
+                        title: "Decline Order",
+                        subtitle: "Are you Sure you want to decline this order?",
+                        color: appColors.declineColor,
+                        buttonHint: "Decline",
+                      ),
+                      hint: "Decline",
+                    ),
                   ],
                 ),
               ],
@@ -124,6 +159,8 @@ class OrderList extends ParentWidget {
     );
   }
 }
+
+void showAlert() {}
 
 Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
   return Column(
