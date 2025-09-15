@@ -1,11 +1,65 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+
+class PriceFormatter {
+  static String formatPrice(price) {
+    if (price == null) {
+      return "0";
+    } else {
+      final NumberFormat formatter = NumberFormat("#,##,##0");
+      return formatter.format(price);
+    }
+  }
+}
+
+class MaxAmountInputFormatter extends TextInputFormatter {
+  final double maxAmount;
+
+  MaxAmountInputFormatter(this.maxAmount);
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue,
+      TextEditingValue newValue,
+      ) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+
+    double? newAmount = double.tryParse(newValue.text);
+
+    if (newAmount == null || newAmount > maxAmount) {
+      return oldValue;
+    }
+
+    return newValue;
+  }
+}
+
+class NoSpaceTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String newText = newValue.text.replaceAll(' ', '');
+
+    int cursorPosition = newValue.selection.baseOffset -
+        (newValue.text.length - newText.length);
+
+    cursorPosition = cursorPosition.clamp(0, newText.length);
+
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: cursorPosition),
+    );
+  }
+}
 
 class NoLeadingSpaceFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
+      TextEditingValue oldValue,
+      TextEditingValue newValue,
+      ) {
     if (newValue.text.startsWith(' ')) {
       final String trimedText = newValue.text.trimLeft();
 
@@ -25,11 +79,11 @@ class NoLeadingSpaceFormatter extends TextInputFormatter {
 class NoLeadingZeroFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
+      TextEditingValue oldValue,
+      TextEditingValue newValue,
+      ) {
     if (newValue.text.isNotEmpty && newValue.text.startsWith('0')) {
-      return oldValue; // Prevent the first digit from being zero
+      return oldValue;
     }
     return newValue;
   }
@@ -42,51 +96,63 @@ class EmailInputFormatter extends TextInputFormatter {
     final emailRegex = RegExp(r'^[a-zA-Z0-9@._-]*$');
 
     if (emailRegex.hasMatch(newValue.text)) {
-      return newValue; // Allows valid email characters
+      return newValue;
     }
-    return oldValue; // Ignores the invalid character
+    return oldValue;
   }
 }
 
 class RemoveTrailingPeriodsFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    // Replace multiple consecutive spaces with a single space
+      TextEditingValue oldValue,
+      TextEditingValue newValue,
+      ) {
+    bool isBackspace = newValue.text.length < oldValue.text.length;
+
+    if (isBackspace) {
+      return newValue;
+    }
+
     String newText = newValue.text.replaceAll(RegExp(r'\s+'), ' ');
 
-    // Remove trailing periods after each word
     newText = newText.replaceAllMapped(RegExp(r'(\w+)\.'), (match) {
       return match.group(1) ?? '';
     });
 
+    int baseOffset = newValue.selection.baseOffset;
+    int extentOffset = newValue.selection.extentOffset;
+
+    baseOffset = baseOffset > newText.length ? newText.length : baseOffset;
+    extentOffset = extentOffset > newText.length ? newText.length : extentOffset;
+
     return TextEditingValue(
       text: newText,
-      selection: newValue.selection.copyWith(
-        baseOffset: newText.length,
-        extentOffset: newText.length,
+      selection: TextSelection(
+        baseOffset: baseOffset,
+        extentOffset: extentOffset,
       ),
     );
   }
 }
 
+
+
+
 class RangeInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    // Ensure input is a valid number
     if (newValue.text.isEmpty) {
       return newValue;
     }
 
     final int? value = int.tryParse(newValue.text);
     if (value == null || value < 0 || value > 100) {
-      return oldValue; // If the value is not valid, keep the old value
+      return oldValue;
     }
 
-    return newValue; // Otherwise, allow the input
+    return newValue;
   }
 }
 
@@ -94,7 +160,6 @@ class EmojiInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    // Regular expression to match any emoji character
     final RegExp emojiRegex = RegExp(
         r'[\u{1F600}-\u{1F64F}]|' // Emoticons
         r'[\u{1F300}-\u{1F5FF}]|' // Miscellaneous Symbols and Pictographs
@@ -110,7 +175,6 @@ class EmojiInputFormatter extends TextInputFormatter {
         ,
         unicode: true);
 
-    // Remove any emoji characters from the new text
     String filteredText = newValue.text.replaceAll(emojiRegex, '');
 
     return TextEditingValue(
@@ -128,17 +192,16 @@ class SpecialCharacterValidator extends TextInputFormatter {
     if (allowedPattern.hasMatch(newValue.text)) {
       return newValue;
     }
-    return oldValue; // Reject changes with special characters
+    return oldValue;
   }
 }
 
 class NoDigitInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    // Use regular expression to remove any digits
+      TextEditingValue oldValue,
+      TextEditingValue newValue,
+      ) {
     String filteredText = newValue.text.replaceAll(RegExp(r'\d'), '');
     return TextEditingValue(
       text: filteredText,

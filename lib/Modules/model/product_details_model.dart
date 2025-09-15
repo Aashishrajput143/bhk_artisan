@@ -70,7 +70,7 @@ class Data {
       this.artisanId});
 
   Data.fromJson(Map<String, dynamic> json) {
-    productId = json['product_id'];
+    productId = json['productId'];
     productName = json['product_name'];
     description = json['description'];
     quantity = json['quantity'];
@@ -102,7 +102,7 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['product_id'] = productId;
+    data['productId'] = productId;
     data['product_name'] = productName;
     data['description'] = description;
     data['quantity'] = quantity;

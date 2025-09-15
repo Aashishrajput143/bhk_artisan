@@ -155,7 +155,7 @@ class ProductDetailScreen extends ParentWidget {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
         ),
         Text(
-          "Product ID: BHKP${controller.getProductModel.value.data?.productId ?? "0"}",
+          "Product ID: BHKP000${controller.getProductModel.value.data?.productId ?? "0"}",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPending),
         ),
         12.kH,

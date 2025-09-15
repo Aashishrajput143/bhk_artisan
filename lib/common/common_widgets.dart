@@ -39,13 +39,13 @@ void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setErr
           CommonMethods.showToast(errorResponse['message']);
         }
       } else {
-        //CommonMethods.showToast("An unexpected error occurred.");
+        CommonMethods.showToast("An unexpected error occurred.");
       }
     } else {
-      //CommonMethods.showToast(error.toString());
+      CommonMethods.showToast(error.toString());
     }
   } catch (e) {
-    //CommonMethods.showToast("An unexpected error occurred.");
+    CommonMethods.showToast("An unexpected error occurred.");
   }
 
   Utils.printLog("Error===> ${error.toString()}");

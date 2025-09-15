@@ -275,7 +275,7 @@ class HomeScreen extends ParentWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        commonNetworkImage(list?.images?.isNotEmpty == true ? list!.images!.first.imageUrl ?? "" : "", width: w * 0.4, height: 180, fit: BoxFit.cover,borderRadius: BorderRadius.circular(12)),
+        commonNetworkImage(list?.images?.isNotEmpty == true ? list!.images!.first.imageUrl ?? "" : "", width: w * 0.4, height: 180, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
         10.kH,
         Text(
           list?.productName ?? "",
@@ -444,9 +444,8 @@ class HomeScreen extends ParentWidget {
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(top: 20),
-            height: h * 0.3,
+          SizedBox(
+            height: h * 0.35,
             child: SfCartesianChart(
               backgroundColor: appColors.backgroundColor,
               primaryXAxis: CategoryAxis(
@@ -454,20 +453,25 @@ class HomeScreen extends ParentWidget {
                 interval: 1, // Show every month
                 labelRotation: 45, // Optional: Rotates text to prevent overlapping
               ),
-              // primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1.8),
-              //legend: Legend(isVisible: true),
+              //primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1.8),
+              legend: Legend(isVisible: true, toggleSeriesVisibility: false),
               tooltipBehavior: TooltipBehavior(enable: true),
               series: <CartesianSeries<Map<String, dynamic>, String>>[
                 ColumnSeries<Map<String, dynamic>, String>(
                   dataSource: controller.chartData,
                   xValueMapper: (Map<String, dynamic> sales, _) => sales['month'] as String,
-                  yValueMapper: (Map<String, dynamic> sales, _) => sales['sales'] as num,
-                  //name: 'Sales',
+                  yValueMapper: (Map<String, dynamic> sales, _) => controller.dropdownsold.value == "Product Sales" ? sales['sales'] as num : sales['unitsSold'] as num,
+                  name: controller.dropdownsold.value,
                   gradient: AppGradients.graphGradient,
                   dataLabelSettings: DataLabelSettings(isVisible: true, labelAlignment: ChartDataLabelAlignment.outer),
                   dataLabelMapper: (Map<String, dynamic> sales, _) {
-                    final value = sales['sales'] as num;
-                    return value != 0 ? value.toString() : null;
+                    if (controller.dropdownsold.value == "Product Sales") {
+                      final value = sales['sales'] as num;
+                      return value != 0 ? value.toString() : null;
+                    } else {
+                      final value = sales['unitsSold'] as num;
+                      return value != 0 ? value.toString() : null;
+                    }
                   },
                 ),
               ],

@@ -19,6 +19,8 @@ class Homecontroller extends GetxController {
 
   var screen = HomeScreen();
 
+  var isProductGraph = true.obs;
+
   var sliderController = CarouselSliderController();
   CommonScreenController commonController = Get.find();
   ProductController productController = Get.put(ProductController());
@@ -28,27 +30,27 @@ class Homecontroller extends GetxController {
   var greetings = "Good Morning".obs;
 
   var chartData = <Map<String, dynamic>>[
-    {"month": "Jan", "sales": 120},
-    {"month": "Feb", "sales": 150},
-    {"month": "Mar", "sales": 180},
-    {"month": "Apr", "sales": 100},
-    {"month": "May", "sales": 210},
-    {"month": "Jun", "sales": 160},
-    {"month": "Jul", "sales": 250},
-    {"month": "Aug", "sales": 300},
+    {"month": "Jan", "sales": 120, "unitsSold": 30},
+    {"month": "Feb", "sales": 150, "unitsSold": 40},
+    {"month": "Mar", "sales": 180, "unitsSold": 50},
+    {"month": "Apr", "sales": 100, "unitsSold": 20},
+    {"month": "May", "sales": 210, "unitsSold": 60},
+    {"month": "Jun", "sales": 160, "unitsSold": 45},
+    {"month": "Jul", "sales": 250, "unitsSold": 70},
+    {"month": "Aug", "sales": 300, "unitsSold": 80},
   ];
 
   int currentYear = DateTime.now().year;
   RxDouble scrollPosition = 0.0.obs;
   RxDouble maxScrollExtent = 0.0.obs;
   var dropdownmonth = 'Last 7 days'.obs;
-  var dropdownsold = 'Product sales'.obs;
+  var dropdownsold = 'Product Sales'.obs;
 
   var scrollController = ScrollController().obs;
 
   List<String> daysfilter = ['Last 7 days', 'Last 30 days', 'Last 12 months', 'This week', 'This month', 'Year to date'];
 
-  List<String> salesfilter = ['Product sales', 'Units sold'];
+  List<String> salesfilter = ['Product Sales', 'Units Sold'];
 
   void updateScrollPosition(double position, double maxExtent) {
     if (position == 0.0) {
@@ -58,9 +60,9 @@ class Homecontroller extends GetxController {
     maxScrollExtent.value = maxExtent;
   }
 
-  void initState(){
+  void initState() {
     setGreeting();
-    getProductApi("APPROVED", isLoader:getApprovedProductModel.value.data?.docs?.isEmpty ?? true? true : false);
+    getProductApi("APPROVED", isLoader: getApprovedProductModel.value.data?.docs?.isEmpty ?? true ? true : false);
   }
 
   void setGreeting() {
@@ -98,7 +100,7 @@ class Homecontroller extends GetxController {
     setGreeting();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (isDialog) {
-       screen.showSuccessDialog();
+        screen.showSuccessDialog();
       }
     });
   }

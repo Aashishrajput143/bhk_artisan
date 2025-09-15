@@ -332,7 +332,7 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
         ),
       ),
       8.kH,
-      Text("Upload up to 10 images to showcase your product. These images will be displayed during Auctions and social sharing. Please ensure each file is no larger than 2 MB, and use one of the supported formats: JPG, JPEG, or PNG.", style: TextStyle(color: Colors.grey[600])),
+      Text("Upload up to 10 Images to showcase your product during the Auctions and social sharing. Please ensure each file is no larger than 2 MB, and support formats: JPG, JPEG, or PNG.", style: TextStyle(color: Colors.grey[600],fontSize: 13)),
       20.kH,
       Text("Picked Files:"),
       Divider(),
@@ -343,8 +343,9 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
 
 Widget pickedfiles(double w, double h, AddProductController controller) {
   return SizedBox(
-    height: h * 0.27,
+    height: h - h*0.71,
     child: GridView.builder(
+      shrinkWrap: true,
       itemCount: controller.imagefiles.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 16),
       physics: const AlwaysScrollableScrollPhysics(),
