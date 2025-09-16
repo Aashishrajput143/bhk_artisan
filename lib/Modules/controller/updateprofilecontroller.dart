@@ -70,7 +70,7 @@ class UpdateProfileController extends GetxController {
     } else if (selectedCategory.value == null) {
       return "Please Select Your Category";
     } else if (communityController.value.text.isEmpty) {
-      return "Please Enter Your Community";
+      return "Please Enter Your Caste";
     } else if (introUploaded.value == null) {
       return "Please Upload Your Intro";
     }

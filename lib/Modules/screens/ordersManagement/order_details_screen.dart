@@ -22,7 +22,7 @@ class OrderDetailsPage extends ParentWidget {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(), 6.kH, orderCardHeader(), 6.kH, orderDescription(), 6.kH, orderRequirement(h, w)]),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(), 6.kH, orderCardHeader(), 6.kH, orderDescription(), 6.kH, orderRequirement(h, w, controller)]),
           ),
         ),
         bottomNavigationBar: bottomButtons(h, w, controller),
@@ -152,7 +152,7 @@ class OrderDetailsPage extends ParentWidget {
             children: [
               Image.asset(appImages.user, width: 30, height: 30, fit: BoxFit.fill),
               8.kW,
-              const Text('Order Description', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+              const Text('Product Description', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
             ],
           ),
           12.kH,
@@ -165,7 +165,7 @@ class OrderDetailsPage extends ParentWidget {
     );
   }
 
-  Widget orderRequirement(double h, double w) {
+  Widget orderRequirement(double h, double w, GetOrderDetailsController controller) {
     return orderCard(
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,7 +179,7 @@ class OrderDetailsPage extends ParentWidget {
           ),
           16.kH,
           Text(
-            "Product Description",
+            "Order Description",
             style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
           ),
           6.kH,
@@ -213,11 +213,46 @@ class OrderDetailsPage extends ParentWidget {
             style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
           ),
           12.kH,
+          if (controller.image.length > 1) orderImageCarousel(h, w, controller),
+          if (controller.image.length == 1)
+            Container(
+              decoration: BoxDecoration(color: appColors.referencebg, borderRadius: BorderRadius.circular(16)),
+              child: Image.asset(controller.image[0]),
+            ),
+          12.kH,
+        ],
+      ),
+    );
+  }
+
+  Widget orderImageCarousel(double h, double w, GetOrderDetailsController controller) {
+    return SizedBox(
+      height: 350,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
           Container(
             decoration: BoxDecoration(color: appColors.referencebg, borderRadius: BorderRadius.circular(16)),
-            child: Image.asset(appImages.product2),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: PageView.builder(
+                controller: controller.pageController,
+                itemCount: controller.images.length,
+                onPageChanged: controller.onPageChanged,
+                itemBuilder: (context, index) {
+                  return Image.asset(controller.images[index], fit: BoxFit.cover, width: w);
+                },
+              ),
+            ),
           ),
-          12.kH,
+          Positioned(
+            left: 8,
+            child: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: controller.goPrevious, color: Colors.black, iconSize: 30, splashRadius: 24),
+          ),
+          Positioned(
+            right: 8,
+            child: IconButton(icon: Icon(Icons.arrow_forward_ios), onPressed: controller.goNext, color: Colors.black, iconSize: 30, splashRadius: 24),
+          ),
         ],
       ),
     );

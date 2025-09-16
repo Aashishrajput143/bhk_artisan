@@ -8,6 +8,8 @@ import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../model/get_all_order_step_model.dart' show Data;
+
 class OrderListHistory extends ParentWidget {
   const OrderListHistory({super.key});
 
@@ -26,10 +28,11 @@ class OrderListHistory extends ParentWidget {
                     ? emptyScreen(w, h)
                     : Expanded(
                         child: ListView.builder(
-                          itemCount: 4,
+                          itemCount: controller.getAllOrderStepModel.value.data?.length??0,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            return orderContent(h, w, index, controller);
+                           final steps = controller.getAllOrderStepModel.value.data?[index];
+                            return orderContent(h, w, index, steps,controller);
                           },
                         ),
                       ),
@@ -71,7 +74,7 @@ class OrderListHistory extends ParentWidget {
     );
   }
 
-  Widget orderContent(double h, double w, int index, GetOrderController controller) {
+  Widget orderContent(double h, double w,int index, Data? steps, GetOrderController controller,) {
     return GestureDetector(
       onTap: () => Get.toNamed(RoutesClass.ordersdetails),
       child: Container(
@@ -87,9 +90,9 @@ class OrderListHistory extends ParentWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              orderCardHeader(),
+              orderCardHeader(steps),
               8.kH,
-              orderCardContent(index),
+              orderCardContent(steps),
               Divider(thickness: 1, color: Colors.grey[300]),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),

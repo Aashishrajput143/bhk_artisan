@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bhk_artisan/Modules/controller/home_controller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.dart';
@@ -222,7 +224,7 @@ class HomeScreen extends ParentWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 20.0, mainAxisSpacing: 7.0, childAspectRatio: 0.6),
-          itemCount: controller.getApprovedProductModel.value.data?.docs?.length ?? 0,
+          itemCount: min(4, controller.getApprovedProductModel.value.data?.docs?.length ?? 0),
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
@@ -260,11 +262,12 @@ class HomeScreen extends ParentWidget {
         ),
         10.kH,
         ListView.builder(
-          itemCount: 2,
+          itemCount: min(2, controller.getOrderController.getAllOrderStepModel.value.data?.length ?? 0),
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            return Obx(() => OrderList().orderContent(h, w, index, controller.getOrderController, hMargin: 0));
+            final steps = controller.getOrderController.getAllOrderStepModel.value.data?[index];
+            return Obx(() => OrderList().orderContent(h, w, index, steps, controller.getOrderController, hMargin: 0));
           },
         ),
       ],
@@ -298,81 +301,6 @@ class HomeScreen extends ParentWidget {
         Text(list?.subCategory?.categoryName ?? "", style: TextStyle(fontSize: 12, color: appColors.brownDarkText)),
         3.kH,
         Text(list?.material ?? "", style: TextStyle(color: appColors.contentPending, fontSize: 13)),
-      ],
-    );
-  }
-
-  Widget trendingProduct(double w) {
-    List product = [appImages.product1, appImages.product2, appImages.product3, appImages.product4, appImages.product5, appImages.product6];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Text('Top Trending Products', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-        ),
-        15.kH,
-        SizedBox(
-          height: 270,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: 6,
-            // itemCount: (controller.getTrendingProductModel.value.data?.docs?.length ?? 0) >= 8 ? 8 : (controller.getTrendingProductModel.value.data?.docs?.length ?? 0),
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  // Get.toNamed(RoutesClass.gotoProductDetailScreen(), arguments: {"productid": controller.getTrendingProductModel.value.data?.docs?[index].productId ?? 0});
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.asset(product[index], width: w * 0.3, height: 150, fit: BoxFit.contain),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        "product${index + 1}",
-                        // controller.getTrendingProductModel.value.data?.docs?[index].productName ?? "",
-                        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),
-                        textAlign: TextAlign.start,
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        "₹ 20$index",
-                        // "₹ ${controller.getTrendingProductModel.value.data?.docs?[index].variants?[(controller.getTrendingProductModel.value.data?.docs?[index].variants?.length ?? 0) - 1].sellingPrice ?? ""}",
-                        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "₹ 30$index",
-                            // "₹ ${controller.getTrendingProductModel.value.data?.docs?[index].variants?[(controller.getTrendingProductModel.value.data?.docs?[index].variants?.length ?? 0) - 1].mrp ?? ""}",
-                            style: const TextStyle(color: Color.fromARGB(198, 143, 142, 142), fontSize: 10, decoration: TextDecoration.lineThrough),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            "10% off",
-                            // '(${controller.getTrendingProductModel.value.data?.docs?[index].variants?[(controller.getTrendingProductModel.value.data?.docs?[index].variants?.length ?? 0) - 1].discount ?? ""})',
-                            style: const TextStyle(color: Color.fromARGB(198, 143, 142, 142), fontSize: 10),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
       ],
     );
   }

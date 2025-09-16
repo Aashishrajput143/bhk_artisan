@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/model/get_all_order_step_model.dart';
 import 'package:bhk_artisan/common/MyAlertDialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
@@ -16,6 +17,7 @@ class OrderList extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetOrderController controller = Get.put(GetOrderController());
+    controller.getAllOrderStepApi();
     return Obx(
       () => Stack(
         children: [
@@ -28,10 +30,11 @@ class OrderList extends ParentWidget {
                     ? emptyScreen(w, h)
                     : Expanded(
                         child: ListView.builder(
-                          itemCount: 4,
+                          itemCount: controller.getAllOrderStepModel.value.data?.length??0,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            return Obx(() => orderContent(h, w, index, controller));
+                           final steps = controller.getAllOrderStepModel.value.data?[index];
+                            return Obx(() => orderContent(h, w, index, steps,controller));
                           },
                         ),
                       ),
@@ -73,7 +76,7 @@ class OrderList extends ParentWidget {
     );
   }
 
-  Widget orderContent(double h, double w, int index, GetOrderController controller, {double hMargin = 8.0}) {
+  Widget orderContent(double h, double w,int index, Data? steps, GetOrderController controller, {double hMargin = 8.0}) {
     return GestureDetector(
       onTap: () {
         controller.index.value = index;
@@ -92,19 +95,19 @@ class OrderList extends ParentWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              orderCardHeader(),
+              orderCardHeader(steps),
               8.kH,
-              orderCardContent(index),
+              orderCardContent(steps),
               Divider(thickness: 1, color: Colors.grey[300]),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    buildOrderDetailColumn('Payment', '₹ 300.50'),
-                    buildOrderDetailColumn('Product ID', 'TST11414'),
-                    buildOrderDetailColumn('Order Qty.', '${index + 1}0'),
-                    if (controller.isAccepted[index].value || controller.isDeclined[index].value) buildOrderDetailColumn('Order Status', controller.isDeclined[index].value ? "Declined" : 'Approved', color: controller.isDeclined[index].value ? appColors.declineColor : appColors.acceptColor),
+                    buildOrderDetailColumn('Payment', '₹ ${steps?.proposedPrice??0}'),
+                    buildOrderDetailColumn('Product ID', steps?.product?.bhkProductId??"BHK000"),
+                    buildOrderDetailColumn('Order Qty.', '${steps?.product?.quantity??0}'),
+                    if (controller.isAccepted[index].value || controller.isDeclined[index].value) buildOrderDetailColumn('Order Status', controller.isDeclined[index].value ? "Declined" : 'Accepted', color: controller.isDeclined[index].value ? appColors.declineColor : appColors.acceptColor),
                   ],
                 ),
               ),
@@ -160,8 +163,6 @@ class OrderList extends ParentWidget {
   }
 }
 
-void showAlert() {}
-
 Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,68 +176,46 @@ Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
   );
 }
 
-Widget orderCardHeader() {
+Widget orderCardHeader(Data? steps) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Order ID #110516", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text("Order ID ORD000${steps?.id}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           Text("Order to be completed by 16 Mar, 02:21 PM", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
         ],
       ),
-      PopupMenuButton<String>(
-        color: appColors.popColor,
-        onSelected: (value) {
-          if (value == 'View Details') {
-            Get.toNamed(RoutesClass.gotoOrderDetailsScreen());
-          } else if (value == 'Track Order') {
-            Get.toNamed(RoutesClass.gotoOrderTrackingScreen());
-          } else if (value == 'View Invoice') {
-            // Handle invoice view
-          }
-        },
-        icon: Icon(Icons.more_vert, color: Colors.grey[700]),
-        itemBuilder: (BuildContext context) => [const PopupMenuItem(value: 'View Details', child: Text('View Details')), const PopupMenuItem(value: 'Track Order', child: Text('Track Order')), const PopupMenuItem(value: 'View Invoice', child: Text('View Invoice'))],
-      ),
+      // PopupMenuButton<String>(
+      //   color: appColors.popColor,
+      //   onSelected: (value) {
+      //     if (value == 'View Details') {
+      //       Get.toNamed(RoutesClass.gotoOrderDetailsScreen());
+      //     } else if (value == 'Track Order') {
+      //       Get.toNamed(RoutesClass.gotoOrderTrackingScreen());
+      //     } else if (value == 'View Invoice') {
+      //       // Handle invoice view
+      //     }
+      //   },
+      //   icon: Icon(Icons.more_vert, color: Colors.grey[700]),
+      //   itemBuilder: (BuildContext context) => [const PopupMenuItem(value: 'View Details', child: Text('View Details')), const PopupMenuItem(value: 'Track Order', child: Text('Track Order')), const PopupMenuItem(value: 'View Invoice', child: Text('View Invoice'))],
+      // ),
     ],
   );
 }
 
-Widget orderCardContent(int index) {
-  List product = [appImages.product1, appImages.product2, appImages.product3, appImages.product4, appImages.product5, appImages.product6];
+Widget orderCardContent(Data? steps) {
   return Row(
     children: [
-      ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(5),
-          color: Colors.grey.shade200,
-          child: Image.asset(
-            product[index],
-            height: 50,
-            width: 50,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) {
-              return const SizedBox(
-                width: 50,
-                height: 50,
-                child: Center(
-                  child: Text("No Image", style: TextStyle(fontSize: 11), textAlign: TextAlign.center),
-                ),
-              );
-            },
-          ),
-        ),
-      ),
+      commonNetworkImage(steps?.referenceImagesAddedByAdmin?.first??steps?.product?.images?.first.imageUrl??"",width: 60,height: 60,fit: BoxFit.cover,borderRadius: BorderRadius.circular(12)),
       12.kW,
       Expanded(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Pink Cotton T-shirt',
+            Text(
+              steps?.stepName??"Not Available",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
             ),
             4.kH,
@@ -244,7 +223,7 @@ Widget orderCardContent(int index) {
               children: [
                 Icon(Icons.circle, color: Colors.green, size: 8),
                 4.kW,
-                Text(index.isEven ? "Order Needs Action!" : "Order is Confirmed", style: TextStyle(color: Colors.green, fontSize: 11)),
+                Text(steps?.artisanAgreedStatus== "PENDING"? "Order Needs Action!" : "Order is Confirmed", style: TextStyle(color: Colors.green, fontSize: 11)),
               ],
             ),
             4.kH,

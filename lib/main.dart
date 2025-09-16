@@ -18,12 +18,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        theme: ThemeData(
-            fontFamily: 'Poppins', primaryColor: Color(appColors.colorPrimary)),
-        home: SplashScreen(),
-        getPages: RoutesClass.routes,
-        initialRoute: RoutesClass.gotoSplash(),
-        debugShowCheckedModeBanner: false,
+      builder: (context, child) {
+        // final systemScale = MediaQuery.of(context).textScaleFactor;
+        // print(systemScale);
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1)),
+          child: child!,
+        );
+      },
+      theme: ThemeData(fontFamily: 'Poppins', primaryColor: Color(appColors.colorPrimary)),
+      home: SplashScreen(),
+      getPages: RoutesClass.routes,
+      initialRoute: RoutesClass.gotoSplash(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
