@@ -28,7 +28,7 @@ class MyProducts extends ParentWidget {
               color: Colors.brown,
               onRefresh: () => controller.productRefresh("APPROVED"),
               child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? true
-                  ? shimmerMyProducts(w, h, addproduct: true)
+                  ? shimmerMyProducts(w, h)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(

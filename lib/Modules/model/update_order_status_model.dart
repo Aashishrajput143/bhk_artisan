@@ -12,10 +12,10 @@ class UpdateOrderStatusModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    data['message'] = this.message;
-    data['success'] = this.success;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    data['message'] = message;
+    data['success'] = success;
     return data;
   }
 }

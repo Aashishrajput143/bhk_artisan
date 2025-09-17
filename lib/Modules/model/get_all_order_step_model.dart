@@ -9,14 +9,14 @@ class GetAllOrderStepsModel {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -106,41 +106,41 @@ class Data {
     buildStatus = json['buildStatus'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-    product = json['product'] != null ? new Product.fromJson(json['product']) : null;
-    artisan = json['artisan'] != null ? new Artisan.fromJson(json['artisan']) : null;
+    product = json['product'] != null ? Product.fromJson(json['product']) : null;
+    artisan = json['artisan'] != null ? Artisan.fromJson(json['artisan']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['stepName'] = this.stepName;
-    data['description'] = this.description;
-    data['dueDate'] = this.dueDate;
-    data['stepNumber'] = this.stepNumber;
-    data['stepType'] = this.stepType;
-    data['artisanStartedStatus'] = this.artisanStartedStatus;
-    data['artisanAgreedStatus'] = this.artisanAgreedStatus;
-    data['agreedCostPerPiece'] = this.agreedCostPerPiece;
-    data['progressStatus'] = this.progressStatus;
-    data['progressPercentage'] = this.progressPercentage;
-    data['progress'] = this.progress;
-    data['referenceImagesAddedByAdmin'] = this.referenceImagesAddedByAdmin;
-    data['imagesAddedByArtisan'] = this.imagesAddedByArtisan;
-    data['adminReviewStatus'] = this.adminReviewStatus;
-    data['transitProvider'] = this.transitProvider;
-    data['transitTransactionId'] = this.transitTransactionId;
-    data['transitStatus'] = this.transitStatus;
-    data['proposedPrice'] = this.proposedPrice;
-    data['approvedPrice'] = this.approvedPrice;
-    data['adminRemarks'] = this.adminRemarks;
-    data['buildStatus'] = this.buildStatus;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    if (this.product != null) {
-      data['product'] = this.product!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['stepName'] = stepName;
+    data['description'] = description;
+    data['dueDate'] = dueDate;
+    data['stepNumber'] = stepNumber;
+    data['stepType'] = stepType;
+    data['artisanStartedStatus'] = artisanStartedStatus;
+    data['artisanAgreedStatus'] = artisanAgreedStatus;
+    data['agreedCostPerPiece'] = agreedCostPerPiece;
+    data['progressStatus'] = progressStatus;
+    data['progressPercentage'] = progressPercentage;
+    data['progress'] = progress;
+    data['referenceImagesAddedByAdmin'] = referenceImagesAddedByAdmin;
+    data['imagesAddedByArtisan'] = imagesAddedByArtisan;
+    data['adminReviewStatus'] = adminReviewStatus;
+    data['transitProvider'] = transitProvider;
+    data['transitTransactionId'] = transitTransactionId;
+    data['transitStatus'] = transitStatus;
+    data['proposedPrice'] = proposedPrice;
+    data['approvedPrice'] = approvedPrice;
+    data['adminRemarks'] = adminRemarks;
+    data['buildStatus'] = buildStatus;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    if (product != null) {
+      data['product'] = product!.toJson();
     }
-    if (this.artisan != null) {
-      data['artisan'] = this.artisan!.toJson();
+    if (artisan != null) {
+      data['artisan'] = artisan!.toJson();
     }
     return data;
   }
@@ -223,37 +223,37 @@ class Product {
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
-        images!.add(new Images.fromJson(v));
+        images!.add(Images.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['productId'] = this.productId;
-    data['bhkProductId'] = this.bhkProductId;
-    data['product_name'] = this.productName;
-    data['description'] = this.description;
-    data['productPricePerPiece'] = this.productPricePerPiece;
-    data['quantity'] = this.quantity;
-    data['material'] = this.material;
-    data['discount'] = this.discount;
-    data['netWeight'] = this.netWeight;
-    data['dimension'] = this.dimension;
-    data['product_status'] = this.productStatus;
-    data['admin_approval_status'] = this.adminApprovalStatus;
-    data['adminRemarks'] = this.adminRemarks;
-    data['createdByRole'] = this.createdByRole;
-    data['timeToMake'] = this.timeToMake;
-    data['texture'] = this.texture;
-    data['washCare'] = this.washCare;
-    data['artUsed'] = this.artUsed;
-    data['patternUsed'] = this.patternUsed;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['build_status'] = this.buildStatus;
-    if (this.images != null) {
-      data['images'] = this.images!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['productId'] = productId;
+    data['bhkProductId'] = bhkProductId;
+    data['product_name'] = productName;
+    data['description'] = description;
+    data['productPricePerPiece'] = productPricePerPiece;
+    data['quantity'] = quantity;
+    data['material'] = material;
+    data['discount'] = discount;
+    data['netWeight'] = netWeight;
+    data['dimension'] = dimension;
+    data['product_status'] = productStatus;
+    data['admin_approval_status'] = adminApprovalStatus;
+    data['adminRemarks'] = adminRemarks;
+    data['createdByRole'] = createdByRole;
+    data['timeToMake'] = timeToMake;
+    data['texture'] = texture;
+    data['washCare'] = washCare;
+    data['artUsed'] = artUsed;
+    data['patternUsed'] = patternUsed;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['build_status'] = buildStatus;
+    if (images != null) {
+      data['images'] = images!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -279,13 +279,13 @@ class Images {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['imageId'] = this.imageId;
-    data['imageUrl'] = this.imageUrl;
-    data['imageOrder'] = this.imageOrder;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['productId'] = this.productId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['imageId'] = imageId;
+    data['imageUrl'] = imageUrl;
+    data['imageOrder'] = imageOrder;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['productId'] = productId;
     return data;
   }
 }
@@ -299,8 +299,8 @@ class Artisan {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
     return data;
   }
 }

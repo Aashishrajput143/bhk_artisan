@@ -1,8 +1,10 @@
-import 'package:bhk_artisan/Modules/controller/orderdetailscontroller.dart';
+import 'package:bhk_artisan/Modules/controller/get_order_controller.dart';
+import 'package:bhk_artisan/Modules/model/get_all_order_step_model.dart';
 import 'package:bhk_artisan/common/MyAlertDialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -14,26 +16,26 @@ class OrderDetailsPage extends ParentWidget {
 
   @override
   Widget buildingView(BuildContext context, double h, double w) {
-    GetOrderDetailsController controller = Get.put(GetOrderDetailsController());
-    return Obx(
-      () => Scaffold(
-        backgroundColor: appColors.backgroundColor,
-        appBar: commonAppBar("Order Details"),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(), 6.kH, orderCardHeader(), 6.kH, orderDescription(), 6.kH, orderRequirement(h, w, controller)]),
-          ),
+    GetOrderController controller  = Get.put(GetOrderController());
+    controller.currentIndex.value=0;
+    final steps = controller.getAllOrderStepModel.value.data?[controller.index.value];
+    return Scaffold(
+      backgroundColor: appColors.backgroundColor,
+      appBar: commonAppBar("Order Details"),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(steps), 6.kH, orderCardHeader(steps), 6.kH, orderDescription(steps), 6.kH, orderRequirement(h, w, steps,controller)]),
         ),
-        bottomNavigationBar: bottomButtons(h, w, controller),
       ),
+      bottomNavigationBar: bottomButtons(h, w, steps, controller),
     );
   }
 
-  Widget bottomButtons(double h, double w, GetOrderDetailsController controller) {
+  Widget bottomButtons(double h, double w, Data? steps, GetOrderController controller) {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.03),
-      child: (!controller.orderController.isAccepted[controller.orderController.index.value].value && !controller.orderController.isDeclined[controller.orderController.index.value].value)
+      child: (steps?.artisanAgreedStatus == OrderStatus.PENDING.name)
           ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -45,7 +47,7 @@ class OrderDetailsPage extends ParentWidget {
                   () => MyAlertDialog.showAlertDialog(
                     onPressed: () {
                       Get.back();
-                      controller.orderController.isAccepted[controller.orderController.index.value].value = true;
+                      controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name, steps?.id);
                     },
                     icon: Icons.inventory_2,
                     title: "Accept Order",
@@ -63,7 +65,7 @@ class OrderDetailsPage extends ParentWidget {
                   () => MyAlertDialog.showAlertDialog(
                     onPressed: () {
                       Get.back();
-                      controller.orderController.isDeclined[controller.orderController.index.value].value = true;
+                      controller.updateOrderStatusApi(OrderStatus.REJECTED.name, steps?.id);
                     },
                     icon: Icons.inventory_2,
                     title: "Decline Order",
@@ -75,22 +77,22 @@ class OrderDetailsPage extends ParentWidget {
                 ),
               ],
             )
-          : controller.orderController.isAccepted[controller.orderController.index.value].value
+          : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
           ? commonButton(w * 0.44, 50, appColors.contentButtonBrown, Colors.white, () => Get.toNamed(RoutesClass.uploadOrderImage), hint: "Mark As Completed")
           : commonButton(w * 0.44, 50, appColors.contentBrownLinearColor1, appColors.contentPrimary, () {}, hint: "Declined"),
     );
   }
 
-  Widget orderStatus() {
+  Widget orderStatus(Data? steps) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          commonRow("Order Status", "Pending", color2: appColors.brownDarkText, fontSize2: 17, color: appColors.contentPrimary),
+          commonRow("Order Status", steps?.artisanAgreedStatus == OrderStatus.PENDING.name?OrderStatus.PENDING.displayText:steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name?OrderStatus.ACCEPTED.displayText:OrderStatus.REJECTED.displayText, color2:steps?.artisanAgreedStatus == OrderStatus.PENDING.name? appColors.brownDarkText:steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name?appColors.acceptColor:appColors.declineColor, fontSize2: 17, color: appColors.contentPrimary),
           16.kH,
           commonRow("Time Remaining", "Order Value", color: appColors.contentSecondary, fontweight: FontWeight.w500, fontSize: 15, fontSize2: 15, color2: appColors.contentSecondary, fontweight2: FontWeight.w500),
           6.kH,
-          commonRow("10 Days", "₹ 300.50", color: appColors.contentPrimary, fontSize: 17, fontweight: FontWeight.bold, color2: appColors.contentPrimary, fontSize2: 17, fontweight2: FontWeight.bold),
+          commonRow("10 Days", "₹ ${steps?.proposedPrice ?? 0}", color: appColors.contentPrimary, fontSize: 17, fontweight: FontWeight.bold, color2: appColors.contentPrimary, fontSize2: 17, fontweight2: FontWeight.bold),
         ],
       ),
     );
@@ -114,7 +116,7 @@ class OrderDetailsPage extends ParentWidget {
     }
   }
 
-  Widget orderCardHeader() {
+  Widget orderCardHeader(Data? steps) {
     return orderCard(
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,23 +129,23 @@ class OrderDetailsPage extends ParentWidget {
             ],
           ),
           16.kH,
-          commonRow("Order ID", "ORD-2024-001", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
+          commonRow("Order ID", "ORD000${steps?.id}", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           6.kH,
-          commonRow("Product", "Custom Ceramic Vase", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
+          commonRow("Product", steps?.stepName??"Not Available", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           6.kH,
-          commonRow("Product ID", "BHKP00016", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
+          commonRow("Product ID", steps?.product?.bhkProductId??"Not Available", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           6.kH,
           commonRow("Order Assigned", "Aug 20, 2025", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           6.kH,
           commonRow("Due Date", "Oct 15, 2025", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
-          6.kH,
-          commonRow("Priority", "High", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.declineColor, fontweight2: FontWeight.bold),
+          //6.kH,
+          //commonRow("Priority", "High", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.declineColor, fontweight2: FontWeight.bold),
         ],
       ),
     );
   }
 
-  Widget orderDescription() {
+  Widget orderDescription(Data? steps) {
     return orderCard(
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +159,7 @@ class OrderDetailsPage extends ParentWidget {
           ),
           12.kH,
           Text(
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, ",
+            steps?.product?.description??"Not Available",
             style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: appColors.contentPrimary),
           ),
         ],
@@ -165,7 +167,7 @@ class OrderDetailsPage extends ParentWidget {
     );
   }
 
-  Widget orderRequirement(double h, double w, GetOrderDetailsController controller) {
+  Widget orderRequirement(double h, double w, Data? steps,GetOrderController controller) {
     return orderCard(
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,11 +215,11 @@ class OrderDetailsPage extends ParentWidget {
             style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
           ),
           12.kH,
-          if (controller.image.length > 1) orderImageCarousel(h, w, controller),
-          if (controller.image.length == 1)
+          if ((steps?.referenceImagesAddedByAdmin?.length??0) > 1) orderImageCarousel(h, w, steps,controller),
+          if ((steps?.referenceImagesAddedByAdmin?.length??0) == 1)
             Container(
               decoration: BoxDecoration(color: appColors.referencebg, borderRadius: BorderRadius.circular(16)),
-              child: Image.asset(controller.image[0]),
+              child: commonNetworkImage(steps?.referenceImagesAddedByAdmin?[0]??''),
             ),
           12.kH,
         ],
@@ -225,7 +227,7 @@ class OrderDetailsPage extends ParentWidget {
     );
   }
 
-  Widget orderImageCarousel(double h, double w, GetOrderDetailsController controller) {
+  Widget orderImageCarousel(double h, double w, Data? steps,GetOrderController controller) {
     return SizedBox(
       height: 350,
       child: Stack(
@@ -237,10 +239,10 @@ class OrderDetailsPage extends ParentWidget {
               borderRadius: BorderRadius.circular(16),
               child: PageView.builder(
                 controller: controller.pageController,
-                itemCount: controller.images.length,
+                itemCount: steps?.referenceImagesAddedByAdmin?.length,
                 onPageChanged: controller.onPageChanged,
                 itemBuilder: (context, index) {
-                  return Image.asset(controller.images[index], fit: BoxFit.cover, width: w);
+                  return commonNetworkImage(steps?.referenceImagesAddedByAdmin?[index]??"",fit: BoxFit.cover, width: w);
                 },
               ),
             ),
@@ -251,7 +253,7 @@ class OrderDetailsPage extends ParentWidget {
           ),
           Positioned(
             right: 8,
-            child: IconButton(icon: Icon(Icons.arrow_forward_ios), onPressed: controller.goNext, color: Colors.black, iconSize: 30, splashRadius: 24),
+            child: IconButton(icon: Icon(Icons.arrow_forward_ios), onPressed:()=> controller.goNext(steps?.referenceImagesAddedByAdmin?.length??0), color: Colors.black, iconSize: 30, splashRadius: 24),
           ),
         ],
       ),

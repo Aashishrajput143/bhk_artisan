@@ -40,7 +40,7 @@ class HomeScreen extends ParentWidget {
                       commonCollection(h, w, controller),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, getRecentOrder(w, h, controller), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false ? product(w, controller) : shimmerProduct(w), 20.kH]),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, controller.getOrderController.getAllOrderStepModel.value.data?.isNotEmpty ?? false ? getRecentOrder(w, h, controller):shimmerList(w, h*0.2), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false ? product(w, controller) : shimmerProduct(w), 20.kH]),
                       ),
                     ],
                   ),
@@ -48,7 +48,7 @@ class HomeScreen extends ParentWidget {
               ),
             ),
           ),
-          //progressBarTransparent(controller.commonController.rxRequestStatus.value == Status.LOADING, h, w),
+          //progressBarTransparent(controller.getOrderController.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
     );
@@ -267,7 +267,7 @@ class HomeScreen extends ParentWidget {
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final steps = controller.getOrderController.getAllOrderStepModel.value.data?[index];
-            return Obx(() => OrderList().orderContent(h, w, index, steps, controller.getOrderController, hMargin: 0));
+            return OrderList().orderContent(h, w, index, steps, controller.getOrderController);
           },
         ),
       ],

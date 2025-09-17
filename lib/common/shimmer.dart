@@ -124,7 +124,7 @@ PreferredSizeWidget shimmerAppBarHome(double w) {
   );
 }
 
-Widget shimmerMyProducts(double w, double h, {bool addproduct = false}) {
+Widget shimmerMyProducts(double w, double h) {
   return SizedBox(
     height: h,
     child: Padding(
@@ -284,6 +284,39 @@ Widget shimmerAddressScreen(double h, double w) {
           ),
         );
       },
+    ),
+  );
+}
+
+Widget shimmerRoundedLine(double w, double h) {
+  return Shimmer.fromColors(
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+    child: Container(
+      width: w,
+      height: h,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+    ),
+  );
+}
+
+Widget shimmerList(double w, double h,{int list = 2}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: List.generate(
+      list,
+      (index) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6.0),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: w,
+            height: h,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+          ),
+        ),
+      ),
     ),
   );
 }

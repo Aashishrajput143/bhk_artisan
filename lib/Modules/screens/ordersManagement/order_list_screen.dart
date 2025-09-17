@@ -1,8 +1,10 @@
 import 'package:bhk_artisan/Modules/model/get_all_order_step_model.dart';
 import 'package:bhk_artisan/common/MyAlertDialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -23,25 +25,27 @@ class OrderList extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                controller.hasData.value
-                    ? emptyScreen(w, h)
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: controller.getAllOrderStepModel.value.data?.length??0,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                           final steps = controller.getAllOrderStepModel.value.data?[index];
-                            return Obx(() => orderContent(h, w, index, steps,controller));
-                          },
-                        ),
-                      ),
-              ],
+            body: RefreshIndicator(
+              color: Colors.brown,
+              onRefresh: () => controller.ordersRefresh(),
+              child: controller.getAllOrderStepModel.value.data?.isEmpty ?? true
+                  ? shimmerList(w, h * 0.2, list: 3)
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: controller.getAllOrderStepModel.value.data?.isNotEmpty ?? true
+                          ? ListView.builder(
+                            itemCount: controller.getAllOrderStepModel.value.data?.length ?? 0,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final steps = controller.getAllOrderStepModel.value.data?[index];
+                              return orderContent(h, w, index, steps, controller);
+                            },
+                          )
+                          : emptyScreen(w, h),
+                    ),
             ),
           ),
-          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),
+          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
     );
@@ -76,14 +80,14 @@ class OrderList extends ParentWidget {
     );
   }
 
-  Widget orderContent(double h, double w,int index, Data? steps, GetOrderController controller, {double hMargin = 8.0}) {
+  Widget orderContent(double h, double w, int index, Data? steps, GetOrderController controller) {
     return GestureDetector(
       onTap: () {
         controller.index.value = index;
         Get.toNamed(RoutesClass.ordersdetails);
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: hMargin),
+        margin: EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(16),
@@ -104,14 +108,14 @@ class OrderList extends ParentWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    buildOrderDetailColumn('Payment', '₹ ${steps?.proposedPrice??0}'),
-                    buildOrderDetailColumn('Product ID', steps?.product?.bhkProductId??"BHK000"),
-                    buildOrderDetailColumn('Order Qty.', '${steps?.product?.quantity??0}'),
-                    if (controller.isAccepted[index].value || controller.isDeclined[index].value) buildOrderDetailColumn('Order Status', controller.isDeclined[index].value ? "Declined" : 'Accepted', color: controller.isDeclined[index].value ? appColors.declineColor : appColors.acceptColor),
+                    buildOrderDetailColumn('Payment', '₹ ${steps?.proposedPrice ?? 0}'),
+                    buildOrderDetailColumn('Product ID', steps?.product?.bhkProductId ?? "BHK000"),
+                    buildOrderDetailColumn('Order Qty.', '${steps?.product?.quantity ?? 0}'),
+                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name) buildOrderDetailColumn('Order Status', steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name ? OrderStatus.ACCEPTED.displayText : OrderStatus.REJECTED.displayText, color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name ? appColors.acceptColor : appColors.declineColor),
                   ],
                 ),
               ),
-              if (!controller.isAccepted[index].value && !controller.isDeclined[index].value) ...[
+              if (steps?.artisanAgreedStatus == OrderStatus.PENDING.name) ...[
                 4.kH,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,6 +129,7 @@ class OrderList extends ParentWidget {
                         onPressed: () {
                           Get.back();
                           controller.isAccepted[index].value = true;
+                          controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name, steps?.id);
                         },
                         icon: Icons.inventory_2,
                         title: "Accept Order",
@@ -143,6 +148,7 @@ class OrderList extends ParentWidget {
                         onPressed: () {
                           Get.back();
                           controller.isDeclined[index].value = true;
+                          controller.updateOrderStatusApi(OrderStatus.REJECTED.name, steps?.id);
                         },
                         icon: Icons.inventory_2,
                         title: "Decline Order",
@@ -187,20 +193,6 @@ Widget orderCardHeader(Data? steps) {
           Text("Order to be completed by 16 Mar, 02:21 PM", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
         ],
       ),
-      // PopupMenuButton<String>(
-      //   color: appColors.popColor,
-      //   onSelected: (value) {
-      //     if (value == 'View Details') {
-      //       Get.toNamed(RoutesClass.gotoOrderDetailsScreen());
-      //     } else if (value == 'Track Order') {
-      //       Get.toNamed(RoutesClass.gotoOrderTrackingScreen());
-      //     } else if (value == 'View Invoice') {
-      //       // Handle invoice view
-      //     }
-      //   },
-      //   icon: Icon(Icons.more_vert, color: Colors.grey[700]),
-      //   itemBuilder: (BuildContext context) => [const PopupMenuItem(value: 'View Details', child: Text('View Details')), const PopupMenuItem(value: 'Track Order', child: Text('Track Order')), const PopupMenuItem(value: 'View Invoice', child: Text('View Invoice'))],
-      // ),
     ],
   );
 }
@@ -208,14 +200,14 @@ Widget orderCardHeader(Data? steps) {
 Widget orderCardContent(Data? steps) {
   return Row(
     children: [
-      commonNetworkImage(steps?.referenceImagesAddedByAdmin?.first??steps?.product?.images?.first.imageUrl??"",width: 60,height: 60,fit: BoxFit.cover,borderRadius: BorderRadius.circular(12)),
+      commonNetworkImage(steps?.referenceImagesAddedByAdmin?.first ?? steps?.product?.images?.first.imageUrl ?? "", width: 60, height: 60, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
       12.kW,
       Expanded(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              steps?.stepName??"Not Available",
+              steps?.stepName ?? "Not Available",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
             ),
             4.kH,
@@ -223,7 +215,7 @@ Widget orderCardContent(Data? steps) {
               children: [
                 Icon(Icons.circle, color: Colors.green, size: 8),
                 4.kW,
-                Text(steps?.artisanAgreedStatus== "PENDING"? "Order Needs Action!" : "Order is Confirmed", style: TextStyle(color: Colors.green, fontSize: 11)),
+                Text(steps?.artisanAgreedStatus == OrderStatus.PENDING.toString() ? "Order Needs Action!" : "Order is Confirmed", style: TextStyle(color: Colors.green, fontSize: 11)),
               ],
             ),
             4.kH,
