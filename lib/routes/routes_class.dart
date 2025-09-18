@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 
 import '../Modules/screens/Terms_conditions.dart.dart';
 import '../Modules/screens/dashboardManagement/notifications.dart';
-import '../Modules/screens/faq.dart';
+import '../Modules/screens/support_screen.dart';
 import '../Modules/screens/login_screen.dart';
 import '../Modules/screens/ordersManagement/order_details_screen.dart';
 import '../Modules/screens/ordersManagement/trackingorder.dart';
@@ -46,7 +46,7 @@ class RoutesClass {
 
   static String termscondition = '/termscondition';
   static String privacypolicy = '/privacypolicy';
-  static String faq = '/faq';
+  static String support = '/support';
 
   //BR1
   static String gotoSplash() => splash;
@@ -65,7 +65,7 @@ class RoutesClass {
   static String gotoViewProfileScreen() => viewprofile;
   static String gotoTermsConditionScreen() => termscondition;
   static String gotoPrivacyPolicyScreen() => privacypolicy;
-  static String gotoFAQScreen() => faq;
+  static String gotoSupportScreen() => support;
   static String gotoAadharVerificationScreen() => aadharVerification;
   static String gotoAddressesScreen() => addresses;
   static String gotoVideoRecorder() => videoRecorder;
@@ -92,6 +92,6 @@ class RoutesClass {
     GetPage(name: editprofile, page: () => EditProfile(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: termscondition, page: () => TermsConditions(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: privacypolicy, page: () => PrivacyPolicy(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
-    GetPage(name: faq, page: () => FAQ(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
+    GetPage(name: support, page: () => SupportScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
   ];
 }

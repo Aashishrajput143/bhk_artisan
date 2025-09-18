@@ -28,6 +28,7 @@ class AppImages {
   String get hammer =>'assets/images/hammer.png';
   String get check =>'assets/images/check.png';
   String get cubeBox =>'assets/images/cube_box.png';
+  String get support =>'assets/images/support.png';
   
 
 

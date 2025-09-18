@@ -22,6 +22,7 @@ class SettingProfile extends ParentWidget {
               buildProfileOptionCard("Edit Profile", 'Edit, or Change your Profile', Icons.edit, () => Get.toNamed(RoutesClass.editprofile)),
               buildProfileOptionCard("Delete Account", "Remove your account permanently", Icons.delete, () {}),
               buildProfileOptionCard("Verify Aadhaar", "Securely link your Aadhaar for verification", Icons.verified, () => Get.toNamed(RoutesClass.aadharVerification)),
+              buildProfileOptionCard("Need Assistance", "Get the help you need quickly and easily", Icons.message, () => Get.toNamed(RoutesClass.support)),
             ],
           ),
         ),
