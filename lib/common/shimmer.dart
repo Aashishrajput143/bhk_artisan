@@ -125,59 +125,55 @@ PreferredSizeWidget shimmerAppBarHome(double w) {
 }
 
 Widget shimmerMyProducts(double w, double h) {
-  return SizedBox(
-    height: h,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: 6,
-        itemBuilder: (context, index) {
-          return Shimmer.fromColors(
-            baseColor: Colors.grey.shade300,
-            highlightColor: Colors.grey.shade100,
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 8.0),
-              decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(10)),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 100,
-                    height: 115,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0)),
+  return Expanded(
+    child: ListView.builder(
+      shrinkWrap: true,
+      itemCount: 6,
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(10)),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 100,
+                  height: 115,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0)),
+                  ),
+                ),
+                10.kW,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(9.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(width: w * 0.4, height: 14, color: Colors.grey),
+                        5.kH,
+                        Container(width: w * 0.3, height: 12, color: Colors.grey),
+                        5.kH,
+                        Row(
+                          children: [
+                            Container(width: 60, height: 20, color: Colors.grey),
+                            8.kW,
+                            Container(width: 60, height: 20, color: Colors.grey),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  10.kW,
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(9.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(width: w * 0.4, height: 14, color: Colors.grey),
-                          5.kH,
-                          Container(width: w * 0.3, height: 12, color: Colors.grey),
-                          5.kH,
-                          Row(
-                            children: [
-                              Container(width: 60, height: 20, color: Colors.grey),
-                              8.kW,
-                              Container(width: 60, height: 20, color: Colors.grey),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     ),
   );
 }
@@ -301,19 +297,21 @@ Widget shimmerRoundedLine(double w, double h) {
 }
 
 Widget shimmerList(double w, double h,{int list = 2}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: List.generate(
-      list,
-      (index) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6.0),
-        child: Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Container(
-            width: w,
-            height: h,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+  return SingleChildScrollView(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(
+        list,
+        (index) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6.0),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: w,
+              height: h,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+            ),
           ),
         ),
       ),

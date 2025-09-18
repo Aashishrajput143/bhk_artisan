@@ -27,23 +27,21 @@ class HomeScreen extends ParentWidget {
       () => Stack(
         children: [
           Scaffold(
+            backgroundColor: appColors.backgroundColor,
             appBar: controller.commonController.profileData.value.data?.firstName?.isNotEmpty ?? false ? appBarHome(controller) : shimmerAppBarHome(w),
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: controller.dashboardRefresh,
-              child: Container(
-                color: appColors.backgroundColor,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      commonCollection(h, w, controller),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, controller.getOrderController.getAllOrderStepModel.value.data?.isNotEmpty ?? false ? getRecentOrder(w, h, controller):shimmerList(w, h*0.2), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false ? product(w, controller) : shimmerProduct(w), 20.kH]),
-                      ),
-                    ],
-                  ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    commonCollection(h, w, controller),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, controller.getOrderController.getAllActiveOrderStepModel.value.data?.isEmpty ?? false ? getRecentOrder(w, h, controller):shimmerList(w, h*0.2), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false ? product(w, controller) : shimmerProduct(w), 20.kH]),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -200,7 +198,7 @@ class HomeScreen extends ParentWidget {
   }
 
   Widget product(double w, Homecontroller controller) {
-    return Column(
+    return controller.getApprovedProductModel.value.data?.docs?.isNotEmpty??false? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
@@ -237,11 +235,11 @@ class HomeScreen extends ParentWidget {
           },
         ),
       ],
-    );
+    ):SizedBox();
   }
 
   Widget getRecentOrder(double w, double h, Homecontroller controller) {
-    return Column(
+    return controller.getOrderController.getAllActiveOrderStepModel.value.data?.isNotEmpty??false? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
@@ -262,16 +260,16 @@ class HomeScreen extends ParentWidget {
         ),
         10.kH,
         ListView.builder(
-          itemCount: min(2, controller.getOrderController.getAllOrderStepModel.value.data?.length ?? 0),
+          itemCount: min(2, controller.getOrderController.getAllActiveOrderStepModel.value.data?.length ?? 0),
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            final steps = controller.getOrderController.getAllOrderStepModel.value.data?[index];
+            final steps = controller.getOrderController.getAllActiveOrderStepModel.value.data?[index];
             return OrderList().orderContent(h, w, index, steps, controller.getOrderController);
           },
         ),
       ],
-    );
+    ):SizedBox();
   }
 
   Widget productCard(double w, ProductDocs? list) {

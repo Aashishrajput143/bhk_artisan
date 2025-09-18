@@ -28,20 +28,20 @@ class OrderList extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.ordersRefresh(),
-              child: controller.getAllOrderStepModel.value.data?.isEmpty ?? true
-                  ? shimmerList(w, h * 0.2, list: 3)
+              child: controller.getAllActiveOrderStepModel.value.data?.isEmpty ?? false
+                  ? emptyScreen(w, h)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: controller.getAllOrderStepModel.value.data?.isNotEmpty ?? true
+                      child: controller.getAllActiveOrderStepModel.value.data?.isNotEmpty ?? false
                           ? ListView.builder(
-                            itemCount: controller.getAllOrderStepModel.value.data?.length ?? 0,
+                            itemCount: controller.getAllActiveOrderStepModel.value.data?.length ?? 0,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              final steps = controller.getAllOrderStepModel.value.data?[index];
+                              final steps = controller.getAllActiveOrderStepModel.value.data?[index];
                               return orderContent(h, w, index, steps, controller);
                             },
                           )
-                          : emptyScreen(w, h),
+                          : shimmerList(w, h * 0.2, list: 4)
                     ),
             ),
           ),
@@ -128,7 +128,6 @@ class OrderList extends ParentWidget {
                       () => MyAlertDialog.showAlertDialog(
                         onPressed: () {
                           Get.back();
-                          controller.isAccepted[index].value = true;
                           controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name, steps?.id);
                         },
                         icon: Icons.inventory_2,
@@ -147,7 +146,6 @@ class OrderList extends ParentWidget {
                       () => MyAlertDialog.showAlertDialog(
                         onPressed: () {
                           Get.back();
-                          controller.isDeclined[index].value = true;
                           controller.updateOrderStatusApi(OrderStatus.REJECTED.name, steps?.id);
                         },
                         icon: Icons.inventory_2,

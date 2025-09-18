@@ -121,7 +121,7 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
     Utils.savePreferenceValues(Constants.accessToken, "${verifyOTPData.value.data?.accessToken}");
 
     Utils.savePreferenceValues(Constants.email, "${verifyOTPData.value.data?.email}");
-    if ((value.data?.isNewUser??true) || (value.data?.name?.isEmpty??true)) {
+    if ((value.data?.isNewUser??true) && (value.data?.name?.isEmpty??true)) {
       Utils.setBoolPreferenceValues(Constants.isNewUser, true);
       Get.offAllNamed(RoutesClass.editprofile, arguments: {"isNewUser": true});
     } else {

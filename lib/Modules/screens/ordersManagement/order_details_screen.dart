@@ -18,7 +18,7 @@ class OrderDetailsPage extends ParentWidget {
   Widget buildingView(BuildContext context, double h, double w) {
     GetOrderController controller  = Get.put(GetOrderController());
     controller.currentIndex.value=0;
-    final steps = controller.getAllOrderStepModel.value.data?[controller.index.value];
+    final steps = controller.getAllActiveOrderStepModel.value.data?[controller.index.value];
     return Scaffold(
       backgroundColor: appColors.backgroundColor,
       appBar: commonAppBar("Order Details"),

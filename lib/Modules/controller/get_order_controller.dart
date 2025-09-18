@@ -4,6 +4,7 @@ import 'package:bhk_artisan/Modules/repository/order_repository.dart';
 import 'package:bhk_artisan/common/CommonMethods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +12,6 @@ import 'package:get/get.dart';
 
 class GetOrderController extends GetxController {
   final _api = OrderRepository();
-
-  var isAccepted = List.generate(4, (_) => false.obs);
-  var isDeclined = List.generate(4, (_) => false.obs);
-  var hasData = false.obs;
-
   var index = 0.obs;
 
   var currentIndex = 0.obs;
@@ -50,17 +46,19 @@ class GetOrderController extends GetxController {
   }
 
   final rxRequestStatus = Status.COMPLETED.obs;
-  final getAllOrderStepModel = GetAllOrderStepsModel().obs;
+  final getAllActiveOrderStepModel = GetAllOrderStepsModel().obs;
+  final getAllPastOrderStepModel = GetAllOrderStepsModel().obs;
   final updateOrderStatusModel = UpdateOrderStatusModel().obs;
 
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
 
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
-  void setAllOrderStepdata(GetAllOrderStepsModel value) => getAllOrderStepModel.value = value;
+  void setAllActiveOrderStepdata(GetAllOrderStepsModel value) => getAllActiveOrderStepModel.value = value;
+  void setAllPastOrderStepdata(GetAllOrderStepsModel value) => getAllPastOrderStepModel.value = value;
   void setOrderStatusModel(UpdateOrderStatusModel value) => updateOrderStatusModel.value = value;
 
-  Future<void> getAllOrderStepApi({bool loader = false}) async {
+  Future<void> getAllOrderStepApi({bool loader = false, bool isActive = true}) async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
@@ -70,7 +68,13 @@ class GetOrderController extends GetxController {
           .getAllOrderStepApi()
           .then((value) {
             if (loader) setRxRequestStatus(Status.COMPLETED);
-            setAllOrderStepdata(value);
+            if (isActive) {
+              filterOrders(value, filterStatuses: [OrderStatus.PENDING, OrderStatus.ACCEPTED,OrderStatus.COMPLETED]);
+              setAllActiveOrderStepdata(value);
+            } else {
+              filterOrders(value, filterStatuses: [OrderStatus.REJECTED]);
+              setAllPastOrderStepdata(value);
+            }
             Utils.printLog("Response ${value.toString()}");
           })
           .onError((error, stackTrace) {
@@ -79,6 +83,16 @@ class GetOrderController extends GetxController {
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
+  }
+
+  void filterOrders(GetAllOrderStepsModel value, {List<OrderStatus>? filterStatuses}) {
+    if (filterStatuses != null && filterStatuses.isNotEmpty) {
+      value.data = value.data?.where((item) {
+        final orderStatus = OrderStatusExtension.fromString(item.artisanAgreedStatus);
+        return filterStatuses.contains(orderStatus);
+      }).toList();
+    }
+    print(value.data);
   }
 
   Future<void> updateOrderStatusApi(var status, var id, {bool loader = false}) async {

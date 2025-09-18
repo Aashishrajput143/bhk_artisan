@@ -18,7 +18,7 @@ class MyProducts extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetProductController controller = Get.put(GetProductController());
-    if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false) controller.getProductApi("APPROVED", isLoader: false);
+    if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true) controller.getProductApi("APPROVED", isLoader: false);
     return Obx(
       () => Stack(
         children: [
@@ -27,15 +27,15 @@ class MyProducts extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.productRefresh("APPROVED"),
-              child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? true
-                  ? shimmerMyProducts(w, h)
+              child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
+                  ? emptyScreen(w, h)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false) headerButton(controller),
-                          controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true
+                          controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false
                               ? Expanded(
                                   child: ListView.builder(
                                     shrinkWrap: true,
@@ -52,7 +52,7 @@ class MyProducts extends ParentWidget {
                                     },
                                   ),
                                 )
-                              : emptyScreen(w, h),
+                              : shimmerMyProducts(w, h)
                         ],
                       ),
                     ),
@@ -172,7 +172,7 @@ Widget emptyScreen(double w, double h) {
       Image.asset(appImages.myproductcart, height: 120, width: 130, fit: BoxFit.contain),
       SizedBox(height: h * 0.15),
       Text(
-        'Add Your First Product',
+        'Add Your Product',
         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
       ),
       10.kH,

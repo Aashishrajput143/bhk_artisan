@@ -1,4 +1,4 @@
-enum OrderStatus { PENDING, REJECTED, ACCEPTED }
+enum OrderStatus { PENDING, REJECTED, ACCEPTED, COMPLETED}
 
 extension OrderStatusExtension on OrderStatus {
   String get displayText {
@@ -9,6 +9,8 @@ extension OrderStatusExtension on OrderStatus {
         return "Accepted";
       case OrderStatus.PENDING:
         return "Pending";
+      case OrderStatus.COMPLETED:
+        return "Completed";
     }
   }
 
@@ -18,6 +20,8 @@ extension OrderStatusExtension on OrderStatus {
         return OrderStatus.REJECTED;
       case "ACCEPTED":
         return OrderStatus.ACCEPTED;
+      case "COMPLETED":
+        return OrderStatus.COMPLETED;
       case "PENDING":
       default:
         return OrderStatus.PENDING;

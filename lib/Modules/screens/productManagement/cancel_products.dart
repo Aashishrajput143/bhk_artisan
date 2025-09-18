@@ -24,15 +24,15 @@ class CancelProducts extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.productRefresh("DISAPPROVED"),
-              child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? true
-                  ? shimmerMyProducts(w, h)
+              child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
+                  ? emptyScreen(w, h)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           8.kH,
-                          controller.getDisapprovedProductModel.value.data?.docs?.isNotEmpty ?? true
+                          controller.getDisapprovedProductModel.value.data?.docs?.isNotEmpty ?? false
                               ? Expanded(
                                   child: ListView.builder(
                                     shrinkWrap: true,
@@ -49,7 +49,7 @@ class CancelProducts extends ParentWidget {
                                     },
                                   ),
                                 )
-                              : emptyScreen(w, h),
+                              : shimmerMyProducts(w, h)
                         ],
                       ),
                     ),

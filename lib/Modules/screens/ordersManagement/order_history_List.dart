@@ -1,5 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/get_order_controller.dart';
 import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.dart';
+import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
@@ -16,27 +17,30 @@ class OrderListHistory extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetOrderController controller = Get.put(GetOrderController());
+    controller.getAllOrderStepApi(isActive: false);
     return Obx(
       () => Stack(
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                controller.hasData.value
-                    ? emptyScreen(w, h)
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: controller.getAllOrderStepModel.value.data?.length??0,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                           final steps = controller.getAllOrderStepModel.value.data?[index];
-                            return orderContent(h, w, index, steps,controller);
-                          },
-                        ),
-                      ),
-              ],
+            body: RefreshIndicator(
+              color: Colors.brown,
+              onRefresh: () => controller.ordersRefresh(),
+              child: controller.getAllPastOrderStepModel.value.data?.isEmpty ?? false
+                  ? emptyScreen(w, h)
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: controller.getAllPastOrderStepModel.value.data?.isNotEmpty ?? false
+                          ? ListView.builder(
+                              itemCount: controller.getAllPastOrderStepModel.value.data?.length ?? 0,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                final steps = controller.getAllPastOrderStepModel.value.data?[index];
+                                return orderContent(h, w, index, steps, controller);
+                              },
+                            )
+                          : shimmerList(w, h * 0.2, list: 4)
+                    ),
             ),
           ),
           //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),
@@ -57,14 +61,14 @@ class OrderListHistory extends ParentWidget {
         Image.asset(appImages.orderscreen, height: 250, fit: BoxFit.fitHeight),
         16.kH,
         Text(
-          'No Pending Orders',
+          'No Orders Found',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
         ),
         10.kH,
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Text(
-            "Thanks for checking out Pending Orders, we hope your products can "
+            "Thanks for checking out Your Orders, we hope your products can "
             "make your routine a little more enjoyable.",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, color: Colors.grey[700]),
@@ -74,11 +78,11 @@ class OrderListHistory extends ParentWidget {
     );
   }
 
-  Widget orderContent(double h, double w,int index, Data? steps, GetOrderController controller,) {
+  Widget orderContent(double h, double w, int index, Data? steps, GetOrderController controller) {
     return GestureDetector(
       onTap: () => Get.toNamed(RoutesClass.ordersdetails),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+        margin: const EdgeInsets.symmetric(vertical: 10.0),
         decoration: BoxDecoration(
           color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(16),

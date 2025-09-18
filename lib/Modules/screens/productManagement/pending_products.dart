@@ -24,15 +24,15 @@ class PendingProducts extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.productRefresh("PENDING"),
-              child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? true
-                  ? shimmerMyProducts(w, h)
+              child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
+                  ? emptyScreen(w, h)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           8.kH,
-                          controller.getPendingProductModel.value.data?.docs?.isNotEmpty ?? true
+                          controller.getPendingProductModel.value.data?.docs?.isNotEmpty ?? false
                               ? Expanded(
                                   child: ListView.builder(
                                     shrinkWrap: true,
@@ -49,7 +49,7 @@ class PendingProducts extends ParentWidget {
                                     },
                                   ),
                                 )
-                              : emptyScreen(w, h),
+                              : shimmerMyProducts(w, h)
                         ],
                       ),
                     ),
