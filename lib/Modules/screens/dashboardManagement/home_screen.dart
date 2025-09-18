@@ -39,7 +39,7 @@ class HomeScreen extends ParentWidget {
                     commonCollection(h, w, controller),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, controller.getOrderController.getAllActiveOrderStepModel.value.data?.isEmpty ?? false ? getRecentOrder(w, h, controller):shimmerList(w, h*0.2), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false ? product(w, controller) : shimmerProduct(w), 20.kH]),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, controller.getOrderController.getAllActiveOrderStepModel.value.data?.isEmpty ?? false ? SizedBox():getRecentOrder(w, h, controller), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false ? SizedBox() : product(w, controller), 20.kH]),
                     ),
                   ],
                 ),
@@ -235,11 +235,11 @@ class HomeScreen extends ParentWidget {
           },
         ),
       ],
-    ):SizedBox();
+    ):shimmerProduct(w);
   }
 
   Widget getRecentOrder(double w, double h, Homecontroller controller) {
-    return controller.getOrderController.getAllActiveOrderStepModel.value.data?.isNotEmpty??false? Column(
+    return controller.getOrderController.getAllActiveOrderStepModel.value.data?.isNotEmpty ?? false? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
@@ -269,7 +269,7 @@ class HomeScreen extends ParentWidget {
           },
         ),
       ],
-    ):SizedBox();
+    ):shimmerList(w, h*0.2);
   }
 
   Widget productCard(double w, ProductDocs? list) {

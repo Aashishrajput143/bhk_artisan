@@ -92,7 +92,6 @@ class GetOrderController extends GetxController {
         return filterStatuses.contains(orderStatus);
       }).toList();
     }
-    print(value.data);
   }
 
   Future<void> updateOrderStatusApi(var status, var id, {bool loader = false}) async {
