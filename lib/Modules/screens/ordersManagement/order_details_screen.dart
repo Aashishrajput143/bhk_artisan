@@ -43,7 +43,7 @@ class OrderDetailsPage extends ParentWidget {
                   w * 0.4,
                   45,
                   appColors.acceptColor,
-                  Colors.white,
+                  appColors.contentWhite,
                   () => MyAlertDialog.showAlertDialog(
                     onPressed: () {
                       Get.back();
@@ -61,7 +61,7 @@ class OrderDetailsPage extends ParentWidget {
                   w * 0.4,
                   45,
                   appColors.declineColor,
-                  Colors.white,
+                  appColors.contentWhite,
                   () => MyAlertDialog.showAlertDialog(
                     onPressed: () {
                       Get.back();
@@ -78,7 +78,7 @@ class OrderDetailsPage extends ParentWidget {
               ],
             )
           : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
-          ? commonButton(w * 0.44, 50, appColors.contentButtonBrown, Colors.white, () => Get.toNamed(RoutesClass.uploadOrderImage), hint: "Mark As Completed")
+          ? commonButton(w * 0.44, 50, appColors.contentButtonBrown, appColors.contentWhite, () => Get.toNamed(RoutesClass.uploadOrderImage), hint: "Mark As Completed")
           : commonButton(w * 0.44, 50, appColors.contentBrownLinearColor1, appColors.contentPrimary, () {}, hint: "Declined"),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:bhk_artisan/resources/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,12 +59,12 @@ class CommonMethods {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         messageText: Row(
           children: [
-            Icon(icon, color: Colors.white, size: 22),
+            Icon(icon, color: appColors.contentWhite, size: 22),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 message,
-                style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                style: TextStyle(color: appColors.contentWhite, fontSize: 15, fontWeight: FontWeight.w500),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

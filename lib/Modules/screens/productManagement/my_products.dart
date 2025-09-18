@@ -3,6 +3,7 @@ import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/product_status_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/stringlimitter.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
@@ -18,7 +19,7 @@ class MyProducts extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetProductController controller = Get.put(GetProductController());
-    if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true) controller.getProductApi("APPROVED", isLoader: false);
+    if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true) controller.getProductApi(ProductStatus.APPROVED.name, isLoader: false);
     return Obx(
       () => Stack(
         children: [
@@ -26,7 +27,7 @@ class MyProducts extends ParentWidget {
             backgroundColor: appColors.backgroundColor,
             body: RefreshIndicator(
               color: Colors.brown,
-              onRefresh: () => controller.productRefresh("APPROVED"),
+              onRefresh: () => controller.productRefresh(ProductStatus.APPROVED.name),
               child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
                   ? emptyScreen(w, h)
                   : Padding(
@@ -44,7 +45,7 @@ class MyProducts extends ParentWidget {
                                       return GestureDetector(
                                         onTap: () {
                                           Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
-                                            controller.getProductApi("APPROVED", isLoader: false);
+                                            controller.getProductApi(ProductStatus.APPROVED.name, isLoader: false);
                                           });
                                         },
                                         child: Stack(children: [commonCard(w, h, controller.getApprovedProductModel.value.data?.docs?[index]), cornerTag(w, controller.getApprovedProductModel.value.data?.docs?[index])]),
@@ -76,7 +77,7 @@ class MyProducts extends ParentWidget {
             onTap: () {
               Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
                 controller.commonController.productController.changeTab(1);
-                controller.getProductApi("PENDING", isLoader: false);
+                controller.getProductApi(ProductStatus.PENDING.name, isLoader: false);
               });
             },
             child: Row(
@@ -153,7 +154,7 @@ Widget cornerTag(double w, ProductDocs? list) {
       ),
       child: Text(
         "₹ ${double.parse(list?.productPricePerPiece ?? "0") * (list?.quantity ?? 0)}",
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+        style: TextStyle(color: appColors.contentWhite, fontWeight: FontWeight.bold, fontSize: 12),
         textAlign: TextAlign.center,
       ),
     ),
@@ -196,10 +197,10 @@ Widget addButton(double w, double h, GetProductController controller) {
       w,
       50,
       appColors.contentButtonBrown,
-      Colors.white,
+      appColors.contentWhite,
       () => Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
         controller.commonController.productController.changeTab(1);
-        controller.getProductApi("PENDING", isLoader: false);
+        controller.getProductApi(ProductStatus.PENDING.name, isLoader: false);
       }),
       radius: 30,
       hint: 'Add New Product',

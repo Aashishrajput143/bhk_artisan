@@ -20,6 +20,7 @@ class AppColors {
   get declineColor => const Color.fromARGB(255, 189, 51, 41);
   get cardBackground2 => getColor("#A9603D").withValues(alpha: 0.1);
   get referencebg => getColor("#D9D9D9");
+  get contentWhite => Colors.white;
 
   get contentPrimary => getColor('#000000');
   get contentBluePrimary => getColor('#0d3d5d');

@@ -41,8 +41,8 @@ PreferredSizeWidget appBarInventory(InventoryController inventorycontroller) {
     flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
     bottom: TabBar(
       controller: inventorycontroller.tabController,
-      labelColor: Colors.white,
-      unselectedLabelColor: Colors.white,
+      labelColor: appColors.contentWhite,
+      unselectedLabelColor: appColors.contentWhite,
       indicatorColor: appColors.brownDarkText,
       indicatorWeight: 4,
       tabs: [
@@ -53,7 +53,7 @@ PreferredSizeWidget appBarInventory(InventoryController inventorycontroller) {
     ),
     centerTitle: true,
     automaticallyImplyLeading: true,
-    iconTheme: const IconThemeData(color: Colors.white),
-    title: Text("Inventory".toUpperCase(), style: const TextStyle(fontSize: 16, color: Colors.white)),
+    iconTheme: IconThemeData(color: appColors.contentWhite),
+    title: Text("Inventory".toUpperCase(), style: TextStyle(fontSize: 16, color: appColors.contentWhite)),
   );
 }

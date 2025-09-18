@@ -60,12 +60,12 @@ class AddProductPage extends ParentWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   controller.selectedIndex.value > 0 ? commonOutlinedButtonIcon(w * 0.2, 48, Colors.black, () => controller.selectedIndex.value--, hint: "Previous step", radius: 25, forward: false, icon: Icons.arrow_back) : SizedBox(),
-                  controller.selectedIndex.value < 2 ? commonButtonIcon(w * 0.2, 48, Colors.white, () => controller.selectedIndex.value++, hint: "Next step", radius: 25, backgroundColor: appColors.contentButtonBrown) : SizedBox(),
+                  controller.selectedIndex.value < 2 ? commonButtonIcon(w * 0.2, 48, appColors.contentWhite, () => controller.selectedIndex.value++, hint: "Next step", radius: 25, backgroundColor: appColors.contentButtonBrown) : SizedBox(),
                   if (controller.selectedIndex.value == 2)
                     commonButtonIcon(
                       w * 0.2,
                       48,
-                      Colors.white,
+                      appColors.contentWhite,
                       () => controller.validateStringForm() == null ? controller.addProductApi() : CommonMethods.showToast(controller.validateStringForm() ?? "Please fill all the mandatory fields!", icon: Icons.warning_amber_rounded),
                       hint: "Submit",
                       radius: 25,
@@ -360,7 +360,7 @@ Widget pickedfiles(double w, double h, AddProductController controller) {
                   margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
-                  child: const Icon(Icons.close, size: 17, color: Colors.white),
+                  child: Icon(Icons.close, size: 17, color: appColors.contentWhite),
                 ),
               ),
             ),
@@ -380,7 +380,7 @@ Widget pickedfiles(double w, double h, AddProductController controller) {
                             margin: const EdgeInsets.symmetric(vertical: 6),
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
-                            child: const Icon(Icons.close, size: 20, color: Colors.white),
+                            child: Icon(Icons.close, size: 20, color: appColors.contentWhite),
                           ),
                         ),
                       ),

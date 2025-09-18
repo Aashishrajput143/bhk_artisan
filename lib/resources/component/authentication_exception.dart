@@ -43,7 +43,7 @@ class AuthenticationExceptionWidget extends ParentWidget {
                       child: Text(appStrings.ok,
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
+                            color: appColors.contentWhite,
                           )))),
             ),
           ),

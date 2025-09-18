@@ -7,7 +7,7 @@ class MyAlertDialog {
   static void showlogoutDialog(Future<void> Function() onLogout) {
     Get.dialog(
       AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: appColors.contentWhite,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         title: Row(
           children: [
@@ -45,7 +45,7 @@ class MyAlertDialog {
   static void showAlertDialog({String? title, IconData? icon, String? subtitle, Function()? onPressed, String? buttonHint, Color? color}) {
     Get.dialog(
       AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: appColors.contentWhite,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         title: Row(
           children: [

@@ -121,7 +121,7 @@ class LogisticsScreen extends ParentWidget {
       ),
       title: Text(order["orderId"], style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       subtitle: Text(StringLimiter.limitCharacters(order["productName"], 20), style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-      trailing: commonTags(Colors.white, bg: appColors.acceptColor, hint:order["status"], padding: 6,vPadding: 3),
+      trailing: commonTags(appColors.contentWhite, bg: appColors.acceptColor, hint:order["status"], padding: 6,vPadding: 3),
     );
   }
 

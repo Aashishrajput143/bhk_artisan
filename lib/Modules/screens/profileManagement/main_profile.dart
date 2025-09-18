@@ -40,7 +40,7 @@ class MainProfile extends ParentWidget {
                     style: const TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.bold),
                   ),
                   10.kH,
-                  commonButton(100, 40, Colors.brown, Colors.white, () => Get.toNamed(RoutesClass.viewprofile), hint: "View Profile", radius: 18, paddingHorizontal: 16, paddingVertical: 8),
+                  commonButton(100, 40, Colors.brown, appColors.contentWhite, () => Get.toNamed(RoutesClass.viewprofile), hint: "View Profile", radius: 18, paddingHorizontal: 16, paddingVertical: 8),
                   20.kH,
                   buildProfileOptionCard('My Address', 'Edit, add or remove Address', Icons.location_city, () => Get.toNamed(RoutesClass.addresses)),
                   buildProfileOptionCard('Privacy & Policy', 'Read how we protect your personal data', Icons.privacy_tip, () => Get.toNamed(RoutesClass.privacypolicy)),

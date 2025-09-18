@@ -68,12 +68,12 @@ class AddressScreen extends ParentWidget {
                               controller.hasDefault.value = false;
                               bottomDrawer(context, h * 0.8, w, controller);
                             },
-                            child: const Icon(Icons.add, color: Colors.white),
+                            child: Icon(Icons.add, color: appColors.contentWhite),
                           ),
                         )
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: commonButton(w, 47, appColors.contentButtonBrown, Colors.white, () {
+                    child: commonButton(w, 47, appColors.contentButtonBrown, appColors.contentWhite, () {
                       if ((controller.getAddressModel.value.data?.isEmpty ?? true)) {
                         controller.hasDefault.value = true;
                       } else {
@@ -281,7 +281,7 @@ class AddressScreen extends ParentWidget {
                         double.infinity,
                         47,
                         appColors.contentButtonBrown,
-                        Colors.white,
+                        appColors.contentWhite,
                         () => controller.validateStringForm() == null
                             ? (id.isNotEmpty && id != "0")
                                   ? controller.editAddressApi(id)

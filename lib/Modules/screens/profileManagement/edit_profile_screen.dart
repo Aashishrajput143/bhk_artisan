@@ -62,7 +62,7 @@ class EditProfile extends ParentWidget {
                         w,
                         45,
                         appColors.contentButtonBrown,
-                        Colors.white,
+                        appColors.contentWhite,
                         () {
                           if (controller.validateStringForm() == null) {
                             controller.updateProfileApi();
@@ -76,12 +76,12 @@ class EditProfile extends ParentWidget {
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          commonButton(w * 0.3, 45, appColors.contentButtonBrown, Colors.white, () => MyAlertDialog.showAlertDialog(), hint: "Cancel", radius: 30),
+                          commonButton(w * 0.3, 45, appColors.contentButtonBrown, appColors.contentWhite, () => MyAlertDialog.showAlertDialog(), hint: "Cancel", radius: 30),
                           commonButton(
                             w * 0.3,
                             45,
                             appColors.contentButtonBrown,
-                            Colors.white,
+                            appColors.contentWhite,
                             () {
                               if (controller.validateStringForm() == null) {
                                 controller.updateProfileApi();
@@ -134,7 +134,7 @@ Widget profile(BuildContext context, double h, double w, UpdateProfileController
                 radius: 20.0,
                 child: IconButton(
                   icon: const Icon(Icons.edit),
-                  color: Colors.white,
+                  color: appColors.contentWhite,
                   onPressed: () => bottomDrawer(
                     context,
                     h * 0.3,
@@ -164,7 +164,7 @@ Widget profile(BuildContext context, double h, double w, UpdateProfileController
         100,
         40,
         backgroundColor: appColors.brownbuttonBg,
-        Colors.white,
+        appColors.contentWhite,
         () {
           if (controller.havingIntro.value) {
             Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.introUploaded.value});
@@ -264,12 +264,12 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
                   children: [
                     Checkbox(
                       value: isSelected,
-                      checkColor: Colors.white,
+                      checkColor: appColors.contentWhite,
                       fillColor: WidgetStateProperty.resolveWith<Color>((states) {
                         if (states.contains(WidgetState.selected)) {
                           return appColors.brownDarkText;
                         }
-                        return Colors.white;
+                        return appColors.contentWhite;
                       }),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       onChanged: (value) {

@@ -55,7 +55,7 @@ class OrderTrackingPage extends ParentWidget {
       width: w,
       height: 45,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.contentWhite,
         borderRadius: BorderRadius.circular(25),
         boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
         border: Border.all(color: Colors.grey.shade200, width: 1.5),
@@ -88,7 +88,7 @@ class OrderTrackingPage extends ParentWidget {
       ),
       title: Text("#110516", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       subtitle: Text(StringLimiter.limitCharacters("Wooden Elephant Carving", 20), style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-      trailing: commonTags(Colors.white, bg: appColors.acceptColor, hint: "Awaiting Pickup", padding: 6, vPadding: 3),
+      trailing: commonTags(appColors.contentWhite, bg: appColors.acceptColor, hint: "Awaiting Pickup", padding: 6, vPadding: 3),
     );
   }
 

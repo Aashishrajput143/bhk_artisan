@@ -124,7 +124,7 @@ class OrderList extends ParentWidget {
                       w * 0.4,
                       45,
                       appColors.acceptColor,
-                      Colors.white,
+                      appColors.contentWhite,
                       () => MyAlertDialog.showAlertDialog(
                         onPressed: () {
                           Get.back();
@@ -142,7 +142,7 @@ class OrderList extends ParentWidget {
                       w * 0.4,
                       45,
                       appColors.declineColor,
-                      Colors.white,
+                      appColors.contentWhite,
                       () => MyAlertDialog.showAlertDialog(
                         onPressed: () {
                           Get.back();

@@ -40,12 +40,12 @@ class LoginScreen extends ParentWidget {
                   30.kH,
                   Text(
                     appStrings.letsSignIn,
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Colors.white, decoration: TextDecoration.none),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: appColors.contentWhite, decoration: TextDecoration.none),
                   ),
                   8.kH,
                   Text(
                     appStrings.welcomeBack,
-                    style: const TextStyle(fontSize: 15, color: Colors.white, decoration: TextDecoration.none),
+                    style: TextStyle(fontSize: 15, color: appColors.contentWhite, decoration: TextDecoration.none),
                   ),
                   30.kH,
                   Padding(
@@ -76,7 +76,7 @@ class LoginScreen extends ParentWidget {
                       w,
                       45,
                       appColors.brownbuttonBg,
-                      Colors.white,
+                      appColors.contentWhite,
                       () {
                         if (controller.phoneController.value.text.isEmpty) {
                           controller.errorMessage.value = appStrings.loginerrormessage;
@@ -107,8 +107,8 @@ Widget topRoundedAnimatedHeader(double w, double h, LoginController controller) 
     height: h * 0.2,
     width: w,
     padding: EdgeInsets.only(bottom: 10),
-    decoration: const BoxDecoration(
-      color: Colors.white,
+    decoration: BoxDecoration(
+      color: appColors.contentWhite,
       borderRadius: BorderRadius.only(bottomRight: Radius.circular(150), bottomLeft: Radius.circular(150)),
     ),
     child: Align(
@@ -154,7 +154,7 @@ Widget google(LoginController controller) {
     // onTap: () => Get.toNamed(RoutesClass.gotoVerifyScreen(), arguments: {'referenceId': 23, "identity": "52353462", "countryCode": "+91"}),
     child: Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(25)),
+      decoration: BoxDecoration(color: appColors.contentWhite, borderRadius: BorderRadius.circular(25)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -43,12 +43,12 @@ class OtpScreen extends ParentWidget {
                         25.kH,
                         Text(
                           appStrings.phoneVerification,
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: appColors.contentWhite),
                         ),
                         10.kH,
                         Text(
                           appStrings.otpDesc,
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: TextStyle(fontSize: 16, color: appColors.contentWhite),
                           textAlign: TextAlign.center,
                         ),
                         30.kH,
@@ -57,7 +57,7 @@ class OtpScreen extends ParentWidget {
                         controller.startTime.value > 0
                             ? Text(
                                 '${appStrings.reSendCode}${controller.startTime.value} sec',
-                                style: TextStyle(fontSize: 14, color: Colors.white),
+                                style: TextStyle(fontSize: 14, color: appColors.contentWhite),
                                 textAlign: TextAlign.center,
                               )
                             : resendOtp(context, controller),
@@ -66,7 +66,7 @@ class OtpScreen extends ParentWidget {
                           w,
                           45,
                           appColors.brownbuttonBg,
-                          Colors.white,
+                          appColors.contentWhite,
                           () {
                             if (controller.otp.value.length == 6) {
                               controller.otpVerificationApi();
@@ -81,7 +81,7 @@ class OtpScreen extends ParentWidget {
                           alignment: Alignment.topLeft,
                           child: TextButton(
                             onPressed: () => Get.offNamed(RoutesClass.login),
-                            child: Text(appStrings.editNumber, style: TextStyle(color: Colors.white)),
+                            child: Text(appStrings.editNumber, style: TextStyle(color: appColors.contentWhite)),
                           ),
                         ),
                       ],
@@ -102,7 +102,7 @@ class OtpScreen extends ParentWidget {
       width: 150,
       height: 150,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .25),
+        color: appColors.contentWhite.withValues(alpha: .25),
         borderRadius: BorderRadius.circular(8),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: Offset(0, 4))],
       ),
@@ -127,7 +127,7 @@ class OtpScreen extends ParentWidget {
       onTap: () => controller.resendOtp(context),
       child: Text(
         appStrings.reSend,
-        style: TextStyle(fontSize: 14, color: Colors.white),
+        style: TextStyle(fontSize: 14, color: appColors.contentWhite),
         textAlign: TextAlign.center,
       ),
     );

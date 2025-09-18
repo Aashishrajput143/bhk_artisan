@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/common/common_controllers/video_player_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
+import 'package:bhk_artisan/resources/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
@@ -25,7 +26,7 @@ class VideoPreviewPage extends ParentWidget {
                       alignment: Alignment.center,
                       children: [
                         AspectRatio(aspectRatio: controller.videoController.value.aspectRatio, child: VideoPlayer(controller.videoController)),
-                        if (controller.isBuffering.value) CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                        if (controller.isBuffering.value) CircularProgressIndicator(color: appColors.contentWhite, strokeWidth: 2.5),
                         if (controller.showControls.value && controller.isBuffering.value == false)
                           GestureDetector(
                             onTap: () {
@@ -44,7 +45,7 @@ class VideoPreviewPage extends ParentWidget {
                                     : controller.isPlaying.value
                                     ? Icons.pause
                                     : Icons.play_arrow,
-                                color: Colors.white,
+                                color: appColors.contentWhite,
                                 size: 40,
                               ),
                             ),
@@ -73,26 +74,26 @@ class VideoPreviewPage extends ParentWidget {
                                         controller.seekTo(Duration(seconds: value.toInt()));
                                       },
                                       activeColor: Colors.red,
-                                      inactiveColor: Colors.white24,
+                                      inactiveColor: appColors.contentWhite,
                                     ),
                                   ),
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       IconButton(
-                                        icon: Icon(controller.isMuted.value ? Icons.volume_off : Icons.volume_up, color: Colors.white, size: 22),
+                                        icon: Icon(controller.isMuted.value ? Icons.volume_off : Icons.volume_up, color: appColors.contentWhite, size: 22),
                                         onPressed: controller.toggleMute,
                                       ),
-                                      Text("${controller.formatDuration(controller.position.value)} / ${controller.formatDuration(controller.duration.value)}", style: const TextStyle(color: Colors.white, fontSize: 12)),
+                                      Text("${controller.formatDuration(controller.position.value)} / ${controller.formatDuration(controller.duration.value)}", style: TextStyle(color: appColors.contentWhite, fontSize: 12)),
                                       const Spacer(),
                                       !controller.restart.value
                                           ? IconButton(
-                                              icon: Icon(Icons.replay, color: Colors.white, size: 22),
+                                              icon: Icon(Icons.replay, color: appColors.contentWhite, size: 22),
                                               onPressed: controller.replayVideo,
                                             )
                                           : SizedBox(),
                                       IconButton(
-                                        icon: Icon(controller.isFullscreen.value ? Icons.fullscreen_exit : Icons.fullscreen, color: Colors.white, size: 22),
+                                        icon: Icon(controller.isFullscreen.value ? Icons.fullscreen_exit : Icons.fullscreen, color: appColors.contentWhite, size: 22),
                                         onPressed: controller.toggleFullscreen,
                                       ),
                                     ],
@@ -106,7 +107,7 @@ class VideoPreviewPage extends ParentWidget {
                   ),
                 ),
               )
-            : Center(child: CircularProgressIndicator(color: Colors.white)),
+            : Center(child: CircularProgressIndicator(color: appColors.contentWhite)),
       ),
     );
   }
@@ -119,16 +120,16 @@ class VideoPreviewPage extends ParentWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(onPressed: controller.replayVideo, icon: Icon(Icons.replay), color: Colors.white, iconSize: 40),
+          IconButton(onPressed: controller.replayVideo, icon: Icon(Icons.replay), color: appColors.contentWhite, iconSize: 40),
           IconButton(
             iconSize: 40,
             onPressed: controller.togglePlayPause,
-            icon: Icon(controller.isPlaying.value ? Icons.pause : Icons.play_arrow, color: Colors.white),
+            icon: Icon(controller.isPlaying.value ? Icons.pause : Icons.play_arrow, color: appColors.contentWhite),
           ),
           IconButton(
             iconSize: 40,
             onPressed: controller.toggleMute,
-            icon: Icon(controller.isMuted.value ? Icons.volume_off : Icons.volume_up, color: Colors.white),
+            icon: Icon(controller.isMuted.value ? Icons.volume_off : Icons.volume_up, color: appColors.contentWhite),
           ),
         ],
       ),

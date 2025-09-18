@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/common/gradient.dart';
+import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -291,7 +292,7 @@ Widget shimmerRoundedLine(double w, double h) {
     child: Container(
       width: w,
       height: h,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: appColors.contentWhite),
     ),
   );
 }
@@ -310,7 +311,7 @@ Widget shimmerList(double w, double h,{int list = 2}) {
             child: Container(
               width: w,
               height: h,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: appColors.contentWhite),
             ),
           ),
         ),

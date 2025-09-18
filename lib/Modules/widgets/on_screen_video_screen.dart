@@ -30,7 +30,7 @@ class VideoRecorderScreen extends ParentWidget {
                     children: [
                       const Icon(Icons.fiber_manual_record, color: Colors.red, size: 18),
                       const SizedBox(width: 6),
-                      Obx(() => Text(controller.formatTime(controller.seconds.value), style: const TextStyle(color: Colors.white, fontSize: 16))),
+                      Obx(() => Text(controller.formatTime(controller.seconds.value), style: TextStyle(color: appColors.contentWhite, fontSize: 16))),
                     ],
                   ),
                 ),
@@ -59,7 +59,7 @@ class VideoRecorderScreen extends ParentWidget {
             onPressed: () {
               controller.isRecording.value ? controller.stopRecording() : controller.startRecording();
             },
-            icon: Icon(controller.isRecording.value ? Icons.stop : Icons.videocam, color: Colors.white),
+            icon: Icon(controller.isRecording.value ? Icons.stop : Icons.videocam, color: appColors.contentWhite),
           ),
           (controller.lastVideoPath.value.isNotEmpty && controller.isRecording.value==false)
               ? IconButton(

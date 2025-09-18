@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/resources/enums/product_status_enum.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:get/get.dart';
 
@@ -30,7 +31,7 @@ class GetProductController extends GetxController {
   @override
   onInit() {
     super.onInit();
-    getProductApi("APPROVED");
+    getProductApi(ProductStatus.APPROVED.name);
   }
 
   Future<void> productRefresh(var status) async {
@@ -47,11 +48,11 @@ class GetProductController extends GetxController {
           .getproductApi(status)
           .then((value) {
             if (isLoader) setRxRequestStatus(Status.COMPLETED);
-            if (status == "APPROVED") {
+            if (status == ProductStatus.APPROVED.name) {
               setApprovedProductdata(value);
-            } else if (status == "PENDING") {
+            } else if (status == ProductStatus.PENDING.name) {
               setPendingProductdata(value);
-            } else if (status == "DISAPPROVED") {
+            } else if (status == ProductStatus.DISAPPROVED.name) {
               setDisapprovedProductdata(value);
             }
             Utils.printLog("Response ${value.toString()}");

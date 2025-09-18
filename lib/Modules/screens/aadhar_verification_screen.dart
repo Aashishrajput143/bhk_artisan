@@ -86,7 +86,7 @@ Widget aadhaarNumber(double w, double h, AadharVerificationController controller
     children: [
       commonComponent("Aadhaar Number", commonTextField(controller.aadharController.value, controller.aadharFocusNode.value, w, (value) {}, fontSize: 14,maxLength: 16,inputFormatters: [FilteringTextInputFormatter.digitsOnly], hint: 'Enter your 16 Digits Aadhaar Number', maxLines: 1)),
       30.kH,
-      commonButton(w, 50, appColors.contentButtonBrown, Colors.white, () =>controller.otpComponent.value=true, hint: "Send OTP"),
+      commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () =>controller.otpComponent.value=true, hint: "Send OTP"),
     ],
   );
 }
@@ -96,7 +96,7 @@ Widget aadhaarOTP(BuildContext context, double w, double h, AadharVerificationCo
     children: [
       commonComponent("Aadhaar OTP", otpField(context, controller.otpController.value, 6, (pin) => controller.otp.value = pin.toString(),inputFormatters: [FilteringTextInputFormatter.digitsOnly],backgroundColor: appColors.backgroundColor,fieldHeight: 65,fieldWidth: 55,autoFocus: false)),
       20.kH,
-      commonButton(w, 50, appColors.contentButtonBrown, Colors.white, () =>Get.back(), hint: "Verify OTP"),
+      commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () =>Get.back(), hint: "Verify OTP"),
     ],
   );
 }

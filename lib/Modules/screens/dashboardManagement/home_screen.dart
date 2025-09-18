@@ -64,7 +64,7 @@ class HomeScreen extends ParentWidget {
               width: 60,
               height: 60,
               decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-              child: Icon(Icons.check, color: Colors.white, size: 30),
+              child: Icon(Icons.check, color: appColors.contentWhite, size: 30),
             ),
             20.kH,
             Text(
@@ -78,7 +78,7 @@ class HomeScreen extends ParentWidget {
               style: TextStyle(fontSize: 14, color: appColors.contentPending),
             ),
             20.kH,
-            commonButton(Get.width, 45, appColors.contentButtonBrown, Colors.white, () => Get.back(), hint: "Go to Dashboard", radius: 8),
+            commonButton(Get.width, 45, appColors.contentButtonBrown, appColors.contentWhite, () => Get.back(), hint: "Go to Dashboard", radius: 8),
           ],
         ),
       ),
@@ -91,7 +91,7 @@ class HomeScreen extends ParentWidget {
       flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
       elevation: 0,
       automaticallyImplyLeading: true,
-      iconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: IconThemeData(color: appColors.contentWhite),
       toolbarHeight: 75,
       centerTitle: false,
       titleSpacing: 2,
@@ -105,17 +105,17 @@ class HomeScreen extends ParentWidget {
         children: [
           Text(
             controller.greetings.value,
-            style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 20, color: appColors.contentWhite, fontWeight: FontWeight.w500),
           ),
           Text(
             controller.commonController.profileData.value.data?.firstName ?? "User",
-            style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 16, color: appColors.contentWhite, fontWeight: FontWeight.w500),
           ),
         ],
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.notifications_none, color: Colors.white),
+          icon: Icon(Icons.notifications_none, color: appColors.contentWhite),
           onPressed: () => Get.toNamed(RoutesClass.notifications),
         ),
       ],

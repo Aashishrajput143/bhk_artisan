@@ -3,6 +3,7 @@ import 'package:bhk_artisan/Modules/screens/productManagement/my_products.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/product_status_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -15,7 +16,7 @@ class PendingProducts extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetProductController controller = Get.put(GetProductController());
-    controller.getProductApi("PENDING", isLoader: controller.getPendingProductModel.value.data?.docs?.isNotEmpty ?? false ? false : true);
+    controller.getProductApi(ProductStatus.PENDING.name, isLoader: controller.getPendingProductModel.value.data?.docs?.isNotEmpty ?? false ? false : true);
     return Obx(
       () => Stack(
         children: [
@@ -23,7 +24,7 @@ class PendingProducts extends ParentWidget {
             backgroundColor: appColors.backgroundColor,
             body: RefreshIndicator(
               color: Colors.brown,
-              onRefresh: () => controller.productRefresh("PENDING"),
+              onRefresh: () => controller.productRefresh(ProductStatus.PENDING.name),
               child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
                   ? emptyScreen(w, h)
                   : Padding(
@@ -41,7 +42,7 @@ class PendingProducts extends ParentWidget {
                                       return GestureDetector(
                                         onTap: () {
                                           Get.toNamed(RoutesClass.productDetails, arguments: controller.getPendingProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
-                                            controller.getProductApi("PENDING", isLoader: false);
+                                            controller.getProductApi(ProductStatus.PENDING.name, isLoader: false);
                                           });
                                         },
                                         child: Stack(children: [commonCard(w, h, controller.getPendingProductModel.value.data?.docs?[index]), cornerTag(w, controller.getPendingProductModel.value.data?.docs?[index])]),

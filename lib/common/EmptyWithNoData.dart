@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/resources/colors.dart';
 import 'package:flutter/material.dart';
 
 class EmptyWithNoData extends StatefulWidget {
@@ -18,7 +19,7 @@ class EmptyWithNoDataState extends State<EmptyWithNoData> {
         child: Text(
           "No Data Found",
           style: TextStyle(
-            color: Colors.white,
+            color: appColors.contentWhite,
             fontFamily: "Raleway",
             fontSize: (w + h) * 0.0085,
             fontWeight: FontWeight.w600,

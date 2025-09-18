@@ -55,10 +55,10 @@ void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setErr
 PreferredSizeWidget commonAppBar(String title, {bool automaticallyImplyLeading = true}) {
   return AppBar(
     flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
-    iconTheme: const IconThemeData(color: Colors.white),
+    iconTheme: IconThemeData(color: appColors.contentWhite),
     centerTitle: true,
     automaticallyImplyLeading: automaticallyImplyLeading,
-    title: Text(title.toUpperCase(), style: const TextStyle(fontSize: 16, color: Colors.white)),
+    title: Text(title.toUpperCase(), style: TextStyle(fontSize: 16, color: appColors.contentWhite)),
   );
 }
 
@@ -67,8 +67,8 @@ PreferredSizeWidget appBarTab({required TabController? tabController, required L
     flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
     bottom: TabBar(
       controller: tabController,
-      labelColor: Colors.white,
-      unselectedLabelColor: Colors.white,
+      labelColor: appColors.contentWhite,
+      unselectedLabelColor: appColors.contentWhite,
       indicatorColor: appColors.brownDarkText,
       indicatorWeight: 4,
       tabs: tabs,
@@ -76,8 +76,8 @@ PreferredSizeWidget appBarTab({required TabController? tabController, required L
     ),
     centerTitle: true,
     automaticallyImplyLeading: true,
-    iconTheme: const IconThemeData(color: Colors.white),
-    title: Text(title.toUpperCase(), style: const TextStyle(fontSize: 16, color: Colors.white)),
+    iconTheme: IconThemeData(color: appColors.contentWhite),
+    title: Text(title.toUpperCase(), style: TextStyle(fontSize: 16, color: appColors.contentWhite)),
   );
 }
 
@@ -219,7 +219,7 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
               commonButtonIcon(
                 w,
                 50,
-                backgroundColor: selectedImage.value != null ? Colors.white : appColors.buttonStateDisabled,
+                backgroundColor: selectedImage.value != null ? appColors.contentWhite : appColors.buttonStateDisabled,
                 selectedImage.value != null ? appColors.brownDarkText : appColors.buttonTextStateDisabled,
                 () {
                   if (selectedImage.isNotEmpty ?? false) {
@@ -275,26 +275,26 @@ Widget commonTextField(
         maxLines: maxLines,
         inputFormatters: inputFormatters,
         keyboardType: keyboardType,
-        cursorColor: isWhite ? Colors.white : appColors.contentPlaceholderPrimary,
-        style: TextStyle(color: isWhite ? Colors.white : appColors.contentPrimary),
+        cursorColor: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary,
+        style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
         decoration: InputDecoration(
           labelText: isLabel ? hint : null,
           hint: Text(
             hint,
-            style: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize),
+            style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize),
           ),
           prefixText: prefix,
           suffixText: suffix,
-          labelStyle: isLabel ? TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
+          labelStyle: isLabel ? TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
           alignLabelWithHint: true,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
+            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
           ),
           counterText: "",
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
+            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
@@ -388,24 +388,24 @@ Widget commonDescriptionTextField(
         textAlign: TextAlign.start,
         inputFormatters: inputFormatters,
         keyboardType: keyboardType,
-        cursorColor: isWhite ? Colors.white : appColors.contentPlaceholderPrimary,
-        style: TextStyle(color: isWhite ? Colors.white : appColors.contentPrimary),
+        cursorColor: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary,
+        style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
         decoration: InputDecoration(
           labelText: isLabel ? hint : null,
           hint: Text(
             hint,
-            style: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize),
+            style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize),
           ),
-          labelStyle: isLabel ? TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
+          labelStyle: isLabel ? TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
           alignLabelWithHint: true,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
+            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
           ),
           counterText: "",
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
+            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
@@ -439,7 +439,7 @@ Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selec
         maxHeight: height * .25,
         width: width * .918,
         offset: const Offset(-9, -3),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: appColors.contentWhite),
       ),
       isExpanded: true,
       underline: const SizedBox(),
@@ -469,7 +469,7 @@ Widget commonMultiDropdownButton(List<DropdownMenuItem<String>>? items, List<Str
           width: width * .9,
           elevation: 4,
           offset: Offset(0,upOffset?? height * .25),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: appColors.contentWhite),
         ),
       ),
     ),
@@ -489,7 +489,7 @@ Widget passwordField(TextEditingController controller, FocusNode focusNode, doub
         onChanged: onChange,
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.white,
+          fillColor: appColors.contentWhite,
           suffixIcon: Padding(
             padding: const EdgeInsets.only(right: 4),
             child: GestureDetector(
@@ -563,31 +563,31 @@ Widget phoneTextField(
         inputFormatters: inputFormatters,
         decoration: InputDecoration(
           labelText: hint,
-          labelStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary),
+          labelStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
           error: null,
           errorStyle: TextStyle(color: Colors.transparent),
-          counterStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPlaceholderPrimary),
+          counterStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
+            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
+            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
+            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? Colors.white : appColors.border, width: borderWidth),
+            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: contentPadding, vertical: 5.0),
         ),
-        style: TextStyle(color: isWhite ? Colors.white : appColors.contentPrimary),
-        dropdownTextStyle: TextStyle(color: isWhite ? Colors.white : appColors.contentPrimary),
-        cursorColor: isWhite ? Colors.white : appColors.contentPlaceholderPrimary,
+        style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
+        dropdownTextStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
+        cursorColor: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary,
         dropdownIcon: const Icon(Icons.arrow_drop_down, color: Colors.transparent),
         initialCountryCode: initialValue,
         languageCode: "en",
@@ -612,7 +612,7 @@ Widget squareCheckBoxWithLabel(bool value, ValueChanged<bool> onChanged, {String
             borderRadius: BorderRadius.circular(radius),
             border: Border.all(color: borderColor, width: 2),
           ),
-          child: value ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
+          child: value ? Icon(Icons.check, size: 16, color: appColors.contentWhite) : null,
         ),
         const SizedBox(width: 8),
         Text(label, style: labelStyle ?? const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
@@ -646,7 +646,7 @@ Widget bottomText() {
     child: RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-        style: TextStyle(color: Colors.white, fontSize: 13),
+        style: TextStyle(color: appColors.contentWhite, fontSize: 13),
         children: [
           TextSpan(text: 'By continuing, you agree to our '),
           TextSpan(
@@ -891,7 +891,7 @@ Widget checkButtonObjective(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius),
           border: Border.all(color: selectedList[index] ? selectedColor : appColors.buttonStateDisabled, width: 2),
-          color: Colors.white,
+          color: appColors.contentWhite,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -903,7 +903,7 @@ Widget checkButtonObjective(
                 border: Border.all(color: selectedList[index] ? selectedColor : textColor, width: 2),
                 color: selectedList[index] ? selectedColor : Colors.transparent,
               ),
-              child: selectedList[index] ? const Icon(Icons.check, weight: 200, size: 16, color: Colors.white) : null,
+              child: selectedList[index] ? Icon(Icons.check, weight: 200, size: 16, color: appColors.contentWhite) : null,
             ),
             const SizedBox(width: 10),
             Flexible(

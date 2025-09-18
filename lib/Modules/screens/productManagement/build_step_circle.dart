@@ -37,7 +37,7 @@ Widget buildStepCircle(String title, int stepNumber, bool isActive, bool complet
         CircleAvatar(
           radius: 14,
           backgroundColor: isActive ? appColors.contentButtonBrown : Colors.grey[300],
-          foregroundColor: isActive ? Colors.white : appColors.contentdescBrownColor,
+          foregroundColor: isActive ? appColors.contentWhite : appColors.contentdescBrownColor,
           child: completed
               ? const Icon(
                   Icons.check_circle, 

@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/resources/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
@@ -45,7 +46,7 @@ class InternetExceptionWidget extends ParentWidget {
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium!
-                    .copyWith(color: Colors.white),
+                    .copyWith(color: appColors.contentWhite),
               )),
             ),
           )

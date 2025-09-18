@@ -31,7 +31,7 @@ class ViewProfile extends ParentWidget {
                   100,
                   40,
                   backgroundColor: appColors.brownbuttonBg,
-                  Colors.white,
+                  appColors.contentWhite,
                   () {
                     Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.profileData.value.data?.introVideo ?? ""});
                   },
