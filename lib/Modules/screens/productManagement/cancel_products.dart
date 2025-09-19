@@ -5,6 +5,7 @@ import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/product_status_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
@@ -68,22 +69,21 @@ Widget emptyScreen(double w, double h) {
     children: [
       16.kH,
       Text(
-        "Hi, there.",
+        appStrings.hiThere,
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
       ),
       SizedBox(height: h * 0.1),
       Image.asset(appImages.myproductcart, height: 120, width: 130, fit: BoxFit.contain),
       SizedBox(height: h * 0.15),
       Text(
-        'No Rejected Products',
+        appStrings.noRejectedProducts,
         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
       ),
       10.kH,
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Text(
-          "Thanks for checking out Rejected Products, we hope your products can "
-          "make your routine a little more enjoyable.",
+          appStrings.emptyRejectedProductDesc,
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 16, color: Colors.grey[700]),
         ),

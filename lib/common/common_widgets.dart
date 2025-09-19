@@ -115,9 +115,8 @@ Future bottomDrawerMultiFile(BuildContext context, h, w, RxList<String> selected
             8.kH,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: onImageGallery,
                 child: Row(
                   children: [
@@ -134,9 +133,8 @@ Future bottomDrawerMultiFile(BuildContext context, h, w, RxList<String> selected
             20.kH,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: onCamera,
                 child: Row(
                   children: [
@@ -179,9 +177,8 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
             8.kH,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: onImageGallery,
                 child: Row(
                   children: [
@@ -198,9 +195,8 @@ Future bottomDrawer(BuildContext context, h, w, Rxn<String> selectedImage, void 
             20.kH,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: onCamera,
                 child: Row(
                   children: [

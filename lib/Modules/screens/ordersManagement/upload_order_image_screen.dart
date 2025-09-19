@@ -8,6 +8,7 @@ import 'package:bhk_artisan/common/myUtils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,7 +24,7 @@ class UploadOrderImageScreen extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            appBar: commonAppBar("Upload Completion"),
+            appBar: commonAppBar(appStrings.uploadCompletion),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -34,12 +35,12 @@ class UploadOrderImageScreen extends ParentWidget {
                       5.kW,
                       Icon(Icons.inventory_2, size: 20.0, color: Colors.blue),
                       10.kW,
-                      Text('Finished Product', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
+                      Text(appStrings.finishedProduct, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
                     ],
                   ),
                   5.kH,
                   Text(
-                    'Add pictures of the completed order.',
+                    appStrings.addPicturesCompletedOrder,
                     style: TextStyle(fontSize: 11.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
                   ),
                   25.kH,
@@ -49,7 +50,7 @@ class UploadOrderImageScreen extends ParentWidget {
             ),
             bottomNavigationBar: Padding(
               padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.04),
-              child: commonButton(w * 0.2, 50, appColors.contentButtonBrown, appColors.contentWhite, () => controller.validateForm() ? controller.uploadOrderImageApi() : CommonMethods.showToast("Please Upload Images!", icon: Icons.warning_amber_rounded), hint: "Submit", radius: 12),
+              child: commonButton(w * 0.2, 50, appColors.contentButtonBrown, appColors.contentWhite, () => controller.validateForm() ? controller.uploadOrderImageApi() : CommonMethods.showToast(appStrings.pleaseUploadImages, icon: Icons.warning_amber_rounded), hint: appStrings.submit, radius: 12),
             ),
           ),
           progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
@@ -65,7 +66,7 @@ Widget mediaFiles(BuildContext context, double w, double h, UploadOrderImageCont
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       commonComponent(
-        "Upload Images",
+        appStrings.uploadImages,
         Container(
           width: w,
           padding: EdgeInsets.all(16),
@@ -78,7 +79,7 @@ Widget mediaFiles(BuildContext context, double w, double h, UploadOrderImageCont
             children: [
               const Icon(Icons.image, size: 50, color: Colors.grey),
               8.kH,
-              const Text("Upload your images here"),
+              Text(appStrings.uploadImagesHere),
               5.kH,
               ElevatedButton(
                 onPressed: () => bottomDrawerMultiFile(
@@ -95,16 +96,16 @@ Widget mediaFiles(BuildContext context, double w, double h, UploadOrderImageCont
                     pickMultipleImagesFromGallery(controller.imagefiles, false);
                   },
                 ),
-                child: const Text('Click to browse', style: TextStyle(fontSize: 12)),
+                child: Text(appStrings.clickToBrowse, style: TextStyle(fontSize: 12)),
               ),
             ],
           ),
         ),
       ),
       8.kH,
-      Text("Upload up to 4 images of the completed product to confirm the order and for record keeping. Please ensure each file is no larger than 2 MB, and use one of the supported formats: JPG, JPEG, or PNG.", style: TextStyle(color: Colors.grey[600])),
+      Text(appStrings.uploadImagesOrderDesc, style: TextStyle(color: Colors.grey[600])),
       20.kH,
-      Text("Picked Files:"),
+      Text(appStrings.pickedFiles),
       Divider(),
       if (controller.imagefiles.isNotEmpty) Padding(padding: const EdgeInsets.all(8.0), child: pickedfiles(w, h, controller)),
     ],

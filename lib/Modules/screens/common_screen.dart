@@ -2,6 +2,8 @@ import 'package:bhk_artisan/common/tab_indicator.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/font.dart';
+import 'package:bhk_artisan/resources/strings.dart';
+import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -72,37 +74,22 @@ void showExitDialog() {
       title: Row(
         children: [
           Icon(Icons.help_outline, color: Colors.orange, size: 30),
-          SizedBox(width: 8),
-          Text("Confirm Exit...!!!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          8.kW,
+          Text(appStrings.confirmExitTitle, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
         ],
       ),
-      content: Text("Are you sure you want to exit?"),
+      content: Text(appStrings.confirmExitSubtitle),
       actions: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButton(
-              onPressed: () {
-                Get.back(); // Close dialog without doing anything
-              },
-              child: Text("CANCEL", style: TextStyle(color: Colors.pink)),
+              onPressed: () => Get.back(),
+              child: Text(appStrings.cancel, style: TextStyle(color: appColors.brownDarkText)),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Get.back(); // Close dialog and stay in the app
-                  },
-                  child: Text("NO", style: TextStyle(color: Colors.pink)),
-                ),
-                TextButton(
-                  onPressed: () {
-                    SystemNavigator.pop();
-                  },
-                  child: Text("YES", style: TextStyle(color: Colors.pink)),
-                ),
-              ],
+            TextButton(
+              onPressed: () => SystemNavigator.pop(),
+              child: Text(appStrings.exit, style: TextStyle(color: appColors.brownDarkText)),
             ),
           ],
         ),

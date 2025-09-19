@@ -9,6 +9,7 @@ import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/inputformatter.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +27,7 @@ class AddProductPage extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            appBar: commonAppBar("Add Product"),
+            appBar: commonAppBar(appStrings.addProduct),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -37,12 +38,12 @@ class AddProductPage extends ParentWidget {
                       5.kW,
                       Icon(Icons.shopping_cart, size: 20.0, color: Colors.blue),
                       10.kW,
-                      Text('Add Product', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
+                      Text(appStrings.addProduct, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
                     ],
                   ),
                   5.kH,
                   Text(
-                    'Add a new product to your store.',
+                    appStrings.addProductDesc,
                     style: TextStyle(fontSize: 11.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
                   ),
                   25.kH,
@@ -59,15 +60,15 @@ class AddProductPage extends ParentWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  controller.selectedIndex.value > 0 ? commonOutlinedButtonIcon(w * 0.2, 48, Colors.black, () => controller.selectedIndex.value--, hint: "Previous step", radius: 25, forward: false, icon: Icons.arrow_back) : SizedBox(),
-                  controller.selectedIndex.value < 2 ? commonButtonIcon(w * 0.2, 48, appColors.contentWhite, () => controller.selectedIndex.value++, hint: "Next step", radius: 25, backgroundColor: appColors.contentButtonBrown) : SizedBox(),
+                  controller.selectedIndex.value > 0 ? commonOutlinedButtonIcon(w * 0.2, 48, Colors.black, () => controller.selectedIndex.value--, hint: appStrings.previousStep, radius: 25, forward: false, icon: Icons.arrow_back) : SizedBox(),
+                  controller.selectedIndex.value < 2 ? commonButtonIcon(w * 0.2, 48, appColors.contentWhite, () => controller.selectedIndex.value++, hint: appStrings.nextStep, radius: 25, backgroundColor: appColors.contentButtonBrown) : SizedBox(),
                   if (controller.selectedIndex.value == 2)
                     commonButtonIcon(
                       w * 0.2,
                       48,
                       appColors.contentWhite,
-                      () => controller.validateStringForm() == null ? controller.addProductApi() : CommonMethods.showToast(controller.validateStringForm() ?? "Please fill all the mandatory fields!", icon: Icons.warning_amber_rounded),
-                      hint: "Submit",
+                      () => controller.validateStringForm() == null ? controller.addProductApi() : CommonMethods.showToast(controller.validateStringForm() ?? appStrings.pleaseFillMandatoryFields, icon: Icons.warning_amber_rounded),
+                      hint: appStrings.submit,
                       radius: 25,
                       backgroundColor: appColors.contentButtonBrown,
                     ),
@@ -90,7 +91,7 @@ Widget generalDetails(double w, double h, AddProductController controller) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           commonComponent(
-            "Category",
+            appStrings.category,
             commonDropdownButton(
               controller.getCategoryModel.value.data?.docs?.map((item) {
                 return DropdownMenuItem<String>(
@@ -108,13 +109,13 @@ Widget generalDetails(double w, double h, AddProductController controller) {
                 controller.selectedsubcategoryid.value = null;
                 controller.getSubCategoryApi();
               },
-              hint: 'Select Category',
+              hint: appStrings.selectCategory,
               borderColor: appColors.border,
             ),
           ),
           16.kH,
           commonComponent(
-            "SubCategory",
+            appStrings.subCategory,
             commonDropdownButton(
               controller.getSubcategoryModel.value.data?.docs?.map((item) {
                 return DropdownMenuItem<String>(
@@ -129,16 +130,16 @@ Widget generalDetails(double w, double h, AddProductController controller) {
               (String? newValue) {
                 controller.selectedsubcategoryid.value = newValue;
               },
-              hint: 'Select SubCategory',
+              hint: appStrings.selectSubCategory,
               borderColor: appColors.border,
             ),
           ),
           16.kH,
-          commonComponent("Product Name", commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Product name', maxLines: 3, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
+          commonComponent(appStrings.productName, commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterProductName, maxLines: 3, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
           16.kH,
-          commonComponent("Time to Make (in days)", commonTextField(controller.timeController.value, controller.timeFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter how long it took to make', inputFormatters: [FilteringTextInputFormatter.digitsOnly],maxLength: 6)),
+          commonComponent(appStrings.timeToMake, commonTextField(controller.timeController.value, controller.timeFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterTimeToMake, inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 6)),
           16.kH,
-          commonComponent("Description", commonDescriptionTextField(controller.detaileddescriptionController.value, controller.detaileddescriptionFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter a detailed description\neg. product history, culture, uniqueness...', maxLines: 8, minLines: 3,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter()])),
+          commonComponent(appStrings.description, commonDescriptionTextField(controller.detaileddescriptionController.value, controller.detaileddescriptionFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterDescription, maxLines: 8, minLines: 3, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter()])),
         ],
       ),
     ),
@@ -152,16 +153,18 @@ Widget productDetails(double w, double h, AddProductController controller) {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          commonComponent("Product Price per Piece", commonTextField(controller.priceController.value, controller.priceFocusNode.value, w, onChange: (value) => controller.calculateTotalPrice(), (value) {},maxLength: 6, hint: 'Enter Product Price per Piece', prefix: '₹ ',inputFormatters: [FilteringTextInputFormatter.digitsOnly])),
+          commonComponent(appStrings.productPrice, commonTextField(controller.priceController.value, controller.priceFocusNode.value, w, onChange: (value) => controller.calculateTotalPrice(), (value) {}, maxLength: 6, hint: appStrings.enterProductPrice, prefix: '₹ ', inputFormatters: [FilteringTextInputFormatter.digitsOnly])),
           16.kH,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: commonComponent("Quantity", commonTextField(controller.quantityController.value, controller.quantityFocusNode.value, w, (value) {}, onChange: (value) => controller.calculateTotalPrice(),maxLength: 6, hint: 'Enter Quantity',inputFormatters: [FilteringTextInputFormatter.digitsOnly])),
+                child: commonComponent(appStrings.quantity, commonTextField(controller.quantityController.value, controller.quantityFocusNode.value, w, (value) {}, onChange: (value) => controller.calculateTotalPrice(), maxLength: 6, hint: appStrings.enterQuantity, inputFormatters: [FilteringTextInputFormatter.digitsOnly])),
               ),
               8.kW,
-              Expanded(child: commonComponent("Total Price", commonTextField(controller.totalPriceController.value, controller.totalPriceFocusNode.value, w, (value) {}, readonly: true, prefix: '₹ ',inputFormatters: [FilteringTextInputFormatter.digitsOnly]), mandatory: false)),
+              Expanded(
+                child: commonComponent(appStrings.totalPrice, commonTextField(controller.totalPriceController.value, controller.totalPriceFocusNode.value, w, (value) {}, readonly: true, prefix: '₹ ', inputFormatters: [FilteringTextInputFormatter.digitsOnly]), mandatory: false),
+              ),
             ],
           ),
           16.kH,
@@ -170,7 +173,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
             children: [
               Expanded(
                 child: commonComponent(
-                  "Finish/Texture",
+                  appStrings.finishTexture,
                   commonDropdownButton(
                     controller.textureList.map((item) {
                       return DropdownMenuItem<String>(
@@ -185,7 +188,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
                     (String? newValue) {
                       controller.selectedTexture.value = newValue;
                     },
-                    hint: 'Select Texture',
+                    hint: appStrings.selectTexture,
                     borderColor: appColors.border,
                   ),
                   mandatory: false,
@@ -194,7 +197,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
               8.kW,
               Expanded(
                 child: commonComponent(
-                  "Wash Care",
+                  appStrings.washCare,
                   commonDropdownButton(
                     controller.washCareList.map((item) {
                       return DropdownMenuItem<String>(
@@ -209,7 +212,7 @@ Widget productDetails(double w, double h, AddProductController controller) {
                     (String? newValue) {
                       controller.selectedWashCare.value = newValue;
                     },
-                    hint: 'Select Wash Care',
+                    hint: appStrings.selectWashCare,
                     borderColor: appColors.border,
                   ),
                   mandatory: false,
@@ -218,14 +221,17 @@ Widget productDetails(double w, double h, AddProductController controller) {
             ],
           ),
           16.kH,
-          commonComponent("Material", commonTextField(controller.materialController.value, controller.materialFocusNode.value, w, (value) {}, hint: 'Enter Material Used', maxLines: 1,inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
+          commonComponent(appStrings.material, commonTextField(controller.materialController.value, controller.materialFocusNode.value, w, (value) {}, hint: appStrings.enterMaterial, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
           16.kH,
           commonComponent(
             mandatory: false,
-            "Net Weight (${controller.dropdownValues})",
+            "${appStrings.netWeight} (${controller.dropdownValues})",
             Row(
               children: [
-                Expanded(flex: 6, child: commonTextField(controller.netweightController.value, controller.netweightFocusNode.value, w, (value) {}, hint: 'Enter Net Weight(in ${controller.dropdownValues})',inputFormatters: [FilteringTextInputFormatter.digitsOnly],maxLength: 5)),
+                Expanded(
+                  flex: 6,
+                  child: commonTextField(controller.netweightController.value, controller.netweightFocusNode.value, w, (value) {}, hint: "${appStrings.enterNetWeight}(in ${controller.dropdownValues})", inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 5),
+                ),
                 8.kW,
                 Expanded(
                   flex: 2,
@@ -250,14 +256,23 @@ Widget productDetails(double w, double h, AddProductController controller) {
           16.kH,
           commonComponent(
             mandatory: false,
-            "Dimension(in L*B*H) in ${controller.dropdownValue}",
+            "${appStrings.dimension}(in L*B*H) in ${controller.dropdownValue}",
             Row(
               children: [
-                Expanded(flex: 2, child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: 'Length',inputFormatters: [FilteringTextInputFormatter.digitsOnly],maxLength: 5)),
+                Expanded(
+                  flex: 2,
+                  child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: appStrings.length, inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 5),
+                ),
                 8.kW,
-                Expanded(flex: 2, child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: 'Breadth',inputFormatters: [FilteringTextInputFormatter.digitsOnly],maxLength: 5)),
+                Expanded(
+                  flex: 2,
+                  child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: appStrings.breadth, inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 5),
+                ),
                 8.kW,
-                Expanded(flex: 2, child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: 'Height',inputFormatters: [FilteringTextInputFormatter.digitsOnly],maxLength: 5)),
+                Expanded(
+                  flex: 2,
+                  child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: appStrings.height, inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 5),
+                ),
                 8.kW,
                 Expanded(
                   flex: 3,
@@ -280,9 +295,9 @@ Widget productDetails(double w, double h, AddProductController controller) {
             ),
           ),
           16.kH,
-          commonComponent("Art Used", commonTextField(controller.techniqueController.value, controller.techniqueFocusNode.value, w, (value) {}, hint: 'Enter Art Used',inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
+          commonComponent(appStrings.artUsed, commonTextField(controller.techniqueController.value, controller.techniqueFocusNode.value, w, (value) {}, hint: appStrings.enterArtUsed, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
           16.kH,
-          commonComponent("Pattern Used", commonTextField(controller.patternController.value, controller.patternFocusNode.value, w, (value) {}, hint: 'Enter Pattern Used',inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)], maxLines: 3), mandatory: false),
+          commonComponent(appStrings.patternUsed, commonTextField(controller.patternController.value, controller.patternFocusNode.value, w, (value) {}, hint: appStrings.enterPatternUsed, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)], maxLines: 3), mandatory: false),
         ],
       ),
     ),
@@ -295,7 +310,7 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       commonComponent(
-        "Upload Images",
+        appStrings.uploadImages,
         Container(
           width: w,
           padding: EdgeInsets.all(16),
@@ -308,7 +323,7 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
             children: [
               const Icon(Icons.image, size: 50, color: Colors.grey),
               8.kH,
-              const Text("Upload your images here"),
+              Text(appStrings.uploadImagesHere),
               5.kH,
               ElevatedButton(
                 onPressed: () => bottomDrawerMultiFile(
@@ -325,16 +340,16 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
                     pickMultipleImagesFromGallery(controller.imagefiles, false);
                   },
                 ),
-                child: const Text('Click to browse', style: TextStyle(fontSize: 12)),
+                child: Text(appStrings.clickToBrowse, style: TextStyle(fontSize: 12)),
               ),
             ],
           ),
         ),
       ),
       8.kH,
-      Text("Upload up to 10 Images to showcase your product during the Auctions and social sharing. Please ensure each file is no larger than 2 MB, and support formats: JPG, JPEG, or PNG.", style: TextStyle(color: Colors.grey[600],fontSize: 13)),
+      Text(appStrings.uploadImagesDesc, style: TextStyle(color: Colors.grey[600], fontSize: 13)),
       20.kH,
-      Text("Picked Files:"),
+      Text(appStrings.pickedFiles),
       Divider(),
       if (controller.imagefiles.isNotEmpty) Padding(padding: const EdgeInsets.all(8.0), child: pickedfiles(w, h, controller)),
     ],
@@ -343,7 +358,7 @@ Widget mediaFiles(BuildContext context, double w, double h, AddProductController
 
 Widget pickedfiles(double w, double h, AddProductController controller) {
   return SizedBox(
-    height: h - h*0.71,
+    height: h - h * 0.71,
     child: GridView.builder(
       shrinkWrap: true,
       itemCount: controller.imagefiles.length,

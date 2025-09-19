@@ -71,7 +71,7 @@ class OtpScreen extends ParentWidget {
                             if (controller.otp.value.length == 6) {
                               controller.otpVerificationApi();
                             } else {
-                              CommonMethods.showToast("Please Enter OTP");
+                              CommonMethods.showToast(appStrings.pleaseEnterOTP);
                             }
                           },
                           hint: appStrings.verifyPhoneNumber,

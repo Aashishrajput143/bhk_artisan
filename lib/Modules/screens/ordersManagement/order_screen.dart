@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/Modules/screens/ordersManagement/order_history_List.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,10 +18,10 @@ class OrderScreen extends StatelessWidget {
       backgroundColor: appColors.backgroundColor,
       appBar: appBarTab(
         tabs: [
-          Tab(text: 'Active Orders'),
-          Tab(text: 'Past Orders'),
+          Tab(text: appStrings.tabActiveOrders),
+          Tab(text: appStrings.tabPastOrders),
         ],
-        title: "ORDERS DETAILS",
+        title: appStrings.ordersDetailsTitle,
         tabController: controller.tabController,
       ),
       body: DefaultTabController(

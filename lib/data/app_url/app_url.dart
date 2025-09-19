@@ -28,7 +28,7 @@ class AppUrl {
   static String orderStatus = '$baseUrl/product/api/build-step/artisan/update_status';
   static String salesgraph = '$baseUrl/api/order/totalsales?year=';
   static String updateProgress = '$baseUrl/product/api/build-step/';
-  static String color = '$baseUrl/api/attribute/getattribute';
+  static String completeOrder = '$baseUrl/product/api/build-step/artisan/complete/';
 
   //post
   static String addproduct = '$baseUrl/product/api/product/addproduct';

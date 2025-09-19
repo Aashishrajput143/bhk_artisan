@@ -4,6 +4,7 @@ import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/caste_category_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class ViewProfile extends ParentWidget {
     CommonScreenController controller = Get.put(CommonScreenController());
     return Scaffold(
       backgroundColor: appColors.backgroundColor,
-      appBar: commonAppBar("View Profile"),
+      appBar: commonAppBar(appStrings.viewProfile),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -36,7 +37,7 @@ class ViewProfile extends ParentWidget {
                     Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.profileData.value.data?.introVideo ?? ""});
                   },
                   icon: Icons.video_call,
-                  hint: "View Intro",
+                  hint: appStrings.viewIntro,
                   forward: false,
                   radius: 16,
                 ),
@@ -46,16 +47,16 @@ class ViewProfile extends ParentWidget {
                 children: [
                   Icon(Icons.edit_document, size: 20.0, color: Colors.blue),
                   8.kW,
-                  Text('Personal Information', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
+                  Text(appStrings.personalInformation, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
                 ],
               ),
               16.kH,
-              commonCards("First Name", controller.profileData.value.data?.firstName ?? "", Icons.person_outline),
-              commonCards("Last Name", controller.profileData.value.data?.lastName ?? "", Icons.person_outline),
-              commonCards("Phone Number", "${controller.profileData.value.data?.countryCode ?? ""} ${controller.profileData.value.data?.phoneNo ?? ""}", Icons.phone_outlined),
-              if (controller.profileData.value.data?.email != null) commonCards("Email", controller.profileData.value.data?.email ?? "", Icons.email_outlined),
-              if (controller.profileData.value.data?.userCasteCategory != null) commonCards("Caste Category", "${parseUserCasteCategory(controller.profileData.value.data?.userCasteCategory)?.displayName}  ( ${controller.profileData.value.data?.subCaste} )", Icons.people_outline),
-              commonCards("Expertise", controller.profileData.value.data?.expertizeField ?? "Please set your Expertise", Icons.work_outline),
+              commonCards(appStrings.firstName, controller.profileData.value.data?.firstName ?? "", Icons.person_outline),
+              commonCards(appStrings.lastName, controller.profileData.value.data?.lastName ?? "", Icons.person_outline),
+              commonCards(appStrings.phone, "${controller.profileData.value.data?.countryCode ?? ""} ${controller.profileData.value.data?.phoneNo ?? ""}", Icons.phone_outlined),
+              if (controller.profileData.value.data?.email != null) commonCards(appStrings.email, controller.profileData.value.data?.email ?? "", Icons.email_outlined),
+              if (controller.profileData.value.data?.userCasteCategory != null) commonCards(appStrings.category, "${parseUserCasteCategory(controller.profileData.value.data?.userCasteCategory)?.displayName}  ( ${controller.profileData.value.data?.subCaste} )", Icons.people_outline),
+              commonCards(appStrings.expertise, controller.profileData.value.data?.expertizeField ?? appStrings.pleaseSetExpertise, Icons.work_outline),
             ],
           ),
         ),
@@ -81,7 +82,7 @@ class ViewProfile extends ParentWidget {
         Center(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
-            child: controller.profileData.value.data?.avatar?.isNotEmpty ?? false ? commonProfileNetworkImage(controller.profileData.value.data?.avatar ?? "",width: 150,height: 150) : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
+            child: controller.profileData.value.data?.avatar?.isNotEmpty ?? false ? commonProfileNetworkImage(controller.profileData.value.data?.avatar ?? "", width: 150, height: 150) : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
           ),
         ),
       ],

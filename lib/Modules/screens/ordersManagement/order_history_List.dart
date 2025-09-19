@@ -4,12 +4,13 @@ import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../model/get_all_order_step_model.dart' show Data;
+import '../../model/get_all_order_step_model.dart';
 
 class OrderListHistory extends ParentWidget {
   const OrderListHistory({super.key});
@@ -39,7 +40,7 @@ class OrderListHistory extends ParentWidget {
                                 return orderContent(h, w, index, steps, controller);
                               },
                             )
-                          : shimmerList(w, h * 0.2, list: 4)
+                          : shimmerList(w, h * 0.2, list: 4),
                     ),
             ),
           ),
@@ -54,22 +55,21 @@ class OrderListHistory extends ParentWidget {
       children: [
         16.kH,
         Text(
-          "Hi, there.",
+          appStrings.hiThere,
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
         ),
         SizedBox(height: h * 0.1),
         Image.asset(appImages.orderscreen, height: 250, fit: BoxFit.fitHeight),
         16.kH,
         Text(
-          'No Orders Found',
+          appStrings.noOrdersFound,
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
         ),
         10.kH,
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Text(
-            "Thanks for checking out Your Orders, we hope your products can "
-            "make your routine a little more enjoyable.",
+            appStrings.emptyOrderDesc,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, color: Colors.grey[700]),
           ),
@@ -103,10 +103,10 @@ class OrderListHistory extends ParentWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    buildOrderDetailColumn('Payment', '₹ 300.50'),
-                    buildOrderDetailColumn('Product ID', 'TST11414'),
-                    buildOrderDetailColumn('Order Qty.', '${index + 1}0'),
-                    buildOrderDetailColumn('Order Status', 'Delivered', color: appColors.brownDarkText),
+                    buildOrderDetailColumn(appStrings.payment, '₹ 300.50'),
+                    buildOrderDetailColumn(appStrings.productId, 'TST11414'),
+                    buildOrderDetailColumn(appStrings.orderQty, '${index + 1}0'),
+                    buildOrderDetailColumn(appStrings.orderStatus, appStrings.delivered, color: appColors.brownDarkText),
                   ],
                 ),
               ),

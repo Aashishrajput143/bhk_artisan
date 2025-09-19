@@ -3,6 +3,7 @@ import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -19,10 +20,10 @@ class ProductDetailScreen extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            appBar: commonAppBar("Product Details"),
+            appBar: commonAppBar(appStrings.productDetailsTitle),
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16),
                 child: controller.getProductModel.value.data?.productName?.isEmpty ?? true
                     ? shimmerProductDetails(h, w)
                     : Column(
@@ -46,9 +47,7 @@ class ProductDetailScreen extends ParentWidget {
         Column(
           children: [
             CarouselSlider(
-              items: controller.getProductModel.value.data?.images?.isNotEmpty ?? false
-                  ? controller.getProductModel.value.data?.images?.map<Widget>((image) => commonNetworkImage(image.imageUrl ?? "", width: w * 0.9, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))).toList()
-                  : [commonNetworkImage("", width: w * 0.9, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))],
+              items: controller.getProductModel.value.data?.images?.isNotEmpty ?? false ? controller.getProductModel.value.data?.images?.map<Widget>((image) => commonNetworkImage(image.imageUrl ?? "", width: w, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))).toList() : [commonNetworkImage("", width: w, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))],
               carouselController: controller.slidercontroller,
               options: CarouselOptions(
                 height: h * 0.43,
@@ -112,7 +111,7 @@ class ProductDetailScreen extends ParentWidget {
                           controller.thumbnailScrollController.animateTo(targetOffset, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
                         },
                         child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          margin: const EdgeInsets.only(right: 4),
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
                             border: Border.all(color: controller.currentIndex.value == index ? appColors.brownDarkText : Colors.transparent, width: 2),
@@ -155,7 +154,7 @@ class ProductDetailScreen extends ParentWidget {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
         ),
         Text(
-          "Product ID: BHKP000${controller.getProductModel.value.data?.productId ?? "0"}",
+          "${appStrings.productIdPrefix}${controller.getProductModel.value.data?.productId ?? "0"}",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPending),
         ),
         12.kH,
@@ -178,7 +177,7 @@ class ProductDetailScreen extends ParentWidget {
           ],
         ),
         Text(
-          "Inclusive all the taxes",
+          appStrings.inclusiveTaxes,
           style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w300, color: appColors.contentPrimary),
         ),
         Padding(
@@ -189,7 +188,7 @@ class ProductDetailScreen extends ParentWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Product Quantity",
+              appStrings.productQuantity,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
             ),
             commonTags(appColors.contentPrimary, padding: 25, borderColor: appColors.contentButtonBrown, hint: "${controller.getProductModel.value.data?.quantity ?? 0}"),
@@ -197,12 +196,12 @@ class ProductDetailScreen extends ParentWidget {
         ),
         20.kH,
         Text(
-          "Product Details",
+          appStrings.productDetails,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         ),
         16.kH,
         Text(
-          "Material",
+          appStrings.material,
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
         ),
         6.kH,
@@ -212,7 +211,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         16.kH,
         Text(
-          "Net Weight",
+          appStrings.netWeight,
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
         ),
         6.kH,
@@ -222,7 +221,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         16.kH,
         Text(
-          "Art Used",
+          appStrings.artUsed,
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
         ),
         6.kH,
@@ -232,7 +231,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         16.kH,
         Text(
-          "Dimensions",
+          appStrings.dimensions,
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
         ),
         6.kH,
@@ -242,7 +241,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         16.kH,
         Text(
-          "Texture",
+          appStrings.texture,
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
         ),
         6.kH,
@@ -252,7 +251,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         16.kH,
         Text(
-          "Pattern Used",
+          appStrings.patternUsed,
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
         ),
         6.kH,
@@ -262,7 +261,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         16.kH,
         Text(
-          "Time to Make",
+          appStrings.timeToMake,
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
         ),
         6.kH,
@@ -272,7 +271,7 @@ class ProductDetailScreen extends ParentWidget {
         ),
         16.kH,
         Text(
-          "Care Instructions",
+          appStrings.careInstructions,
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
         ),
         6.kH,

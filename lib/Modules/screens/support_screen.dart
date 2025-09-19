@@ -3,6 +3,7 @@ import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,25 +16,25 @@ class SupportScreen extends ParentWidget {
     SupportController controller = Get.put(SupportController());
     return Scaffold(
       backgroundColor: appColors.backgroundColor,
-      appBar: commonAppBar("Need Assistance"),
+      appBar: commonAppBar(appStrings.needAssistance),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(child: Image.asset(appImages.support, width: 400)),
-            commonComponent("Name", commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, hint: "Enter your Name", fontSize: 14)),
+            commonComponent(appStrings.name, commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, hint: appStrings.enterName, fontSize: 14)),
             12.kH,
-            commonComponent("Email", commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, hint: "Enter your Email", fontSize: 14)),
+            commonComponent(appStrings.email, commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, hint: appStrings.emailHint, fontSize: 14)),
             12.kH,
-            commonComponent("Phone Number", commonTextField(controller.phoneController.value, controller.phoneFocusNode.value, w, (value) {}, hint: "Enter your Phone Number", fontSize: 14)),
+            commonComponent(appStrings.phone, commonTextField(controller.phoneController.value, controller.phoneFocusNode.value, w, (value) {}, hint: appStrings.enterPhone, fontSize: 14)),
             12.kH,
-            commonComponent("Message", commonDescriptionTextField(controller.messageController.value, controller.messageFocusNode.value, w, maxLines: 5,minLines: 4, (value) {}, hint: "Write your message here...", fontSize: 15)),
+            commonComponent(appStrings.message, commonDescriptionTextField(controller.messageController.value, controller.messageFocusNode.value, w, maxLines: 5, minLines: 4, (value) {}, hint: appStrings.enterMessage, fontSize: 15)),
             20.kH,
-            commonButton(w, 50, appColors.contentButtonBrown, Colors.white, () {}, hint: "Send Message"),
+            commonButton(w, 50, appColors.contentButtonBrown, Colors.white, () {}, hint: appStrings.sendMessage),
             30.kH,
-            contactDetails(Icons.call, "(246)264 845"),
-            contactDetails(Icons.email_outlined, "BharathasthKaushal@gmail.com"),
+            contactDetails(Icons.call, appStrings.contactPhone),
+            contactDetails(Icons.email_outlined, appStrings.contactEmail),
           ],
         ),
       ),

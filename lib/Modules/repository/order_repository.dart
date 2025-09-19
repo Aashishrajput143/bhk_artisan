@@ -23,8 +23,8 @@ class OrderRepository {
     return UpdateOrderStatusModel.fromJson(response);
   }
 
-  Future<AddProductModel> updateOrderImageApi(var path) async {
-    dynamic response = await _apiServices.multiPartImageOnlyApi(AppUrl.addproduct, path, "images");
+  Future<AddProductModel> updateOrderImageApi(var data,var path,var id) async {
+    dynamic response = await _apiServices.multiPartMediaApi(data, "${AppUrl.completeOrder}$id", path, "work_images");
     return AddProductModel.fromJson(response);
   }
 }

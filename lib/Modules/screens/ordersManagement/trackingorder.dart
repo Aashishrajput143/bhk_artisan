@@ -4,6 +4,7 @@ import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/font.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/stringlimitter.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +17,11 @@ class OrderTrackingPage extends ParentWidget {
   Widget buildingView(BuildContext context, double h, double w) {
     return Scaffold(
       backgroundColor: appColors.backgroundColor,
-      appBar: commonAppBar("Order Id #110516"),
+      appBar: commonAppBar("${appStrings.orderIdPrefixHash}110516"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(children: [logisticCardHeader(), 20.kH, logisticStatus(), 20.kH, logisticExpected(w, "Expected Pickup on SEP 12, 2025")]),
+          child: Column(children: [logisticCardHeader(), 20.kH, logisticStatus(), 20.kH, logisticExpected(w, "${appStrings.expectedPickup}SEP 12, 2025")]),
         ),
       ),
     );
@@ -38,13 +39,13 @@ class OrderTrackingPage extends ParentWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Order Fulfillment Status', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          SizedBox(height: 16),
-          buildTimelineItem(status: "Order Received", date: 'AUG 15, 2025', isCompleted: true),
-          buildTimelineItem(status: "Order Completed", date: 'SEP 10, 2025', isCompleted: true),
-          buildTimelineItem(status: 'Awaiting Pickup', date: 'SEP 12, 2025', isCompleted: false),
-          buildTimelineItem(status: 'In Transit', date: 'SEP 14, 2025', isCompleted: false),
-          buildTimelineItem(status: 'Order Delivered', date: 'SEP 20, 2024', description: 'Your order has been Successfully Delivered', isCompleted: false, islast: true),
+          Text(appStrings.orderFulfillmentStatus, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          16.kH,
+          buildTimelineItem(status: appStrings.statusOrderReceived, date: 'AUG 15, 2025', isCompleted: true),
+          buildTimelineItem(status: appStrings.statusOrderCompleted, date: 'SEP 10, 2025', isCompleted: true),
+          buildTimelineItem(status: appStrings.statusAwaitingPickup, date: 'SEP 12, 2025', isCompleted: false),
+          buildTimelineItem(status: appStrings.statusInTransit, date: 'SEP 14, 2025', isCompleted: false),
+          buildTimelineItem(status: appStrings.statusOrderDelivered, date: 'SEP 20, 2024', description: appStrings.deliveredDescription, isCompleted: false, islast: true),
         ],
       ),
     );
@@ -108,16 +109,10 @@ class OrderTrackingPage extends ParentWidget {
               size: 22,
             ),
             if (!islast)
-            SizedBox(
-              height: Get.height * 0.07,
-              child: DottedLine(
-                direction: Axis.vertical,
-                lineLength: Get.height * 0.07,
-                lineThickness: 2,
-                dashLength: 9,
-                dashColor: color??appColors.border,
+              SizedBox(
+                height: Get.height * 0.07,
+                child: DottedLine(direction: Axis.vertical, lineLength: Get.height * 0.07, lineThickness: 2, dashLength: 9, dashColor: color ?? appColors.border),
               ),
-            ),
           ],
         ),
         12.kW,

@@ -10,6 +10,7 @@ import 'package:bhk_artisan/resources/enums/address_type_enum.dart';
 import 'package:bhk_artisan/resources/font.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/inputformatter.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,7 +28,7 @@ class AddressScreen extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            appBar: commonAppBar("Manage Address"),
+            appBar: commonAppBar(appStrings.manageAddress),
             body: controller.rxRequestStatus.value == Status.LOADING
                 ? shimmerAddressScreen(h, w)
                 : controller.getAddressModel.value.data?.isNotEmpty ?? false
@@ -44,10 +45,10 @@ class AddressScreen extends ParentWidget {
                       child: Column(
                         children: [
                           SvgPicture.asset(appImages.emptyMap, color: appColors.brownbuttonBg),
-                          Text("Your Address is Empty", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(appStrings.yourAddressEmpty, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                           4.kH,
                           Text(
-                            "No address added yet. Keeping your profile\nsafe starts with adding your address. ",
+                            appStrings.emptyAddressDescription,
                             style: TextStyle(fontSize: 14, color: appColors.contentSecondary),
                             textAlign: TextAlign.center,
                           ),
@@ -80,7 +81,7 @@ class AddressScreen extends ParentWidget {
                         controller.hasDefault.value = false;
                       }
                       bottomDrawer(context, h * 0.8, w, controller);
-                    }, hint: "Add Address"),
+                    }, hint: appStrings.addAddress),
                   ),
             floatingActionButtonLocation: controller.getAddressModel.value.data?.isNotEmpty ?? true ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.centerFloat,
           ),
@@ -112,34 +113,34 @@ class AddressScreen extends ParentWidget {
         ListTile(
           contentPadding: EdgeInsets.zero,
           minVerticalPadding: 0,
-          leading: Icon((address?.addressType ?? "OTHERS").toAddressType().icon, size: 25, color: appColors.brownDarkText),
+          leading: Icon((address?.addressType ?? "").toAddressType().icon, size: 25, color: appColors.brownDarkText),
           title: Row(
             children: [
               Text(
-                (address?.addressType ?? "OTHERS").toAddressType().displayName,
+                (address?.addressType ?? "").toAddressType().displayName,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: appColors.contentPending),
               ),
-              if (address?.isDefault ?? false) ...[10.kW, commonContainer("Default", appColors.brownDarkText, isBrown: true, pH: 14, borderWidth: 1.5)],
+              if (address?.isDefault ?? false) ...[10.kW, commonContainer(appStrings.defaultTag, appColors.brownDarkText, isBrown: true, pH: 14, borderWidth: 1.5)],
             ],
           ),
           trailing: PopupMenuButton<String>(
             color: appColors.popColor,
             onSelected: (value) {
-              if (value == 'Delete') {
+              if (value == appStrings.delete) {
                 if (address?.isDefault ?? false) {
-                  CommonMethods.showToast("Default address can't be deleted", icon: Icons.error, bgColor: appColors.declineColor);
+                  CommonMethods.showToast(appStrings.defaultAddressDeleted, icon: Icons.error, bgColor: appColors.declineColor);
                 } else {
                   controller.deleteAddressApi((address?.id ?? 0).toString());
                 }
-              } else if (value == 'Edit') {
+              } else if (value == appStrings.edit) {
                 controller.getLocationApi(index);
                 bottomDrawer(context, h * 0.8, w, controller, id: (address?.id ?? 0).toString());
-              } else if (value == 'markasDefault') {
+              } else if (value == appStrings.markasDefault) {
                 controller.editAddressApi((address?.id ?? 0).toString(), isDefault: true);
               }
             },
             icon: Icon(Icons.more_vert, color: Colors.grey[700]),
-            itemBuilder: (BuildContext context) => [if (!(address?.isDefault ?? false)) PopupMenuItem(value: 'markasDefault', child: Text('Mark As Default')), PopupMenuItem(value: 'Delete', child: Text('Delete')), PopupMenuItem(value: 'Edit', child: Text('Edit'))],
+            itemBuilder: (BuildContext context) => [if (!(address?.isDefault ?? false)) PopupMenuItem(value: appStrings.markasDefault, child: Text(appStrings.markasDefault)), PopupMenuItem(value: appStrings.delete, child: Text(appStrings.delete)), PopupMenuItem(value: appStrings.edit, child: Text(appStrings.edit))],
           ),
         ),
         // 6.kH,
@@ -177,7 +178,7 @@ class AddressScreen extends ParentWidget {
                       horizontalTitleGap: 0,
                       contentPadding: EdgeInsets.all(0),
                       title: Text(
-                        "Address Details",
+                        appStrings.addressDetails,
                         style: TextStyle(fontSize: 18, color: appColors.contentPrimary, fontFamily: appFonts.robotoSlabBold, fontWeight: FontWeight.bold),
                       ),
                       leading: Icon(Icons.place, size: 25.0, color: appColors.brownDarkText),
@@ -189,7 +190,7 @@ class AddressScreen extends ParentWidget {
                     const Divider(height: 1),
                     10.kH,
                     Text(
-                      'Complete Address would assists better\n us in serving you...',
+                      appStrings.addressDetailsDescription,
                       style: TextStyle(fontSize: 13.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
                     ),
                     20.kH,
@@ -199,43 +200,43 @@ class AddressScreen extends ParentWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             commonComponent(
-                              "House/Flat/Building",
-                              commonTextField(controller.flatNameController.value, controller.flatFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your house/Flat/Building', maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
+                              appStrings.houseBuilding,
+                              commonTextField(controller.flatNameController.value, controller.flatFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.houseBuildingHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
                             ),
                             16.kH,
                             commonComponent(
-                              "Street/Area/Locality",
-                              commonTextField(controller.streetNameController.value, controller.streetFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Street/Area/Locality', maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
+                              appStrings.streetArea,
+                              commonTextField(controller.streetNameController.value, controller.streetFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.streetAreaHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
                             ),
                             16.kH,
-                            commonComponent("LandMark", commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter LandMark', maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
+                            commonComponent(appStrings.landMark, commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.landMarkHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
                             16.kH,
                             commonComponent(
-                              "City",
-                              commonTextField(controller.cityController.value, controller.cityFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your City', maxLines: 1, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
+                              appStrings.city,
+                              commonTextField(controller.cityController.value, controller.cityFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.cityHint, maxLines: 1, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
                               mandatory: false,
                             ),
                             16.kH,
                             commonComponent(
-                              "State",
-                              commonTextField(controller.stateController.value, controller.stateFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your State', maxLines: 1, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
+                              appStrings.state,
+                              commonTextField(controller.stateController.value, controller.stateFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.stateHint, maxLines: 1, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
                               mandatory: false,
                             ),
                             16.kH,
                             commonComponent(
-                              "Country",
-                              commonTextField(controller.countryController.value, controller.countryFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Country', maxLines: 1, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
+                              appStrings.country,
+                              commonTextField(controller.countryController.value, controller.countryFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.countryHint, maxLines: 1, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
                               mandatory: false,
                             ),
                             16.kH,
                             commonComponent(
-                              "PinCode",
-                              commonTextField(controller.pinController.value, controller.pinFocusNode.value, w, (value) {}, fontSize: 14, hint: 'Enter your Pin Code', maxLines: 1, maxLength: 6, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
+                              appStrings.pinCode,
+                              commonTextField(controller.pinController.value, controller.pinFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.pinCodeHint, maxLines: 1, maxLength: 6, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
                               mandatory: false,
                             ),
                             20.kH,
                             commonComponent(
-                              "AddressType",
+                              appStrings.addressType,
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
@@ -262,10 +263,9 @@ class AddressScreen extends ParentWidget {
                               (val) {
                                 if (controller.getAddressModel.value.data?.isNotEmpty ?? false) {
                                   controller.hasDefault.value = val;
-                                  print("Checkbox changed: $val");
                                 }
                               },
-                              label: "Mark as Default",
+                              label: appStrings.markasDefault,
                               checkedColor: appColors.brownDarkText,
                               uncheckedColor: Colors.transparent,
                               borderColor: appColors.brownDarkText,
@@ -286,10 +286,10 @@ class AddressScreen extends ParentWidget {
                             ? (id.isNotEmpty && id != "0")
                                   ? controller.editAddressApi(id)
                                   : controller.addAddressApi()
-                            : CommonMethods.showToast(controller.validateStringForm() ?? "please fill all the mandatory fields"),
+                            : CommonMethods.showToast(controller.validateStringForm() ?? appStrings.mandatoryFields),
                         fontSize: 17,
                         radius: 12,
-                        hint: "Confirm Address",
+                        hint: appStrings.confirmAddress,
                       ),
                     ),
                     10.kH,

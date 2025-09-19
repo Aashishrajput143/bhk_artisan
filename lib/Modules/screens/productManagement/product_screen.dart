@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/Modules/screens/productManagement/cancel_products.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/pending_products.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,15 +17,15 @@ class ProductScreen extends StatelessWidget {
     return Scaffold(
       appBar: appBarTab(
         tabs: [
-          Tab(text: 'Approved'),
-          Tab(text: 'Pending'),
-          Tab(text: 'Rejected'),
+          Tab(text: appStrings.tabApproved),
+          Tab(text: appStrings.tabPending),
+          Tab(text: appStrings.tabRejected),
         ],
-        title: "MY PRODUCTS",
+        title:appStrings.myProductsTitle,
         tabController: controller.tabController,
       ),
       body: DefaultTabController(
-        length: 2,
+        length: 3,
         initialIndex: controller.initialIndex.value,
         child: Column(
           children: [

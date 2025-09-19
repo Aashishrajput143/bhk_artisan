@@ -171,9 +171,9 @@ class NetworkApiServices extends BaseApiServices {
         dynamic responseJson = jsonDecode(response.body);
         return responseJson;
       case 400:
-        throw InvalidUrlException();
+        throw InvalidUrlException(response.body);
       case 401:
-        throw AuthenticationException('');
+        throw AuthenticationException(response.body);
       case 408:
         throw FetchDataException(response.body);
       case 409:

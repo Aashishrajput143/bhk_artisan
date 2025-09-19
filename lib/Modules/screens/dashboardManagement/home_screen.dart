@@ -8,7 +8,9 @@ import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/product_status_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
@@ -53,38 +55,38 @@ class HomeScreen extends ParentWidget {
   }
 
   void showSuccessDialog() {
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-              child: Icon(Icons.check, color: appColors.contentWhite, size: 30),
-            ),
-            20.kH,
-            Text(
-              "Success!",
-              style: TextStyle(fontSize: 20, color: appColors.contentPrimary, fontWeight: FontWeight.bold),
-            ),
-            10.kH,
-            Text(
-              "You have successfully logged into the system",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: appColors.contentPending),
-            ),
-            20.kH,
-            commonButton(Get.width, 45, appColors.contentButtonBrown, appColors.contentWhite, () => Get.back(), hint: "Go to Dashboard", radius: 8),
-          ],
-        ),
+  Get.dialog(
+    AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+            child: Icon(Icons.check, color: appColors.contentWhite, size: 30),
+          ),
+          20.kH,
+          Text(
+            appStrings.success,
+            style: TextStyle(fontSize: 20, color: appColors.contentPrimary, fontWeight: FontWeight.bold),
+          ),
+          10.kH,
+          Text(
+            appStrings.loginSuccess,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14, color: appColors.contentPending),
+          ),
+          20.kH,
+          commonButton(Get.width, 45, appColors.contentButtonBrown, appColors.contentWhite, () => Get.back(), hint: appStrings.goToDashboard, radius: 8),
+        ],
       ),
-      barrierDismissible: false,
-    );
-  }
+    ),
+    barrierDismissible: false,
+  );
+}
 
   PreferredSizeWidget appBarHome(Homecontroller controller) {
     return AppBar(
@@ -132,15 +134,15 @@ class HomeScreen extends ParentWidget {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                commonContainer(w, "0", Colors.orange[100], Colors.orange, "Today Orders", Icons.shopping_cart),
+                commonContainer(w, "0", Colors.orange[100], Colors.orange, appStrings.todayOrders, Icons.shopping_cart),
                 12.kW,
-                commonContainer(w, "₹ 0", Colors.blue[100], Colors.blue, "Today Sales", Icons.bar_chart),
+                commonContainer(w, "₹ 0", Colors.blue[100], Colors.blue, appStrings.todaySales, Icons.bar_chart),
                 12.kW,
-                commonContainer(w, "0", Colors.red[100], Colors.red, "Pending Orders", Icons.pending_actions),
+                commonContainer(w, "0", Colors.red[100], Colors.red, appStrings.pendingOrders, Icons.pending_actions),
                 12.kW,
-                commonContainer(w, "0", Colors.orange[100], Colors.orange, "Total Orders", Icons.shopping_cart),
+                commonContainer(w, "0", Colors.orange[100], Colors.orange, appStrings.totalOrders, Icons.shopping_cart),
                 12.kW,
-                commonContainer(w, "₹ 0", Colors.blue[100], Colors.blue, "Annual Sales", Icons.bar_chart),
+                commonContainer(w, "₹ 0", Colors.blue[100], Colors.blue, appStrings.annualSales, Icons.bar_chart),
               ],
             ),
           ),
@@ -206,13 +208,14 @@ class HomeScreen extends ParentWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Recently Added Products', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-              InkWell(
+              Text(appStrings.recentlyAddedProducts, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   controller.commonController.selectedIndex.value = 2;
                   controller.productController.changeTab(0);
                 },
-                child: Text('View All>', style: TextStyle(fontSize: 14.0, color: Colors.brown)),
+                child: Text(appStrings.viewAll, style: TextStyle(fontSize: 14.0, color: Colors.brown)),
               ),
             ],
           ),
@@ -221,13 +224,14 @@ class HomeScreen extends ParentWidget {
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 20.0, mainAxisSpacing: 7.0, childAspectRatio: 0.6),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 20.0, mainAxisSpacing: 7.0, childAspectRatio: 0.63),
           itemCount: min(4, controller.getApprovedProductModel.value.data?.docs?.length ?? 0),
           itemBuilder: (context, index) {
-            return InkWell(
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
               onTap: () {
                 Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
-                  controller.getProductApi("APPROVED", isLoader: false);
+                  controller.getProductApi(ProductStatus.APPROVED.name, isLoader: false);
                 });
               },
               child: productCard(w, controller.getApprovedProductModel.value.data?.docs?[index]),
@@ -247,13 +251,14 @@ class HomeScreen extends ParentWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Recent Orders', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-              InkWell(
+              Text(appStrings.recentOrders, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   controller.commonController.selectedIndex.value = 1;
                   controller.orderController.changeTab(0);
                 },
-                child: Text('View All>', style: TextStyle(fontSize: 14.0, color: Colors.brown)),
+                child: Text(appStrings.viewAll, style: TextStyle(fontSize: 14.0, color: Colors.brown)),
               ),
             ],
           ),
@@ -292,7 +297,7 @@ class HomeScreen extends ParentWidget {
               style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13),
             ),
             5.kW,
-            Text("(₹ ${list?.productPricePerPiece ?? "0"} /piece)", style: TextStyle(color: appColors.contentPending, fontSize: 12)),
+            Text("(₹ ${list?.productPricePerPiece ?? "0"} ${appStrings.perPiece})", style: TextStyle(color: appColors.contentPending, fontSize: 12)),
           ],
         ),
         3.kH,
@@ -310,12 +315,13 @@ class HomeScreen extends ParentWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Sales Statistics', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-              InkWell(
+              Text(appStrings.salesStatistics, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   controller.commonController.selectedIndex.value = 3;
                 },
-                child: Text('View All>', style: TextStyle(fontSize: 14.0, color: Colors.brown)),
+                child: Text(appStrings.viewAll, style: TextStyle(fontSize: 14.0, color: Colors.brown)),
               ),
             ],
           ),

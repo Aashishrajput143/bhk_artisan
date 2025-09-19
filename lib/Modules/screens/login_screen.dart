@@ -149,9 +149,9 @@ Widget errorToggle(LoginController controller) {
 }
 
 Widget google(LoginController controller) {
-  return InkWell(
+  return GestureDetector(
+    behavior: HitTestBehavior.opaque,
     //onTap: () async => await controller.signInWithGoogle(),
-    // onTap: () => Get.toNamed(RoutesClass.gotoVerifyScreen(), arguments: {'referenceId': 23, "identity": "52353462", "countryCode": "+91"}),
     child: Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(color: appColors.contentWhite, borderRadius: BorderRadius.circular(25)),

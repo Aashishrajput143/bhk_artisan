@@ -12,6 +12,7 @@ class UploadOrderImageController extends GetxController {
   final _api = OrderRepository();
 
   var imagefiles = <String>[].obs;
+  var id = Get.arguments ?? "";
 
   bool validateForm() {
     if (imagefiles.length >= 4) return true;
@@ -34,14 +35,15 @@ class UploadOrderImageController extends GetxController {
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
 
+      Map<String, String> data = {"progress_percentage": "100"};
       _api
-          .updateOrderImageApi(imagefiles)
+          .updateOrderImageApi(data, imagefiles, id)
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
             setaddProductModeldata(value);
             Utils.printLog("Response===> ${value.toString()}");
             Get.back();
-            CommonMethods.showToast("Product Added Successfully...", icon: Icons.check, bgColor: Colors.green);
+            CommonMethods.showToast("Order Completed Successfully...", icon: Icons.check, bgColor: Colors.green);
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

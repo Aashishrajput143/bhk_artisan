@@ -6,6 +6,7 @@ import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/font.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class NotificationScreen extends ParentWidget {
     return Obx(
       () => Scaffold(
         backgroundColor: appColors.backgroundColor,
-        appBar: commonAppBar("Notifications"),
+        appBar: commonAppBar(appStrings.notificationsTitle),
         body: controller.rxRequestStatus.value == Status.LOADING
             ? ListView.builder(
                 shrinkWrap: true,
@@ -62,7 +63,7 @@ class NotificationScreen extends ParentWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text("Mark as Read", style: TextStyle(color: appColors.contentWhite, fontSize: 16)),
+                                Text(appStrings.markAsRead, style: TextStyle(color: appColors.contentWhite, fontSize: 16)),
                                 8.kW,
                                 Icon(Icons.done, color: appColors.contentWhite, size: 28),
                               ],
@@ -80,7 +81,7 @@ class NotificationScreen extends ParentWidget {
                               children: [
                                 Icon(Icons.done, color: appColors.contentWhite, size: 28),
                                 8.kW,
-                                Text("Mark as Read", style: TextStyle(color: appColors.contentWhite, fontSize: 16)),
+                                Text(appStrings.markAsRead, style: TextStyle(color: appColors.contentWhite, fontSize: 16)),
                               ],
                             ),
                           ),

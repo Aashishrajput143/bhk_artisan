@@ -6,6 +6,7 @@ import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
@@ -34,14 +35,14 @@ class OrderList extends ParentWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: controller.getAllActiveOrderStepModel.value.data?.isNotEmpty ?? false
                           ? ListView.builder(
-                            itemCount: controller.getAllActiveOrderStepModel.value.data?.length ?? 0,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final steps = controller.getAllActiveOrderStepModel.value.data?[index];
-                              return orderContent(h, w, index, steps, controller);
-                            },
-                          )
-                          : shimmerList(w, h * 0.2, list: 4)
+                              itemCount: controller.getAllActiveOrderStepModel.value.data?.length ?? 0,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                final steps = controller.getAllActiveOrderStepModel.value.data?[index];
+                                return orderContent(h, w, index, steps, controller);
+                              },
+                            )
+                          : shimmerList(w, h * 0.2, list: 4),
                     ),
             ),
           ),
@@ -56,22 +57,21 @@ class OrderList extends ParentWidget {
       children: [
         16.kH,
         Text(
-          "Hi, there.",
+          appStrings.hiThere,
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
         ),
         SizedBox(height: h * 0.1),
         Image.asset(appImages.orderscreen, height: 250, fit: BoxFit.fitHeight),
         16.kH,
         Text(
-          'No Orders Available',
+          appStrings.noOrdersAvailable,
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
         ),
         10.kH,
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Text(
-            "Thanks for checking out Orders, we hope your products can "
-            "make your routine a little more enjoyable.",
+            appStrings.emptyOrdersDesc,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, color: Colors.grey[700]),
           ),
@@ -108,10 +108,10 @@ class OrderList extends ParentWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    buildOrderDetailColumn('Payment', '₹ ${steps?.proposedPrice ?? 0}'),
-                    buildOrderDetailColumn('Product ID', steps?.product?.bhkProductId ?? "BHK000"),
-                    buildOrderDetailColumn('Order Qty.', '${steps?.product?.quantity ?? 0}'),
-                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name) buildOrderDetailColumn('Order Status', steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name ? OrderStatus.ACCEPTED.displayText : OrderStatus.REJECTED.displayText, color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name ? appColors.acceptColor : appColors.declineColor),
+                    buildOrderDetailColumn(appStrings.payment, '₹ ${steps?.proposedPrice ?? 0}'),
+                    buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
+                    buildOrderDetailColumn(appStrings.orderQty, '${steps?.product?.quantity ?? 0}'),
+                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name) buildOrderDetailColumn(appStrings.orderStatus, steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name ? OrderStatus.ACCEPTED.displayText : OrderStatus.REJECTED.displayText, color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name ? appColors.acceptColor : appColors.declineColor),
                   ],
                 ),
               ),
@@ -131,12 +131,12 @@ class OrderList extends ParentWidget {
                           controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name, steps?.id);
                         },
                         icon: Icons.inventory_2,
-                        title: "Accept Order",
-                        subtitle: "Are you Sure you want to accept this order?",
+                        title: appStrings.acceptOrder,
+                        subtitle: appStrings.acceptOrderSubtitle,
                         color: appColors.acceptColor,
-                        buttonHint: "Accept",
+                        buttonHint: appStrings.accept,
                       ),
-                      hint: "Accept",
+                      hint: appStrings.accept,
                     ),
                     commonButton(
                       w * 0.4,
@@ -149,12 +149,12 @@ class OrderList extends ParentWidget {
                           controller.updateOrderStatusApi(OrderStatus.REJECTED.name, steps?.id);
                         },
                         icon: Icons.inventory_2,
-                        title: "Decline Order",
-                        subtitle: "Are you Sure you want to decline this order?",
+                        title: appStrings.declineOrder,
+                        subtitle: appStrings.declineOrderSubtitle,
                         color: appColors.declineColor,
-                        buttonHint: "Decline",
+                        buttonHint: appStrings.decline,
                       ),
-                      hint: "Decline",
+                      hint: appStrings.decline,
                     ),
                   ],
                 ),
@@ -187,8 +187,8 @@ Widget orderCardHeader(Data? steps) {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Order ID ORD000${steps?.id}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          Text("Order to be completed by 16 Mar, 02:21 PM", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+          Text("${appStrings.orderIdPrefix}${steps?.id}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text("${appStrings.orderCompleteBy} 16 Mar, 02:21 PM", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
         ],
       ),
     ],
@@ -205,7 +205,7 @@ Widget orderCardContent(Data? steps) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              steps?.stepName ?? "Not Available",
+              steps?.stepName ?? appStrings.notAvailable,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
             ),
             4.kH,
@@ -213,11 +213,11 @@ Widget orderCardContent(Data? steps) {
               children: [
                 Icon(Icons.circle, color: Colors.green, size: 8),
                 4.kW,
-                Text(steps?.artisanAgreedStatus == OrderStatus.PENDING.toString() ? "Order Needs Action!" : "Order is Confirmed", style: TextStyle(color: Colors.green, fontSize: 11)),
+                Text(steps?.artisanAgreedStatus == OrderStatus.PENDING.toString() ? appStrings.orderNeedsAction : appStrings.orderConfirmed, style: TextStyle(color: Colors.green, fontSize: 11)),
               ],
             ),
             4.kH,
-            Text("Order Assigned : 16 Mar, 23:06:51 AM", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+            Text("${appStrings.orderAssigned} : 16 Mar, 23:06:51 AM", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
           ],
         ),
       ),

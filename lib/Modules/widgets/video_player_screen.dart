@@ -2,6 +2,7 @@ import 'package:bhk_artisan/common/common_controllers/video_player_controller.da
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
@@ -15,7 +16,7 @@ class VideoPreviewPage extends ParentWidget {
     return Obx(
       () => Scaffold(
         backgroundColor: Colors.black,
-        appBar: controller.isFullscreen.value ? null : commonAppBar("Introductory Video"),
+        appBar: controller.isFullscreen.value ? null : commonAppBar(appStrings.introductoryVideo),
         body: controller.isInitialized.value
             ? Center(
                 child: SizedBox.expand(

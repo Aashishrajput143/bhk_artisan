@@ -5,6 +5,7 @@ import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class MainProfile extends ParentWidget {
       () => Stack(
         children: [
           Scaffold(
-            appBar: commonAppBar("Profile & More"),
+            appBar: commonAppBar(appStrings.profileAndMore),
             backgroundColor: appColors.backgroundColor,
             body: SingleChildScrollView(
               child: Column(
@@ -36,17 +37,17 @@ class MainProfile extends ParentWidget {
                   ),
                   3.kH,
                   Text(
-                    "${controller.commonController.profileData.value.data?.countryCode??""} ${controller.commonController.profileData.value.data?.phoneNo??""}",
+                    "${controller.commonController.profileData.value.data?.countryCode ?? ""} ${controller.commonController.profileData.value.data?.phoneNo ?? ""}",
                     style: const TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.bold),
                   ),
                   10.kH,
-                  commonButton(100, 40, Colors.brown, appColors.contentWhite, () => Get.toNamed(RoutesClass.viewprofile), hint: "View Profile", radius: 18, paddingHorizontal: 16, paddingVertical: 8),
+                  commonButton(100, 40, Colors.brown, appColors.contentWhite, () => Get.toNamed(RoutesClass.viewprofile), hint: appStrings.viewProfile, radius: 18, paddingHorizontal: 16, paddingVertical: 8),
                   20.kH,
-                  buildProfileOptionCard('My Address', 'Edit, add or remove Address', Icons.location_city, () => Get.toNamed(RoutesClass.addresses)),
-                  buildProfileOptionCard('Privacy & Policy', 'Read how we protect your personal data', Icons.privacy_tip, () => Get.toNamed(RoutesClass.privacypolicy)),
-                  buildProfileOptionCard('Terms & Conditions', 'Review the terms of using our services', Icons.description, () => Get.toNamed(RoutesClass.termscondition)),
-                  buildProfileOptionCard('Settings', 'Edit Profile, Manage your profile', Icons.settings_outlined, () => Get.toNamed(RoutesClass.setting)),
-                  buildProfileOptionCard('Logout', 'Sign out from your account', Icons.logout, () =>MyAlertDialog.showlogoutDialog(controller.logOutApi)),
+                  buildProfileOptionCard(appStrings.myAddress, appStrings.editAddRemoveAddress, Icons.location_city, () => Get.toNamed(RoutesClass.addresses)),
+                  buildProfileOptionCard(appStrings.privacyPolicyTitle, appStrings.privacyPolicySubtitle, Icons.privacy_tip, () => Get.toNamed(RoutesClass.privacypolicy)),
+                  buildProfileOptionCard(appStrings.termsConditions, appStrings.termsConditionsSubtitle, Icons.description, () => Get.toNamed(RoutesClass.termscondition)),
+                  buildProfileOptionCard(appStrings.settings, appStrings.settingsSubtitle, Icons.settings_outlined, () => Get.toNamed(RoutesClass.setting)),
+                  buildProfileOptionCard(appStrings.logout, appStrings.logoutSubtitle, Icons.logout, () => MyAlertDialog.showlogoutDialog(controller.logOutApi)),
                 ],
               ),
             ),
