@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'constants.dart';
+import 'common_constants.dart';
 
 class AppPreferences {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();

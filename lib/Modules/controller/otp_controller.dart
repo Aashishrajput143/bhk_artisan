@@ -4,8 +4,8 @@ import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bhk_artisan/utils/utils.dart';
-import '../../common/CommonMethods.dart';
-import '../../common/Constants.dart';
+import '../../common/common_methods.dart';
+import '../../common/common_constants.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../../routes/routes_class.dart';
@@ -50,7 +50,7 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
       countryCode.value = Get.arguments['countryCode'];
     }
     animationController = AnimationController(vsync: this, duration: const Duration(seconds: 6))..repeat();
-    print("${referenceId.value} ${identity.value} ${countryCode.value}");
+    debugPrint("${referenceId.value} ${identity.value} ${countryCode.value}");
   }
 
   void startTimerCountdown() {
@@ -117,7 +117,6 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
   }
 
   redirect(VerifyOTPModel value) {
-    print("Statuscode======> ${verifyOTPData.value.statusCode}");
     Utils.savePreferenceValues(Constants.accessToken, "${verifyOTPData.value.data?.accessToken}");
 
     Utils.savePreferenceValues(Constants.email, "${verifyOTPData.value.data?.email}");

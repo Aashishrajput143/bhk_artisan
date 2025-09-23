@@ -73,9 +73,17 @@ class LogisticsScreen extends ParentWidget {
               logisticCardHeader(order),
               logisticCardContent(order),
               Divider(thickness: 1, color: Colors.grey[300]),
-              Text(
-                "Location:",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
+              Row(
+                children: [
+                  Text(
+                    "Location: ",
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
+                  ),
+                  Text(
+                    "Home",
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: appColors.brownDarkText),
+                  ),
+                ],
               ),
               2.kH,
               Text(

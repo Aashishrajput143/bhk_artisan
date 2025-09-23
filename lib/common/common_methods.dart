@@ -129,7 +129,7 @@ class CommonMethods {
       pathPDF = file.path;
       return pathPDF;
     } catch (e) {
-      print("error ->>>>${e.toString()}");
+      debugPrint("error ->>>>${e.toString()}");
       return "Eror";
     }
   }

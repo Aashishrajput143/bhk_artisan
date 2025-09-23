@@ -1,7 +1,7 @@
 import 'package:bhk_artisan/Modules/controller/address_controller.dart';
-import 'package:bhk_artisan/common/CommonMethods.dart';
+import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/common/my_utils.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
@@ -209,7 +209,11 @@ class AddressScreen extends ParentWidget {
                               commonTextField(controller.streetNameController.value, controller.streetFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.streetAreaHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
                             ),
                             16.kH,
-                            commonComponent(appStrings.landMark, commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.landMarkHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
+                            commonComponent(
+                              appStrings.landMark,
+                              commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.landMarkHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
+                              mandatory: false,
+                            ),
                             16.kH,
                             commonComponent(
                               appStrings.city,
@@ -262,7 +266,9 @@ class AddressScreen extends ParentWidget {
                               controller.hasDefault.value,
                               (val) {
                                 if (controller.getAddressModel.value.data?.isNotEmpty ?? false) {
-                                  controller.hasDefault.value = val;
+                                  if ((controller.getAddressModel.value.data?.length ?? 0) > 1) {
+                                    controller.hasDefault.value = val;
+                                  }
                                 }
                               },
                               label: appStrings.markasDefault,

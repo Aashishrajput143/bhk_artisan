@@ -1,5 +1,5 @@
 import 'package:bhk_artisan/Modules/model/get_all_order_step_model.dart';
-import 'package:bhk_artisan/common/MyAlertDialog.dart';
+import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
@@ -82,10 +82,9 @@ class OrderList extends ParentWidget {
 
   Widget orderContent(double h, double w, int index, Data? steps, GetOrderController controller) {
     return GestureDetector(
-      onTap: () {
-        controller.index.value = index;
-        Get.toNamed(RoutesClass.ordersdetails);
-      },
+      onTap: () => Get.toNamed(RoutesClass.ordersdetails, arguments: steps?.id ?? "")?.then((onValue) {
+        controller.getAllOrderStepApi();
+      }),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
@@ -110,8 +109,17 @@ class OrderList extends ParentWidget {
                   children: [
                     buildOrderDetailColumn(appStrings.payment, '₹ ${steps?.proposedPrice ?? 0}'),
                     buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
-                    buildOrderDetailColumn(appStrings.orderQty, '${steps?.product?.quantity ?? 0}'),
-                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name) buildOrderDetailColumn(appStrings.orderStatus, steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name ? OrderStatus.ACCEPTED.displayText : OrderStatus.REJECTED.displayText, color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name ? appColors.acceptColor : appColors.declineColor),
+                    buildOrderDetailColumn(appStrings.orderQty, (steps?.product?.quantity ?? 0).toString().padLeft(2, '0')),
+                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name)
+                      buildOrderDetailColumn(
+                        appStrings.orderStatus,
+                        double.tryParse(steps?.progressPercentage?.toString() ?? "0") == 100
+                            ? OrderStatus.INREVIEW.displayText
+                            : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
+                            ? OrderStatus.ACCEPTED.displayText
+                            : OrderStatus.REJECTED.displayText,
+                        color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(steps?.progressPercentage?.toString() ?? "0") == 100 ? appColors.acceptColor : appColors.declineColor,
+                      ),
                   ],
                 ),
               ),
@@ -165,62 +173,62 @@ class OrderList extends ParentWidget {
       ),
     );
   }
-}
 
-Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-      Text(
-        value,
-        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color ?? Colors.black87),
-      ),
-    ],
-  );
-}
+  Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+        Text(
+          value,
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color ?? Colors.black87),
+        ),
+      ],
+    );
+  }
 
-Widget orderCardHeader(Data? steps) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("${appStrings.orderIdPrefix}${steps?.id}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          Text("${appStrings.orderCompleteBy} 16 Mar, 02:21 PM", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-        ],
-      ),
-    ],
-  );
-}
-
-Widget orderCardContent(Data? steps) {
-  return Row(
-    children: [
-      commonNetworkImage(steps?.referenceImagesAddedByAdmin?.first ?? steps?.product?.images?.first.imageUrl ?? "", width: 60, height: 60, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
-      12.kW,
-      Expanded(
-        child: Column(
+  Widget orderCardHeader(Data? steps) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              steps?.stepName ?? appStrings.notAvailable,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
-            ),
-            4.kH,
-            Row(
-              children: [
-                Icon(Icons.circle, color: Colors.green, size: 8),
-                4.kW,
-                Text(steps?.artisanAgreedStatus == OrderStatus.PENDING.toString() ? appStrings.orderNeedsAction : appStrings.orderConfirmed, style: TextStyle(color: Colors.green, fontSize: 11)),
-              ],
-            ),
-            4.kH,
-            Text("${appStrings.orderAssigned} : 16 Mar, 23:06:51 AM", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+            Text("${appStrings.orderIdPrefix}${steps?.id}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text("${appStrings.orderCompleteBy} 16 Mar, 02:21 PM", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
           ],
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
+
+  Widget orderCardContent(Data? steps) {
+    return Row(
+      children: [
+        commonNetworkImage(steps?.referenceImagesAddedByAdmin?.first ?? steps?.product?.images?.first.imageUrl ?? "", width: 60, height: 60, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
+        12.kW,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                steps?.stepName ?? appStrings.notAvailable,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
+              ),
+              4.kH,
+              Row(
+                children: [
+                  Icon(Icons.circle, color: Colors.green, size: 8),
+                  4.kW,
+                  Text(steps?.artisanAgreedStatus == OrderStatus.PENDING.toString() ? appStrings.orderNeedsAction : appStrings.orderConfirmed, style: TextStyle(color: Colors.green, fontSize: 11)),
+                ],
+              ),
+              4.kH,
+              Text("${appStrings.orderAssigned} : 16 Mar, 23:06:51 AM", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bhk_artisan/utils/utils.dart';
-import '../../common/constants.dart';
+import '../../common/common_constants.dart';
 import '../../main.dart';
 
 import '../colors.dart';

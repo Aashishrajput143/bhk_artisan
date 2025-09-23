@@ -3,7 +3,7 @@ import 'package:bhk_artisan/Modules/model/get_address_model.dart';
 import 'package:bhk_artisan/Modules/repository/address_repository.dart';
 import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/commonmethods.dart';
+import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/enums/address_type_enum.dart';
 import 'package:bhk_artisan/resources/strings.dart';

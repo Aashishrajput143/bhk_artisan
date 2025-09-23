@@ -1,6 +1,6 @@
-import 'package:bhk_artisan/common/MyAlertDialog.dart';
+import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/common/my_utils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';

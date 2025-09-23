@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:bhk_artisan/common/cache_network_image.dart';
-import 'package:bhk_artisan/common/commonmethods.dart';
+import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
@@ -22,30 +22,33 @@ import 'package:syncfusion_flutter_charts/charts.dart' as chart;
 import '../resources/colors.dart';
 import '../resources/font.dart';
 
-void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setError, Function(Status)? setRxRequestStatus, bool closeDialog = false, bool showMessage = false}) {
+void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setError, Function(Status)? setRxRequestStatus, bool closeDialog = false, bool showMessage = true}) {
   if (closeDialog) {
     Get.back();
   }
-
   setError?.call(error.toString());
   setRxRequestStatus?.call(Status.ERROR);
 
   try {
-    if (error.toString().contains("{")) {
-      var errorResponse = json.decode(error.toString());
-
-      if (errorResponse is Map && errorResponse.containsKey('message')) {
-        if (showMessage) {
-          CommonMethods.showToast(errorResponse['message']);
+    final errorStr = error.toString();
+    if (errorStr.contains("{")) {
+      final jsonPart = errorStr.substring(errorStr.indexOf("{"), errorStr.lastIndexOf("}") + 1);
+      final decoded = json.decode(jsonPart);
+      if (decoded is Map) {
+        final errorMap = Map<String, dynamic>.from(decoded);
+        if (errorMap.containsKey('message')) {
+          if (showMessage) {
+            CommonMethods.showToast(errorMap['message'].toString());
+            return;
+          }
         }
-      } else {
-        CommonMethods.showToast("An unexpected error occurred.");
       }
+      CommonMethods.showToast("An unexpected error occurred.");
     } else {
-      CommonMethods.showToast(error.toString());
+      CommonMethods.showToast(errorStr);
     }
   } catch (e) {
-    CommonMethods.showToast("An unexpected error occurred.");
+    CommonMethods.showToast("An unexpected error occurred...");
   }
 
   Utils.printLog("Error===> ${error.toString()}");
@@ -81,12 +84,12 @@ PreferredSizeWidget appBarTab({required TabController? tabController, required L
   );
 }
 
-Widget commonProfileNetworkImage(String url, {double? width, double? height, BoxFit? fit,String? defaultImage}) {
-  return AvatarWithBlurHash().avatarWithBlurHash(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, width: width, height: height,defaultImage: defaultImage);
+Widget commonProfileNetworkImage(String url, {double? width, double? height, BoxFit? fit, String? defaultImage}) {
+  return AvatarWithBlurHash().avatarWithBlurHash(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, width: width, height: height, defaultImage: defaultImage);
 }
 
-Widget commonNetworkImage(String url, {double? width, double? height, BoxFit? fit,String? defaultImage,BorderRadius? borderRadius}) {
-  return AvatarWithBlurHash().avatarWithBlurHashIcon(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, width: width, height: height,borderRadius: borderRadius);
+Widget commonNetworkImage(String url, {double? width, double? height, BoxFit? fit, String? defaultImage, BorderRadius? borderRadius}) {
+  return AvatarWithBlurHash().avatarWithBlurHashIcon(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, width: width, height: height, borderRadius: borderRadius);
 }
 
 Widget commonCircleNetworkImage(String url, {double radius = 22}) {
@@ -464,7 +467,7 @@ Widget commonMultiDropdownButton(List<DropdownMenuItem<String>>? items, List<Str
           maxHeight: height * .25,
           width: width * .9,
           elevation: 4,
-          offset: Offset(0,upOffset?? height * .25),
+          offset: Offset(0, upOffset ?? height * .25),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: appColors.contentWhite),
         ),
       ),
@@ -632,6 +635,27 @@ Widget commonButton(double width, double height, Color backgroundColor, Color co
     child: Text(
       hint,
       style: TextStyle(fontSize: fontSize, fontFamily: appFonts.NunitoBold, fontWeight: FontWeight.bold, color: color),
+    ),
+  );
+}
+
+Widget commonButtonContainer(double width, double height, Color backgroundColor, Color textColor, VoidCallback? onChanged, {String hint = '', double radius = 12, double paddingVertical = 0, double paddingHorizontal = 0, double fontSize = 16, Color borderColor = Colors.transparent}) {
+  return GestureDetector(
+    onTap: onChanged,
+    child: Container(
+      width: width,
+      height: height,
+      padding: EdgeInsets.symmetric(vertical: paddingVertical, horizontal: paddingHorizontal),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(color: borderColor, width: 1),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        hint,
+        style: TextStyle(fontSize: fontSize, fontFamily: appFonts.NunitoBold, fontWeight: FontWeight.bold, color: textColor),
+      ),
     ),
   );
 }
@@ -916,11 +940,11 @@ Widget checkButtonObjective(
   );
 }
 
-Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged, bool autoFocus = true, Color backgroundColor = Colors.grey,List<TextInputFormatter>? inputFormatters}) {
+Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged, bool autoFocus = true, Color backgroundColor = Colors.grey, List<TextInputFormatter>? inputFormatters}) {
   return PinCodeTextField(
     appContext: context,
     length: length,
-    inputFormatters: inputFormatters??[],
+    inputFormatters: inputFormatters ?? [],
     keyboardType: TextInputType.number,
     animationType: AnimationType.fade,
     autoFocus: autoFocus,

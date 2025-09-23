@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:bhk_artisan/utils/utils.dart';
-import '../../common/Constants.dart';
+import '../../common/common_constants.dart';
 import '../../routes/routes_class.dart';
 
 class SplashController extends GetxController with GetSingleTickerProviderStateMixin {

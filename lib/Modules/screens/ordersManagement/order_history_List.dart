@@ -94,19 +94,19 @@ class OrderListHistory extends ParentWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              orderCardHeader(steps),
+              OrderList().orderCardHeader(steps),
               8.kH,
-              orderCardContent(steps),
+              OrderList().orderCardContent(steps),
               Divider(thickness: 1, color: Colors.grey[300]),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    buildOrderDetailColumn(appStrings.payment, '₹ 300.50'),
-                    buildOrderDetailColumn(appStrings.productId, 'TST11414'),
-                    buildOrderDetailColumn(appStrings.orderQty, '${index + 1}0'),
-                    buildOrderDetailColumn(appStrings.orderStatus, appStrings.delivered, color: appColors.brownDarkText),
+                    OrderList().buildOrderDetailColumn(appStrings.payment, '₹ 300.50'),
+                    OrderList().buildOrderDetailColumn(appStrings.productId, 'TST11414'),
+                    OrderList().buildOrderDetailColumn(appStrings.orderQty, '${index + 1}0'),
+                    OrderList().buildOrderDetailColumn(appStrings.orderStatus, appStrings.delivered, color: appColors.brownDarkText),
                   ],
                 ),
               ),

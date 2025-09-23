@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/commonmethods.dart';
-import 'package:bhk_artisan/common/myUtils.dart';
+import 'package:bhk_artisan/common/common_methods.dart';
+import 'package:bhk_artisan/common/my_utils.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';

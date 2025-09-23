@@ -1,10 +1,10 @@
 import 'package:bhk_artisan/Modules/model/login_model.dart';
-import 'package:bhk_artisan/common/Constants.dart';
+import 'package:bhk_artisan/common/common_constants.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:bhk_artisan/utils/utils.dart';
-import '../../common/CommonMethods.dart';
+import '../../common/common_methods.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../../routes/routes_class.dart';
@@ -96,7 +96,6 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
         setLoginData(value);
         CommonMethods.showToast("${value.message} ${value.data?.oTP}");
         Utils.printLog("Response===> ${value.toString()}");
-        print("redirect");
         redirect(value);
       }).onError((error, stackTrace) {
         handleApiError(
@@ -117,7 +116,6 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   }
 
   void redirect(LoginModel value) {
-    print("redirect");
     Utils.savePreferenceValues(Constants.referenceId, "${logInData.value.data?.referenceId}");
     Utils.setBoolPreferenceValues(Constants.isNewUser, false);
     Get.toNamed(RoutesClass.verify, arguments: {'referenceId': logInData.value.data?.referenceId, "identity": phoneController.value.text, if (phoneController.value.text.isNotEmpty) "countryCode": countryCode.value});

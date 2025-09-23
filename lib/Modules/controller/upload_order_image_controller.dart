@@ -1,8 +1,9 @@
 import 'package:bhk_artisan/Modules/model/add_product_model.dart';
 import 'package:bhk_artisan/Modules/repository/order_repository.dart';
-import 'package:bhk_artisan/common/CommonMethods.dart';
+import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -35,13 +36,14 @@ class UploadOrderImageController extends GetxController {
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
 
-      Map<String, String> data = {"progress_percentage": "100"};
+      Map<String, String> data = {"progress_percentage": "100","progress_status":OrderStatus.COMPLETED.name};
       _api
           .updateOrderImageApi(data, imagefiles, id)
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
             setaddProductModeldata(value);
             Utils.printLog("Response===> ${value.toString()}");
+            Get.back();
             Get.back();
             CommonMethods.showToast("Order Completed Successfully...", icon: Icons.check, bgColor: Colors.green);
           })

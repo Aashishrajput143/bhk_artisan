@@ -1,7 +1,7 @@
 import 'package:bhk_artisan/Modules/model/product_details_model.dart';
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/commonmethods.dart';
+import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';

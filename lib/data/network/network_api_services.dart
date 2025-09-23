@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:bhk_artisan/Modules/controller/logincontroller.dart';
 import 'package:bhk_artisan/Modules/screens/login_screen.dart';
-import 'package:bhk_artisan/common/CommonMethods.dart';
+import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 import 'package:http/http.dart' as http;
 
-import '../../common/constants.dart';
+import '../../common/common_constants.dart';
 
 import '../app_exceptions.dart';
 import 'base_api_services.dart';

@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/data/response/status.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
@@ -54,8 +55,8 @@ class LocationController extends GetxController {
     latitude.value = position.latitude;
     longitude.value = position.longitude;
 
-    print("latitude===>${latitude.value}");
-    print("longitude===>${longitude.value}");
+    debugPrint("latitude===>${latitude.value}");
+    debugPrint("longitude===>${longitude.value}");
 
     await getAddressFromLatLng(position);
 
@@ -75,10 +76,10 @@ class LocationController extends GetxController {
             "${place.value?.name}, ${place.value?.street}, ${place.value?.subLocality}, ${place.value?.locality}, "
             "${place.value?.administrativeArea}, ${place.value?.postalCode}, ${place.value?.country}";
 
-        print("Full Address===> ${address.value}");
+        debugPrint("Full Address===> ${address.value}");
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 }

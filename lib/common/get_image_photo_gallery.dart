@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:ui' as ui;
-import 'package:bhk_artisan/common/CommonMethods.dart';
+import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/resources/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -27,7 +27,6 @@ class NotificationController extends GetxController {
     ]);
 
     setRxRequestStatus(Status.COMPLETED);
-    print("sfdf=>$notifications");
   }
 
   void markAsRead(String id) {

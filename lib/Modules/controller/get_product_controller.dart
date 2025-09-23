@@ -5,7 +5,7 @@ import 'package:bhk_artisan/resources/enums/product_status_enum.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:get/get.dart';
 
-import '../../common/CommonMethods.dart';
+import '../../common/common_methods.dart';
 import '../../data/response/status.dart';
 import '../../resources/strings.dart';
 import '../repository/product_repository.dart';

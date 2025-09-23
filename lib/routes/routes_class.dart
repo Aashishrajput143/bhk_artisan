@@ -20,7 +20,7 @@ import '../Modules/screens/profileManagement/edit_profile_screen.dart';
 import '../Modules/screens/profileManagement/setting_profile.dart';
 import '../Modules/screens/profileManagement/view_profile.dart';
 import '../Modules/screens/splash_screen.dart';
-import '../binding/loginbinding.dart';
+import '../binding/login_binding.dart';
 
 class RoutesClass {
   //BR1

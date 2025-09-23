@@ -60,8 +60,8 @@ class AvatarWithBlurHash {
             : CachedNetworkImage(
                 imageUrl: imageUrl,
                 fit: fit,
-                width: width,
-                height: height,
+                width: width??150,
+                height: height??150,
                 placeholder: (context, url) => BlurHash(hash: blurHash, imageFit: fit),
                 errorWidget: (context, url, error) => Icon(icon, color: Colors.grey, size: 40),
               ),
