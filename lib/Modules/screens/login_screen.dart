@@ -100,70 +100,70 @@ class LoginScreen extends ParentWidget {
       ),
     );
   }
-}
 
-Widget topRoundedAnimatedHeader(double w, double h, LoginController controller) {
-  return Container(
-    height: h * 0.2,
-    width: w,
-    padding: EdgeInsets.only(bottom: 10),
-    decoration: BoxDecoration(
-      color: appColors.contentWhite,
-      borderRadius: BorderRadius.only(bottomRight: Radius.circular(150), bottomLeft: Radius.circular(150)),
-    ),
-    child: Align(
-      alignment: Alignment.bottomCenter,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          AnimatedBuilder(
-            animation: controller.animationController,
-            builder: (context, child) {
-              return Transform.rotate(angle: controller.animationController.value * 2 * pi, child: child);
-            },
-            child: Image.asset(appImages.loaderouter, height: h * 0.13, fit: BoxFit.contain),
-          ),
-          Image.asset(appImages.logo, width: 45, height: 45),
-        ],
+  Widget topRoundedAnimatedHeader(double w, double h, LoginController controller) {
+    return Container(
+      height: h * 0.2,
+      width: w,
+      padding: EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: appColors.contentWhite,
+        borderRadius: BorderRadius.only(bottomRight: Radius.circular(150), bottomLeft: Radius.circular(150)),
       ),
-    ),
-  );
-}
-
-Widget errorToggle(LoginController controller) {
-  return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16.0),
-    padding: const EdgeInsets.all(12.0),
-    decoration: BoxDecoration(color: Colors.red[100], borderRadius: BorderRadius.circular(8.0)),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Icon(Icons.error, color: Colors.red),
-        8.kW,
-        Expanded(
-          child: Text(controller.errorMessage.value, style: const TextStyle(color: Colors.red)),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            AnimatedBuilder(
+              animation: controller.animationController,
+              builder: (context, child) {
+                return Transform.rotate(angle: controller.animationController.value * 2 * pi, child: child);
+              },
+              child: Image.asset(appImages.loaderouter, height: h * 0.13, fit: BoxFit.contain),
+            ),
+            Image.asset(appImages.logo, width: 45, height: 45),
+          ],
         ),
-      ],
-    ),
-  );
-}
+      ),
+    );
+  }
 
-Widget google(LoginController controller) {
-  return GestureDetector(
-    behavior: HitTestBehavior.opaque,
-    //onTap: () async => await controller.signInWithGoogle(),
-    child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(color: appColors.contentWhite, borderRadius: BorderRadius.circular(25)),
+  Widget errorToggle(LoginController controller) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(color: Colors.red[100], borderRadius: BorderRadius.circular(8.0)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset(appImages.googleIcon, width: 30, height: 30),
-          10.kW,
-          Text("Continue with Google", style: TextStyle(fontWeight: FontWeight.bold)),
+          const Icon(Icons.error, color: Colors.red),
+          8.kW,
+          Expanded(
+            child: Text(controller.errorMessage.value, style: const TextStyle(color: Colors.red)),
+          ),
         ],
       ),
-    ),
-  );
+    );
+  }
+
+  Widget google(LoginController controller) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      //onTap: () async => await controller.signInWithGoogle(),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(color: appColors.contentWhite, borderRadius: BorderRadius.circular(25)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(appImages.googleIcon, width: 30, height: 30),
+            10.kW,
+            Text("Continue with Google", style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
+  }
 }

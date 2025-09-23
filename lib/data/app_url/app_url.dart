@@ -8,7 +8,6 @@ class AppUrl {
   static String logout = '$baseUrl/auth/api/logout/currentsession';
   static String loggedinuser = '$baseUrl/users/api/users/userdetails';
   static String updateprofile = '$baseUrl/users/api/users/updateprofile';
-  static String register = '$baseUrl/api/user/register';
   static String presignUrl = '$baseUrl/users/api/users/presign-url';
 
   //address
@@ -17,21 +16,19 @@ class AppUrl {
   static String getAddress = '$baseUrl/users/api/users/addresses_self';
   static String deleteAddress = '$baseUrl/users/api/users/delete-address/';
 
-  //get
+  //Product
   static String getcategory = '$baseUrl/product/api/category/main-categories?page=';
   static String getsubcategory = '$baseUrl/product/api/category/getsubcategory/';
+  static String addproduct = '$baseUrl/product/api/product/addproduct';
   static String getproductlisting = '$baseUrl/product/api/product/artisan/get_products?';
   static String getproduct = '$baseUrl/product/api/product/productdetails/';
 
   //Orders
   static String allorders = '$baseUrl/product/api/build-step/artisan/my-steps';
-  static String ordersDetails ='$baseUrl/product/api/build-step/details/';
+  static String ordersDetails = '$baseUrl/product/api/build-step/details/';
   static String orderStatus = '$baseUrl/product/api/build-step/artisan/update_status';
   static String salesgraph = '$baseUrl/api/order/totalsales?year=';
   static String updateProgress = '$baseUrl/product/api/build-step/';
   static String completeOrder = '$baseUrl/product/api/build-step/artisan/complete/';
 
-  //post
-  static String addproduct = '$baseUrl/product/api/product/addproduct';
-  static String uploadOrderImage = '$baseUrl/product/api/product/addproduct';
 }

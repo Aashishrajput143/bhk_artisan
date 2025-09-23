@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:bhk_artisan/Modules/controller/updateprofilecontroller.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
@@ -21,8 +20,6 @@ class VideoPreviewController extends GetxController {
   var showControls = true.obs;
 
   Timer? hideTimer;
-
-  UpdateProfileController updateProfileController = Get.put(UpdateProfileController());
 
   @override
   void onInit() {
