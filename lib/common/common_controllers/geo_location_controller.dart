@@ -72,11 +72,29 @@ class LocationController extends GetxController {
 
       if (placemarks.isNotEmpty) {
         place.value = placemarks.first;
-        address.value =
-            "${place.value?.name}, ${place.value?.street}, ${place.value?.subLocality}, ${place.value?.locality}, "
-            "${place.value?.administrativeArea}, ${place.value?.postalCode}, ${place.value?.country}";
 
-        debugPrint("Full Address===> ${address.value}");
+        final places = placemarks.first;
+
+        List<String> parts = [];
+        void addIfNotEmpty(String? value) {
+          if (value != null && value.trim().isNotEmpty) {
+            parts.add(value.trim());
+          }
+        }
+
+        addIfNotEmpty(places.name);
+        addIfNotEmpty(places.street);
+        addIfNotEmpty(places.subLocality);
+        addIfNotEmpty(places.locality);
+        addIfNotEmpty(places.administrativeArea);
+        addIfNotEmpty(places.postalCode);
+        addIfNotEmpty(places.country);
+
+        address.value = parts.join(", ");
+
+        debugPrint("Full Address ===> ${address.value}");
+      
+
       }
     } catch (e) {
       debugPrint(e.toString());

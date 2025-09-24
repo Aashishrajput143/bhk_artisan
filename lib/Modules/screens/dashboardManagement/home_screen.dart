@@ -203,7 +203,7 @@ class HomeScreen extends ParentWidget {
     return controller.getApprovedProductModel.value.data?.docs?.isNotEmpty??false? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -246,7 +246,7 @@ class HomeScreen extends ParentWidget {
     return controller.getOrderController.getAllActiveOrderStepModel.value.data?.isNotEmpty ?? false? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

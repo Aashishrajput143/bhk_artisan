@@ -357,7 +357,7 @@ class AddProductPage extends ParentWidget {
 
   Widget pickedfiles(double w, double h, AddProductController controller) {
     return SizedBox(
-      height: h - h * 0.71,
+      height: h*0.24,
       child: GridView.builder(
         shrinkWrap: true,
         itemCount: controller.imagefiles.length,
