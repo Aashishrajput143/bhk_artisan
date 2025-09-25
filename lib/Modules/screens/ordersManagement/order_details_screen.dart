@@ -87,7 +87,7 @@ class OrderDetailsPage extends ParentWidget {
   Widget bottomButtons(double h, double w, GetOrderDetailsController controller) {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.03),
-      child: (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name)
+      child:controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name?commonButtonContainer(w * 0.44, 50, appColors.contentBrownLinearColor2, appColors.acceptColor, () {}, hint: appStrings.awaitingPickUp): (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name)
           ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -144,12 +144,20 @@ class OrderDetailsPage extends ParentWidget {
         children: [
           commonRow(
             appStrings.orderStatus,
-            double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100
+            controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
+                ? OrderStatus.ADMIN_APPROVED.displayText
+                : double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100
                 ? OrderStatus.INREVIEW.displayText
                 : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
                 ? OrderStatus.ACCEPTED.displayText
+                : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name
+                ? OrderStatus.PENDING.displayText
                 : OrderStatus.REJECTED.displayText,
-            color2: controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100 ? appColors.acceptColor : appColors.declineColor,
+            color2: controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100
+                ? appColors.acceptColor
+                : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name
+                ? appColors.brownDarkText
+                : appColors.declineColor,
             fontSize2: 17,
             color: appColors.contentPrimary,
           ),
@@ -248,7 +256,7 @@ class OrderDetailsPage extends ParentWidget {
           ),
           6.kH,
           Text(
-            "Handcrafted ceramic vase with traditional Aztec design patterns",
+            controller.getOrderStepModel.value.data?.description ?? appStrings.notAvailable,
             style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
           ),
           16.kH,
@@ -258,7 +266,7 @@ class OrderDetailsPage extends ParentWidget {
           ),
           6.kH,
           Text(
-            "High-quality ceramic clay, natural glazes, metallic accents",
+            controller.getOrderStepModel.value.data?.materials ?? appStrings.notAvailable,
             style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
           ),
           16.kH,
@@ -268,7 +276,7 @@ class OrderDetailsPage extends ParentWidget {
           ),
           6.kH,
           Text(
-            'Client requires a custom ceramic vase with specific dimensions: 12" height x 6" diameter. Design should feature blue and terracotta geometric patterns inspired by traditional Mexican pottery but with modern aesthetic touches. Handle with care - this is a premium commission piece.',
+            controller.getOrderStepModel.value.data?.instructions ?? appStrings.notAvailable,
             style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
           ),
           16.kH,

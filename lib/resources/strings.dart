@@ -143,6 +143,7 @@ class AppStrings {
   String get markAsCompleted => "Mark As Completed";
   String get declined => "Declined";
   String get waitingForApproval =>'Waiting for the Approval';
+  String get awaitingPickUp =>'Waiting for the Pick Up';
   String get orderStatus => "Order Status";
   String get timeRemaining => "Time Remaining";
   String get orderValue => "Order Value";

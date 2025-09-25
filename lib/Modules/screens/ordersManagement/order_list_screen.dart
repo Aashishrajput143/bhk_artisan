@@ -113,12 +113,16 @@ class OrderList extends ParentWidget {
                     if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name)
                       buildOrderDetailColumn(
                         appStrings.orderStatus,
-                        double.tryParse(steps?.progressPercentage?.toString() ?? "0") == 100
+                        steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
+                            ? OrderStatus.ADMIN_APPROVED.displayText
+                            : double.tryParse(steps?.progressPercentage?.toString() ?? "0") == 100
                             ? OrderStatus.INREVIEW.displayText
                             : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
                             ? OrderStatus.ACCEPTED.displayText
+                            :steps?.artisanAgreedStatus == OrderStatus.PENDING.name
+                            ? OrderStatus.PENDING.displayText
                             : OrderStatus.REJECTED.displayText,
-                        color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(steps?.progressPercentage?.toString() ?? "0") == 100 ? appColors.acceptColor : appColors.declineColor,
+                        color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(steps?.progressPercentage?.toString() ?? "0") == 100 ? appColors.acceptColor :steps?.artisanAgreedStatus == OrderStatus.PENDING.name?appColors.brownDarkText: appColors.declineColor,
                       ),
                   ],
                 ),

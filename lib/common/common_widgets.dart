@@ -37,6 +37,7 @@ void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setErr
       if (decoded is Map) {
         final errorMap = Map<String, dynamic>.from(decoded);
         if (errorMap.containsKey('message')) {
+          Utils.printLog("ErrorState===> $errorMap");
           if (showMessage) {
             CommonMethods.showToast(errorMap['message'].toString());
             return;

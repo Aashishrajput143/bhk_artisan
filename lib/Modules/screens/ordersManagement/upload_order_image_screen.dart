@@ -113,7 +113,7 @@ class UploadOrderImageScreen extends ParentWidget {
 
   Widget pickedfiles(double w, double h, UploadOrderImageController controller) {
     return SizedBox(
-      height: h * 0.27,
+      height:h>700?h*0.28: h*0.24,
       child: GridView.builder(
         itemCount: controller.imagefiles.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 16),

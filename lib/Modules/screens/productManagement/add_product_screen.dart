@@ -305,7 +305,6 @@ class AddProductPage extends ParentWidget {
 
   Widget mediaFiles(BuildContext context, double w, double h, AddProductController controller) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         commonComponent(
@@ -357,7 +356,7 @@ class AddProductPage extends ParentWidget {
 
   Widget pickedfiles(double w, double h, AddProductController controller) {
     return SizedBox(
-      height: h*0.24,
+      height:h>700?h*0.28: h*0.24,
       child: GridView.builder(
         shrinkWrap: true,
         itemCount: controller.imagefiles.length,

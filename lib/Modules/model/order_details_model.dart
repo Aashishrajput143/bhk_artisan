@@ -27,9 +27,10 @@ class Data {
   int? stepNumber;
   String? stepType;
   String? artisanStartedStatus;
+  String? materials;
+  String? instructions;
   String? artisanAgreedStatus;
   String? agreedCostPerPiece;
-  String? progressStatus;
   dynamic progressPercentage;
   int? progress;
   List<String>? referenceImagesAddedByAdmin;
@@ -57,7 +58,8 @@ class Data {
     this.artisanStartedStatus,
     this.artisanAgreedStatus,
     this.agreedCostPerPiece,
-    this.progressStatus,
+    this.materials,
+    this.instructions,
     this.progressPercentage,
     this.progress,
     this.referenceImagesAddedByAdmin,
@@ -83,10 +85,11 @@ class Data {
     dueDate = json['dueDate'];
     stepNumber = json['stepNumber'];
     stepType = json['stepType'];
+    materials = json['materials'];
+    instructions = json['instructions'];
     artisanStartedStatus = json['artisanStartedStatus'];
     artisanAgreedStatus = json['artisanAgreedStatus'];
     agreedCostPerPiece = json['agreedCostPerPiece'];
-    progressStatus = json['progressStatus'];
     progressPercentage = json['progressPercentage'];
     progress = json['progress'];
     referenceImagesAddedByAdmin = json['referenceImagesAddedByAdmin'].cast<String>();
@@ -113,10 +116,11 @@ class Data {
     data['dueDate'] = dueDate;
     data['stepNumber'] = stepNumber;
     data['stepType'] = stepType;
+    data['materials'] = materials;
+    data['instructions'] = instructions;
     data['artisanStartedStatus'] = artisanStartedStatus;
     data['artisanAgreedStatus'] = artisanAgreedStatus;
     data['agreedCostPerPiece'] = agreedCostPerPiece;
-    data['progressStatus'] = progressStatus;
     data['progressPercentage'] = progressPercentage;
     data['progress'] = progress;
     data['referenceImagesAddedByAdmin'] = referenceImagesAddedByAdmin;

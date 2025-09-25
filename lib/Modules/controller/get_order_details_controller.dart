@@ -88,6 +88,7 @@ class GetOrderDetailsController extends GetxController {
           .then((value) {
             if (loader) setRxRequestStatus(Status.COMPLETED);
             setOrderStatusModel(value);
+            getOrderStepApi();
             Utils.printLog("Response ${value.toString()}");
           })
           .onError((error, stackTrace) {
