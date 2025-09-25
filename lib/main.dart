@@ -1,6 +1,5 @@
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
-import 'package:camera/camera.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +8,7 @@ import 'Modules/screens/splash_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
-  await availableCameras();
+  //await availableCameras();
   runApp(MyApp());
 }
 

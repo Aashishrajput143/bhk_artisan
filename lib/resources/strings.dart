@@ -41,8 +41,9 @@ class AppStrings {
   String get loginSuccess => "You have successfully logged into the system";
   String get goToDashboard => "Go to Dashboard";
   String get todayOrders => "Today Orders";
-  String get todaySales => "Today Sales";
+  String get approvedProducts => "Approved Products";
   String get pendingOrders => "Pending Orders";
+  String get needAction => "Orders Need Action";
   String get totalOrders => "Total Orders";
   String get annualSales => "Annual Sales";
   String get recentlyAddedProducts => "Recently Added Products";

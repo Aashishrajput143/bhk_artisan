@@ -28,7 +28,6 @@ class MainProfile extends ParentWidget {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  30.kH,
                   getProfileImage(h, w, controller),
                   10.kH,
                   Text(
@@ -59,32 +58,35 @@ class MainProfile extends ParentWidget {
   }
 
   Widget getProfileImage(double h, double w, ProfileController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Center(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: controller.commonController.profileData.value.data?.avatar?.isNotEmpty ?? false ? commonProfileNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "") : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
+    return Padding(
+      padding: const EdgeInsets.only(top: 30.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(100),
+              child: controller.commonController.profileData.value.data?.avatar?.isNotEmpty ?? false ? commonProfileNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "") : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildProfileOptionCard(String title, String subtitle, IconData icon, void Function()? onTap) {
+    return Column(
+      children: [
+        ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+          leading: Icon(icon, color: Colors.brown[700]),
+          title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: appColors.greyNew)),
+          trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+          onTap: onTap,
         ),
+        Divider(height: 0.1, color: Colors.black),
       ],
     );
   }
-}
-
-Widget buildProfileOptionCard(String title, String subtitle, IconData icon, void Function()? onTap) {
-  return Column(
-    children: [
-      ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-        leading: Icon(icon, color: Colors.brown[700]),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: appColors.greyNew)),
-        trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
-        onTap: onTap,
-      ),
-      Divider(height: 0.1, color: Colors.black),
-    ],
-  );
 }

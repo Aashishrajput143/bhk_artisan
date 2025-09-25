@@ -16,6 +16,18 @@ Widget shimmerContainer({double width = double.infinity, double height = 100, do
   );
 }
 
+Widget shimmerCollection(double w) {
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: List.generate(6, (index) => Padding(padding: const EdgeInsets.only(right: 12), child: shimmerContainer(width: w * 0.455,height: 100))),
+      ),
+    ),
+  );
+}
+
 Widget shimmerProduct(double w) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,7 +309,7 @@ Widget shimmerRoundedLine(double w, double h) {
   );
 }
 
-Widget shimmerList(double w, double h,{int list = 2}) {
+Widget shimmerList(double w, double h, {int list = 2}) {
   return SingleChildScrollView(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,

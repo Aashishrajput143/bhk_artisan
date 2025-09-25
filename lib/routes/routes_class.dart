@@ -9,7 +9,7 @@ import 'package:bhk_artisan/Modules/widgets/video_player_screen.dart';
 import 'package:get/get.dart';
 
 import '../Modules/screens/Terms_conditions.dart.dart';
-import '../Modules/screens/dashboardManagement/notifications.dart';
+import '../Modules/screens/notifications.dart';
 import '../Modules/screens/support_screen.dart';
 import '../Modules/screens/login_screen.dart';
 import '../Modules/screens/ordersManagement/order_details_screen.dart';

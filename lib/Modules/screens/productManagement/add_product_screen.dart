@@ -138,7 +138,7 @@ class AddProductPage extends ParentWidget {
             16.kH,
             commonComponent(appStrings.timeToMake, commonTextField(controller.timeController.value, controller.timeFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterTimeToMake, inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 6)),
             16.kH,
-            commonComponent(appStrings.description, commonDescriptionTextField(controller.detaileddescriptionController.value, controller.detaileddescriptionFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterDescription, maxLines: 8, minLines: 3, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter()])),
+            commonComponent(appStrings.description, commonDescriptionTextField(controller.detaileddescriptionController.value, controller.detaileddescriptionFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterDescription, maxLines: 6, minLines: 3, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter()])),
           ],
         ),
       ),

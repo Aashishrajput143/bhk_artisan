@@ -4,7 +4,7 @@ import 'package:bhk_artisan/Modules/controller/orderscreencontroller.dart';
 import 'package:bhk_artisan/Modules/controller/productscreencontroller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
-import 'package:bhk_artisan/Modules/screens/dashboardManagement/home_screen.dart';
+import 'package:bhk_artisan/Modules/screens/home_screen.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -13,6 +13,8 @@ import 'package:bhk_artisan/utils/utils.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'package:bhk_artisan/Modules/model/get_all_order_step_model.dart' as orderstep;
 
 class Homecontroller extends GetxController {
   final _api = ProductRepository();
@@ -30,15 +32,57 @@ class Homecontroller extends GetxController {
   var greetings = "Good Morning".obs;
 
   var chartData = <Map<String, dynamic>>[
-    {"month": "Jan", "sales": 120, "unitsSold": 30},
-    {"month": "Feb", "sales": 150, "unitsSold": 40},
-    {"month": "Mar", "sales": 180, "unitsSold": 50},
-    {"month": "Apr", "sales": 100, "unitsSold": 20},
-    {"month": "May", "sales": 210, "unitsSold": 60},
-    {"month": "Jun", "sales": 160, "unitsSold": 45},
-    {"month": "Jul", "sales": 250, "unitsSold": 70},
-    {"month": "Aug", "sales": 300, "unitsSold": 80},
+    {"month": "Jan", "sales": 12000, "unitsSold": 30},
+    {"month": "Feb", "sales": 17000, "unitsSold": 40},
+    {"month": "Mar", "sales": 18000, "unitsSold": 50},
+    {"month": "Apr", "sales": 10000, "unitsSold": 20},
+    {"month": "May", "sales": 21000, "unitsSold": 60},
+    {"month": "Jun", "sales": 16000, "unitsSold": 45},
+    {"month": "Jul", "sales": 25000, "unitsSold": 70},
+    {"month": "Aug", "sales": 30000, "unitsSold": 80},
   ];
+
+  String totalSales() {
+    double total = calculateSales(chartData);
+    return formatNumberIndian(total);
+  }
+
+  double calculateSales(List<Map<String, dynamic>> chartData) {
+    return chartData.fold<double>(0, (sum, item) => sum + (item["sales"] as num).toDouble());
+  }
+
+  String formatNumberIndian(double number) {
+    if (number >= 10000000) {
+      return "${removeTrailingZero(number / 10000000)}Cr";
+    } else if (number >= 100000) {
+      return "${removeTrailingZero(number / 100000)}L";
+    } else if (number >= 1000) {
+      return "${removeTrailingZero(number / 1000)}K";
+    } else {
+      return removeTrailingZero(number);
+    }
+  }
+
+  String removeTrailingZero(double value) {
+    if (value == value.roundToDouble()) {
+      return value.toInt().toString();
+    }
+    return value.toStringAsFixed(1);
+  }
+
+  String getTodayOrdersCount(List<orderstep.Data> orders) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    return orders.where((order) {
+      if (order.createdAt == null) return false;
+
+      final created = DateTime.parse(order.createdAt!);
+      final createdDate = DateTime(created.year, created.month, created.day);
+
+      return createdDate == today;
+    }).length.toString();
+  }
 
   int currentYear = DateTime.now().year;
   RxDouble scrollPosition = 0.0.obs;
@@ -61,26 +105,19 @@ class Homecontroller extends GetxController {
   }
 
   void initState() {
+    scrollPosition.value = 0;
     setGreeting();
     getProductApi("APPROVED", isLoader: getApprovedProductModel.value.data?.docs?.isEmpty ?? true ? true : false);
   }
 
   void setGreeting() {
-    String time = DateTime.now().toString();
-    time = time.split(" ")[1].toString();
-    time = time.split(".")[0].toString();
-    DateTime timeNow = DateTime.parse("2000-01-01 $time");
-    DateTime morningStart = DateTime.parse("2000-01-01 05:00:00");
-    DateTime morningEnd = DateTime.parse("2000-01-01 11:59:59");
-    DateTime afternoonStart = DateTime.parse("2000-01-01 12:00:00");
-    DateTime afternoonEnd = DateTime.parse("2000-01-01 16:59:59");
-    DateTime eveningStart = DateTime.parse("2000-01-01 17:00:00");
-    DateTime eveningEnd = DateTime.parse("2000-01-01 20:59:59");
-    if (timeNow.isAfter(morningStart) && timeNow.isBefore(morningEnd)) {
+    final hour = DateTime.now().hour;
+
+    if (hour >= 5 && hour < 12) {
       greetings.value = "Good Morning";
-    } else if (timeNow.isAfter(afternoonStart) && timeNow.isBefore(afternoonEnd)) {
+    } else if (hour >= 12 && hour < 17) {
       greetings.value = "Good Afternoon";
-    } else if (timeNow.isAfter(eveningStart) && timeNow.isBefore(eveningEnd)) {
+    } else if (hour >= 17 && hour < 21) {
       greetings.value = "Good Evening";
     } else {
       greetings.value = "Good Night";

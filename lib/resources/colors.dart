@@ -21,6 +21,11 @@ class AppColors {
   get cardBackground2 => getColor("#A9603D").withValues(alpha: 0.1);
   get referencebg => getColor("#D9D9D9");
   get contentWhite => Colors.white;
+  get progressBarColor =>const Color.fromARGB(255, 193, 94, 58);
+  get progressBarBg => const Color.fromARGB(255, 252, 234, 208);
+  get blueColor => Colors.blue;
+  get redColor => Colors.red;
+  get orangeColor => Colors.orange;
 
   get contentPrimary => getColor('#000000');
   get contentBluePrimary => getColor('#0d3d5d');

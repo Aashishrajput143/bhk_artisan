@@ -20,10 +20,10 @@ class SettingProfile extends ParentWidget {
           padding: const EdgeInsets.fromLTRB(20, 5, 20, 20),
           child: Column(
             children: [
-              buildProfileOptionCard(appStrings.editProfile, appStrings.editProfileSubtitle, Icons.edit, () => Get.toNamed(RoutesClass.editprofile)),
-              buildProfileOptionCard(appStrings.deleteAccount, appStrings.deleteAccountSubtitle, Icons.delete, () {}),
-              buildProfileOptionCard(appStrings.verifyAadhaar, appStrings.verifyAadhaarSubtitle, Icons.verified, () => Get.toNamed(RoutesClass.aadharVerification)),
-              buildProfileOptionCard(appStrings.needAssistance, appStrings.needAssistanceSubtitle, Icons.message, () => Get.toNamed(RoutesClass.support)),
+              MainProfile().buildProfileOptionCard(appStrings.editProfile, appStrings.editProfileSubtitle, Icons.edit, () => Get.toNamed(RoutesClass.editprofile)),
+              MainProfile().buildProfileOptionCard(appStrings.deleteAccount, appStrings.deleteAccountSubtitle, Icons.delete, () {}),
+              MainProfile().buildProfileOptionCard(appStrings.verifyAadhaar, appStrings.verifyAadhaarSubtitle, Icons.verified, () => Get.toNamed(RoutesClass.aadharVerification)),
+              MainProfile().buildProfileOptionCard(appStrings.needAssistance, appStrings.needAssistanceSubtitle, Icons.message, () => Get.toNamed(RoutesClass.support)),
             ],
           ),
         ),

@@ -22,7 +22,12 @@ class GetOrderController extends GetxController {
     getAllOrderStepApi();
   }
 
+  var totalOrders = 0.obs;
+  var pendingOrders = 0.obs;
+  var acceptedOrders = 0.obs;
+
   final rxRequestStatus = Status.COMPLETED.obs;
+  final getAllOrderStepModel = GetAllOrderStepsModel().obs;
   final getAllActiveOrderStepModel = GetAllOrderStepsModel().obs;
   final getAllPastOrderStepModel = GetAllOrderStepsModel().obs;
   final updateOrderStatusModel = UpdateOrderStatusModel().obs;
@@ -32,6 +37,7 @@ class GetOrderController extends GetxController {
 
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
   void setAllActiveOrderStepdata(GetAllOrderStepsModel value) => getAllActiveOrderStepModel.value = value;
+  void setAllOrderStepdata(GetAllOrderStepsModel value) => getAllOrderStepModel.value = value;
   void setAllPastOrderStepdata(GetAllOrderStepsModel value) => getAllPastOrderStepModel.value = value;
   void setOrderStatusModel(UpdateOrderStatusModel value) => updateOrderStatusModel.value = value;
 
@@ -45,11 +51,13 @@ class GetOrderController extends GetxController {
           .getAllOrderStepApi()
           .then((value) {
             if (loader) setRxRequestStatus(Status.COMPLETED);
+            setAllOrderStepdata(value);
+            calculateOrderCounts(value);
             if (isActive) {
-              filterOrders(value, filterStatuses: [OrderStatus.PENDING, OrderStatus.ACCEPTED,OrderStatus.COMPLETED]);
+              filterOrders(value, filterAgreedStatuses: [OrderStatus.PENDING, OrderStatus.ACCEPTED, OrderStatus.COMPLETED]);
               setAllActiveOrderStepdata(value);
             } else {
-              filterOrders(value, filterStatuses: [OrderStatus.REJECTED]);
+              filterOrders(value, filterAgreedStatuses: [OrderStatus.REJECTED]);
               setAllPastOrderStepdata(value);
             }
             Utils.printLog("Response ${value.toString()}");
@@ -62,11 +70,18 @@ class GetOrderController extends GetxController {
     }
   }
 
-  void filterOrders(GetAllOrderStepsModel value, {List<OrderStatus>? filterStatuses}) {
-    if (filterStatuses != null && filterStatuses.isNotEmpty) {
+  void calculateOrderCounts(GetAllOrderStepsModel value) {
+    if (value.data == null) return;
+    totalOrders.value = value.data?.length ?? 0;
+    pendingOrders.value = value.data!.where((item) => OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.PENDING).length;
+    acceptedOrders.value = value.data!.where((item) => OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.ACCEPTED).length;
+  }
+
+  void filterOrders(GetAllOrderStepsModel value, {List<OrderStatus>? filterAgreedStatuses, List<OrderStatus>? filterProgressStatuses}) {
+    if (filterAgreedStatuses != null && filterAgreedStatuses.isNotEmpty) {
       value.data = value.data?.where((item) {
         final orderStatus = OrderStatusExtension.fromString(item.artisanAgreedStatus);
-        return filterStatuses.contains(orderStatus);
+        return filterAgreedStatuses.contains(orderStatus);
       }).toList();
     }
   }

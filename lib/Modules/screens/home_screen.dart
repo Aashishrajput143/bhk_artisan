@@ -41,7 +41,10 @@ class HomeScreen extends ParentWidget {
                     commonCollection(h, w, controller),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [16.kH, salesGraph(context, w, h, controller), 12.kH, controller.getOrderController.getAllActiveOrderStepModel.value.data?.isEmpty ?? false ? SizedBox():getRecentOrder(w, h, controller), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false ? SizedBox() : product(w, controller), 20.kH]),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [16.kH, salesGraph(context, w, h, controller), 12.kH, controller.getOrderController.getAllActiveOrderStepModel.value.data?.isEmpty ?? false ? SizedBox() : getRecentOrder(w, h, controller), 12.kH, controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false ? SizedBox() : product(w, controller), 20.kH],
+                      ),
                     ),
                   ],
                 ),
@@ -55,38 +58,38 @@ class HomeScreen extends ParentWidget {
   }
 
   void showSuccessDialog() {
-  Get.dialog(
-    AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-            child: Icon(Icons.check, color: appColors.contentWhite, size: 30),
-          ),
-          20.kH,
-          Text(
-            appStrings.success,
-            style: TextStyle(fontSize: 20, color: appColors.contentPrimary, fontWeight: FontWeight.bold),
-          ),
-          10.kH,
-          Text(
-            appStrings.loginSuccess,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: appColors.contentPending),
-          ),
-          20.kH,
-          commonButton(Get.width, 45, appColors.contentButtonBrown, appColors.contentWhite, () => Get.back(), hint: appStrings.goToDashboard, radius: 8),
-        ],
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+              child: Icon(Icons.check, color: appColors.contentWhite, size: 30),
+            ),
+            20.kH,
+            Text(
+              appStrings.success,
+              style: TextStyle(fontSize: 20, color: appColors.contentPrimary, fontWeight: FontWeight.bold),
+            ),
+            10.kH,
+            Text(
+              appStrings.loginSuccess,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: appColors.contentPending),
+            ),
+            20.kH,
+            commonButton(Get.width, 45, appColors.contentButtonBrown, appColors.contentWhite, () => Get.back(), hint: appStrings.goToDashboard, radius: 8),
+          ],
+        ),
       ),
-    ),
-    barrierDismissible: false,
-  );
-}
+      barrierDismissible: false,
+    );
+  }
 
   PreferredSizeWidget appBarHome(Homecontroller controller) {
     return AppBar(
@@ -125,6 +128,11 @@ class HomeScreen extends ParentWidget {
   }
 
   Widget commonCollection(double h, double w, Homecontroller controller) {
+    final approvedDocs = controller.getApprovedProductModel.value.data?.docs;
+
+    if (approvedDocs == null) {
+      return shimmerCollection(w);
+    }
     return Column(
       children: [
         SingleChildScrollView(
@@ -134,15 +142,17 @@ class HomeScreen extends ParentWidget {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                commonContainer(w, "0", Colors.orange[100], Colors.orange, appStrings.todayOrders, Icons.shopping_cart),
+                commonContainer(w, controller.getTodayOrdersCount(controller.getOrderController.getAllOrderStepModel.value.data ?? []), appColors.orangeColor[100], appColors.orangeColor, appStrings.todayOrders, Icons.shopping_cart, onTap: () => controller.commonController.selectedIndex.value = 1),
                 12.kW,
-                commonContainer(w, "₹ 0", Colors.blue[100], Colors.blue, appStrings.todaySales, Icons.bar_chart),
+                commonContainer(w, controller.getOrderController.pendingOrders.value.toString(), appColors.blueColor[100], appColors.blueColor, appStrings.needAction, Icons.touch_app, onTap: () => controller.commonController.selectedIndex.value = 1),
                 12.kW,
-                commonContainer(w, "0", Colors.red[100], Colors.red, appStrings.pendingOrders, Icons.pending_actions),
+                commonContainer(w, controller.getOrderController.acceptedOrders.value.toString(), appColors.redColor[100], appColors.redColor, appStrings.pendingOrders, Icons.pending_actions, onTap: () => controller.commonController.selectedIndex.value = 1),
                 12.kW,
-                commonContainer(w, "0", Colors.orange[100], Colors.orange, appStrings.totalOrders, Icons.shopping_cart),
+                commonContainer(w, (approvedDocs.length).toString(), appColors.blueColor[100], appColors.blueColor, appStrings.approvedProducts, Icons.local_offer, onTap: () => controller.commonController.selectedIndex.value = 2),
                 12.kW,
-                commonContainer(w, "₹ 0", Colors.blue[100], Colors.blue, appStrings.annualSales, Icons.bar_chart),
+                commonContainer(w, (controller.getOrderController.getAllOrderStepModel.value.data?.length ?? 0).toString(), appColors.orangeColor[100], appColors.orangeColor, appStrings.totalOrders, Icons.shopping_cart, onTap: () => controller.commonController.selectedIndex.value = 1),
+                12.kW,
+                commonContainer(w, "₹ ${controller.totalSales()}", appColors.blueColor[100], appColors.blueColor, appStrings.annualSales, Icons.bar_chart),
               ],
             ),
           ),
@@ -152,7 +162,7 @@ class HomeScreen extends ParentWidget {
           padding: const EdgeInsets.symmetric(horizontal: 130),
           child: Obx(() {
             double progress = (controller.scrollPosition.value / controller.maxScrollExtent.value).clamp(0.0, 1.0);
-            return LinearProgressBar(maxSteps: 50, progressType: LinearProgressBar.progressTypeLinear, currentStep: controller.scrollPosition < 15 ? 2 : (progress * 50).toInt(), progressColor: const Color.fromARGB(255, 193, 94, 58), backgroundColor: const Color.fromARGB(255, 252, 234, 208), minHeight: 7, borderRadius: BorderRadius.circular(10));
+            return LinearProgressBar(maxSteps: 50, progressType: LinearProgressBar.progressTypeLinear, currentStep: controller.scrollPosition < 15 ? 2 : (progress * 50).toInt(), progressColor: appColors.progressBarColor, backgroundColor: appColors.progressBarBg, minHeight: 7, borderRadius: BorderRadius.circular(10));
           }),
         ),
         20.kH,
@@ -160,121 +170,129 @@ class HomeScreen extends ParentWidget {
     );
   }
 
-  Widget commonContainer(double w, String count, Color? color, Color colorValues, String title, IconData icon) {
-    return Container(
-      width: w * 0.455,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 5, offset: const Offset(0, 3))],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 12,
-                backgroundColor: colorValues.withValues(alpha: 0.2),
-                child: Icon(icon, color: colorValues, size: 16),
-              ),
-              8.kW,
-              Text(
-                title,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black),
-              ),
-            ],
-          ),
-          16.kH,
-          Padding(
-            padding: const EdgeInsets.only(left: 5),
-            child: Text(
-              count,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black),
+  Widget commonContainer(double w, String count, Color? color, Color colorValues, String title, IconData icon, {void Function()? onTap}) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
+        width: w * 0.455,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 5, offset: const Offset(0, 3))],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 12,
+                  backgroundColor: colorValues.withValues(alpha: 0.2),
+                  child: Icon(icon, color: colorValues, size: 16),
+                ),
+                8.kW,
+                Text(
+                  title,
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black),
+                ),
+              ],
             ),
-          ),
-        ],
+            16.kH,
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Text(
+                count,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget product(double w, Homecontroller controller) {
-    return controller.getApprovedProductModel.value.data?.docs?.isNotEmpty??false? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(appStrings.recentlyAddedProducts, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  controller.commonController.selectedIndex.value = 2;
-                  controller.productController.changeTab(0);
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(appStrings.recentlyAddedProducts, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        controller.commonController.selectedIndex.value = 2;
+                        controller.productController.changeTab(0);
+                      },
+                      child: Text(appStrings.viewAll, style: TextStyle(fontSize: 14.0, color: Colors.brown)),
+                    ),
+                  ],
+                ),
+              ),
+              15.kH,
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 20.0, mainAxisSpacing: 7.0, childAspectRatio: 0.6),
+                itemCount: min(4, controller.getApprovedProductModel.value.data?.docs?.length ?? 0),
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                        controller.getProductApi(ProductStatus.APPROVED.name, isLoader: false);
+                      });
+                    },
+                    child: productCard(w, controller.getApprovedProductModel.value.data?.docs?[index]),
+                  );
                 },
-                child: Text(appStrings.viewAll, style: TextStyle(fontSize: 14.0, color: Colors.brown)),
               ),
             ],
-          ),
-        ),
-        15.kH,
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 20.0, mainAxisSpacing: 7.0, childAspectRatio: 0.6),
-          itemCount: min(4, controller.getApprovedProductModel.value.data?.docs?.length ?? 0),
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
-                  controller.getProductApi(ProductStatus.APPROVED.name, isLoader: false);
-                });
-              },
-              child: productCard(w, controller.getApprovedProductModel.value.data?.docs?[index]),
-            );
-          },
-        ),
-      ],
-    ):shimmerProduct(w);
+          )
+        : shimmerProduct(w);
   }
 
   Widget getRecentOrder(double w, double h, Homecontroller controller) {
-    return controller.getOrderController.getAllActiveOrderStepModel.value.data?.isNotEmpty ?? false? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return controller.getOrderController.getAllActiveOrderStepModel.value.data?.isNotEmpty ?? false
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(appStrings.recentOrders, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  controller.commonController.selectedIndex.value = 1;
-                  controller.orderController.changeTab(0);
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(appStrings.recentOrders, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        controller.commonController.selectedIndex.value = 1;
+                        controller.orderController.changeTab(0);
+                      },
+                      child: Text(appStrings.viewAll, style: TextStyle(fontSize: 14.0, color: Colors.brown)),
+                    ),
+                  ],
+                ),
+              ),
+              10.kH,
+              ListView.builder(
+                itemCount: min(2, controller.getOrderController.getAllActiveOrderStepModel.value.data?.length ?? 0),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  final steps = controller.getOrderController.getAllActiveOrderStepModel.value.data?[index];
+                  return OrderList().orderContent(h, w, index, steps, controller.getOrderController);
                 },
-                child: Text(appStrings.viewAll, style: TextStyle(fontSize: 14.0, color: Colors.brown)),
               ),
             ],
-          ),
-        ),
-        10.kH,
-        ListView.builder(
-          itemCount: min(2, controller.getOrderController.getAllActiveOrderStepModel.value.data?.length ?? 0),
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            final steps = controller.getOrderController.getAllActiveOrderStepModel.value.data?[index];
-            return OrderList().orderContent(h, w, index, steps, controller.getOrderController);
-          },
-        ),
-      ],
-    ):shimmerList(w, h*0.2);
+          )
+        : shimmerList(w, h * 0.2);
   }
 
   Widget productCard(double w, ProductDocs? list) {
