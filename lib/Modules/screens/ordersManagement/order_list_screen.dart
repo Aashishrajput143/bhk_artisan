@@ -98,9 +98,9 @@ class OrderList extends ParentWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              orderCardHeader(steps),
+              orderCardHeader(steps,controller),
               8.kH,
-              orderCardContent(steps),
+              orderCardContent(steps,controller),
               Divider(thickness: 1, color: Colors.grey[300]),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -191,7 +191,7 @@ class OrderList extends ParentWidget {
     );
   }
 
-  Widget orderCardHeader(Data? steps) {
+  Widget orderCardHeader(Data? steps,GetOrderController controller) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -199,14 +199,14 @@ class OrderList extends ParentWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("${appStrings.orderIdPrefix}${steps?.id}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            Text("${appStrings.orderCompleteBy} 16 Mar, 02:21 PM", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+            Text("${appStrings.orderCompleteBy} ${controller.formatDate(steps?.dueDate)}", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
           ],
         ),
       ],
     );
   }
 
-  Widget orderCardContent(Data? steps) {
+  Widget orderCardContent(Data? steps,GetOrderController controller) {
     return Row(
       children: [
         commonNetworkImage(steps?.referenceImagesAddedByAdmin?.first ?? steps?.product?.images?.first.imageUrl ?? "", width: 60, height: 60, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
@@ -224,11 +224,11 @@ class OrderList extends ParentWidget {
                 children: [
                   Icon(Icons.circle, color: Colors.green, size: 8),
                   4.kW,
-                  Text(steps?.artisanAgreedStatus == OrderStatus.PENDING.toString() ? appStrings.orderNeedsAction : appStrings.orderConfirmed, style: TextStyle(color: Colors.green, fontSize: 11)),
+                  Text(steps?.artisanAgreedStatus == OrderStatus.PENDING.name ? appStrings.orderNeedsAction : appStrings.orderConfirmed, style: TextStyle(color: Colors.green, fontSize: 11)),
                 ],
               ),
               4.kH,
-              Text("${appStrings.orderAssigned} : 16 Mar, 23:06:51 AM", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+              Text("${appStrings.orderAssigned} : ${controller.formatDate(steps?.createdAt)}", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
             ],
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:bhk_artisan/Modules/controller/get_order_controller.dart';
 import 'package:bhk_artisan/Modules/controller/orderscreencontroller.dart';
 import 'package:bhk_artisan/Modules/controller/productscreencontroller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
+import 'package:bhk_artisan/Modules/model/sales_graph_model.dart';
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
 import 'package:bhk_artisan/Modules/screens/home_screen.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
@@ -42,13 +43,62 @@ class Homecontroller extends GetxController {
     {"month": "Aug", "sales": 30000, "unitsSold": 80},
   ];
 
-  String totalSales() {
-    double total = calculateSales(chartData);
-    return formatNumberIndian(total);
+  final List<ChartFilter> chartDataFilters = [
+    ChartFilter(
+      filter: "Weekly",
+      data: [
+        ChartData(day: "Mon", sales: 4000, unitsSold: 10),
+        ChartData(day: "Tue", sales: 5000, unitsSold: 12),
+        ChartData(day: "Wed", sales: 3000, unitsSold: 8),
+        ChartData(day: "Thu", sales: 6000, unitsSold: 14),
+        ChartData(day: "Fri", sales: 7000, unitsSold: 16),
+        ChartData(day: "Sat", sales: 8000, unitsSold: 18),
+        ChartData(day: "Sun", sales: 6500, unitsSold: 15),
+      ],
+    ),
+    ChartFilter(
+      filter: "Monthly",
+      data: [
+        ChartData(month: "Jan", sales: 12000, unitsSold: 30),
+        ChartData(month: "Feb", sales: 17000, unitsSold: 40),
+        ChartData(month: "Mar", sales: 18000, unitsSold: 50),
+        ChartData(month: "Apr", sales: 10000, unitsSold: 20),
+        ChartData(month: "May", sales: 21000, unitsSold: 60),
+        ChartData(month: "Jun", sales: 16000, unitsSold: 45),
+        ChartData(month: "Jul", sales: 25000, unitsSold: 70),
+        ChartData(month: "Aug", sales: 30000, unitsSold: 80),
+      ],
+    ),
+    ChartFilter(
+      filter: "Yearly",
+      data: [
+        ChartData(year: "2022", sales: 150000, unitsSold: 400),
+        ChartData(year: "2023", sales: 180000, unitsSold: 450),
+        ChartData(year: "2024", sales: 220000, unitsSold: 500),
+        ChartData(year: "2025", sales: 250000, unitsSold: 600),
+      ],
+    ),
+  ];
+
+  List<ChartData> get selectedFilterData {
+    final filter = chartDataFilters.firstWhere((e) => e.filter == dropdownmonth.value, orElse: () => chartDataFilters.first);
+    return filter.data;
   }
 
-  double calculateSales(List<Map<String, dynamic>> chartData) {
-    return chartData.fold<double>(0, (sum, item) => sum + (item["sales"] as num).toDouble());
+  double calculateTotalSalesThisYear() {
+    final yearlyFilter = chartDataFilters.firstWhere(
+      (filter) => filter.filter == "Yearly",
+      orElse: () => ChartFilter(filter: "Yearly", data: []),
+    );
+
+    double total = yearlyFilter.data.fold(0, (sum, data) => sum + data.sales.toDouble());
+
+    return total;
+  }
+
+  String totalSales() {
+    double total = calculateTotalSalesThisYear();
+    return formatNumberIndian(total);
   }
 
   String formatNumberIndian(double number) {
@@ -74,25 +124,28 @@ class Homecontroller extends GetxController {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 
-    return orders.where((order) {
-      if (order.createdAt == null) return false;
+    return orders
+        .where((order) {
+          if (order.createdAt == null) return false;
 
-      final created = DateTime.parse(order.createdAt!);
-      final createdDate = DateTime(created.year, created.month, created.day);
+          final created = DateTime.parse(order.createdAt!);
+          final createdDate = DateTime(created.year, created.month, created.day);
 
-      return createdDate == today;
-    }).length.toString();
+          return createdDate == today;
+        })
+        .length
+        .toString();
   }
 
   int currentYear = DateTime.now().year;
   RxDouble scrollPosition = 0.0.obs;
   RxDouble maxScrollExtent = 0.0.obs;
-  var dropdownmonth = 'Last 7 days'.obs;
+  var dropdownmonth = 'Weekly'.obs;
   var dropdownsold = 'Product Sales'.obs;
 
   var scrollController = ScrollController().obs;
 
-  List<String> daysfilter = ['Last 7 days', 'Last 30 days', 'Last 12 months', 'This week', 'This month', 'Year to date'];
+  List<String> daysfilter = ['Weekly', 'Monthly', 'Yearly'];
 
   List<String> salesfilter = ['Product Sales', 'Units Sold'];
 

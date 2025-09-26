@@ -8,12 +8,24 @@ import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class GetOrderController extends GetxController {
   final _api = OrderRepository();
 
   Future<void> ordersRefresh() async {
     getAllOrderStepApi();
+  }
+
+  String formatDate(String? rawDate) {
+    if (rawDate == null || rawDate.isEmpty) return "N/A";
+
+    try {
+      final dateTime = DateTime.parse(rawDate).toLocal();
+      return DateFormat("MMM dd, yyyy").format(dateTime);
+    } catch (e) {
+      return "Invalid date";
+    }
   }
 
   @override

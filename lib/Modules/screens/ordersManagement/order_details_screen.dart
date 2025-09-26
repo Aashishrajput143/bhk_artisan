@@ -87,12 +87,14 @@ class OrderDetailsPage extends ParentWidget {
   Widget bottomButtons(double h, double w, GetOrderDetailsController controller) {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.03),
-      child:controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name?commonButtonContainer(w * 0.44, 50, appColors.contentBrownLinearColor2, appColors.acceptColor, () {}, hint: appStrings.awaitingPickUp): (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name)
+      child: controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
+          ? commonButtonContainer(w * 0.44, 50, appColors.cardBackground2, appColors.acceptColor, () {}, hint: appStrings.awaitingPickUp)
+          : (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name)
           ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 commonButton(
-                  w * 0.4,
+                  w * 0.44,
                   45,
                   appColors.acceptColor,
                   appColors.contentWhite,
@@ -110,7 +112,7 @@ class OrderDetailsPage extends ParentWidget {
                   hint: appStrings.accept,
                 ),
                 commonButton(
-                  w * 0.4,
+                  w * 0.44,
                   45,
                   appColors.declineColor,
                   appColors.contentWhite,
@@ -130,10 +132,10 @@ class OrderDetailsPage extends ParentWidget {
               ],
             )
           : double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100
-          ? commonButtonContainer(w * 0.44, 50, appColors.contentBrownLinearColor2, appColors.acceptColor, () {}, hint: appStrings.waitingForApproval)
+          ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor2, appColors.acceptColor, () {}, hint: appStrings.waitingForApproval)
           : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
-          ? commonButton(w * 0.44, 50, appColors.contentButtonBrown, appColors.contentWhite, () => Get.toNamed(RoutesClass.uploadOrderImage, arguments: controller.getOrderStepModel.value.data?.id ?? ""), hint: appStrings.uploadCompletion)
-          : commonButtonContainer(w * 0.44, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.declined),
+          ? commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => Get.toNamed(RoutesClass.uploadOrderImage, arguments: controller.getOrderStepModel.value.data?.id ?? ""), hint: appStrings.uploadCompletion)
+          : commonButtonContainer(w, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.declined),
     );
   }
 
@@ -164,7 +166,7 @@ class OrderDetailsPage extends ParentWidget {
           16.kH,
           commonRow(appStrings.timeRemaining, appStrings.orderValue, color: appColors.contentSecondary, fontweight: FontWeight.w500, fontSize: 15, fontSize2: 15, color2: appColors.contentSecondary, fontweight2: FontWeight.w500),
           6.kH,
-          commonRow("10 Days", "₹ ${controller.getOrderStepModel.value.data?.proposedPrice ?? 0}", color: appColors.contentPrimary, fontSize: 17, fontweight: FontWeight.bold, color2: appColors.contentPrimary, fontSize2: 17, fontweight2: FontWeight.bold),
+          commonRow(controller.getRemainingDays(controller.getOrderStepModel.value.data?.dueDate), "₹ ${controller.getOrderStepModel.value.data?.proposedPrice ?? 0}", color: appColors.contentPrimary, fontSize: 17, fontweight: FontWeight.bold, color2: appColors.contentPrimary, fontSize2: 17, fontweight2: FontWeight.bold),
         ],
       ),
     );
@@ -205,9 +207,9 @@ class OrderDetailsPage extends ParentWidget {
           6.kH,
           commonRow(appStrings.productId, controller.getOrderStepModel.value.data?.product?.bhkProductId ?? appStrings.notAvailable, color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           6.kH,
-          commonRow(appStrings.orderAssigned, "Aug 20, 2025", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
+          commonRow(appStrings.orderAssigned, controller.formatDate(controller.getOrderStepModel.value.data?.createdAt), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           6.kH,
-          commonRow(appStrings.dueDate, "Oct 15, 2025", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
+          commonRow(appStrings.dueDate, controller.formatDate(controller.getOrderStepModel.value.data?.dueDate), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           //6.kH,
           //commonRow("Priority", "High", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.declineColor, fontweight2: FontWeight.bold),
         ],

@@ -73,3 +73,49 @@ class MonthsData {
     return data;
   }
 }
+
+class ChartFilter {
+  final String filter;
+  final List<ChartData> data;
+
+  ChartFilter({required this.filter, required this.data});
+
+  factory ChartFilter.fromJson(Map<String, dynamic> json) {
+    return ChartFilter(
+      filter: json['filter'],
+      data: (json['data'] as List)
+          .map((e) => ChartData.fromJson(e))
+          .toList(),
+    );
+  }
+}
+
+class ChartData {
+  final String? day;
+  final String? month;
+  final String? year;
+  final int sales;
+  final int unitsSold;
+
+  ChartData({
+    this.day,
+    this.month,
+    this.year,
+    required this.sales,
+    required this.unitsSold,
+  });
+
+  factory ChartData.fromJson(Map<String, dynamic> json) {
+    return ChartData(
+      day: json['day'],
+      month: json['month'],
+      year: json['year'],
+      sales: json['sales'] ?? 0,
+      unitsSold: json['unitsSold'] ?? 0,
+    );
+  }
+
+  /// Get the correct X-axis label (day, month, or year)
+  String get label => day ?? month ?? year ?? "";
+}
+

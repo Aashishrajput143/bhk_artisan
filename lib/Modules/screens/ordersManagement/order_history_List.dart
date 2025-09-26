@@ -94,9 +94,9 @@ class OrderListHistory extends ParentWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OrderList().orderCardHeader(steps),
+              OrderList().orderCardHeader(steps,controller),
               8.kH,
-              OrderList().orderCardContent(steps),
+              OrderList().orderCardContent(steps,controller),
               Divider(thickness: 1, color: Colors.grey[300]),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),

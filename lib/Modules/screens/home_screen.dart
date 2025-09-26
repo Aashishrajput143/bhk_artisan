@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bhk_artisan/Modules/controller/home_controller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
+import 'package:bhk_artisan/Modules/model/sales_graph_model.dart';
 import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/gradient.dart';
@@ -388,6 +389,7 @@ class HomeScreen extends ParentWidget {
                     appColors.backgroundColor,
                     (value) {
                       controller.dropdownmonth.value = value ?? "";
+                      print("controller.dropdownmonth.value===${controller.dropdownmonth.value}");
                     },
                   ),
                 ),
@@ -398,30 +400,20 @@ class HomeScreen extends ParentWidget {
             height: h * 0.35,
             child: SfCartesianChart(
               backgroundColor: appColors.backgroundColor,
-              primaryXAxis: CategoryAxis(
-                edgeLabelPlacement: EdgeLabelPlacement.shift,
-                interval: 1, // Show every month
-                labelRotation: 45, // Optional: Rotates text to prevent overlapping
-              ),
-              //primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1.8),
+              primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1, labelRotation: 45),
               legend: Legend(isVisible: true, toggleSeriesVisibility: false),
               tooltipBehavior: TooltipBehavior(enable: true),
-              series: <CartesianSeries<Map<String, dynamic>, String>>[
-                ColumnSeries<Map<String, dynamic>, String>(
-                  dataSource: controller.chartData,
-                  xValueMapper: (Map<String, dynamic> sales, _) => sales['month'] as String,
-                  yValueMapper: (Map<String, dynamic> sales, _) => controller.dropdownsold.value == "Product Sales" ? sales['sales'] as num : sales['unitsSold'] as num,
+              series: <CartesianSeries<ChartData, String>>[
+                ColumnSeries<ChartData, String>(
+                  dataSource: controller.selectedFilterData,
+                  xValueMapper: (ChartData sales, _) => sales.label,
+                  yValueMapper: (ChartData sales, _) => controller.dropdownsold.value == "Product Sales" ? sales.sales : sales.unitsSold,
                   name: controller.dropdownsold.value,
                   gradient: AppGradients.graphGradient,
                   dataLabelSettings: DataLabelSettings(isVisible: true, labelAlignment: ChartDataLabelAlignment.outer),
-                  dataLabelMapper: (Map<String, dynamic> sales, _) {
-                    if (controller.dropdownsold.value == "Product Sales") {
-                      final value = sales['sales'] as num;
-                      return value != 0 ? value.toString() : null;
-                    } else {
-                      final value = sales['unitsSold'] as num;
-                      return value != 0 ? value.toString() : null;
-                    }
+                  dataLabelMapper: (ChartData sales, _) {
+                    final value = controller.dropdownsold.value == "Product Sales" ? sales.sales : sales.unitsSold;
+                    return value != 0 ? value.toString() : null;
                   },
                 ),
               ],

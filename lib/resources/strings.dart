@@ -254,7 +254,7 @@ class AppStrings {
   //Aadhar Screen
   String get aadharVerificationTitle => "Aadhar Verification";
   String get aadharVerificationHeader => "Aadhaar Verification";
-  String get aadharVerificationDesc => "Verify your identity securely with your Aadhaar number. Enter your 12-digit Aadhaar number to receive a One-Time Password (OTP) on your registered mobile number.";
+  String get aadharVerificationDesc => "Verify your identity securely with your Aadhaar number. Enter your 16-digit Aadhaar number to receive a One-Time Password (OTP) on your registered mobile number.";
   String get aadhaarNumber => "Aadhaar Number";
   String get enterAadhaarNumber => "Enter your 16 Digits Aadhaar Number";
   String get sendOtp => "Send OTP";

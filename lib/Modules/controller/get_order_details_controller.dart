@@ -8,6 +8,7 @@ import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class GetOrderDetailsController extends GetxController {
   final _api = OrderRepository();
@@ -32,6 +33,38 @@ class GetOrderDetailsController extends GetxController {
 
   void onPageChanged(int index) {
     currentIndex.value = index;
+  }
+
+  String formatDate(String? rawDate) {
+    if (rawDate == null || rawDate.isEmpty) return "N/A";
+
+    try {
+      final dateTime = DateTime.parse(rawDate).toLocal();
+      return DateFormat("MMM dd, yyyy").format(dateTime);
+    } catch (e) {
+      return "Invalid date";
+    }
+  }
+
+  String getRemainingDays(String? rawDate) {
+    if (rawDate == null || rawDate.isEmpty) return "N/A";
+
+    try {
+      final dueDate = DateTime.parse(rawDate).toLocal(); // API date → local
+      final now = DateTime.now();
+
+      final difference = dueDate.difference(now).inDays;
+
+      if (difference < 0) {
+        return "Overdue";
+      } else if (difference == 0) {
+        return "Today";
+      } else {
+        return "$difference Days";
+      }
+    } catch (e) {
+      return "Invalid date";
+    }
   }
 
   @override
