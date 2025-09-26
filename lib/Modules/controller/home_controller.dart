@@ -87,8 +87,8 @@ class Homecontroller extends GetxController {
 
   double calculateTotalSalesThisYear() {
     final yearlyFilter = chartDataFilters.firstWhere(
-      (filter) => filter.filter == "Yearly",
-      orElse: () => ChartFilter(filter: "Yearly", data: []),
+      (filter) => filter.filter == "Monthly",
+      orElse: () => ChartFilter(filter: "Monthly", data: []),
     );
 
     double total = yearlyFilter.data.fold(0, (sum, data) => sum + data.sales.toDouble());
