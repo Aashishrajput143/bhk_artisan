@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/controller/orderscreencontroller.dart';
 import 'package:bhk_artisan/Modules/model/get_all_order_step_model.dart';
 import 'package:bhk_artisan/Modules/model/update_order_status_model.dart';
 import 'package:bhk_artisan/Modules/repository/order_repository.dart';
@@ -16,6 +17,8 @@ class GetOrderController extends GetxController {
   Future<void> ordersRefresh() async {
     getAllOrderStepApi();
   }
+
+  OrderController orderController = Get.find();
 
   String formatDate(String? rawDate) {
     if (rawDate == null || rawDate.isEmpty) return "N/A";
@@ -62,15 +65,16 @@ class GetOrderController extends GetxController {
       _api
           .getAllOrderStepApi()
           .then((value) {
+            calculateOrderCounts(value);
             if (loader) setRxRequestStatus(Status.COMPLETED);
             setAllOrderStepdata(value);
-            calculateOrderCounts(value);
+
             if (isActive) {
-              filterOrders(value, filterAgreedStatuses: [OrderStatus.PENDING, OrderStatus.ACCEPTED, OrderStatus.COMPLETED]);
-              setAllActiveOrderStepdata(value);
+              final activeOrders = getFilteredOrders(value, filterAgreedStatuses: [OrderStatus.PENDING, OrderStatus.ACCEPTED, OrderStatus.COMPLETED]);
+              setAllActiveOrderStepdata(activeOrders);
             } else {
-              filterOrders(value, filterAgreedStatuses: [OrderStatus.REJECTED]);
-              setAllPastOrderStepdata(value);
+              final pastOrders = getFilteredOrders(value, filterAgreedStatuses: [OrderStatus.REJECTED, OrderStatus.DELIVERED]);
+              setAllPastOrderStepdata(pastOrders);
             }
             Utils.printLog("Response ${value.toString()}");
           })
@@ -87,15 +91,15 @@ class GetOrderController extends GetxController {
     totalOrders.value = value.data?.length ?? 0;
     pendingOrders.value = value.data!.where((item) => OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.PENDING).length;
     acceptedOrders.value = value.data!.where((item) => OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.ACCEPTED).length;
+    update();
   }
 
-  void filterOrders(GetAllOrderStepsModel value, {List<OrderStatus>? filterAgreedStatuses, List<OrderStatus>? filterProgressStatuses}) {
-    if (filterAgreedStatuses != null && filterAgreedStatuses.isNotEmpty) {
-      value.data = value.data?.where((item) {
-        final orderStatus = OrderStatusExtension.fromString(item.artisanAgreedStatus);
-        return filterAgreedStatuses.contains(orderStatus);
-      }).toList();
+  GetAllOrderStepsModel getFilteredOrders(GetAllOrderStepsModel value, {List<OrderStatus>? filterAgreedStatuses}) {
+    if (filterAgreedStatuses == null || filterAgreedStatuses.isEmpty) {
+      return GetAllOrderStepsModel(message: value.message, data: value.data != null ? List<Data>.from(value.data!) : []);
     }
+    final filteredData = value.data?.where((item) => filterAgreedStatuses.contains(OrderStatusExtension.fromString(item.artisanAgreedStatus))).toList() ?? [];
+    return GetAllOrderStepsModel(message: value.message, data: filteredData);
   }
 
   Future<void> updateOrderStatusApi(var status, var id, {bool loader = false}) async {

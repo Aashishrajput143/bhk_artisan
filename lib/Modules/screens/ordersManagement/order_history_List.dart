@@ -3,6 +3,7 @@ import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.d
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
@@ -80,7 +81,9 @@ class OrderListHistory extends ParentWidget {
 
   Widget orderContent(double h, double w, int index, Data? steps, GetOrderController controller) {
     return GestureDetector(
-      onTap: () => Get.toNamed(RoutesClass.ordersdetails),
+      onTap: () => Get.toNamed(RoutesClass.ordersdetails, arguments: steps?.id ?? "")?.then((onValue) {
+        controller.getAllOrderStepApi(isActive: false);
+      }),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10.0),
         decoration: BoxDecoration(
@@ -94,19 +97,19 @@ class OrderListHistory extends ParentWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OrderList().orderCardHeader(steps,controller),
+              OrderList().orderCardHeader(steps, controller),
               8.kH,
-              OrderList().orderCardContent(steps,controller),
+              OrderList().orderCardContent(steps, controller),
               Divider(thickness: 1, color: Colors.grey[300]),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    OrderList().buildOrderDetailColumn(appStrings.payment, '₹ 300.50'),
-                    OrderList().buildOrderDetailColumn(appStrings.productId, 'TST11414'),
-                    OrderList().buildOrderDetailColumn(appStrings.orderQty, '${index + 1}0'),
-                    OrderList().buildOrderDetailColumn(appStrings.orderStatus, appStrings.delivered, color: appColors.brownDarkText),
+                    OrderList().buildOrderDetailColumn(appStrings.payment, '₹ ${steps?.proposedPrice ?? 0}'),
+                    if (steps?.product != null) OrderList().buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
+                    OrderList().buildOrderDetailColumn(appStrings.orderQty, (steps?.product?.quantity ?? 0).toString().padLeft(2, '0')),
+                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name) OrderList().buildOrderDetailColumn(appStrings.orderStatus, steps?.artisanAgreedStatus == OrderStatus.DELIVERED.name ? OrderStatus.DELIVERED.displayText : OrderStatus.REJECTED.displayText, color: steps?.artisanAgreedStatus == OrderStatus.DELIVERED.name ? appColors.brownDarkText : appColors.declineColor),
                   ],
                 ),
               ),

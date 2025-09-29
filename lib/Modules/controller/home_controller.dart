@@ -106,8 +106,6 @@ class Homecontroller extends GetxController {
       return "${removeTrailingZero(number / 10000000)}Cr";
     } else if (number >= 100000) {
       return "${removeTrailingZero(number / 100000)}L";
-    } else if (number >= 1000) {
-      return "${removeTrailingZero(number / 1000)}K";
     } else {
       return removeTrailingZero(number);
     }

@@ -43,6 +43,7 @@ class ProductDetailScreen extends ParentWidget {
 
   Widget productImageCarousel(double h, double w, ProductDetailsController controller) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
           children: [
@@ -90,34 +91,36 @@ class ProductDetailScreen extends ParentWidget {
                   itemBuilder: (context, index) {
                     String image = controller.getProductModel.value.data?.images?[index].imageUrl ?? "";
                     return Obx(
-                      () => GestureDetector(
-                        onTap: () {
-                          int current = controller.currentIndex.value;
-                          int tapped = index;
-                          controller.slidercontroller.animateToPage(tapped);
-                          if (!controller.thumbnailScrollController.hasClients) return;
-                          double itemWidth = w * 0.165 + controller.thumbMargin.value;
-                          double currentOffset = controller.thumbnailScrollController.offset;
-                          double maxScroll = controller.thumbnailScrollController.position.maxScrollExtent;
-                          int diff = tapped - current;
-                          double targetOffset;
-                          if (diff > 0) {
-                            targetOffset = (currentOffset + itemWidth).clamp(0, maxScroll);
-                          } else if (diff < 0) {
-                            targetOffset = (currentOffset - itemWidth).clamp(0, maxScroll);
-                          } else {
-                            targetOffset = currentOffset;
-                          }
-                          controller.thumbnailScrollController.animateTo(targetOffset, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 4),
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: controller.currentIndex.value == index ? appColors.brownDarkText : Colors.transparent, width: 2),
-                            borderRadius: BorderRadius.circular(8),
+                      () => Align(
+                        child: GestureDetector(
+                          onTap: () {
+                            int current = controller.currentIndex.value;
+                            int tapped = index;
+                            controller.slidercontroller.animateToPage(tapped);
+                            if (!controller.thumbnailScrollController.hasClients) return;
+                            double itemWidth = w * 0.165 + controller.thumbMargin.value;
+                            double currentOffset = controller.thumbnailScrollController.offset;
+                            double maxScroll = controller.thumbnailScrollController.position.maxScrollExtent;
+                            int diff = tapped - current;
+                            double targetOffset;
+                            if (diff > 0) {
+                              targetOffset = (currentOffset + itemWidth).clamp(0, maxScroll);
+                            } else if (diff < 0) {
+                              targetOffset = (currentOffset - itemWidth).clamp(0, maxScroll);
+                            } else {
+                              targetOffset = currentOffset;
+                            }
+                            controller.thumbnailScrollController.animateTo(targetOffset, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 4),
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: controller.currentIndex.value == index ? appColors.brownDarkText : Colors.transparent, width: 2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: commonNetworkImage(image, width: w * 0.165, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8))),
                           ),
-                          child: commonNetworkImage(image, width: w * 0.165, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8))),
                         ),
                       ),
                     );
@@ -212,56 +215,66 @@ class ProductDetailScreen extends ParentWidget {
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         ),
         16.kH,
-        Text(
-          appStrings.netWeight,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
-        ),
-        6.kH,
-        Text(
-          controller.getProductModel.value.data?.netWeight ?? "0 gm",
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-        ),
-        16.kH,
-        Text(
-          appStrings.artUsed,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
-        ),
-        6.kH,
-        Text(
-          controller.getProductModel.value.data?.artUsed ?? "",
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-        ),
-        16.kH,
-        Text(
-          appStrings.dimensions,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
-        ),
-        6.kH,
-        Text(
-          controller.getProductModel.value.data?.dimension ?? "0x0x0 cm",
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-        ),
-        16.kH,
-        Text(
-          appStrings.texture,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
-        ),
-        6.kH,
-        Text(
-          controller.getProductModel.value.data?.texture ?? "",
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-        ),
-        16.kH,
-        Text(
-          appStrings.patternUsed,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
-        ),
-        6.kH,
-        Text(
-          controller.getProductModel.value.data?.patternUsed ?? "",
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-        ),
-        16.kH,
+        if (controller.getProductModel.value.data?.netWeight?.isNotEmpty ?? false) ...[
+          Text(
+            appStrings.netWeight,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
+          ),
+          6.kH,
+          Text(
+            controller.getProductModel.value.data?.netWeight ?? "0 gm",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+          ),
+          16.kH,
+        ],
+        if (controller.getProductModel.value.data?.artUsed?.isNotEmpty ?? false) ...[
+          Text(
+            appStrings.artUsed,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
+          ),
+          6.kH,
+          Text(
+            controller.getProductModel.value.data?.artUsed ?? "",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+          ),
+          16.kH,
+        ],
+        if (controller.getProductModel.value.data?.dimension?.isNotEmpty ?? false) ...[
+          Text(
+            appStrings.dimensions,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
+          ),
+          6.kH,
+          Text(
+            controller.getProductModel.value.data?.dimension ?? "0x0x0 cm",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+          ),
+          16.kH,
+        ],
+        if (controller.getProductModel.value.data?.texture?.isNotEmpty ?? false) ...[
+          Text(
+            appStrings.texture,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
+          ),
+          6.kH,
+          Text(
+            controller.getProductModel.value.data?.texture ?? "",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+          ),
+          16.kH,
+        ],
+        if (controller.getProductModel.value.data?.patternUsed?.isNotEmpty ?? false) ...[
+          Text(
+            appStrings.patternUsed,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
+          ),
+          6.kH,
+          Text(
+            controller.getProductModel.value.data?.patternUsed ?? "",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+          ),
+          16.kH,
+        ],
         if (controller.orderStepModel.value == null) ...[
           Text(
             appStrings.timeToMake,
@@ -274,12 +287,14 @@ class ProductDetailScreen extends ParentWidget {
           ),
           16.kH,
         ],
-        Text(
-          appStrings.careInstructions,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
-        ),
-        6.kH,
-        commonTags(appColors.contentPrimary, bg: appColors.cardBackground2, padding: 12, hint: controller.getProductModel.value.data?.washCare ?? "", radius: 6),
+        if (controller.getProductModel.value.data?.washCare?.isNotEmpty ?? false) ...[
+          Text(
+            appStrings.careInstructions,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
+          ),
+          6.kH,
+          commonTags(appColors.contentPrimary, bg: appColors.cardBackground2, padding: 12, hint: controller.getProductModel.value.data?.washCare ?? "", radius: 6),
+        ],
         25.kH,
       ],
     );

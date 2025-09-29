@@ -41,12 +41,9 @@ class CommonScreenController extends GetxController {
   }
 
   void onTap(index) {
-    if (index == 2) {
-      productController.changeTab(0);
-      update();
-    }
-    else if (index == 1) {
+    if (index == 0) {
       orderController.changeTab(0);
+      productController.changeTab(0);
       update();
     }
     selectedIndex.value = index;

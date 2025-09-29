@@ -146,6 +146,7 @@ class AppStrings {
   String get awaitingPickUp =>'Waiting for the Pick Up';
   String get orderStatus => "Order Status";
   String get timeRemaining => "Time Remaining";
+  String get asap=>"As Soon As Possible";
   String get orderValue => "Order Value";
   String get orderId => "Order ID";
   String get orderIdPrefix => "ORD000";
@@ -153,6 +154,7 @@ class AppStrings {
   String get productId => "Product ID";
   String get orderAssigned => "Order Assigned";
   String get dueDate => "Due Date";
+  String get completeSoonPossible =>"Complete as soon as possible";
   String get orderInformation => "Order Information";
   String get productDescription => "Product Description";
   String get viewDetails =>"View Details";
@@ -201,6 +203,7 @@ class AppStrings {
   String get orderCompleteBy => "Order to be completed by";
   String get orderNeedsAction => "Order Needs Action!";
   String get orderConfirmed => "Order is Confirmed";
+  String get orderDeclined => "Order is Declined";
 
   //Edit Profile Screen
   String get updateProfile => 'Update Profile';

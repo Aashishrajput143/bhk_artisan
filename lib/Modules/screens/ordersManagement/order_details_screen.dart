@@ -26,7 +26,7 @@ class OrderDetailsPage extends ParentWidget {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: controller.rxRequestStatus.value == Status.LOADING ? shimmer(w) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(controller), 6.kH, orderCardHeader(controller), 6.kH, orderDescription(controller), 6.kH, orderRequirement(h, w, controller)]),
+            child: controller.rxRequestStatus.value == Status.LOADING ? shimmer(w) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(controller), 6.kH, orderCardHeader(controller), 6.kH, if (controller.getOrderStepModel.value.data?.product != null) orderDescription(controller), 6.kH, orderRequirement(h, w, controller)]),
           ),
         ),
         bottomNavigationBar: controller.rxRequestStatus.value == Status.LOADING ? null : bottomButtons(h, w, controller),
@@ -131,7 +131,7 @@ class OrderDetailsPage extends ParentWidget {
                 ),
               ],
             )
-          : double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100
+          :  controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name
           ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor2, appColors.acceptColor, () {}, hint: appStrings.waitingForApproval)
           : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
           ? commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => Get.toNamed(RoutesClass.uploadOrderImage, arguments: controller.getOrderStepModel.value.data?.id ?? ""), hint: appStrings.uploadCompletion)
@@ -148,7 +148,7 @@ class OrderDetailsPage extends ParentWidget {
             appStrings.orderStatus,
             controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
                 ? OrderStatus.ADMIN_APPROVED.displayText
-                : double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100
+                : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name
                 ? OrderStatus.INREVIEW.displayText
                 : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
                 ? OrderStatus.ACCEPTED.displayText
@@ -166,7 +166,7 @@ class OrderDetailsPage extends ParentWidget {
           16.kH,
           commonRow(appStrings.timeRemaining, appStrings.orderValue, color: appColors.contentSecondary, fontweight: FontWeight.w500, fontSize: 15, fontSize2: 15, color2: appColors.contentSecondary, fontweight2: FontWeight.w500),
           6.kH,
-          commonRow(controller.getRemainingDays(controller.getOrderStepModel.value.data?.dueDate), "₹ ${controller.getOrderStepModel.value.data?.proposedPrice ?? 0}", color: appColors.contentPrimary, fontSize: 17, fontweight: FontWeight.bold, color2: appColors.contentPrimary, fontSize2: 17, fontweight2: FontWeight.bold),
+          commonRow(controller.getOrderStepModel.value.data?.dueDate != null ? controller.getRemainingDays(controller.getOrderStepModel.value.data?.dueDate) : appStrings.asap, "₹ ${controller.getOrderStepModel.value.data?.proposedPrice ?? 0}", color: appColors.contentPrimary, fontSize: 17, fontweight: FontWeight.bold, color2: appColors.contentPrimary, fontSize2: 17, fontweight2: FontWeight.bold),
         ],
       ),
     );
@@ -176,13 +176,20 @@ class OrderDetailsPage extends ParentWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: fontSize, color: color, fontWeight: fontweight),
+        Flexible(
+          flex: 5,
+          child: Text(
+            title,
+            style: TextStyle(fontSize: fontSize, color: color, fontWeight: fontweight),
+          ),
         ),
-        Text(
-          subtitle,
-          style: TextStyle(fontSize: fontSize2, color: color2, fontWeight: fontweight2),
+        Flexible(
+          flex: 4,
+          child: Text(
+            textAlign: TextAlign.end,
+            subtitle,
+            style: TextStyle(fontSize: fontSize2, color: color2, fontWeight: fontweight2),
+          ),
         ),
       ],
     );
@@ -205,11 +212,9 @@ class OrderDetailsPage extends ParentWidget {
           6.kH,
           commonRow(appStrings.product, controller.getOrderStepModel.value.data?.stepName ?? appStrings.notAvailable, color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           6.kH,
-          commonRow(appStrings.productId, controller.getOrderStepModel.value.data?.product?.bhkProductId ?? appStrings.notAvailable, color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
-          6.kH,
+          if (controller.getOrderStepModel.value.data?.product != null) ...[commonRow(appStrings.productId, controller.getOrderStepModel.value.data?.product?.bhkProductId ?? appStrings.notAvailable, color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold), 6.kH],
           commonRow(appStrings.orderAssigned, controller.formatDate(controller.getOrderStepModel.value.data?.createdAt), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
-          6.kH,
-          commonRow(appStrings.dueDate, controller.formatDate(controller.getOrderStepModel.value.data?.dueDate), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
+          if (controller.getOrderStepModel.value.data?.dueDate != null) ...[6.kH, commonRow(appStrings.dueDate, controller.formatDate(controller.getOrderStepModel.value.data?.dueDate), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold)],
         ],
       ),
     );
@@ -285,11 +290,13 @@ class OrderDetailsPage extends ParentWidget {
             style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
           ),
           16.kH,
-          Text(
-            appStrings.imageForReference,
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
-          ),
-          12.kH,
+          if (controller.getOrderStepModel.value.data?.referenceImagesAddedByAdmin?.isNotEmpty ?? false) ...[
+            Text(
+              appStrings.imageForReference,
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
+            ),
+            12.kH,
+          ],
           if ((controller.getOrderStepModel.value.data?.referenceImagesAddedByAdmin?.length ?? 0) > 1) orderImageCarousel(h, w, controller),
           if ((controller.getOrderStepModel.value.data?.referenceImagesAddedByAdmin?.length ?? 0) == 1)
             Container(

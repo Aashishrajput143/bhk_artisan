@@ -98,9 +98,9 @@ class OrderList extends ParentWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              orderCardHeader(steps,controller),
+              orderCardHeader(steps, controller),
               8.kH,
-              orderCardContent(steps,controller),
+              orderCardContent(steps, controller),
               Divider(thickness: 1, color: Colors.grey[300]),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -108,21 +108,25 @@ class OrderList extends ParentWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     buildOrderDetailColumn(appStrings.payment, '₹ ${steps?.proposedPrice ?? 0}'),
-                    buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
+                    if (steps?.product != null) buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
                     buildOrderDetailColumn(appStrings.orderQty, (steps?.product?.quantity ?? 0).toString().padLeft(2, '0')),
                     if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name)
                       buildOrderDetailColumn(
                         appStrings.orderStatus,
                         steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
                             ? OrderStatus.ADMIN_APPROVED.displayText
-                            : double.tryParse(steps?.progressPercentage?.toString() ?? "0") == 100
+                            : steps?.buildStatus == OrderStatus.COMPLETED.name
                             ? OrderStatus.INREVIEW.displayText
                             : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
                             ? OrderStatus.ACCEPTED.displayText
-                            :steps?.artisanAgreedStatus == OrderStatus.PENDING.name
+                            : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                             ? OrderStatus.PENDING.displayText
                             : OrderStatus.REJECTED.displayText,
-                        color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(steps?.progressPercentage?.toString() ?? "0") == 100 ? appColors.acceptColor :steps?.artisanAgreedStatus == OrderStatus.PENDING.name?appColors.brownDarkText: appColors.declineColor,
+                        color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name ||  steps?.buildStatus == OrderStatus.COMPLETED.name
+                            ? appColors.acceptColor
+                            : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
+                            ? appColors.brownDarkText
+                            : appColors.declineColor,
                       ),
                   ],
                 ),
@@ -191,7 +195,7 @@ class OrderList extends ParentWidget {
     );
   }
 
-  Widget orderCardHeader(Data? steps,GetOrderController controller) {
+  Widget orderCardHeader(Data? steps, GetOrderController controller) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -199,14 +203,14 @@ class OrderList extends ParentWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("${appStrings.orderIdPrefix}${steps?.id}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            Text("${appStrings.orderCompleteBy} ${controller.formatDate(steps?.dueDate)}", style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+            Text(steps?.dueDate != null && (steps?.dueDate?.isNotEmpty ?? false) ? "${appStrings.orderCompleteBy} ${controller.formatDate(steps?.dueDate)}" : appStrings.completeSoonPossible, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
           ],
         ),
       ],
     );
   }
 
-  Widget orderCardContent(Data? steps,GetOrderController controller) {
+  Widget orderCardContent(Data? steps, GetOrderController controller) {
     return Row(
       children: [
         commonNetworkImage(steps?.referenceImagesAddedByAdmin?.first ?? steps?.product?.images?.first.imageUrl ?? "", width: 60, height: 60, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
@@ -222,9 +226,9 @@ class OrderList extends ParentWidget {
               4.kH,
               Row(
                 children: [
-                  Icon(Icons.circle, color: Colors.green, size: 8),
+                  Icon(Icons.circle, color:steps?.artisanAgreedStatus == OrderStatus.REJECTED.name? appColors.declineColor:appColors.acceptColor, size: 8),
                   4.kW,
-                  Text(steps?.artisanAgreedStatus == OrderStatus.PENDING.name ? appStrings.orderNeedsAction : appStrings.orderConfirmed, style: TextStyle(color: Colors.green, fontSize: 11)),
+                  Text(steps?.artisanAgreedStatus == OrderStatus.PENDING.name ? appStrings.orderNeedsAction :steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name? appStrings.orderConfirmed:appStrings.orderDeclined, style: TextStyle(color:steps?.artisanAgreedStatus == OrderStatus.REJECTED.name? appColors.declineColor:appColors.acceptColor, fontSize: 11)),
                 ],
               ),
               4.kH,

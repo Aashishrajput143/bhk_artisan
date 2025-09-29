@@ -26,7 +26,7 @@ class LogisticsScreen extends ParentWidget {
     {
       "orderId": "#110517",
       "productName": "Banarsi Silk Saree",
-      "status": "Picked",
+      "status": "In Transit",
       "shipper": "Sunil Sharma",
       "recipient": "Priya Verma",
       "location": "500 Terry Francois St, San Francisco, CA 94158, United States"

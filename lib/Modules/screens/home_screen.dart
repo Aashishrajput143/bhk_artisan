@@ -330,20 +330,9 @@ class HomeScreen extends ParentWidget {
   Widget salesGraph(BuildContext context, double w, double h, Homecontroller controller) {
     return Obx(
       () => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(appStrings.salesStatistics, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  controller.commonController.selectedIndex.value = 3;
-                },
-                child: Text(appStrings.viewAll, style: TextStyle(fontSize: 14.0, color: Colors.brown)),
-              ),
-            ],
-          ),
+          Text(appStrings.salesStatistics, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
           Padding(
             padding: const EdgeInsets.only(top: 15),
             child: Row(
@@ -400,6 +389,12 @@ class HomeScreen extends ParentWidget {
             child: SfCartesianChart(
               backgroundColor: appColors.backgroundColor,
               primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1, labelRotation: 45),
+              primaryYAxis: NumericAxis(
+                axisLabelFormatter: (AxisLabelRenderDetails args) {
+                  final value = args.value;
+                  return ChartAxisLabel(controller.formatNumberIndian(value.toDouble()), args.textStyle);
+                },
+              ),
               legend: Legend(isVisible: true, toggleSeriesVisibility: false),
               tooltipBehavior: TooltipBehavior(enable: true),
               series: <CartesianSeries<ChartData, String>>[
@@ -412,7 +407,7 @@ class HomeScreen extends ParentWidget {
                   dataLabelSettings: DataLabelSettings(isVisible: true, labelAlignment: ChartDataLabelAlignment.outer),
                   dataLabelMapper: (ChartData sales, _) {
                     final value = controller.dropdownsold.value == "Product Sales" ? sales.sales : sales.unitsSold;
-                    return value != 0 ? value.toString() : null;
+                    return value != 0 ? controller.formatNumberIndian(value.toDouble()) : null;
                   },
                 ),
               ],
