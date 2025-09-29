@@ -258,6 +258,7 @@ Widget commonTextField(
   String suffix = "",
   double fontSize = 12,
   bool isLabel = false,
+  bool isCounter = false,
   TextInputType keyboardType = TextInputType.text,
   TextInputAction textInputAction = TextInputAction.done,
   List<TextInputFormatter>? inputFormatters,
@@ -291,7 +292,7 @@ Widget commonTextField(
             borderRadius: BorderRadius.circular(radius),
             borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
           ),
-          counterText: "",
+          counterText: isCounter?null:"",
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
             borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),

@@ -29,7 +29,6 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
 
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
 
-  // final logInData = LoginModel().obs;
   RxString error = ''.obs;
 
   void setError(String value) => error.value = value;
@@ -120,11 +119,11 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
     Utils.savePreferenceValues(Constants.accessToken, "${verifyOTPData.value.data?.accessToken}");
 
     Utils.savePreferenceValues(Constants.email, "${verifyOTPData.value.data?.email}");
-    if ((value.data?.isNewUser??true) && (value.data?.name?.isEmpty??true)) {
+    if (!(value.data?.isNewUser??false) && (value.data?.name?.isNotEmpty??false)) {
+      Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
+    } else {
       Utils.setBoolPreferenceValues(Constants.isNewUser, true);
       Get.offAllNamed(RoutesClass.editprofile, arguments: {"isNewUser": true});
-    } else {
-      Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
     }
   }
 

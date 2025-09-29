@@ -33,6 +33,9 @@ class UpdateProfileController extends GetxController {
   var gstController = TextEditingController().obs;
   var gstFocusNode = FocusNode().obs;
 
+  var aadharController = TextEditingController().obs;
+  var aadharFocusNode = FocusNode().obs;
+
   var selectedMultiExpertise = <String>[].obs;
 
   var isNewUser = false.obs;
@@ -53,13 +56,8 @@ class UpdateProfileController extends GetxController {
     getCategoryApi();
   }
 
-  bool validateForm() {
-    if ((firstNameController.value.text.isNotEmpty) && (lastNameController.value.text.isNotEmpty) && (selectedMultiExpertise.isNotEmpty) && (introUploaded.value != null) && (communityController.value.text.isNotEmpty) && (selectedCategory.value != null)) return true;
-    return false;
-  }
-
   String? validateStringForm() {
-    if ((firstNameController.value.text.isEmpty) && (lastNameController.value.text.isEmpty) && (selectedMultiExpertise.isEmpty) && (introUploaded.value == null) && (communityController.value.text.isEmpty) && (selectedCategory.value == null)) {
+    if ((firstNameController.value.text.isEmpty) && (lastNameController.value.text.isEmpty) &&(aadharController.value.text.isEmpty) && (selectedMultiExpertise.isEmpty) && (introUploaded.value == null) && (communityController.value.text.isEmpty) && (selectedCategory.value == null)) {
       return "Please fill all the mandatory fields";
     } else if (firstNameController.value.text.isEmpty) {
       return "Please Enter Your First Name";
@@ -69,7 +67,9 @@ class UpdateProfileController extends GetxController {
       return "Please Select Your Expertise";
     } else if (selectedCategory.value == null) {
       return "Please Select Your Category";
-    } else if (communityController.value.text.isEmpty) {
+    } else if (aadharController.value.text.isEmpty) {
+      return "Please Enter Your Aadhar Number";
+    }else if (communityController.value.text.isEmpty) {
       return "Please Enter Your Caste";
     } else if (introUploaded.value == null) {
       return "Please Upload Your Intro";
@@ -82,6 +82,8 @@ class UpdateProfileController extends GetxController {
     lastNameController.value.text = commonController.profileData.value.data?.lastName ?? "";
     emailController.value.text = commonController.profileData.value.data?.email ?? "";
     communityController.value.text = commonController.profileData.value.data?.subCaste ?? "";
+    aadharController.value.text = commonController.profileData.value.data?.aadhaarNumber??"";
+    gstController.value.text = commonController.profileData.value.data?.gstNumber??"";
 
     String? profileExpertise = commonController.profileData.value.data?.expertizeField ?? "";
 
@@ -153,6 +155,8 @@ class UpdateProfileController extends GetxController {
       if (emailController.value.text.isNotEmpty) "email": emailController.value.text,
       if (selectedMultiExpertise.isNotEmpty) "expertizeField": selectedMultiExpertise.join(","),
       if (introUploaded.isNotEmpty ?? false) "introVideo": introUploaded.value ?? "",
+      if (gstController.value.text.isNotEmpty) "gstNumber": gstController.value.text,
+      if (aadharController.value.text.isNotEmpty) "aadhaarNumber": aadharController.value.text,
       if (selectedCategory.value?.categoryValue.isNotEmpty ?? false) "user_caste_category": selectedCategory.value?.categoryValue ?? "",
       if (communityController.value.text.isNotEmpty) "subCaste": communityController.value.text,
     };

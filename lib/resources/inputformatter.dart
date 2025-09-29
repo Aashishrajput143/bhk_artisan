@@ -54,6 +54,26 @@ class NoSpaceTextInputFormatter extends TextInputFormatter {
   }
 }
 
+class AadhaarNumberFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    String digitsOnly = newValue.text.replaceAll(RegExp(r'\s+'), ''); // remove existing spaces
+    String newText = '';
+
+    for (int i = 0; i < digitsOnly.length; i++) {
+      newText += digitsOnly[i];
+      if ((i + 1) % 4 == 0 && i + 1 != digitsOnly.length) {
+        newText += ' '; // add space after every 4 digits
+      }
+    }
+
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
+}
+
 class NoLeadingSpaceFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

@@ -122,7 +122,7 @@ class OrderList extends ParentWidget {
                             : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                             ? OrderStatus.PENDING.displayText
                             : OrderStatus.REJECTED.displayText,
-                        color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name ||  steps?.buildStatus == OrderStatus.COMPLETED.name
+                        color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.buildStatus == OrderStatus.COMPLETED.name
                             ? appColors.acceptColor
                             : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                             ? appColors.brownDarkText
@@ -213,7 +213,7 @@ class OrderList extends ParentWidget {
   Widget orderCardContent(Data? steps, GetOrderController controller) {
     return Row(
       children: [
-        commonNetworkImage(steps?.referenceImagesAddedByAdmin?.first ?? steps?.product?.images?.first.imageUrl ?? "", width: 60, height: 60, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
+        if (steps?.referenceImagesAddedByAdmin != null || steps?.product?.images != null) commonNetworkImage(steps?.referenceImagesAddedByAdmin?.first ?? steps?.product?.images?.first.imageUrl ?? "", width: 60, height: 60, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
         12.kW,
         Expanded(
           child: Column(
@@ -226,9 +226,16 @@ class OrderList extends ParentWidget {
               4.kH,
               Row(
                 children: [
-                  Icon(Icons.circle, color:steps?.artisanAgreedStatus == OrderStatus.REJECTED.name? appColors.declineColor:appColors.acceptColor, size: 8),
+                  Icon(Icons.circle, color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name ? appColors.declineColor : appColors.acceptColor, size: 8),
                   4.kW,
-                  Text(steps?.artisanAgreedStatus == OrderStatus.PENDING.name ? appStrings.orderNeedsAction :steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name? appStrings.orderConfirmed:appStrings.orderDeclined, style: TextStyle(color:steps?.artisanAgreedStatus == OrderStatus.REJECTED.name? appColors.declineColor:appColors.acceptColor, fontSize: 11)),
+                  Text(
+                    steps?.artisanAgreedStatus == OrderStatus.PENDING.name
+                        ? appStrings.orderNeedsAction
+                        : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
+                        ? appStrings.orderConfirmed
+                        : appStrings.orderDeclined,
+                    style: TextStyle(color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name ? appColors.declineColor : appColors.acceptColor, fontSize: 11),
+                  ),
                 ],
               ),
               4.kH,

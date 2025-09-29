@@ -41,6 +41,7 @@ class Data {
   String? userCasteCategory;
   String? religion;
   String? introVideo;
+  String? gstNumber;
 
   Data(
       {this.name,
@@ -63,7 +64,7 @@ class Data {
       this.subCaste,
       this.userCasteCategory,
       this.religion,
-      this.introVideo});
+      this.introVideo,this.gstNumber});
 
   Data.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -87,6 +88,7 @@ class Data {
     userCasteCategory = json['user_caste_category'];
     religion = json['religion'];
     introVideo = json['introVideo'];
+    gstNumber = json['gstNumber'];
   }
 
   Map<String, dynamic> toJson() {
@@ -112,6 +114,7 @@ class Data {
     data['user_caste_category'] = userCasteCategory;
     data['religion'] = religion;
     data['introVideo'] = introVideo;
+    data['gstNumber'] = gstNumber;
     return data;
   }
 }

@@ -210,6 +210,10 @@ Widget content(BuildContext context, double w, double h, UpdateProfileController
       commonComponent(appStrings.email, commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.emailHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
       16.kH,
       if (controller.isNewUser.value) ...[
+        commonComponent(
+          appStrings.aadhaarNumber,
+          commonTextField(controller.aadharController.value, controller.aadharFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterAadhaarNumber, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(16)], maxLength: 16, isCounter: true),
+        ),
         commonComponent(appStrings.gstNumber, commonTextField(controller.gstController.value, controller.gstFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.gstNumberHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
         16.kH,
         Row(
