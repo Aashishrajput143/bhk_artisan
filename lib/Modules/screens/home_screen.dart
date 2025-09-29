@@ -246,7 +246,7 @@ class HomeScreen extends ParentWidget {
                   return GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () {
-                      Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                      Get.toNamed(RoutesClass.productDetails, arguments: {"productId": controller.getApprovedProductModel.value.data?.docs?[index].productId})?.then((onValue) {
                         controller.getProductApi(ProductStatus.APPROVED.name, isLoader: false);
                       });
                     },
@@ -389,7 +389,6 @@ class HomeScreen extends ParentWidget {
                     appColors.backgroundColor,
                     (value) {
                       controller.dropdownmonth.value = value ?? "";
-                      print("controller.dropdownmonth.value===${controller.dropdownmonth.value}");
                     },
                   ),
                 ),

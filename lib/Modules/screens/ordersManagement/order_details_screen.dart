@@ -210,8 +210,6 @@ class OrderDetailsPage extends ParentWidget {
           commonRow(appStrings.orderAssigned, controller.formatDate(controller.getOrderStepModel.value.data?.createdAt), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           6.kH,
           commonRow(appStrings.dueDate, controller.formatDate(controller.getOrderStepModel.value.data?.dueDate), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
-          //6.kH,
-          //commonRow("Priority", "High", color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.declineColor, fontweight2: FontWeight.bold),
         ],
       ),
     );
@@ -222,14 +220,19 @@ class OrderDetailsPage extends ParentWidget {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Image.asset(appImages.user, width: 30, height: 30, fit: BoxFit.fill),
-              8.kW,
-              Text(appStrings.productDescription, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-            ],
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            horizontalTitleGap: 8,
+            leading: Image.asset(appImages.user, width: 30, height: 30, fit: BoxFit.fill),
+            title: Text(appStrings.productDescription, style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+            trailing: GestureDetector(
+              onTap: () => Get.toNamed(RoutesClass.productDetails, arguments: {"productId": controller.getOrderStepModel.value.data?.product?.productId, "orderStepModel": controller.getOrderStepModel.value}),
+              child: Text(
+                appStrings.viewDetails,
+                style: TextStyle(color: appColors.contentButtonBrown, fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+            ),
           ),
-          12.kH,
           Text(
             controller.getOrderStepModel.value.data?.product?.description ?? appStrings.notAvailable,
             style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: appColors.contentPrimary),

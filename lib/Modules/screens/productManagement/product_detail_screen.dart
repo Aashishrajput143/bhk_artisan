@@ -163,23 +163,25 @@ class ProductDetailScreen extends ParentWidget {
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
         ),
         20.kH,
-        Row(
-          children: [
-            Text(
-              "₹ ${double.parse(controller.getProductModel.value.data?.productPricePerPiece ?? "0") * (controller.getProductModel.value.data?.quantity ?? 0)}",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
-            ),
-            10.kW,
-            Text(
-              "(₹ ${controller.getProductModel.value.data?.productPricePerPiece ?? "0"} per piece)",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
-            ),
-          ],
-        ),
-        Text(
-          appStrings.inclusiveTaxes,
-          style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w300, color: appColors.contentPrimary),
-        ),
+        if (controller.orderStepModel.value == null) ...[
+          Row(
+            children: [
+              Text(
+                "₹ ${double.parse(controller.getProductModel.value.data?.productPricePerPiece ?? "0") * (controller.getProductModel.value.data?.quantity ?? 0)}",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
+              ),
+              10.kW,
+              Text(
+                "(₹ ${controller.getProductModel.value.data?.productPricePerPiece ?? "0"} per piece)",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
+              ),
+            ],
+          ),
+          Text(
+            appStrings.inclusiveTaxes,
+            style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w300, color: appColors.contentPrimary),
+          ),
+        ],
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Divider(color: appColors.border, thickness: 2),
@@ -260,16 +262,18 @@ class ProductDetailScreen extends ParentWidget {
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
         ),
         16.kH,
-        Text(
-          appStrings.timeToMake,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
-        ),
-        6.kH,
-        Text(
-          controller.getProductModel.value.data?.timeToMake ?? "",
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-        ),
-        16.kH,
+        if (controller.orderStepModel.value == null) ...[
+          Text(
+            appStrings.timeToMake,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),
+          ),
+          6.kH,
+          Text(
+            controller.getProductModel.value.data?.timeToMake ?? "",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+          ),
+          16.kH,
+        ],
         Text(
           appStrings.careInstructions,
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: appColors.contentPending),

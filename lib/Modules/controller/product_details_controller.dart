@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/model/order_details_model.dart';
 import 'package:bhk_artisan/Modules/model/product_details_model.dart';
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
@@ -13,7 +14,8 @@ class ProductDetailsController extends GetxController {
   final _api = ProductRepository();
   var currentIndex = 0.obs;
   var slidercontroller = CarouselSliderController();
-  var productId = Get.arguments ?? "";
+  var productId = Get.arguments ?? 0;
+  var orderStepModel = Rxn<OrderDetailsModel>();
 
   ScrollController thumbnailScrollController = ScrollController();
   var thumbMargin = 0.obs;
@@ -21,6 +23,9 @@ class ProductDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    final args = Get.arguments as Map?;
+    productId = args?['productId'] ?? 0;
+    orderStepModel.value = args?['orderStepModel'];
     getProductDetailsApi();
   }
 
@@ -40,7 +45,7 @@ class ProductDetailsController extends GetxController {
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
       _api
-          .getproductDetailsApi(productId.toString())
+          .getproductDetailsApi(productId)
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
             setProductdata(value);

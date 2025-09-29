@@ -42,7 +42,7 @@ class PendingProducts extends ParentWidget {
                                     itemBuilder: (context, index) {
                                       return GestureDetector(
                                         onTap: () {
-                                          Get.toNamed(RoutesClass.productDetails, arguments: controller.getPendingProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                                          Get.toNamed(RoutesClass.productDetails, arguments: {"productId": controller.getPendingProductModel.value.data?.docs?[index].productId})?.then((onValue) {
                                             controller.getProductApi(ProductStatus.PENDING.name, isLoader: false);
                                           });
                                         },

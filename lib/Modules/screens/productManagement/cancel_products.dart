@@ -42,7 +42,7 @@ class CancelProducts extends ParentWidget {
                                     itemBuilder: (context, index) {
                                       return GestureDetector(
                                         onTap: () {
-                                          Get.toNamed(RoutesClass.productDetails, arguments: controller.getDisapprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                                          Get.toNamed(RoutesClass.productDetails, arguments: {"productId": controller.getDisapprovedProductModel.value.data?.docs?[index].productId})?.then((onValue) {
                                             controller.getProductApi(ProductStatus.DISAPPROVED.name, isLoader: false);
                                           });
                                         },

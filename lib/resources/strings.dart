@@ -155,6 +155,7 @@ class AppStrings {
   String get dueDate => "Due Date";
   String get orderInformation => "Order Information";
   String get productDescription => "Product Description";
+  String get viewDetails =>"View Details";
   String get notAvailable => "Not Available";
   String get productionRequirements => "Production Requirements";
   String get orderDescription => "Order Description";

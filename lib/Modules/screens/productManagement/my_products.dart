@@ -45,7 +45,7 @@ class MyProducts extends ParentWidget {
                                     itemBuilder: (context, index) {
                                       return GestureDetector(
                                         onTap: () {
-                                          Get.toNamed(RoutesClass.productDetails, arguments: controller.getApprovedProductModel.value.data?.docs?[index].productId ?? "")?.then((onValue) {
+                                          Get.toNamed(RoutesClass.productDetails, arguments: {"productId": controller.getApprovedProductModel.value.data?.docs?[index].productId})?.then((onValue) {
                                             controller.getProductApi(ProductStatus.APPROVED.name, isLoader: false);
                                           });
                                         },
