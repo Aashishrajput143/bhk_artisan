@@ -57,7 +57,7 @@ class AddressScreen extends ParentWidget {
                     ),
                   ),
             floatingActionButton: controller.getAddressModel.value.data?.isNotEmpty ?? true
-                ? (((controller.getAddressModel.value.data?.length ?? 0) > 3) || ((controller.getAddressModel.value.data?.length ?? 0) == 0))
+                ? (((controller.getAddressModel.value.data?.length ?? 0) > 2) || ((controller.getAddressModel.value.data?.length ?? 0) == 0))
                       ? SizedBox()
                       : Padding(
                           padding: EdgeInsets.only(bottom: h * 0.03, right: 10),
