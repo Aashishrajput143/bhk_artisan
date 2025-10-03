@@ -17,7 +17,7 @@ class GetProductController extends GetxController {
   final getApprovedProductModel = ProductListingModel().obs;
   final getPendingProductModel = ProductListingModel().obs;
   final getDisapprovedProductModel = ProductListingModel().obs;
-
+  
   CommonScreenController commonController = Get.find();
 
   void setError(String value) => error.value = value;

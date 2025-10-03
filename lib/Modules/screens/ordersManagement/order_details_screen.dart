@@ -28,13 +28,15 @@ class OrderDetailsPage extends ParentWidget {
       () => Scaffold(
         backgroundColor: appColors.backgroundColor,
         appBar: commonAppBar(appStrings.orderDetailsTitle),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: controller.rxRequestStatus.value == Status.LOADING ? shimmer(w) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(controller), 6.kH, orderCardHeader(controller), 6.kH, if (controller.getOrderStepModel.value.data?.product != null) orderDescription(controller), 6.kH, orderRequirement(h, w, controller)]),
-          ),
-        ),
-        bottomNavigationBar: controller.rxRequestStatus.value == Status.LOADING ? null : bottomButtons(context, h, w, controller),
+        body: controller.rxRequestStatus.value == Status.NOINTERNET
+            ? noInternetConnection(onRefresh: () => controller.getOrderStepApi(), lastChecked: controller.lastChecked.value)
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: controller.rxRequestStatus.value == Status.LOADING ? shimmer(w) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(controller), 6.kH, orderCardHeader(controller), 6.kH, if (controller.getOrderStepModel.value.data?.product != null) orderDescription(controller), 6.kH, orderRequirement(h, w, controller)]),
+                ),
+              ),
+        bottomNavigationBar: (controller.rxRequestStatus.value == Status.LOADING || controller.rxRequestStatus.value == Status.NOINTERNET) ? null : bottomButtons(context, h, w, controller),
       ),
     );
   }

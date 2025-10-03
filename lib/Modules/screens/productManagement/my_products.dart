@@ -78,7 +78,7 @@ class MyProducts extends ParentWidget {
             behavior: HitTestBehavior.opaque,
             onTap: () {
               Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
-                controller.commonController.productController.changeTab(1);
+                controller.commonController.productController.changeTab(onValue??0);
                 controller.getProductApi(ProductStatus.PENDING.name, isLoader: false);
               });
             },
@@ -136,7 +136,7 @@ class MyProducts extends ParentWidget {
         appColors.contentButtonBrown,
         appColors.contentWhite,
         () => Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
-          controller.commonController.productController.changeTab(1);
+          controller.commonController.productController.changeTab(onValue??0);
           controller.getProductApi(ProductStatus.PENDING.name, isLoader: false);
         }),
         radius: 30,

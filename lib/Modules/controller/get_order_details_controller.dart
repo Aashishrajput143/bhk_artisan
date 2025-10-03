@@ -16,6 +16,7 @@ class GetOrderDetailsController extends GetxController {
   var id = 0.obs;
   var addressId = 0.obs;
   var hasAddress = false.obs;
+  var lastChecked = "".obs;
 
   var currentIndex = 0.obs;
   final PageController pageController = PageController();
@@ -107,7 +108,7 @@ class GetOrderDetailsController extends GetxController {
     id.value = Get.arguments ?? 0;
     if (id.value != 0) {
       getOrderStepApi();
-      ever(addressController.getAddressModel, (_) =>setDefaultSelection());
+      ever(addressController.getAddressModel, (_) => setDefaultSelection());
     }
   }
 
@@ -139,6 +140,9 @@ class GetOrderDetailsController extends GetxController {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
           });
     } else {
+      setRxRequestStatus(Status.NOINTERNET);
+      final now = TimeOfDay.now();
+      lastChecked.value = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
   }

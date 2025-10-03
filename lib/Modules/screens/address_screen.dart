@@ -29,7 +29,9 @@ class AddressScreen extends ParentWidget {
           Scaffold(
             backgroundColor: appColors.backgroundColor,
             appBar: commonAppBar(appStrings.manageAddress),
-            body: controller.rxRequestStatus.value == Status.LOADING
+            body: controller.rxRequestStatus.value == Status.NOINTERNET
+                ? noInternetConnection(onRefresh: () => controller.getAddressApi(), lastChecked: controller.lastChecked.value)
+                : controller.rxRequestStatus.value == Status.LOADING
                 ? shimmerAddressScreen(h, w)
                 : controller.getAddressModel.value.data?.isNotEmpty ?? false
                 ? ListView.builder(
@@ -56,7 +58,9 @@ class AddressScreen extends ParentWidget {
                       ),
                     ),
                   ),
-            floatingActionButton: controller.getAddressModel.value.data?.isNotEmpty ?? true
+            floatingActionButton: controller.rxRequestStatus.value == Status.NOINTERNET
+                ? null
+                : controller.getAddressModel.value.data?.isNotEmpty ?? true
                 ? (((controller.getAddressModel.value.data?.length ?? 0) > 2) || ((controller.getAddressModel.value.data?.length ?? 0) == 0))
                       ? SizedBox()
                       : Padding(

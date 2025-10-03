@@ -159,6 +159,7 @@ class Homecontroller extends GetxController {
     commonController.getProfileApi();
     scrollPosition.value = 0;
     setGreeting();
+    getOrderController.getAllOrderStepApi();
     getProductApi("APPROVED", isLoader: getApprovedProductModel.value.data?.docs?.isEmpty ?? true ? true : false);
   }
 

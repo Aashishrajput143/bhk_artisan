@@ -22,6 +22,60 @@ import 'package:syncfusion_flutter_charts/charts.dart' as chart;
 import '../resources/colors.dart';
 import '../resources/font.dart';
 
+Widget noInternetConnection({VoidCallback? onRefresh, final String? lastChecked}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey.shade200),
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 6)],
+          ),
+          child: const Icon(Icons.wifi_off, size: 40, color: Colors.grey),
+        ),
+        20.kH,
+        const Text(
+          "No Internet Connection",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.black87),
+        ),
+        8.kH,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Text(
+            "You're currently offline. Please check your connection and try again.",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14, height: 1.5, color: Colors.grey.shade600),
+          ),
+        ),
+        20.kH,
+        Divider(color: Colors.grey.shade200, thickness: 1),
+        20.kH,
+        commonButtonIcon(double.infinity, 50, appColors.contentWhite, backgroundColor: appColors.contentButtonBrown, onRefresh, icon: Icons.refresh, forward: true, hint: "Refresh"),
+        16.kH,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(color: Colors.grey.shade400, shape: BoxShape.circle),
+            ),
+            10.kW,
+            Text("Last checked: ${lastChecked ?? "just now"}", style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
 void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setError, Function(Status)? setRxRequestStatus, bool closeDialog = false, bool showMessage = true}) {
   if (closeDialog) {
     Get.back();
@@ -292,7 +346,7 @@ Widget commonTextField(
             borderRadius: BorderRadius.circular(radius),
             borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
           ),
-          counterText: isCounter?null:"",
+          counterText: isCounter ? null : "",
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
             borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),

@@ -32,6 +32,7 @@ class AddressController extends GetxController {
 
   var addressType = AddressType.HOME.obs;
   var hasDefault = false.obs;
+  var lastChecked ="".obs;
 
   LocationController locationController = Get.put(LocationController());
 
@@ -173,6 +174,9 @@ class AddressController extends GetxController {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
           });
     } else {
+      setRxRequestStatus(Status.NOINTERNET);
+      final now = TimeOfDay.now();
+      lastChecked.value = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
   }

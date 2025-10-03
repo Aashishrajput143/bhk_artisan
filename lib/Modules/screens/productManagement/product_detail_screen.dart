@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/Modules/controller/product_details_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/strings.dart';
@@ -21,7 +22,9 @@ class ProductDetailScreen extends ParentWidget {
           Scaffold(
             backgroundColor: appColors.backgroundColor,
             appBar: commonAppBar(appStrings.productDetailsTitle),
-            body: SingleChildScrollView(
+            body:controller.rxRequestStatus.value == Status.NOINTERNET
+            ? noInternetConnection(onRefresh: () => controller.getProductDetailsApi(), lastChecked: controller.lastChecked.value)
+            :  SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: controller.getProductModel.value.data?.productName?.isEmpty ?? true

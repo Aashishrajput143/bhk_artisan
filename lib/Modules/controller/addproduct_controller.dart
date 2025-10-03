@@ -268,7 +268,7 @@ class AddProductController extends GetxController {
             setRxRequestStatus(Status.COMPLETED);
             setaddProductModeldata(value);
             Utils.printLog("Response===> ${value.toString()}");
-            Get.back();
+            Get.back(result: 1);
             CommonMethods.showToast("Product Added Successfully...", icon: Icons.check, bgColor: Colors.green);
           })
           .onError((error, stackTrace) {

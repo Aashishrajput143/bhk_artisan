@@ -16,6 +16,7 @@ class ProductDetailsController extends GetxController {
   var slidercontroller = CarouselSliderController();
   var productId = Get.arguments ?? 0;
   var orderStepModel = Rxn<OrderDetailsModel>();
+  var lastChecked = "".obs;
 
   ScrollController thumbnailScrollController = ScrollController();
   var thumbMargin = 0.obs;
@@ -55,6 +56,9 @@ class ProductDetailsController extends GetxController {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
           });
     } else {
+      setRxRequestStatus(Status.NOINTERNET);
+      final now = TimeOfDay.now();
+      lastChecked.value = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
   }
