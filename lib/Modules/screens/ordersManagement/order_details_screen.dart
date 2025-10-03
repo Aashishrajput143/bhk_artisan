@@ -1,16 +1,21 @@
+import 'package:bhk_artisan/Modules/controller/address_controller.dart';
 import 'package:bhk_artisan/Modules/controller/get_order_details_controller.dart';
+import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/address_type_enum.dart';
 import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
+import 'package:bhk_artisan/resources/font.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class OrderDetailsPage extends ParentWidget {
@@ -29,7 +34,7 @@ class OrderDetailsPage extends ParentWidget {
             child: controller.rxRequestStatus.value == Status.LOADING ? shimmer(w) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(controller), 6.kH, orderCardHeader(controller), 6.kH, if (controller.getOrderStepModel.value.data?.product != null) orderDescription(controller), 6.kH, orderRequirement(h, w, controller)]),
           ),
         ),
-        bottomNavigationBar: controller.rxRequestStatus.value == Status.LOADING ? null : bottomButtons(h, w, controller),
+        bottomNavigationBar: controller.rxRequestStatus.value == Status.LOADING ? null : bottomButtons(context, h, w, controller),
       ),
     );
   }
@@ -84,11 +89,13 @@ class OrderDetailsPage extends ParentWidget {
     );
   }
 
-  Widget bottomButtons(double h, double w, GetOrderDetailsController controller) {
+  Widget bottomButtons(BuildContext context, double h, double w, GetOrderDetailsController controller) {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.03),
       child: controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
-          ? commonButtonContainer(w * 0.44, 50, appColors.cardBackground2, appColors.acceptColor, () {}, hint: appStrings.awaitingPickUp)
+          ? controller.addressId.value != 0 && controller.hasAddress.value
+                ? commonButtonContainer(w * 0.44, 50, appColors.cardBackground2, appColors.acceptColor, () {}, hint: appStrings.awaitingPickUp)
+                : commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => bottomDrawerSelectAddress(context, h, w, controller.addressController, controller), hint: appStrings.selectAddress)
           : (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name)
           ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +138,7 @@ class OrderDetailsPage extends ParentWidget {
                 ),
               ],
             )
-          :  controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name
+          : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name
           ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor2, appColors.acceptColor, () {}, hint: appStrings.waitingForApproval)
           : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
           ? commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => Get.toNamed(RoutesClass.uploadOrderImage, arguments: controller.getOrderStepModel.value.data?.id ?? ""), hint: appStrings.uploadCompletion)
@@ -192,6 +199,151 @@ class OrderDetailsPage extends ParentWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Future bottomDrawerSelectAddress(BuildContext context, double h, double w, AddressController addresscontroller, GetOrderDetailsController controller) {
+    final addresses = addresscontroller.getAddressModel.value.data ?? [];
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      appStrings.selectAddress,
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
+                    ),
+                  ),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => Get.toNamed(RoutesClass.addresses)?.then((onValue) {
+                      Get.back();
+                      addresscontroller.getAddressApi();
+                      if (context.mounted) {
+                        bottomDrawerSelectAddress(context, h, w, addresscontroller, controller);
+                      }
+                    }),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        appStrings.manage,
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: appFonts.NunitoBold, color: appColors.brownDarkText),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              2.kH,
+              if (addresses.isEmpty) ...[
+                Center(
+                  child: Column(
+                    children: [
+                      SvgPicture.asset(appImages.emptyMap, color: appColors.brownbuttonBg),
+                      Text(appStrings.yourAddressEmpty, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      4.kH,
+                      Text(
+                        appStrings.emptyAddressDescription,
+                        style: TextStyle(fontSize: 14, color: appColors.contentSecondary),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                20.kH,
+                commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () => Get.toNamed(RoutesClass.addresses), hint: appStrings.addAddress),
+              ],
+              if (addresses.isNotEmpty) ...[
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: addresses.length,
+                  itemBuilder: (context, index) {
+                    final address = addresses[index];
+                    return Obx(
+                      () => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Theme(
+                            data: Theme.of(context).copyWith(
+                              radioTheme: RadioThemeData(
+                                fillColor: WidgetStateProperty.resolveWith((states) {
+                                  if (states.contains(WidgetState.selected)) {
+                                    return appColors.brownDarkText;
+                                  }
+                                  return appColors.contentPrimary;
+                                }),
+                              ),
+                            ),
+                            child: RadioMenuButton<int>(
+                              groupValue: addresses[index].id,
+                              style: ButtonStyle(overlayColor: WidgetStateProperty.all(Colors.transparent), backgroundColor: WidgetStateProperty.all(Colors.transparent), shadowColor: WidgetStateProperty.all(Colors.transparent), surfaceTintColor: WidgetStateProperty.all(Colors.transparent)),
+                              value: controller.addressId.value,
+                              onChanged: (value) {
+                                controller.addressId.value = addresses[index].id ?? 0;
+                                print(controller.addressId.value);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon((address.addressType ?? "").toAddressType().icon, size: 25, color: appColors.brownDarkText),
+                                        10.kW,
+                                        Text(
+                                          (address.addressType ?? "").toAddressType().displayName,
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: appColors.contentPending),
+                                        ),
+                                        if (address.isDefault ?? false) ...[10.kW, commonContainer(appStrings.defaultTag, appColors.brownDarkText, isBrown: true, pH: 14, borderWidth: 1.5)],
+                                      ],
+                                    ),
+                                    4.kH,
+                                    SizedBox(
+                                      width: w * 0.75,
+                                      child: Text(
+                                        softWrap: true,
+                                        overflow: TextOverflow.visible,
+                                        controller.getFullAddress(index),
+                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (index != addresses.length - 1) Divider(height: 1, thickness: 1),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () {
+                  if (controller.addressId.value != 0) {
+                    controller.hasAddress.value = true;
+                    Navigator.pop(context);
+                  } else {
+                    CommonMethods.showToast(appStrings.selectAddress, icon: Icons.error, bgColor: appColors.declineColor);
+                  }
+                }, hint: appStrings.confirmAddress),
+              ],
+              16.kH,
+            ],
+          ),
+        );
+      },
     );
   }
 

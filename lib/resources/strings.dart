@@ -144,6 +144,7 @@ class AppStrings {
   String get declined => "Declined";
   String get waitingForApproval =>'Waiting for the Approval';
   String get awaitingPickUp =>'Waiting for the Pick Up';
+  String get selectAddress => "Select Address for Pick Up";
   String get orderStatus => "Order Status";
   String get timeRemaining => "Time Remaining";
   String get asap=>"As Soon As Possible";
@@ -164,9 +165,10 @@ class AppStrings {
   String get materialsRequired => "Materials Required";
   String get specialInstructions => "Special Instructions";
   String get imageForReference => "Image for Reference"; 
+  String get manage =>'Manage';
 
   //Upload Order Image
-    String get uploadCompletion => "Upload Completion";
+  String get uploadCompletion => "Upload Completion";
   String get finishedProduct => "Finished Product";
   String get addPicturesCompletedOrder => "Add pictures of the completed order.";
   String get uploadImagesOrderDesc => "Upload up to 10 images of the completed product to confirm the order and for record keeping. Please ensure each file is no larger than 2 MB, and use one of the supported formats: JPG, JPEG, or PNG.";
