@@ -205,6 +205,7 @@ class AppStrings {
   String get orderCompleteBy => "Order to be completed by";
   String get orderNeedsAction => "Order Needs Action!";
   String get orderConfirmed => "Order is Confirmed";
+  String get orderapproved => "Order is Approved";
   String get orderDeclined => "Order is Declined";
 
   //Edit Profile Screen

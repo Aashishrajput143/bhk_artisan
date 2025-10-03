@@ -229,7 +229,7 @@ class OrderList extends ParentWidget {
                   Icon(Icons.circle, color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name ? appColors.declineColor : appColors.acceptColor, size: 8),
                   4.kW,
                   Text(
-                    steps?.artisanAgreedStatus == OrderStatus.PENDING.name
+                   steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name?appStrings.orderapproved: steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                         ? appStrings.orderNeedsAction
                         : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
                         ? appStrings.orderConfirmed
