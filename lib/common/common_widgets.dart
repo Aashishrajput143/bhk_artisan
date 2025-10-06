@@ -596,8 +596,6 @@ Widget phoneTextField(
   int maxLength = 15,
   String hint = '',
   bool isWhite = false,
-  bool enabled = true,
-  bool obscure = false,
   double contentPadding = 12,
   dynamic maxLines = 1,
   bool readonly = false,
@@ -608,48 +606,47 @@ Widget phoneTextField(
   void Function(String)? onChange,
   void Function(Country)? onCountryChanged,
   ValueChanged<PhoneNumber>? onCountryCodeChange,
+  void Function(String)? onSubmitted,
   List<TextInputFormatter>? inputFormatters,
 }) {
-  return StatefulBuilder(
-    builder: (context, setState) {
-      return IntlPhoneField(
-        focusNode: focusNode,
-        controller: controller,
-        inputFormatters: inputFormatters,
-        decoration: InputDecoration(
-          labelText: hint,
-          labelStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
-          error: null,
-          errorStyle: TextStyle(color: Colors.transparent),
-          counterStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: contentPadding, vertical: 5.0),
-        ),
-        style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
-        dropdownTextStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
-        cursorColor: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary,
-        dropdownIcon: const Icon(Icons.arrow_drop_down, color: Colors.transparent),
-        initialCountryCode: initialValue,
-        languageCode: "en",
-        onChanged: onCountryCodeChange,
-        onCountryChanged: onCountryChanged,
-      );
-    },
+  return IntlPhoneField(
+    focusNode: focusNode,
+    controller: controller,
+    autofocus: true,
+    inputFormatters: inputFormatters,
+    onSubmitted: onSubmitted,
+    decoration: InputDecoration(
+      labelText: hint,
+      labelStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
+      error: null,
+      errorStyle: TextStyle(color: Colors.transparent),
+      counterStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(radius),
+        borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(radius),
+        borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(radius),
+        borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(radius),
+        borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
+      ),
+      contentPadding: EdgeInsets.symmetric(horizontal: contentPadding, vertical: 5.0),
+    ),
+    style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
+    dropdownTextStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
+    cursorColor: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary,
+    dropdownIcon: const Icon(Icons.arrow_drop_down, color: Colors.transparent),
+    initialCountryCode: initialValue,
+    languageCode: "en",
+    onChanged: onCountryCodeChange,
+    onCountryChanged: onCountryChanged,
   );
 }
 

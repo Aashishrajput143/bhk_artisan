@@ -12,12 +12,11 @@ import '../repository/login_repository.dart';
 
 class LoginController extends GetxController with GetSingleTickerProviderStateMixin {
   var phoneController = TextEditingController().obs;
-  var passwordController = TextEditingController().obs;
   var countryCode = "".obs;
   final _api = LoginRepository();
-  var checkInternetValue = false.obs();
   var phoneNumberFocusNode = FocusNode().obs;
   var errorMessage = "".obs;
+  var maxlength = 10.obs;
 
   late final AnimationController animationController;
   
@@ -36,9 +35,6 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   RxString error = ''.obs;
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
   void setLoginData(LoginModel value) => logInData.value = value;
-
-  var textFieldFocusNode = FocusNode().obs;
-
   // Future<UserCredential?> signInWithGoogle() async {
   //   try {
   //     await GoogleSignIn().signOut(); // Optional: ensures a clean login

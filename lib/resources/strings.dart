@@ -338,6 +338,7 @@ class AppStrings {
   String get afterComplete => 'After your registration is complete';
   String get opportunity => 'you can see our opportunity products.';
   String get loginerrormessage => 'Please Enter Phone Number.';
+  String get loginvalidPhone =>'Please Enter valid Phone Number.';
 
   String get reSend => 'Resend';
   String get reSendCode => 'Resend OTP in ';

@@ -25,14 +25,16 @@ class OtpScreen extends ParentWidget {
     return Obx(
       () => Stack(
         children: [
-          Container(
-            alignment: Alignment.center,
-            width: w,
-            height: h,
-            decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage(appImages.bhkbackground), fit: BoxFit.cover),
-            ),
-            child: SingleChildScrollView(
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Container(
+              alignment: Alignment.center,
+              width: w,
+              height: h,
+              decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage(appImages.bhkbackground), fit: BoxFit.cover),
+              ),
               child: Center(
                 child: SingleChildScrollView(
                   child: Padding(

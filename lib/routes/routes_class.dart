@@ -20,7 +20,6 @@ import '../Modules/screens/profileManagement/edit_profile_screen.dart';
 import '../Modules/screens/profileManagement/setting_profile.dart';
 import '../Modules/screens/profileManagement/view_profile.dart';
 import '../Modules/screens/splash_screen.dart';
-import '../binding/login_binding.dart';
 
 class RoutesClass {
   //BR1
@@ -74,7 +73,7 @@ class RoutesClass {
 
   static List<GetPage> routes = [
     GetPage(name: splash, page: () => SplashScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
-    GetPage(name: login, page: () => LoginScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300), binding: LoginBinding()),
+    GetPage(name: login, page: () => LoginScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: commonScreen, page: () => CommonScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: aadharVerification, page: () => AadharVerificationScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: addresses, page: () => AddressScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),

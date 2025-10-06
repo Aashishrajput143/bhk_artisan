@@ -23,75 +23,84 @@ class LoginScreen extends ParentWidget {
     return Obx(
       () => Stack(
         children: [
-          Container(
-            width: w,
-            height: h,
-            decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage(appImages.bhkbackground), fit: BoxFit.cover),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  topRoundedAnimatedHeader(w, h, controller),
-                  SizedBox(height: h * 0.13),
-                  if (controller.errorMessage.value != "") errorToggle(controller),
-                  30.kH,
-                  Text(
-                    appStrings.letsSignIn,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: appColors.contentWhite, decoration: TextDecoration.none),
-                  ),
-                  8.kH,
-                  Text(
-                    appStrings.welcomeBack,
-                    style: TextStyle(fontSize: 15, color: appColors.contentWhite, decoration: TextDecoration.none),
-                  ),
-                  30.kH,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: phoneTextField(
-                      controller.phoneController.value,
-                      controller.phoneNumberFocusNode.value,
-                      w,
-                      onCountryChanged: (country) {
-                        debugPrint('Country changed to: ${country.dialCode}');
-                        controller.phoneController.value.text = "";
-                      },
-                      onCountryCodeChange: (phone) {
-                        controller.errorMessage.value = "";
-                        controller.countryCode.value = phone.countryCode;
-                      },
-                      isWhite: true,
-                      radius: 25,
-                      borderWidth: 2,
-                      hint: appStrings.phone,
-                      inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Container(
+              width: w,
+              height: h,
+              decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage(appImages.bhkbackground), fit: BoxFit.cover),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    topRoundedAnimatedHeader(w, h, controller),
+                    SizedBox(height: h * 0.13),
+                    if (controller.errorMessage.value != "") errorToggle(controller),
+                    30.kH,
+                    Text(
+                      appStrings.letsSignIn,
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: appColors.contentWhite, decoration: TextDecoration.none),
                     ),
-                  ),
-                  20.kH,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: commonButton(
-                      w,
-                      45,
-                      appColors.brownbuttonBg,
-                      appColors.contentWhite,
-                      () {
-                        if (controller.phoneController.value.text.isEmpty) {
-                          controller.errorMessage.value = appStrings.loginerrormessage;
-                        } else {
+                    8.kH,
+                    Text(
+                      appStrings.welcomeBack,
+                      style: TextStyle(fontSize: 15, color: appColors.contentWhite, decoration: TextDecoration.none),
+                    ),
+                    30.kH,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: phoneTextField(
+                        controller.phoneController.value,
+                        controller.phoneNumberFocusNode.value,
+                        w,
+                        onCountryChanged: (country) {
+                          debugPrint('Country changed to: ${country.dialCode}');
+                          controller.phoneController.value.text = "";
+                          controller.maxlength.value = country.maxLength;
+                        },
+                        onCountryCodeChange: (phone) {
                           controller.errorMessage.value = "";
-                          controller.logInAndRegister(context);
-                        }
-                      },
-                      radius: 30,
-                      hint: appStrings.getOTP,
+                          controller.countryCode.value = phone.countryCode;
+                        },
+                        isWhite: true,
+                        radius: 25,
+                        borderWidth: 2,
+                        hint: appStrings.phone,
+                        inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: controller.errorMessage.value == "" ? h * 0.23 : h * 0.18),
-                  Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0), child: bottomText()),
-                ],
+                    20.kH,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: commonButton(
+                        w,
+                        45,
+                        appColors.brownbuttonBg,
+                        appColors.contentWhite,
+                        () {
+                          if (controller.phoneController.value.text.isNotEmpty && controller.phoneController.value.text.length == controller.maxlength.value) {
+                            controller.errorMessage.value = "";
+                            controller.logInAndRegister(context);
+                          } else {
+                            if (controller.phoneController.value.text.length != controller.maxlength.value) {
+                              controller.errorMessage.value = appStrings.loginvalidPhone;
+                            } else {
+                              controller.errorMessage.value = appStrings.loginerrormessage;
+                            }
+                          }
+                        },
+                        radius: 30,
+                        hint: appStrings.getOTP,
+                      ),
+                    ),
+                    SizedBox(height: controller.errorMessage.value == "" ? h * 0.23 : h * 0.18),
+                    Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0), child: bottomText()),
+                  ],
+                ),
               ),
             ),
           ),

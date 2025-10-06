@@ -1,10 +1,10 @@
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 
-import '../Modules/controller/otp_controller.dart';
+// import '../Modules/controller/otp_controller.dart';
 
-class OtpBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut(() => OtpController());
-  }
-}
+// class OtpBinding extends Bindings {
+//   @override
+//   void dependencies() {
+//     Get.lazyPut(() => OtpController());
+//   }
+// }
