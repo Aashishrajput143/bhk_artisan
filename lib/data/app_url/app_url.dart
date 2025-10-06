@@ -9,6 +9,8 @@ class AppUrl {
   static String loggedinuser = '$baseUrl/users/api/users/userdetails';
   static String updateprofile = '$baseUrl/users/api/users/updateprofile';
   static String presignUrl = '$baseUrl/users/api/users/presign-url';
+  static String needAssistance ='$baseUrl/users/api/users/needAssistance';
+
 
   //address
   static String addAddress = '$baseUrl/users/api/users/addAddress';

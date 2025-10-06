@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/model/logout_model.dart';
 import 'package:bhk_artisan/Modules/model/pre_signed_intro_video_model.dart';
 import 'package:bhk_artisan/Modules/model/update_profile_model.dart';
 import 'package:bhk_artisan/data/app_url/app_url.dart';
@@ -25,5 +26,10 @@ class ProfileRepository {
   Future<bool> addIntroVideoApi(String path, String presignedUrl) async {
     dynamic response = await _apiServices.uploadFileToS3WithPresignedUrl(path,presignedUrl);
     return response;
+  }
+
+  Future<LogoutModel> needSupportApi(var data) async {
+    dynamic response = await _apiServices.postEncodeApi(data,AppUrl.needAssistance);
+    return LogoutModel.fromJson(response);
   }
 }

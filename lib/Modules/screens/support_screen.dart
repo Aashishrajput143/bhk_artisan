@@ -22,12 +22,12 @@ class SupportScreen extends ParentWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(child: Image.asset(appImages.support, width: 400)),
+            Center(child: Image.asset(appImages.support)),
             commonComponent(appStrings.name, commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, hint: appStrings.enterName, fontSize: 14)),
             12.kH,
-            commonComponent(appStrings.email, commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, hint: appStrings.emailHint, fontSize: 14)),
-            12.kH,
             commonComponent(appStrings.phone, commonTextField(controller.phoneController.value, controller.phoneFocusNode.value, w, (value) {}, hint: appStrings.enterPhone, fontSize: 14)),
+            12.kH,
+            commonComponent(appStrings.email, commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, hint: appStrings.emailHint, fontSize: 14),mandatory: false),
             12.kH,
             commonComponent(appStrings.message, commonDescriptionTextField(controller.messageController.value, controller.messageFocusNode.value, w, maxLines: 5, minLines: 4, (value) {}, hint: appStrings.enterMessage, fontSize: 15)),
             20.kH,
