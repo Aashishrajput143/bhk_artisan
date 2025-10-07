@@ -11,11 +11,21 @@ class AppStrings {
   //login Screen
   String get phone => 'Phone Number';
   String get phoneHint => 'Enter Phone Number';
+  String get loginerrormessage => 'Please Enter Phone Number.';
+  String get loginvalidPhone =>'Please Enter valid Phone Number.';
+  String get getOTP => 'GET OTP';
+  String get welcomeBack => 'Welcome back, you\'ve been missed!';
+  String get letsSignIn => "Log In to Continue";
+  String get or => 'Or';
+  String get phoneVerification => "OTP Verification";
+  String get editNumber => "Edit Phone Number?";
 
   //Otp Verification
   String get verifyPhoneNumber => "Verify Phone Number";
   String get otpDesc => "We need to register your phone without getting started!";
   String get pleaseEnterOTP => "Please Enter OTP";
+  String get reSend => 'Resend';
+  String get reSendCode => 'Resend OTP in ';
 
   // Upload Image Drawer
   String get uploadPhoto => 'Upload Photo';
@@ -319,29 +329,6 @@ class AppStrings {
   String get retry => 'Retry';
   String get weUnableCheckData => 'Please Check Your Internet Connection, We Unable to Check your Data';
   String get ok => 'Ok';
-  String get getOTP => 'GET OTP';
-  String get welcomeBack => 'Welcome back, you\'ve been missed!';
-  String get password => 'Password';
-  String get username => 'Username';
-  String get letsSignIn => "Log In or Sign Up to Continue";
-  String get signIn => 'SIGN IN';
-  String get signUp => 'Sign Up';
-  String get or => 'Or';
-  String get phoneVerification => "OTP Verification";
-  String get alreadyAccount => 'Already have a account?';
-  String get dontHaveAccount => 'Don\'t have a account?';
-  String get editNumber => "Edit Phone Number?";
-  String get singingPrivacyPolicy => 'By Registering with us or signing up  you are agree to our privacy policy and term and condition';
-  String get privacyPolicy => 'By Signing in you are agree to our privacy policy and term and condition';
-  String get register => 'register';
-  String get createAccount => 'Create your account';
-  String get afterComplete => 'After your registration is complete';
-  String get opportunity => 'you can see our opportunity products.';
-  String get loginerrormessage => 'Please Enter Phone Number.';
-  String get loginvalidPhone =>'Please Enter valid Phone Number.';
-
-  String get reSend => 'Resend';
-  String get reSendCode => 'Resend OTP in ';
 }
 
 AppStrings appStrings = AppStrings();
