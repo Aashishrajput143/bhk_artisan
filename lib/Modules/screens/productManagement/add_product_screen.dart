@@ -29,7 +29,7 @@ class AddProductPage extends ParentWidget {
             backgroundColor: appColors.backgroundColor,
             appBar: commonAppBar(appStrings.addProduct),
             body: Padding(
-              padding: const EdgeInsets.fromLTRB(16,16,16,0),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -57,14 +57,12 @@ class AddProductPage extends ParentWidget {
             ),
             bottomNavigationBar: Container(
               color: appColors.backgroundColor,
-              padding: EdgeInsets.fromLTRB(16.0,16,16, h * 0.04),
+              padding: EdgeInsets.fromLTRB(16.0, 16, 16, h * 0.04),
               child: controller.selectedIndex.value == 0
                   ? Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      commonButtonIcon(w * 0.2, 48, appColors.contentWhite, () => controller.selectedIndex.value++, hint: appStrings.nextStep, radius: 25, backgroundColor: appColors.contentButtonBrown),
-                    ],
-                  )
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [commonButtonIcon(w * 0.2, 48, appColors.contentWhite, () => controller.selectedIndex.value++, hint: appStrings.nextStep, radius: 25, backgroundColor: appColors.contentButtonBrown)],
+                    )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -287,22 +285,22 @@ class AddProductPage extends ParentWidget {
               Row(
                 children: [
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: appStrings.length, inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: appStrings.breadth, inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: appStrings.height, inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
-                    flex: 3,
+                    flex: 4,
                     child: commonDropdownButton(
                       controller.measureunits.map((item) {
                         return DropdownMenuItem<String>(
@@ -384,7 +382,11 @@ class AddProductPage extends ParentWidget {
 
   Widget pickedfiles(double w, double h, AddProductController controller) {
     return SizedBox(
-      height: h > 700 ? h * 0.29 :h > 500?h*0.2: h * 0.24,
+      height: h > 1000
+          ? h * 0.25
+          : h > 700
+          ? h * 0.25
+          : h * 0.2,
       child: GridView.builder(
         shrinkWrap: true,
         itemCount: controller.imagefiles.length,

@@ -20,6 +20,7 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
   var otpController = TextEditingController().obs;
   var otp = "".obs;
   final logInData = LoginModel().obs;
+  var isButtonEnabled = true.obs;
 
   late final AnimationController animationController;
   void setLoginData(LoginModel value) => logInData.value = value;
@@ -80,7 +81,7 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
             redirect(value);
           })
           .onError((error, stackTrace) {
-            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus,showMessage: true);
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus, showMessage: true);
           });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
@@ -88,6 +89,8 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
   }
 
   Future<void> resendOtp(context) async {
+    if (!isButtonEnabled.value) return;
+    isButtonEnabled.value = false;
     otpController.value.text = "";
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
@@ -113,13 +116,14 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
+    enableButtonAfterDelay(isButtonEnabled);
   }
 
   redirect(VerifyOTPModel value) {
     Utils.savePreferenceValues(Constants.accessToken, "${verifyOTPData.value.data?.accessToken}");
 
     Utils.savePreferenceValues(Constants.email, "${verifyOTPData.value.data?.email}");
-    if (!(value.data?.isNewUser??false) && (value.data?.name?.isNotEmpty??false)) {
+    if (!(value.data?.isNewUser ?? false) && (value.data?.name?.isNotEmpty ?? false)) {
       Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
     } else {
       Utils.setBoolPreferenceValues(Constants.isNewUser, true);

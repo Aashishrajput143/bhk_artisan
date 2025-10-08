@@ -1,7 +1,10 @@
+import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/logout_model.dart';
 import 'package:bhk_artisan/Modules/repository/profile_repository.dart';
+import 'package:bhk_artisan/common/app_constants_list.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
@@ -9,12 +12,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SupportController extends GetxController {
-    final _api = ProfileRepository();
+  final _api = ProfileRepository();
 
   var nameController = TextEditingController().obs;
   var emailController = TextEditingController().obs;
   var phoneController = TextEditingController().obs;
   var messageController = TextEditingController().obs;
+
+  List<String> issueType = AppConstantsList.issueType;
+  var selectedIssueType = Rxn<String>();
+
+  CommonScreenController commonScreenController = Get.find();
+
+
 
   var emailFocusNode = FocusNode().obs;
   var nameFocusNode = FocusNode().obs;
@@ -53,5 +63,21 @@ class SupportController extends GetxController {
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
+  }
+
+  redirect(context,w){
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return SuccessDialogBox(
+          width: w,
+          title: appStrings.requestSubmitted,
+          buttonHint: appStrings.buttonGoBackHome,
+          onChanged: (){Get.back();Get.back();Get.back();commonScreenController.selectedIndex.value =0;},
+          message: appStrings.requestSubmittedDesc,
+        );
+      },
+    );
   }
 }

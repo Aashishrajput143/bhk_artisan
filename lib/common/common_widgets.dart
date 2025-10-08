@@ -76,6 +76,11 @@ Widget noInternetConnection({VoidCallback? onRefresh, final String? lastChecked}
   );
 }
 
+void enableButtonAfterDelay(RxBool isButtonEnabled) async {
+    await Future.delayed(const Duration(seconds: 3));
+    isButtonEnabled.value = true;
+  }
+
 void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setError, Function(Status)? setRxRequestStatus, bool closeDialog = false, bool showMessage = true}) {
   if (closeDialog) {
     Get.back();
@@ -477,6 +482,74 @@ Widget commonDescriptionTextField(
   );
 }
 
+Widget dropdownButton(List<String> items, String? selectedValue, double width, double height, Color color, void Function(String?) onChanged, {String hint = ''}) {
+  return Container(
+    width: width,
+    height: height,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: appColors.border), // Outer border
+    ),
+    //padding: const EdgeInsets.all(1.0),
+    child: Container(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton2<String>(
+          //underline: Container(),
+          hint: Padding(
+            padding: const EdgeInsets.only(left: 12.0),
+            child: selectedValue?.isNotEmpty ?? false
+                ? Text(
+                    selectedValue ?? "",
+                    style: TextStyle(fontSize: 16, color: appColors.contentPrimary, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.bold),
+                  )
+                : Text(hint),
+          ),
+          style: TextStyle(fontSize: 16, color: appColors.contentPrimary, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.bold),
+          //value: selectedValue,
+          items: items.map((item) {
+            return DropdownMenuItem<String>(
+              alignment: AlignmentDirectional.centerStart,
+              value: item,
+              child: Container(
+                width: width,
+                color: appColors.backgroundColor,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
+                      child: Text(
+                        item,
+                        style: TextStyle(fontSize: 16, color: appColors.contentPrimary, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    //if (item != items.last) Divider(thickness: 1.5, height: 1.5, color: appColors.border),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: onChanged,
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 300,
+            width: width * 0.88,
+            offset: const Offset(4, 10),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+            padding: EdgeInsets.zero,
+          ),
+          menuItemStyleData: const MenuItemStyleData(padding: EdgeInsets.zero),
+          isExpanded: true,
+          iconStyleData: const IconStyleData(
+            icon: Padding(padding: EdgeInsets.only(right: 8.0), child: Icon(Icons.keyboard_arrow_down, size: 22)),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selectedValue, double width, double height, Color color, void Function(String?) onChanged, {String hint = '', Color borderColor = Colors.transparent}) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -494,7 +567,7 @@ Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selec
         maxHeight: height * .25,
         width: width * .918,
         offset: const Offset(-9, -3),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: appColors.contentWhite),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: appColors.cardBackground),
       ),
       isExpanded: true,
       underline: const SizedBox(),
@@ -592,10 +665,11 @@ Widget phoneTextField(
   FocusNode focusNode,
   double height, {
   FormFieldValidator<String>? validator,
-  var error,
+  Rxn<String>? error,
   int maxLength = 15,
   String hint = '',
   bool isWhite = false,
+  bool enabled = true,
   double contentPadding = 12,
   dynamic maxLines = 1,
   bool readonly = false,
@@ -613,13 +687,15 @@ Widget phoneTextField(
     focusNode: focusNode,
     controller: controller,
     autofocus: true,
+    enabled: enabled,
     inputFormatters: inputFormatters,
-    onSubmitted: onSubmitted,
+    onSubmitted: onSubmitted,invalidNumberMessage: error?.value,
     decoration: InputDecoration(
+      errorMaxLines: 2,
       labelText: hint,
       labelStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
-      error: null,
-      errorStyle: TextStyle(color: Colors.transparent),
+      errorText: (error?.value?.isNotEmpty ?? false) ? error?.value : null,
+      errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: Colors.red, fontSize: 13) : TextStyle(color: Colors.transparent),
       counterStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(radius),
@@ -644,6 +720,7 @@ Widget phoneTextField(
     cursorColor: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary,
     dropdownIcon: const Icon(Icons.arrow_drop_down, color: Colors.transparent),
     initialCountryCode: initialValue,
+    //countries: allCountries?null: countries.where((c) => c.code == 'IN').toList(),
     languageCode: "en",
     onChanged: onCountryCodeChange,
     onCountryChanged: onCountryChanged,
@@ -1004,6 +1081,7 @@ Widget otpField(BuildContext context, TextEditingController controller, length, 
     cursorColor: appColors.contentPrimary,
     cursorHeight: fontSize,
     textStyle: TextStyle(fontSize: fontSize, color: appColors.contentPrimary, fontWeight: FontWeight.w800, fontFamily: appFonts.NunitoBold),
+    pastedTextStyle: TextStyle(color: appColors.contentPrimary, fontFamily: appFonts.NunitoBold),
     controller: controller,
     pinTheme: PinTheme(
       shape: PinCodeFieldShape.box,
@@ -1018,6 +1096,7 @@ Widget otpField(BuildContext context, TextEditingController controller, length, 
       inactiveFillColor: backgroundColor.withValues(alpha: 0.9),
     ),
     enableActiveFill: true,
+    enablePinAutofill: true,
     onChanged: onChanged,
     onCompleted: onSubmitted,
   );

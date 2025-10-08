@@ -9,14 +9,18 @@ import '../model/get_subcategory_model.dart';
 class ProductRepository {
   final _apiServices = NetworkApiServices();
 
-  Future<GetCategoryModel> getcategoryApi(var page,var toPage) async {
+  Future<GetCategoryModel> getcategoryApi(var page, var toPage) async {
     dynamic response = await _apiServices.getApi("${AppUrl.getcategory}$page&pageSize=$toPage");
     return GetCategoryModel.fromJson(response);
   }
 
   Future<GetSubCategoryModel> getsubcategoryApi(cateId) async {
-    dynamic response =
-        await _apiServices.getApi("${AppUrl.getsubcategory}$cateId");
+    dynamic response = await _apiServices.getApi("${AppUrl.getsubcategory}$cateId");
+    return GetSubCategoryModel.fromJson(response);
+  }
+
+  Future<GetSubCategoryModel> getallsubcategoryApi(var page, var toPage) async {
+    dynamic response = await _apiServices.getApi("${AppUrl.getallSubcategory}$page&pageSize=$toPage");
     return GetSubCategoryModel.fromJson(response);
   }
 
@@ -26,14 +30,12 @@ class ProductRepository {
   }
 
   Future<ProductListingModel> getproductApi(var status) async {
-    dynamic response = await _apiServices.getApi(
-        "${AppUrl.getproductlisting}adminApprovalStatus=$status");
+    dynamic response = await _apiServices.getApi("${AppUrl.getproductlisting}adminApprovalStatus=$status");
     return ProductListingModel.fromJson(response);
   }
 
   Future<ProductDetailsModel> getproductDetailsApi(var productId) async {
-    dynamic response =
-        await _apiServices.getApi("${AppUrl.getproduct}$productId");
+    dynamic response = await _apiServices.getApi("${AppUrl.getproduct}$productId");
     return ProductDetailsModel.fromJson(response);
   }
 }

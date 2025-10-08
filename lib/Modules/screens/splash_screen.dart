@@ -12,6 +12,7 @@ class SplashScreen extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     SplashController controller = Get.put(SplashController());
+    precacheImage(AssetImage(appImages.bhkbackground), context);
     return Scaffold(
       backgroundColor: appColors.backgroundColor,
       body: Stack(

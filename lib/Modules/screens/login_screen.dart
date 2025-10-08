@@ -39,7 +39,6 @@ class LoginScreen extends ParentWidget {
                   children: [
                     topRoundedAnimatedHeader(w, h, controller),
                     SizedBox(height: h * 0.13),
-                    if (controller.errorMessage.value != "") errorToggle(controller),
                     30.kH,
                     Text(
                       appStrings.letsSignIn,
@@ -62,15 +61,16 @@ class LoginScreen extends ParentWidget {
                           controller.phoneController.value.text = "";
                           controller.maxlength.value = country.maxLength;
                         },
+                        error: controller.errorMessage,
                         onCountryCodeChange: (phone) {
-                          controller.errorMessage.value = "";
+                          controller.errorMessage.value = null;
                           controller.countryCode.value = phone.countryCode;
                         },
                         isWhite: true,
                         radius: 25,
                         borderWidth: 2,
                         hint: appStrings.phone,
-                        inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
+                        inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(15)],
                       ),
                     ),
                     20.kH,
@@ -81,23 +81,12 @@ class LoginScreen extends ParentWidget {
                         45,
                         appColors.brownbuttonBg,
                         appColors.contentWhite,
-                        () {
-                          if (controller.phoneController.value.text.isNotEmpty && controller.phoneController.value.text.length == controller.maxlength.value) {
-                            controller.errorMessage.value = "";
-                            controller.logInAndRegister(context);
-                          } else {
-                            if (controller.phoneController.value.text.length != controller.maxlength.value) {
-                              controller.errorMessage.value = appStrings.loginvalidPhone;
-                            } else {
-                              controller.errorMessage.value = appStrings.loginerrormessage;
-                            }
-                          }
-                        },
+                        () =>controller.validateAndLogin(),
                         radius: 30,
                         hint: appStrings.getOTP,
                       ),
                     ),
-                    SizedBox(height: controller.errorMessage.value == "" ? h * 0.23 : h * 0.18),
+                    SizedBox(height: h * 0.23),
                     Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0), child: bottomText()),
                   ],
                 ),
@@ -134,24 +123,6 @@ class LoginScreen extends ParentWidget {
             Image.asset(appImages.logo, width: 45, height: 45),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget errorToggle(LoginController controller) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0),
-      padding: const EdgeInsets.all(12.0),
-      decoration: BoxDecoration(color: Colors.red[100], borderRadius: BorderRadius.circular(8.0)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.error, color: Colors.red),
-          8.kW,
-          Expanded(
-            child: Text(controller.errorMessage.value, style: const TextStyle(color: Colors.red)),
-          ),
-        ],
       ),
     );
   }

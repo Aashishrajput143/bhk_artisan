@@ -15,14 +15,14 @@ class AppStrings {
   String get loginvalidPhone =>'Please Enter valid Phone Number.';
   String get getOTP => 'GET OTP';
   String get welcomeBack => 'Welcome back, you\'ve been missed!';
-  String get letsSignIn => "Log In to Continue";
+  String get letsSignIn => "Log In or Sign Up to Continue";
   String get or => 'Or';
   String get phoneVerification => "OTP Verification";
   String get editNumber => "Edit Phone Number?";
 
   //Otp Verification
   String get verifyPhoneNumber => "Verify Phone Number";
-  String get otpDesc => "We need to register your phone without getting started!";
+  String get otpDesc => "We need to register your phone number before getting started";
   String get pleaseEnterOTP => "Please Enter OTP";
   String get reSend => 'Resend';
   String get reSendCode => 'Resend OTP in ';
@@ -120,17 +120,17 @@ class AppStrings {
   //MY Product
   String get myProducts => "My Products";
   String get addNewProduct => "Add New Product";
-  String get hiThere => "Hi, there.";
+  String get hiThere => "Hi there";
   String get addYourProduct => "Add Your Product";
-  String get emptyProductDesc => "Thanks for checking out Products, we hope your products can make your routine a little more enjoyable.";
+  String get emptyProductDesc => "Thanks for checking out products. we hope your products can make your routine a little more enjoyable.";
 
   //Pending Product Screen
   String get noPendingProducts => "No Pending Products";
-  String get emptyPendingProductDesc => "Thanks for checking out Pending Products, we hope your products can make your routine a little more enjoyable.";
+  String get emptyPendingProductDesc => "Thanks for checking out Pending products. we hope your products can make your routine a little more enjoyable.";
 
   //Cancel Product Screen
   String get noRejectedProducts => "No Rejected Products";
-  String get emptyRejectedProductDesc => "Thanks for checking out Rejected Products, we hope your products can make your routine a little more enjoyable.";
+  String get emptyRejectedProductDesc => "Thanks for checking out Rejected products. we hope your products can make your routine a little more enjoyable.";
 
   //Product Details Screen
   String get productDetailsTitle => "Product Details";
@@ -204,14 +204,14 @@ class AppStrings {
 
   // Order History Screen
   String get noOrdersFound => "No Orders Found";
-  String get emptyOrderDesc => "Thanks for checking out Your Orders, we hope your products can make your routine a little more enjoyable.";
+  String get emptyOrderDesc => "Once an order is delivered or declined, it will appear here with complete details for your review";
   String get payment => "Payment";
   String get orderQty => "Order Qty.";
   String get delivered => "Delivered";
 
   // Active orders Screen
   String get noOrdersAvailable => "No Orders Available";
-  String get emptyOrdersDesc => "Thanks for checking out Orders, we hope your products can make your routine a little more enjoyable.";
+  String get emptyOrdersDesc => "Once an order is allocated, it will appear here with complete details for your review and action.";
   String get orderCompleteBy => "Order to be completed by";
   String get orderNeedsAction => "Order Needs Action!";
   String get orderConfirmed => "Order is Confirmed";
@@ -262,7 +262,7 @@ class AppStrings {
   String get deleteAccountSubtitle => "Remove your account permanently";
   String get verifyAadhaar => "Verify Aadhaar";
   String get verifyAadhaarSubtitle => "Securely link your Aadhaar for verification";
-  String get needAssistance => "Need Assistance";
+  String get needAssistance => 'Need Assistance';
   String get needAssistanceSubtitle => "Get the help you need quickly and easily";
 
   //View Profile
@@ -313,12 +313,14 @@ class AppStrings {
   String get mandatoryFields => "please fill all the mandatory fields";
 
   // Need Assistance
-  String get name => "Name";
-  String get enterName => "Enter your Name";
-  String get enterPhone => "Enter your Phone Number";
-  String get message => "Message";
-  String get enterMessage => "Write your message here...";
-  String get sendMessage => "Send Message";
+  String get needHelp => 'Need Help?';
+  String get issueTypeHint => 'Issue Type';
+  String get selectIssue => 'Select Issue';
+  String get issueDescHint => 'Issue Description';
+  String get detailedDescriptionIssue => 'Detailed description of the issue';
+  String get requestSubmitted => 'Request Submitted';
+  String get requestSubmittedDesc => 'Your request has been submitted and an executive will reach out to you shortly.';
+  String get buttonGoBackHome => 'Go Back Home';
   String get contactPhone => "(246)264 845";
   String get contactEmail => "BharathasthKaushal@gmail.com";
 

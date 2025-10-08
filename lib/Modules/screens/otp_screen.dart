@@ -54,7 +54,7 @@ class OtpScreen extends ParentWidget {
                           textAlign: TextAlign.center,
                         ),
                         30.kH,
-                        otpField(context, controller.otpController.value, 6, (pin) => controller.otp.value = pin.toString(),inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
+                        otpField(context, controller.otpController.value, 6, onChanged: (pin) => controller.otp.value = pin.toString(), (pin) => controller.otp.value = pin.toString(), inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
                         6.kH,
                         controller.startTime.value > 0
                             ? Text(
@@ -70,11 +70,14 @@ class OtpScreen extends ParentWidget {
                           appColors.brownbuttonBg,
                           appColors.contentWhite,
                           () {
+                            if (!controller.isButtonEnabled.value) return;
+                            controller.isButtonEnabled.value = false;
                             if (controller.otp.value.length == 6) {
                               controller.otpVerificationApi();
                             } else {
                               CommonMethods.showToast(appStrings.pleaseEnterOTP);
                             }
+                            enableButtonAfterDelay(controller.isButtonEnabled);
                           },
                           hint: appStrings.verifyPhoneNumber,
                           radius: 30,

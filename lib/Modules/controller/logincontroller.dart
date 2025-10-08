@@ -15,18 +15,43 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   var countryCode = "".obs;
   final _api = LoginRepository();
   var phoneNumberFocusNode = FocusNode().obs;
-  var errorMessage = "".obs;
+  var errorMessage = Rxn<String>();
   var maxlength = 10.obs;
+  var isButtonEnabled = true.obs;
 
   late final AnimationController animationController;
-  
+
+  void validateAndLogin() async {
+    final phone = phoneController.value.text.trim();
+    final maxLength = maxlength.value;
+
+    if (!isButtonEnabled.value) return;
+    isButtonEnabled.value = false;
+
+    if (phone.isEmpty) {
+      errorMessage.value = appStrings.loginerrormessage;
+      return;
+    }
+
+    if (phone.length != maxLength) {
+      errorMessage.value = appStrings.loginvalidPhone;
+      return;
+    }
+
+    if (!RegExp(r'^[6-9]').hasMatch(phone)) {
+      errorMessage.value = appStrings.loginvalidPhone;
+      return;
+    }
+
+    errorMessage.value = null;
+    await logInAndRegister();
+    enableButtonAfterDelay(isButtonEnabled);
+  }
+
   @override
   void onInit() {
     super.onInit();
-    animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 6),
-    )..repeat();
+    animationController = AnimationController(vsync: this, duration: const Duration(seconds: 6))..repeat();
   }
 
   final rxRequestStatus = Status.COMPLETED.obs;
@@ -35,6 +60,7 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   RxString error = ''.obs;
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
   void setLoginData(LoginModel value) => logInData.value = value;
+
   // Future<UserCredential?> signInWithGoogle() async {
   //   try {
   //     await GoogleSignIn().signOut(); // Optional: ensures a clean login
@@ -75,31 +101,26 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   //   }
   // }
 
-  Future<void> logInAndRegister(context) async {
+  Future<void> logInAndRegister() async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
 
-      Map<String, dynamic> data = {
-        "identity": phoneController.value.text,
-        "user_group": "ARTISAN",
-        if (phoneController.value.text.isNotEmpty) "countryCode": countryCode.value
-      };
-      _api.logInApi(data).then((value) {
-        setRxRequestStatus(Status.COMPLETED);
-        setLoginData(value);
-        CommonMethods.showToast("${value.message} ${value.data?.oTP}");
-        Utils.printLog("Response===> ${value.toString()}");
-        redirect(value);
-      }).onError((error, stackTrace) {
-        handleApiError(
-        error,stackTrace,
-        setError: setError,
-        setRxRequestStatus: setRxRequestStatus,
-      );
-    });
+      Map<String, dynamic> data = {"identity": phoneController.value.text, "user_group": "ARTISAN", if (phoneController.value.text.isNotEmpty) "countryCode": countryCode.value};
+      _api
+          .logInApi(data)
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setLoginData(value);
+            CommonMethods.showToast("${value.message} ${value.data?.oTP}");
+            Utils.printLog("Response===> ${value.toString()}");
+            redirect(value);
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }

@@ -19,7 +19,7 @@ class PrivacyPolicy extends ParentWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Privacy Policy",
+                "Privacy Policy".toUpperCase(),
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               10.kH,

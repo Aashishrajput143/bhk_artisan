@@ -33,7 +33,7 @@ class OrderDetailsPage extends ParentWidget {
             : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: controller.rxRequestStatus.value == Status.LOADING ? shimmer(w) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(controller), 6.kH, orderCardHeader(controller), 6.kH, if (controller.getOrderStepModel.value.data?.product != null) orderDescription(controller), 6.kH, orderRequirement(h, w, controller)]),
+                  child: controller.rxRequestStatus.value == Status.COMPLETED ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(controller), 6.kH, orderCardHeader(controller), 6.kH, if (controller.getOrderStepModel.value.data?.product != null) orderDescription(controller), 6.kH, orderRequirement(h, w, controller)]):shimmer(w),
                 ),
               ),
         bottomNavigationBar: (controller.rxRequestStatus.value == Status.LOADING || controller.rxRequestStatus.value == Status.NOINTERNET) ? null : bottomButtons(context, h, w, controller),

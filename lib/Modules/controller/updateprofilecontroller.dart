@@ -1,5 +1,5 @@
 import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
-import 'package:bhk_artisan/Modules/model/get_category_model.dart';
+import 'package:bhk_artisan/Modules/model/get_subcategory_model.dart';
 import 'package:bhk_artisan/Modules/model/pre_signed_intro_video_model.dart' show PreSignedIntroVideoModel;
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
@@ -50,10 +50,8 @@ class UpdateProfileController extends GetxController {
     super.onInit();
     if (Get.arguments?['isNewUser'] != null) {
       isNewUser.value = Get.arguments['isNewUser'];
-    } else {
-      loadData();
     }
-    getCategoryApi();
+    getExpertiseApi();
   }
 
   String? validateStringForm() {
@@ -69,7 +67,10 @@ class UpdateProfileController extends GetxController {
       return "Please Select Your Category";
     } else if (aadharController.value.text.isEmpty) {
       return "Please Enter Your Aadhar Number";
-    }else if (communityController.value.text.isEmpty) {
+    } else if (aadharController.value.text.length!=12) {
+      return "Invalid Aadhar Number";
+    }
+    else if (communityController.value.text.isEmpty) {
       return "Please Enter Your Caste";
     } else if (introUploaded.value == null) {
       return "Please Upload Your Intro";
@@ -78,41 +79,48 @@ class UpdateProfileController extends GetxController {
   }
 
   void loadData() {
-    firstNameController.value.text = commonController.profileData.value.data?.firstName ?? "";
-    lastNameController.value.text = commonController.profileData.value.data?.lastName ?? "";
-    emailController.value.text = commonController.profileData.value.data?.email ?? "";
-    communityController.value.text = commonController.profileData.value.data?.subCaste ?? "";
-    aadharController.value.text = commonController.profileData.value.data?.aadhaarNumber??"";
-    gstController.value.text = commonController.profileData.value.data?.gstNumber??"";
+  firstNameController.value.text = commonController.profileData.value.data?.firstName ?? "";
+  lastNameController.value.text = commonController.profileData.value.data?.lastName ?? "";
+  emailController.value.text = commonController.profileData.value.data?.email ?? "";
+  communityController.value.text = commonController.profileData.value.data?.subCaste ?? "";
+  aadharController.value.text = commonController.profileData.value.data?.aadhaarNumber ?? "";
+  gstController.value.text = commonController.profileData.value.data?.gstNumber ?? "";
 
-    String? profileExpertise = commonController.profileData.value.data?.expertizeField ?? "";
+  // Load and filter expertise
+  String? profileExpertise = commonController.profileData.value.data?.expertizeField ?? "";
+  List<String> loadedExpertise = profileExpertise.split(",").map((e) => e.trim()).toList();
+  List<String> apiExpertiseNames = getexpertiseModel.value.data?.docs?.map((e) => e.categoryName??"".trim()).toList() ?? [];
 
-    selectedMultiExpertise.clear();
-    selectedMultiExpertise.value = profileExpertise.split(",").map((e) => e.trim()).toList();
-    print(selectedMultiExpertise);
+  selectedMultiExpertise.clear();
+  selectedMultiExpertise.value = loadedExpertise.where((e) => apiExpertiseNames.contains(e)).toList();
+  print("Selected expertise after filtering: $selectedMultiExpertise");
 
-    String? casteCategoryValue = commonController.profileData.value.data?.userCasteCategory ?? "";
-
-    if (casteCategoryValue.isNotEmpty) {
-      try {
-        selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == casteCategoryValue, orElse: () => UserCasteCategory.OTHER);
-      } catch (e) {
-        selectedCategory.value = null;
-      }
-    } else {
+  // Load caste category
+  String? casteCategoryValue = commonController.profileData.value.data?.userCasteCategory ?? "";
+  if (casteCategoryValue.isNotEmpty) {
+    try {
+      selectedCategory.value = UserCasteCategory.values.firstWhere(
+        (e) => e.categoryValue == casteCategoryValue,
+        orElse: () => UserCasteCategory.OTHER,
+      );
+    } catch (e) {
       selectedCategory.value = null;
     }
-
-    String? introVideo = commonController.profileData.value.data?.introVideo ?? '';
-
-    if (introVideo.isNotEmpty) {
-      havingIntro.value = true;
-      introUploaded.value = introVideo;
-    }
+  } else {
+    selectedCategory.value = null;
   }
 
+  // Load intro video
+  String? introVideo = commonController.profileData.value.data?.introVideo ?? '';
+  if (introVideo.isNotEmpty) {
+    havingIntro.value = true;
+    introUploaded.value = introVideo;
+  }
+}
+
+
   final rxRequestStatus = Status.COMPLETED.obs;
-  final getCategoryModel = GetCategoryModel().obs;
+  final getexpertiseModel = GetSubCategoryModel().obs;
   final updateProfileModel = UpdateProfileModel().obs;
   final urlData = PreSignedIntroVideoModel().obs;
 
@@ -121,20 +129,23 @@ class UpdateProfileController extends GetxController {
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
   void setupdateProfileModeldata(UpdateProfileModel value) => updateProfileModel.value = value;
   void setUrlData(PreSignedIntroVideoModel value) => urlData.value = value;
-  void setgetCategoryModeldata(GetCategoryModel value) => getCategoryModel.value = value;
+  void setgetExpertiseModeldata(GetSubCategoryModel value) => getexpertiseModel.value = value;
 
-  Future<void> getCategoryApi() async {
+  Future<void> getExpertiseApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
       productApi
-          .getcategoryApi(1, 20)
+          .getallsubcategoryApi(1,100)
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
-            setgetCategoryModeldata(value);
+            setgetExpertiseModeldata(value);
             //CommonMethods.showToast(value.message);
+            if (!isNewUser.value) {
+            loadData();
+          }
             Utils.printLog("Response===> ${value.toString()}");
           })
           .onError((error, stackTrace) {

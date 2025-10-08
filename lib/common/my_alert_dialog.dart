@@ -1,4 +1,7 @@
+import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/font.dart';
+import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -79,6 +82,80 @@ class MyAlertDialog {
         ],
       ),
       barrierDismissible: false,
+    );
+  }
+}
+
+class SuccessDialogBox extends StatelessWidget {
+  final String title;
+  final String message;
+  final double width;
+  final String buttonHint;
+  final VoidCallback? onChanged;
+  const SuccessDialogBox({
+    super.key,
+    required this.title,
+    required this.message,
+    required this.width,
+    this.onChanged,
+    required this.buttonHint,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      insetPadding: EdgeInsets.symmetric(horizontal: width * 0.05),
+      child: SizedBox(
+        width: width,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                appImages.check,
+                width: 120,
+                height: 120,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: appColors.brownDarkText,
+                  fontFamily: appFonts.NunitoBold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: appColors.contentPrimary,
+                  fontFamily: appFonts.NunitoMedium,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 40),
+              commonButton(
+                double.infinity,
+                50,
+                appColors.contentButtonBrown,
+                Colors.white,
+                hint: buttonHint,
+                onChanged,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

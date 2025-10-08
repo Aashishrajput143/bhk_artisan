@@ -4,10 +4,12 @@ import 'package:bhk_artisan/Modules/repository/login_repository.dart';
 import 'package:bhk_artisan/Modules/screens/login_screen.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/common_constants.dart';
+import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'common_screen_controller.dart';
 
@@ -31,11 +33,10 @@ class ProfileController extends GetxController {
       setRxRequestStatus(Status.LOADING);
 
       repository.logoutApi().then((value) {
-        setRxRequestStatus(Status.COMPLETED);
         setLogoutdata(value);
         //CommonMethods.showToast(value.message);
         Utils.printLog("Response===> ${value.toString()}");
-        redirect();
+        initSplashLogic();
       }).onError((error, stackTrace) {
         handleApiError(
         error,stackTrace,
@@ -45,6 +46,17 @@ class ProfileController extends GetxController {
     });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+
+  Future<void> initSplashLogic() async {
+    await Future.delayed(Duration.zero);
+    final context = Get.context!;
+    if (context.mounted) {
+      await precacheImage(AssetImage(appImages.bhkbackground), context);
+      Utils.printLog("Login background image preloaded");
+      setRxRequestStatus(Status.COMPLETED);
+      await redirect();
     }
   }
 

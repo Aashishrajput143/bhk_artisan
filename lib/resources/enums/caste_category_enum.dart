@@ -1,7 +1,8 @@
 enum UserCasteCategory {
   GENERAL,
   OBC,
-  SC_ST,
+  SC,
+  ST,
   OTHER,
 }
 
@@ -12,8 +13,10 @@ extension UserCasteCategoryDisplayExtension on UserCasteCategory {
         return "General";
       case UserCasteCategory.OBC:
         return "OBC";
-      case UserCasteCategory.SC_ST:
-        return "SC/ST";
+      case UserCasteCategory.SC:
+        return "SC";
+      case UserCasteCategory.ST:
+        return "ST";
       case UserCasteCategory.OTHER:
         return "Others";
     }
@@ -27,8 +30,10 @@ extension UserCasteCategoryValueExtension on UserCasteCategory {
         return "GENERAL";
       case UserCasteCategory.OBC:
         return "OBC";
-      case UserCasteCategory.SC_ST:
-        return "SC/ST";
+      case UserCasteCategory.SC:
+        return "SC";
+      case UserCasteCategory.ST:
+        return "ST";
       case UserCasteCategory.OTHER:
         return "OTHER";
     }
@@ -41,8 +46,10 @@ UserCasteCategory? parseUserCasteCategory(String? value) {
       return UserCasteCategory.GENERAL;
     case "OBC":
       return UserCasteCategory.OBC;
-    case "SC/ST":
-      return UserCasteCategory.SC_ST;
+    case "SC":
+      return UserCasteCategory.SC;
+    case "ST":
+      return UserCasteCategory.ST;
     case "OTHER":
       return UserCasteCategory.OTHER;
     default:

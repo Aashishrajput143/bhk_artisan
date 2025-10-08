@@ -103,212 +103,229 @@ class EditProfile extends ParentWidget {
         canPop: false,
         (didPop, result) async {
           if (!didPop) {
-            MyAlertDialog.showAlertDialog();
+            MyAlertDialog.showAlertDialog(
+              onPressed: () {
+                Get.back();
+                if (controller.isNewUser.value) {
+                  if (Platform.isAndroid) {
+                    SystemNavigator.pop();
+                  } else if (Platform.isIOS) {
+                    exit(0);
+                  }
+                } else {
+                  Get.back();
+                }
+              },
+            );
           }
         },
       ),
     );
   }
-}
 
-Widget profile(BuildContext context, double h, double w, UpdateProfileController controller) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: controller.selectedImage.value != null
-                  ? Image.file(File(controller.selectedImage.value ?? ""), width: 150, height: 150, fit: BoxFit.cover)
-                  : (controller.commonController.profileData.value.data?.avatar?.isNotEmpty ?? false)
-                  ? commonProfileNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "")
-                  : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
-            ),
-            Positioned(
-              bottom: 5,
-              right: 5,
-              child: CircleAvatar(
-                backgroundColor: appColors.contentButtonBrown,
-                radius: 20.0,
-                child: IconButton(
-                  icon: const Icon(Icons.edit),
-                  color: appColors.contentWhite,
-                  onPressed: () => bottomDrawer(
-                    context,
-                    h * 0.3,
-                    w,
-                    controller.selectedImage,
-                    () {
-                      Get.back();
-                      pickImageFromGallery(controller.selectedImage, true);
-                    },
-                    () {
-                      Get.back();
-                      pickImageFromGallery(controller.selectedImage, false);
-                    },
-                    isDeleteButton: true,
+  Widget profile(BuildContext context, double h, double w, UpdateProfileController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Center(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: controller.selectedImage.value != null
+                    ? Image.file(File(controller.selectedImage.value ?? ""), width: 150, height: 150, fit: BoxFit.cover)
+                    : (controller.commonController.profileData.value.data?.avatar?.isNotEmpty ?? false)
+                    ? commonProfileNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "")
+                    : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
+              ),
+              Positioned(
+                bottom: 5,
+                right: 5,
+                child: CircleAvatar(
+                  backgroundColor: appColors.contentButtonBrown,
+                  radius: 20.0,
+                  child: IconButton(
+                    icon: const Icon(Icons.edit),
+                    color: appColors.contentWhite,
+                    onPressed: () => bottomDrawer(
+                      context,
+                      h * 0.3,
+                      w,
+                      controller.selectedImage,
+                      () {
+                        Get.back();
+                        pickImageFromGallery(controller.selectedImage, true);
+                      },
+                      () {
+                        Get.back();
+                        pickImageFromGallery(controller.selectedImage, false);
+                      },
+                      isDeleteButton: true,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      16.kH,
-      Text(appStrings.fiveMBValidation, style: TextStyle(color: appColors.contentdescBrownColor)),
-      Text(appStrings.jpgPngAccpted, style: TextStyle(color: appColors.contentdescBrownColor)),
-      10.kH,
-      commonButtonIcon(
-        100,
-        40,
-        backgroundColor: appColors.brownbuttonBg,
-        appColors.contentWhite,
-        () {
-          if (controller.havingIntro.value) {
-            Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.introUploaded.value});
-          } else if (controller.introUploaded.value?.isEmpty ?? true) {
-            bottomDrawer(
-              context,
-              h * 0.22,
-              w,
-              controller.selectedIntroVideo,
-              () {
-                Get.back();
-                pickVideoFromGallery(controller.selectedIntroVideo, true, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
-              },
-              () {
-                Get.back();
-                pickVideoFromGallery(controller.selectedIntroVideo, false, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
-              },
-              isVideo: true,
-            );
-          }
-        },
-        icon: Icons.video_call,
-        hint: controller.havingIntro.value
-            ? appStrings.viewIntro
-            : controller.introUploaded.value?.isNotEmpty ?? false
-            ? appStrings.uploadedtick
-            : appStrings.uploadIntro,
-        forward: false,
-        radius: 25,
-      ),
-    ],
-  );
-}
-
-Widget content(BuildContext context, double w, double h, UpdateProfileController controller) {
-  return Column(
-    children: [
-      commonComponent(appStrings.firstName, commonTextField(controller.firstNameController.value, controller.firstNameFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.firstNameHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
-      16.kH,
-      commonComponent(appStrings.lastName, commonTextField(controller.lastNameController.value, controller.lastNameFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.lastNameHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
-      16.kH,
-      commonComponent(appStrings.email, commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.emailHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
-      16.kH,
-      if (controller.isNewUser.value) ...[
-        commonComponent(
-          appStrings.aadhaarNumber,
-          commonTextField(controller.aadharController.value, controller.aadharFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterAadhaarNumber, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(16)], maxLength: 16, isCounter: true),
-        ),
-        commonComponent(appStrings.gstNumber, commonTextField(controller.gstController.value, controller.gstFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.gstNumberHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
         16.kH,
-        Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: commonComponent(
-                appStrings.category,
-                commonDropdownButton(
-                  controller.casteCategories.map((item) {
-                    return DropdownMenuItem<String>(
-                      value: item.categoryValue.toString(),
-                      child: Text(item.displayName, style: const TextStyle(fontSize: 14)),
-                    );
-                  }).toList(),
-                  controller.selectedCategory.value?.categoryValue,
-                  w * 0.5,
-                  h,
-                  appColors.backgroundColor,
-                  (String? newValue) {
-                    if (newValue != null) {
-                      controller.selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == newValue);
-                    }
-                  },
-                  hint: appStrings.selectCategory,
-                  borderColor: appColors.border,
+        Text(appStrings.fiveMBValidation, style: TextStyle(color: appColors.contentdescBrownColor)),
+        Text(appStrings.jpgPngAccpted, style: TextStyle(color: appColors.contentdescBrownColor)),
+        10.kH,
+        commonButtonIcon(
+          100,
+          40,
+          backgroundColor: appColors.brownbuttonBg,
+          appColors.contentWhite,
+          () {
+            if (controller.havingIntro.value) {
+              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.introUploaded.value});
+            } else if (controller.introUploaded.value?.isEmpty ?? true) {
+              bottomDrawer(
+                context,
+                h * 0.22,
+                w,
+                controller.selectedIntroVideo,
+                () {
+                  Get.back();
+                  pickVideoFromGallery(controller.selectedIntroVideo, true, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
+                },
+                () {
+                  Get.back();
+                  pickVideoFromGallery(controller.selectedIntroVideo, false, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
+                },
+                isVideo: true,
+              );
+            }
+          },
+          icon: Icons.video_call,
+          hint: controller.havingIntro.value
+              ? appStrings.viewIntro
+              : controller.introUploaded.value?.isNotEmpty ?? false
+              ? appStrings.uploadedtick
+              : appStrings.uploadIntro,
+          forward: false,
+          radius: 25,
+        ),
+      ],
+    );
+  }
+
+  Widget content(BuildContext context, double w, double h, UpdateProfileController controller) {
+    return Column(
+      children: [
+        commonComponent(appStrings.firstName, commonTextField(controller.firstNameController.value, controller.firstNameFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.firstNameHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
+        16.kH,
+        commonComponent(appStrings.lastName, commonTextField(controller.lastNameController.value, controller.lastNameFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.lastNameHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
+        16.kH,
+        commonComponent(appStrings.email, commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.emailHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
+        16.kH,
+        if (controller.isNewUser.value) ...[
+          commonComponent(
+            appStrings.aadhaarNumber,
+            commonTextField(controller.aadharController.value, controller.aadharFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterAadhaarNumber, maxLines: 1, inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(12)], maxLength: 12, isCounter: true),
+          ),
+          commonComponent(appStrings.gstNumber, commonTextField(controller.gstController.value, controller.gstFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.gstNumberHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
+          16.kH,
+          Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: commonComponent(
+                  appStrings.category,
+                  commonDropdownButton(
+                    controller.casteCategories.map((item) {
+                      return DropdownMenuItem<String>(
+                        value: item.categoryValue.toString(),
+                        child: Text(item.displayName, style: const TextStyle(fontSize: 14)),
+                      );
+                    }).toList(),
+                    controller.selectedCategory.value?.categoryValue,
+                    w * 0.5,
+                    h,
+                    appColors.backgroundColor,
+                    (String? newValue) {
+                      if (newValue != null) {
+                        controller.selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == newValue);
+                      }
+                    },
+                    hint: appStrings.selectCategory,
+                    borderColor: appColors.border,
+                  ),
                 ),
               ),
-            ),
-            10.kW,
-            Expanded(
-              flex: 3,
-              child: commonComponent(appStrings.caste, commonTextField(controller.communityController.value, controller.communityFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterCaste, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
-            ),
-          ],
-        ),
-        16.kH,
-      ],
-      commonComponent(
-        appStrings.expertise,
-        commonMultiDropdownButton(
-          controller.getCategoryModel.value.data?.docs?.map((item) {
-            return DropdownMenuItem<String>(
-              value: item.categoryName,
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  final isSelected = controller.selectedMultiExpertise.contains(item.categoryName);
-                  return GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      if (isSelected) {
-                        controller.selectedMultiExpertise.remove(item.categoryName);
-                      } else {
-                        controller.selectedMultiExpertise.add(item.categoryName ?? "");
-                      }
-                      setState(() {});
-                    },
-                    child: Row(
-                      children: [
-                        Checkbox(
-                          value: isSelected,
-                          checkColor: appColors.contentWhite,
-                          fillColor: WidgetStateProperty.resolveWith<Color>((states) {
-                            if (states.contains(WidgetState.selected)) {
-                              return appColors.brownDarkText;
-                            }
-                            return appColors.contentWhite;
-                          }),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                          onChanged: (value) {
-                            if (value == true) {
-                              controller.selectedMultiExpertise.add(item.categoryName ?? "");
-                            } else {
-                              controller.selectedMultiExpertise.remove(item.categoryName);
-                            }
-                            setState(() {});
-                          },
-                        ),
-                        Text(item.categoryName ?? "", style: const TextStyle(fontSize: 14)),
-                      ],
-                    ),
-                  );
-                },
+              10.kW,
+              Expanded(
+                flex: 3,
+                child: commonComponent(appStrings.caste, commonTextField(controller.communityController.value, controller.communityFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterCaste, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
               ),
-            );
-          }).toList(),
-          controller.selectedMultiExpertise,
-          w,
-          h,
-          appColors.backgroundColor,
-          hint: appStrings.selectExpertise,
-          borderColor: appColors.border,
-        ),
+            ],
+          ),
+          16.kH,
+        ],
+        multidropdown(context, w, h, controller),
+        6.kH,
+      ],
+    );
+  }
+
+  Widget multidropdown(BuildContext context, double w, double h, UpdateProfileController controller) {
+    return commonComponent(
+      appStrings.expertise,
+      commonMultiDropdownButton(
+        controller.getexpertiseModel.value.data?.docs?.map((item) {
+          return DropdownMenuItem<String>(
+            value: item.categoryName,
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                final isSelected = controller.selectedMultiExpertise.contains(item.categoryName);
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    if (isSelected) {
+                      controller.selectedMultiExpertise.remove(item.categoryName);
+                    } else {
+                      controller.selectedMultiExpertise.add(item.categoryName ?? "");
+                    }
+                    setState(() {});
+                  },
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: isSelected,
+                        checkColor: appColors.contentWhite,
+                        fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+                          if (states.contains(WidgetState.selected)) {
+                            return appColors.brownDarkText;
+                          }
+                          return appColors.contentWhite;
+                        }),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                        onChanged: (value) {
+                          if (value == true) {
+                            controller.selectedMultiExpertise.add(item.categoryName ?? "");
+                          } else {
+                            controller.selectedMultiExpertise.remove(item.categoryName);
+                          }
+                          setState(() {});
+                        },
+                      ),
+                      Text(item.categoryName ?? "", style: const TextStyle(fontSize: 14)),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        }).toList(),
+        controller.selectedMultiExpertise,
+        w,
+        h,
+        appColors.backgroundColor,
+        hint: appStrings.selectExpertise,
+        borderColor: appColors.border,
       ),
-      6.kH,
-    ],
-  );
+    );
+  }
 }

@@ -1,6 +1,8 @@
 class AppUrl {
   //Staging
-  static const String baseUrl = 'http://157.20.214.239';
+  static const String baseUrl1 = 'http://157.20.214.239';
+  static const String devUrl = "https://api.dev.bharathastkaushal.com";
+  static const String baseUrl = devUrl;
 
   //Authentication
   static String login = '$baseUrl/auth/api/auth/loginOrRegister';
@@ -21,6 +23,7 @@ class AppUrl {
   //Product
   static String getcategory = '$baseUrl/product/api/category/main-categories?page=';
   static String getsubcategory = '$baseUrl/product/api/category/getsubcategory/';
+  static String getallSubcategory ='$baseUrl/product/api/category/getallsubcategory?page=';
   static String addproduct = '$baseUrl/product/api/product/addproduct';
   static String getproductlisting = '$baseUrl/product/api/product/artisan/get_products?';
   static String getproduct = '$baseUrl/product/api/product/productdetails/';
