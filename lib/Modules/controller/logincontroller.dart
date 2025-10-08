@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/Modules/model/login_model.dart';
 import 'package:bhk_artisan/common/common_constants.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/resources/images.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:bhk_artisan/utils/utils.dart';
@@ -112,17 +113,27 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
       _api
           .logInApi(data)
           .then((value) {
-            setRxRequestStatus(Status.COMPLETED);
             setLoginData(value);
             CommonMethods.showToast("${value.message} ${value.data?.oTP}");
             Utils.printLog("Response===> ${value.toString()}");
-            redirect(value);
+            initSplashLogic(value);
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
           });
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+
+    Future<void> initSplashLogic(LoginModel value) async {
+    await Future.delayed(Duration.zero);
+    final context = Get.context!;
+    if (context.mounted) {
+      await precacheImage(AssetImage(appImages.bhkbackground), context);
+      Utils.printLog("Login background image preloaded");
+      setRxRequestStatus(Status.COMPLETED);
+      redirect(value);
     }
   }
 

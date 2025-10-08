@@ -20,7 +20,7 @@ class MyProducts extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetProductController controller = Get.put(GetProductController());
-    if (controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? true) controller.getProductApi(ProductStatus.APPROVED.name, isLoader: false);
+    controller.getProductApi(ProductStatus.APPROVED.name, isLoader: controller.getApprovedProductModel.value.data?.docs?.isNotEmpty ?? false ? false : true);
     return Obx(
       () => Stack(
         children: [

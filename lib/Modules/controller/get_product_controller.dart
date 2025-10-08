@@ -28,12 +28,6 @@ class GetProductController extends GetxController {
   void setPendingProductdata(ProductListingModel value) => getPendingProductModel.value = value;
   void setDisapprovedProductdata(ProductListingModel value) => getDisapprovedProductModel.value = value;
 
-  @override
-  onInit() {
-    super.onInit();
-    getProductApi(ProductStatus.APPROVED.name);
-  }
-
   Future<void> productRefresh(var status) async {
     getProductApi(status);
   }
