@@ -51,8 +51,7 @@ class UpdateProfileController extends GetxController {
     if (Get.arguments?['isNewUser'] != null) {
       isNewUser.value = Get.arguments['isNewUser'];
     }
-    await getProfileApi();
-    getExpertiseApi();
+    getProfileApi();
   }
 
   String? validateStringForm() {
@@ -142,10 +141,11 @@ class UpdateProfileController extends GetxController {
       _api
           .getprofileApi()
           .then((value) {
-            setRxRequestStatus(Status.COMPLETED);
+            // setRxRequestStatus(Status.COMPLETED);
             setProfileData(value);
             Utils.savePreferenceValues(Constants.userId, "${value.data?.id}");
             debugPrint("user_id===>${value.data?.id}");
+            getExpertiseApi();
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> ${value.toString()}");
           })
@@ -166,10 +166,10 @@ class UpdateProfileController extends GetxController {
       productApi
           .getallsubcategoryApi(1, 100)
           .then((value) {
-            setRxRequestStatus(Status.COMPLETED);
             setgetExpertiseModeldata(value);
             //CommonMethods.showToast(value.message);
             loadData();
+            setRxRequestStatus(Status.COMPLETED);
             Utils.printLog("Response===> ${value.toString()}");
           })
           .onError((error, stackTrace) {
