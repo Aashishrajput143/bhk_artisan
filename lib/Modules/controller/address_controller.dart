@@ -33,6 +33,8 @@ class AddressController extends GetxController {
   var addressType = AddressType.HOME.obs;
   var hasDefault = false.obs;
   var lastChecked ="".obs;
+  var isButtonEnabled = true.obs;
+
 
   LocationController locationController = Get.put(LocationController());
 

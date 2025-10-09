@@ -292,11 +292,16 @@ class AddressScreen extends ParentWidget {
                         47,
                         appColors.contentButtonBrown,
                         appColors.contentWhite,
-                        () => controller.validateStringForm() == null
-                            ? (id.isNotEmpty && id != "0")
-                                  ? controller.editAddressApi(id)
-                                  : controller.addAddressApi()
-                            : CommonMethods.showToast(controller.validateStringForm() ?? appStrings.mandatoryFields),
+                        () {
+                          if (!controller.isButtonEnabled.value) return;
+                          controller.isButtonEnabled.value = false;
+                          controller.validateStringForm() == null
+                              ? (id.isNotEmpty && id != "0")
+                                    ? controller.editAddressApi(id)
+                                    : controller.addAddressApi()
+                              : CommonMethods.showToast(controller.validateStringForm() ?? appStrings.mandatoryFields);
+                          enableButtonAfterDelay(controller.isButtonEnabled);
+                        },
                         fontSize: 17,
                         radius: 12,
                         hint: appStrings.confirmAddress,

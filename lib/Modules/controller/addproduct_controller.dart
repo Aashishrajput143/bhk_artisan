@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/Modules/model/add_product_model.dart';
 import 'package:bhk_artisan/Modules/model/get_category_model.dart';
 import 'package:bhk_artisan/Modules/model/get_subcategory_model.dart';
+import 'package:bhk_artisan/common/app_constants_list.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -60,27 +61,23 @@ class AddProductController extends GetxController {
 
   var dropdownValues = 'gm'.obs;
   var dropdownValue = 'cm'.obs;
+    var isButtonEnabled = true.obs;
+
 
   bool gm = false;
   var clickNext = false.obs;
-
-  var selectedColor = Rxn<String>();
-  var selectedColorcheck = "blue".obs;
-
-  var selectedSize = Rxn<String>();
-  var selectedSizecheck = "xs".obs;
 
   var totalprice = 0.0.obs;
 
   var imagefiles = <String>[].obs;
 
-  List<String> weights = ['gm', 'kg'];
+  List<String> weights = AppConstantsList.weights;
 
-  List<String> measureunits = ['cm', 'inches'];
+  List<String> measureunits = AppConstantsList.measureunits;
 
-  final List<String> washCareList = ["Hand Wash", "Machine Wash", "Dry Clean Only", "wipe with dry cloth", "wipe with damp cloth", "no washing required"];
+  final List<String> washCareList = AppConstantsList.washCareList;
 
-  final List<String> textureList = ["Matte", "glossy", "hand-polished", "rough", "smooth"];
+  final List<String> textureList = AppConstantsList.textureList;
 
   void calculateTotalPrice() {
     double? price = double.tryParse(priceController.value.text);

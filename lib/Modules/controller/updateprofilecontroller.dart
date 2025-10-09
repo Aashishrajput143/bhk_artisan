@@ -32,6 +32,8 @@ class UpdateProfileController extends GetxController {
   var emailFocusNode = FocusNode().obs;
   var gstController = TextEditingController().obs;
   var gstFocusNode = FocusNode().obs;
+  var isButtonEnabled = true.obs;
+
 
   var aadharController = TextEditingController().obs;
   var aadharFocusNode = FocusNode().obs;
@@ -247,11 +249,4 @@ class UpdateProfileController extends GetxController {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
   }
-}
-
-class Expertise {
-  final int id;
-  final String name;
-
-  Expertise({required this.id, required this.name});
 }

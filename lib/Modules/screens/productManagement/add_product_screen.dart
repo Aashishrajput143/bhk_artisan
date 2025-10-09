@@ -72,7 +72,12 @@ class AddProductPage extends ParentWidget {
                                 w * 0.2,
                                 48,
                                 appColors.contentWhite,
-                                () => controller.validateStringForm() == null ? controller.addProductApi() : CommonMethods.showToast(controller.validateStringForm() ?? appStrings.pleaseFillMandatoryFields, icon: Icons.warning_amber_rounded),
+                                () {
+                                  if (!controller.isButtonEnabled.value) return;
+                                  controller.isButtonEnabled.value = false;
+                                  controller.validateStringForm() == null ? controller.addProductApi() : CommonMethods.showToast(controller.validateStringForm() ?? appStrings.pleaseFillMandatoryFields, icon: Icons.warning_amber_rounded);
+                                  enableButtonAfterDelay(controller.isButtonEnabled);
+                                },
                                 hint: appStrings.submit,
                                 radius: 25,
                                 backgroundColor: appColors.contentButtonBrown,

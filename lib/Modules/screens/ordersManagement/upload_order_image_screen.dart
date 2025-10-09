@@ -50,7 +50,20 @@ class UploadOrderImageScreen extends ParentWidget {
             ),
             bottomNavigationBar: Padding(
               padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.04),
-              child: commonButton(w * 0.2, 50, appColors.contentButtonBrown, appColors.contentWhite, () => controller.validateForm() ? controller.uploadOrderImageApi() : CommonMethods.showToast(appStrings.pleaseUploadImages, icon: Icons.warning_amber_rounded), hint: appStrings.markAsCompleted, radius: 12),
+              child: commonButton(
+                w * 0.2,
+                50,
+                appColors.contentButtonBrown,
+                appColors.contentWhite,
+                () {
+                  if (!controller.isButtonEnabled.value) return;
+                  controller.isButtonEnabled.value = false;
+                  controller.validateForm() ? controller.uploadOrderImageApi() : CommonMethods.showToast(appStrings.pleaseUploadImages, icon: Icons.warning_amber_rounded);
+                  enableButtonAfterDelay(controller.isButtonEnabled);
+                },
+                hint: appStrings.markAsCompleted,
+                radius: 12,
+              ),
             ),
           ),
           progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
@@ -113,7 +126,7 @@ class UploadOrderImageScreen extends ParentWidget {
 
   Widget pickedfiles(double w, double h, UploadOrderImageController controller) {
     return SizedBox(
-      height:h>700?h*0.28: h*0.24,
+      height: h > 700 ? h * 0.28 : h * 0.24,
       child: GridView.builder(
         itemCount: controller.imagefiles.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 16),

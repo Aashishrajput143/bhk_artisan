@@ -14,6 +14,8 @@ class UploadOrderImageController extends GetxController {
 
   var imagefiles = <String>[].obs;
   var id = Get.arguments ?? "";
+  var isButtonEnabled = true.obs;
+
 
   bool validateForm() {
     if (imagefiles.length >= 4) return true;
