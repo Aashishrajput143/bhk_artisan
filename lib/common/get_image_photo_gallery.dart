@@ -33,22 +33,35 @@ Future<void> pickImageFromGallery(Rxn<String> selectedImage, gallery) async {
   }
 }
 
-Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromGallery, {bool isValidate = false}) async {
+Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromGallery, {bool isValidate = false,int max=10,}) async {
   try {
     List<XFile> pickedFiles = [];
 
     if (fromGallery) {
       pickedFiles = await picker.value.pickMultiImage();
 
+      if (pickedFiles.isEmpty) return;
+
+      int availableSlots = max - imageFiles.length;
+      if (availableSlots <= 0) {
+        CommonMethods.showToast("You can select a maximum of $max images", icon: Icons.warning, bgColor: Colors.red);
+        return;
+      }
+
+      if (pickedFiles.length > availableSlots) {
+        pickedFiles = pickedFiles.sublist(0, availableSlots);
+        CommonMethods.showToast("You can only add $availableSlots more images", icon: Icons.warning, bgColor: Colors.orange);
+      }
+
       if (isValidate) {
         bool formatErrorShown = false;
         bool sizeErrorShown = false;
 
         for (var file in pickedFiles) {
-          File files = File(file.path);
+          File f = File(file.path);
 
-          bool validateFormat = Validator.validateImagesPath(files);
-          bool validateSize = Validator.validateImagesSize(files, 2);
+          bool validateFormat = Validator.validateImagesPath(f);
+          bool validateSize = Validator.validateImagesSize(f, 2);
 
           if (!validateFormat && !formatErrorShown) {
             CommonMethods.showToast("Only JPG, JPEG, PNG formats are allowed", icon: Icons.warning, bgColor: Colors.red);
@@ -64,33 +77,34 @@ Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromG
         imageFiles.addAll(pickedFiles.map((file) => file.path));
       }
     } else {
+      if (imageFiles.length >= max) {
+        CommonMethods.showToast("You can select a maximum of $max images", icon: Icons.warning, bgColor: Colors.red);
+        return;
+      }
+
       final XFile? pickedFile = await picker.value.pickImage(source: ImageSource.camera);
       if (pickedFile != null) {
-        debugPrint("ImageSingle: $pickedFile");
         imageFiles.add(pickedFile.path);
       }
     }
 
-    for (var image in pickedFiles) {
-      final file = File(image.path);
+    for (var path in imageFiles) {
+      final file = File(path);
       final int bytes = await file.length();
       final double kb = bytes / 1024;
       final double mb = kb / 1024;
 
-      // Image resolution
       final data = await file.readAsBytes();
       final ui.Image decodedImage = await decodeImageFromList(data);
       final int width = decodedImage.width;
       final int height = decodedImage.height;
 
-      debugPrint("Image: ${image.path}");
-      debugPrint('Size: $bytes bytes');
-      debugPrint('Size: ${kb.toStringAsFixed(2)} KB');
-      debugPrint('Size: ${mb.toStringAsFixed(2)} MB');
+      debugPrint("Image: $path");
+      debugPrint('Size: $bytes bytes / ${mb.toStringAsFixed(2)} MB');
       debugPrint('Resolution: ${width}x$height');
     }
 
-    debugPrint("Total images: ${imageFiles.length}");
+    debugPrint("Total images selected: ${imageFiles.length}");
   } catch (e) {
     debugPrint("Error: $e");
   }
