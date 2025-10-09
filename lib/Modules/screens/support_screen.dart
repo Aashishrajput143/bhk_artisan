@@ -40,7 +40,7 @@ class SupportScreen extends ParentWidget {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,
@@ -49,7 +49,7 @@ class SupportScreen extends ParentWidget {
             30.kH,
             contactDetails(Icons.call, appStrings.contactPhone),
             contactDetails(Icons.email_outlined, appStrings.contactEmail),
-            30.kH,
+            40.kH,
           ],
         ),
       ),

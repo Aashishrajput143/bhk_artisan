@@ -169,9 +169,7 @@ class UpdateProfileController extends GetxController {
             setRxRequestStatus(Status.COMPLETED);
             setgetExpertiseModeldata(value);
             //CommonMethods.showToast(value.message);
-            if (!isNewUser.value) {
-              loadData();
-            }
+            loadData();
             Utils.printLog("Response===> ${value.toString()}");
           })
           .onError((error, stackTrace) {
