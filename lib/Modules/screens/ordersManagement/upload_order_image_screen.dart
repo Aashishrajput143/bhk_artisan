@@ -58,7 +58,7 @@ class UploadOrderImageScreen extends ParentWidget {
                 () {
                   if (!controller.isButtonEnabled.value) return;
                   controller.isButtonEnabled.value = false;
-                  controller.validateForm() ? controller.uploadOrderImageApi() : CommonMethods.showToast(appStrings.pleaseUploadImages, icon: Icons.warning_amber_rounded);
+                  controller.validateStringForm() == null ? controller.uploadOrderImageApi() : CommonMethods.showToast(controller.validateStringForm() ?? appStrings.pleaseUploadImages, icon: Icons.warning_amber_rounded);
                   enableButtonAfterDelay(controller.isButtonEnabled);
                 },
                 hint: appStrings.markAsCompleted,

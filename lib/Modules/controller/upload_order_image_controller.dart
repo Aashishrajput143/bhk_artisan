@@ -16,10 +16,11 @@ class UploadOrderImageController extends GetxController {
   var id = Get.arguments ?? "";
   var isButtonEnabled = true.obs;
 
-
-  bool validateForm() {
-    if (imagefiles.length >= 4) return true;
-    return false;
+  String? validateStringForm() {
+    if ((imagefiles.length<4 || imagefiles.length>10)) {
+      return "Please Upload Min 4 and Max 10 Images";
+    }
+    return null;
   }
 
   final rxRequestStatus = Status.COMPLETED.obs;
