@@ -110,7 +110,7 @@ Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromG
   }
 }
 
-Future<void> pickVideoFromGallery(Rxn<String> selectedVideo, bool fromGallery, {Future<void> Function()? onVideoPicked}) async {
+Future<void> pickVideoFromGallery(Rxn<String> selectedVideo, bool fromGallery, {Future<void> Function()? onVideoPicked, int maxSeconds = 15}) async {
   final XFile? video = await picker.value.pickVideo(source: fromGallery ? ImageSource.gallery : ImageSource.camera, maxDuration: const Duration(seconds: 15));
 
   if (video != null) {
@@ -135,8 +135,8 @@ Future<void> pickVideoFromGallery(Rxn<String> selectedVideo, bool fromGallery, {
     debugPrint('Video resolution: ${width}x$height');
     debugPrint('Video duration: ${videoDuration.inSeconds} seconds');
 
-    if (videoDuration > const Duration(seconds: 15)) {
-      CommonMethods.showToast("Please select a video no longer than 15 seconds", icon: Icons.warning, bgColor: Colors.red);
+    if (videoDuration > Duration(seconds: maxSeconds)) {
+      CommonMethods.showToast("Please select a video no longer than $maxSeconds seconds", icon: Icons.warning, bgColor: Colors.red);
       return;
     }
 

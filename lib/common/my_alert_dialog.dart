@@ -5,6 +5,8 @@ import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:app_settings/app_settings.dart';
+
 
 class MyAlertDialog {
   static void showlogoutDialog(Future<void> Function() onLogout) {
@@ -85,6 +87,91 @@ class MyAlertDialog {
     );
   }
 }
+
+void showLocationDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                radius: 35,
+                backgroundColor:appColors.brownDarkText.withOpacity(0.1),
+                child: Icon(
+                  Icons.location_on,
+                  color: appColors.brownDarkText,
+                  size: 40,
+                ),
+              ),
+              16.kH,
+              Text(
+                "Location Needed to Continue",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              8.kH,
+              Text(
+                "Please enable your device location to continue using this feature.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: appColors.contentSecondary,
+                ),
+              ),
+              24.kH,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        side: const BorderSide(color: Colors.grey),
+                      ),
+                      child: Text("Close",style: TextStyle(color: appColors.brownDarkText)),
+                    ),
+                  ),
+                  10.kW,
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        AppSettings.openAppSettings(type: AppSettingsType.location);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: appColors.brownDarkText,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      icon: Icon(Icons.settings, size: 18,color: appColors.contentWhite),
+                      label: Text("Enable",style: TextStyle(color: appColors.contentWhite)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 
 class SuccessDialogBox extends StatelessWidget {
   final String title;

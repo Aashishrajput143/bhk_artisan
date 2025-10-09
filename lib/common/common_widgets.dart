@@ -77,9 +77,9 @@ Widget noInternetConnection({VoidCallback? onRefresh, final String? lastChecked}
 }
 
 void enableButtonAfterDelay(RxBool isButtonEnabled) async {
-    await Future.delayed(const Duration(seconds: 3));
-    isButtonEnabled.value = true;
-  }
+  await Future.delayed(const Duration(seconds: 2));
+  isButtonEnabled.value = true;
+}
 
 void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setError, Function(Status)? setRxRequestStatus, bool closeDialog = false, bool showMessage = true}) {
   if (closeDialog) {
@@ -307,7 +307,7 @@ Widget commonTextField(
   int maxLength = 254,
   double contentPadding = 12,
   String hint = '',
-  dynamic error,
+  Rxn<String>? error,
   dynamic maxLines = 1,
   bool readonly = false,
   void Function(String)? onChange,
@@ -343,6 +343,8 @@ Widget commonTextField(
             hint,
             style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize),
           ),
+          errorText: (error?.value?.isNotEmpty ?? false) ? error?.value : null,
+      errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: appColors.redColor, fontSize: 13) : TextStyle(color: Colors.transparent),
           prefixText: prefix,
           suffixText: suffix,
           labelStyle: isLabel ? TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
@@ -358,11 +360,11 @@ Widget commonTextField(
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: Colors.red, width: borderWidth),
+            borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: Colors.red, width: borderWidth),
+            borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: contentPadding),
         ),
@@ -412,7 +414,7 @@ Widget commonDescriptionTextField(
   bool isWhite = false,
   double contentPadding = 12,
   String hint = '',
-  dynamic error,
+  Rxn<String>? error,
   maxLines = 1,
   minLines = 1,
   dynamic maxLength = 1000,
@@ -456,6 +458,8 @@ Widget commonDescriptionTextField(
             hint,
             style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize),
           ),
+          errorText: (error?.value?.isNotEmpty ?? false) ? error?.value : null,
+      errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: appColors.redColor, fontSize: 13) : TextStyle(color: Colors.transparent),
           labelStyle: isLabel ? TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
           alignLabelWithHint: true,
           enabledBorder: OutlineInputBorder(
@@ -469,11 +473,11 @@ Widget commonDescriptionTextField(
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: Colors.red, width: borderWidth),
+            borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: Colors.red, width: borderWidth),
+            borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: contentPadding),
         ),
@@ -689,13 +693,14 @@ Widget phoneTextField(
     autofocus: true,
     enabled: enabled,
     inputFormatters: inputFormatters,
-    onSubmitted: onSubmitted,invalidNumberMessage: error?.value,
+    onSubmitted: onSubmitted,
+    invalidNumberMessage: error?.value,
     decoration: InputDecoration(
       errorMaxLines: 2,
       labelText: hint,
       labelStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
       errorText: (error?.value?.isNotEmpty ?? false) ? error?.value : null,
-      errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: Colors.red, fontSize: 13) : TextStyle(color: Colors.transparent),
+      errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: appColors.redColor, fontSize: 13) : TextStyle(color: Colors.transparent),
       counterStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(radius),
@@ -707,11 +712,11 @@ Widget phoneTextField(
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(radius),
-        borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
+        borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(radius),
-        borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
+        borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: contentPadding, vertical: 5.0),
     ),
@@ -1167,7 +1172,7 @@ Widget commonComponent(String title, Widget component, {bool mandatory = true}) 
           if (mandatory) ...[
             Text(
               " *",
-              style: TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(color: appColors.redColor, fontSize: 14, fontWeight: FontWeight.bold),
             ),
           ],
         ],

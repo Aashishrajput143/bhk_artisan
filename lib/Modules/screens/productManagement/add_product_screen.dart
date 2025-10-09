@@ -167,7 +167,7 @@ class AddProductPage extends ParentWidget {
             16.kH,
             commonComponent(appStrings.productName, commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterProductName, maxLines: 3, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
             16.kH,
-            commonComponent(appStrings.timeToMake, commonTextField(controller.timeController.value, controller.timeFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterTimeToMake,keyboardType: TextInputType.numberWithOptions(decimal: false), inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0')),], maxLength: 6)),
+            commonComponent(appStrings.timeToMake, commonTextField(controller.timeController.value, controller.timeFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterTimeToMake,keyboardType: TextInputType.numberWithOptions(decimal: false), inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 6)),
             16.kH,
             commonComponent(appStrings.description, commonDescriptionTextField(controller.detaileddescriptionController.value, controller.detaileddescriptionFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterDescription, maxLines: h > 800 ? 6 : 4, minLines: 3, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter()])),
           ],
@@ -183,13 +183,13 @@ class AddProductPage extends ParentWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            commonComponent(appStrings.productPrice, commonTextField(controller.priceController.value, controller.priceFocusNode.value, w, onChange: (value) => controller.calculateTotalPrice(), (value) {}, maxLength: 6,keyboardType: TextInputType.numberWithOptions(decimal: true), hint: appStrings.enterProductPrice, prefix: '₹ ', inputFormatters: [FilteringTextInputFormatter.digitsOnly])),
+            commonComponent(appStrings.productPrice, commonTextField(controller.priceController.value, controller.priceFocusNode.value, w, onChange: (value) => controller.calculateTotalPrice(), (value) {}, maxLength: 6,keyboardType: TextInputType.numberWithOptions(decimal: true), hint: appStrings.enterProductPrice, prefix: '₹ ', inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))])),
             16.kH,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: commonComponent(appStrings.quantity, commonTextField(controller.quantityController.value, controller.quantityFocusNode.value,keyboardType: TextInputType.numberWithOptions(decimal: false), w, (value) {}, onChange: (value) => controller.calculateTotalPrice(), maxLength: 6, hint: appStrings.enterQuantity, inputFormatters: [FilteringTextInputFormatter.digitsOnly])),
+                  child: commonComponent(appStrings.quantity, commonTextField(controller.quantityController.value, controller.quantityFocusNode.value,keyboardType: TextInputType.numberWithOptions(decimal: false), w, (value) {}, onChange: (value) => controller.calculateTotalPrice(), maxLength: 6, hint: appStrings.enterQuantity, inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))])),
                 ),
                 8.kW,
                 Expanded(
@@ -260,7 +260,7 @@ class AddProductPage extends ParentWidget {
                 children: [
                   Expanded(
                     flex: 6,
-                    child: commonTextField(controller.netweightController.value, controller.netweightFocusNode.value, w, (value) {}, hint: "${appStrings.enterNetWeight}(in ${controller.dropdownValues})", inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 5),
+                    child: commonTextField(controller.netweightController.value, controller.netweightFocusNode.value, w, (value) {}, hint: "${appStrings.enterNetWeight}(in ${controller.dropdownValues})", inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
@@ -291,17 +291,17 @@ class AddProductPage extends ParentWidget {
                 children: [
                   Expanded(
                     flex: 3,
-                    child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: appStrings.length,keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 5),
+                    child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: appStrings.length,keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
                     flex: 3,
-                    child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: appStrings.breadth,keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 5),
+                    child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: appStrings.breadth,keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
                     flex: 3,
-                    child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: appStrings.height,keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly], maxLength: 5),
+                    child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: appStrings.height,keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(

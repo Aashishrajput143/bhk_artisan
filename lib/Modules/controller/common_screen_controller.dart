@@ -6,7 +6,6 @@ import 'package:bhk_artisan/Modules/screens/home_screen.dart';
 import 'package:bhk_artisan/Modules/screens/logistics_screen.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_constants.dart';
-import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
@@ -31,7 +30,7 @@ class CommonScreenController extends GetxController {
     super.onInit();
     isDialog.value = Get.arguments?['isDialog'] ?? false;
     getProfileApi();
-    Get.put(LocationController());
+    //Get.put(LocationController());
   }
 
   int changeIndex() {

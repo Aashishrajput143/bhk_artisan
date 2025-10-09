@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/Modules/controller/address_controller.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/common/my_utils.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -68,10 +69,14 @@ class AddressScreen extends ParentWidget {
                           child: FloatingActionButton(
                             backgroundColor: appColors.contentButtonBrown,
                             onPressed: () {
-                              controller.loadLocation();
-                              controller.setDisabledAddressType();
-                              controller.hasDefault.value = false;
-                              bottomDrawer(context, h * 0.8, w, controller);
+                              if (controller.locationController.error.isEmpty ?? true) {
+                                controller.loadLocation();
+                                controller.setDisabledAddressType();
+                                controller.hasDefault.value = false;
+                                bottomDrawer(context, h * 0.8, w, controller);
+                              } else {
+                                showLocationDialog(context);
+                              }
                             },
                             child: Icon(Icons.add, color: appColors.contentWhite),
                           ),
@@ -79,12 +84,16 @@ class AddressScreen extends ParentWidget {
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: commonButton(w, 47, appColors.contentButtonBrown, appColors.contentWhite, () {
-                      if ((controller.getAddressModel.value.data?.isEmpty ?? true)) {
-                        controller.hasDefault.value = true;
+                      if (controller.locationController.error.isEmpty ?? true) {
+                        if ((controller.getAddressModel.value.data?.isEmpty ?? true)) {
+                          controller.hasDefault.value = true;
+                        } else {
+                          controller.hasDefault.value = false;
+                        }
+                        bottomDrawer(context, h * 0.8, w, controller);
                       } else {
-                        controller.hasDefault.value = false;
+                        showLocationDialog(context);
                       }
-                      bottomDrawer(context, h * 0.8, w, controller);
                     }, hint: appStrings.addAddress),
                   ),
             floatingActionButtonLocation: controller.getAddressModel.value.data?.isNotEmpty ?? true ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.centerFloat,
@@ -270,7 +279,7 @@ class AddressScreen extends ParentWidget {
                               controller.hasDefault.value,
                               (val) {
                                 if (controller.getAddressModel.value.data?.isNotEmpty ?? false) {
-                                  if ((controller.getAddressModel.value.data?.length ?? 0) > 1) {
+                                  if ((controller.getAddressModel.value.data?.length ?? 0) >= 1) {
                                     controller.hasDefault.value = val;
                                   }
                                 }
@@ -311,7 +320,7 @@ class AddressScreen extends ParentWidget {
                   ],
                 ),
               ),
-              progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+              progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING || controller.locationController.rxRequestStatus.value == Status.LOADING, h, w),
             ],
           ),
         );

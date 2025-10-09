@@ -9,6 +9,8 @@ class LocationController extends GetxController {
   var longitude = 0.0.obs;
   var place = Rxn<Placemark>();
   var address = "".obs;
+  var error = Rxn<String>();
+
 
   @override
   void onInit() {
@@ -17,8 +19,6 @@ class LocationController extends GetxController {
   }
 
   final rxRequestStatus = Status.COMPLETED.obs;
-  void setError(String value) => error.value = value;
-  RxString error = ''.obs;
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
 
   Future<void> getCurrentLocation() async {
@@ -30,7 +30,7 @@ class LocationController extends GetxController {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       setRxRequestStatus(Status.COMPLETED);
-      Get.snackbar("Error", "Location services are disabled.");
+      error.value = "Location services are disabled.";
       return;
     }
 
@@ -39,14 +39,14 @@ class LocationController extends GetxController {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         setRxRequestStatus(Status.COMPLETED);
-        Get.snackbar("Error", "Location permissions are denied");
+        error.value = "Location permissions are denied";
         return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       setRxRequestStatus(Status.COMPLETED);
-      Get.snackbar("Error", "Location permissions are permanently denied");
+      error.value = "Location permissions are permanently denied";
       return;
     }
 
