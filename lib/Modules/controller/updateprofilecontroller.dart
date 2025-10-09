@@ -72,7 +72,7 @@ class UpdateProfileController extends GetxController {
       return "Please Enter Your Aadhar Number";
     } else if (aadharController.value.text.length != 12) {
       return "Invalid Aadhar Number";
-    } else if (!emailRegex.hasMatch(email)) {
+    } else if (emailController.value.text.isNotEmpty && !emailRegex.hasMatch(email)) {
       return "Please Enter a Valid Email Address";
     } else if (communityController.value.text.isEmpty) {
       return "Please Enter Your Caste";
