@@ -81,7 +81,12 @@ class LoginScreen extends ParentWidget {
                         45,
                         appColors.brownbuttonBg,
                         appColors.contentWhite,
-                        () =>controller.validateAndLogin(),
+                        () {
+                          if (!controller.isButtonEnabled.value) return;
+                          controller.isButtonEnabled.value = false;
+                          controller.validateAndLogin();
+                          enableButtonAfterDelay(controller.isButtonEnabled);
+                        },
                         radius: 30,
                         hint: appStrings.getOTP,
                       ),

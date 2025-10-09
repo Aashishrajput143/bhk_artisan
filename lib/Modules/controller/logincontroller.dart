@@ -23,30 +23,18 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   late final AnimationController animationController;
 
   void validateAndLogin() async {
-    final phone = phoneController.value.text.trim();
-    final maxLength = maxlength.value;
-
-    if (!isButtonEnabled.value) return;
-    isButtonEnabled.value = false;
-
-    if (phone.isEmpty) {
-      errorMessage.value = appStrings.loginerrormessage;
-      return;
+    if (phoneController.value.text.isNotEmpty && phoneController.value.text.length == maxlength.value) {
+      errorMessage.value = null;
+      logInAndRegister();
+    } else {
+      if (phoneController.value.text.length != maxlength.value) {
+        errorMessage.value = appStrings.loginvalidPhone;
+      } else if (!RegExp(r'^[6-9]').hasMatch(phoneController.value.text.trim())) {
+        errorMessage.value = appStrings.loginvalidPhone;
+      } else {
+        errorMessage.value = appStrings.loginerrormessage;
+      }
     }
-
-    if (phone.length != maxLength) {
-      errorMessage.value = appStrings.loginvalidPhone;
-      return;
-    }
-
-    if (!RegExp(r'^[6-9]').hasMatch(phone)) {
-      errorMessage.value = appStrings.loginvalidPhone;
-      return;
-    }
-
-    errorMessage.value = null;
-    await logInAndRegister();
-    enableButtonAfterDelay(isButtonEnabled);
   }
 
   @override
@@ -126,7 +114,7 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
     }
   }
 
-    Future<void> initSplashLogic(LoginModel value) async {
+  Future<void> initSplashLogic(LoginModel value) async {
     await Future.delayed(Duration.zero);
     final context = Get.context!;
     if (context.mounted) {
