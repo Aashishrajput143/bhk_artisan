@@ -1,4 +1,4 @@
-import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
+import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
 import 'package:bhk_artisan/Modules/model/get_subcategory_model.dart';
 import 'package:bhk_artisan/Modules/model/pre_signed_intro_video_model.dart' show PreSignedIntroVideoModel;
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
@@ -16,7 +16,6 @@ import '../model/update_profile_model.dart';
 import '../repository/profile_repository.dart';
 
 class UpdateProfileController extends GetxController {
-  CommonScreenController commonController = Get.put(CommonScreenController());
   final _api = ProfileRepository();
   final productApi = ProductRepository();
   var selectedImage = Rxn<String>();
@@ -47,11 +46,12 @@ class UpdateProfileController extends GetxController {
   final List<UserCasteCategory> casteCategories = UserCasteCategory.values;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     if (Get.arguments?['isNewUser'] != null) {
       isNewUser.value = Get.arguments['isNewUser'];
     }
+    await getProfileApi();
     getExpertiseApi();
   }
 
@@ -83,15 +83,15 @@ class UpdateProfileController extends GetxController {
   }
 
   void loadData() {
-    firstNameController.value.text = commonController.profileData.value.data?.firstName ?? "";
-    lastNameController.value.text = commonController.profileData.value.data?.lastName ?? "";
-    emailController.value.text = commonController.profileData.value.data?.email ?? "";
-    communityController.value.text = commonController.profileData.value.data?.subCaste ?? "";
-    aadharController.value.text = commonController.profileData.value.data?.aadhaarNumber ?? "";
-    gstController.value.text = commonController.profileData.value.data?.gstNumber ?? "";
+    firstNameController.value.text = profileData.value.data?.firstName ?? "";
+    lastNameController.value.text = profileData.value.data?.lastName ?? "";
+    emailController.value.text = profileData.value.data?.email ?? "";
+    communityController.value.text = profileData.value.data?.subCaste ?? "";
+    aadharController.value.text = profileData.value.data?.aadhaarNumber ?? "";
+    gstController.value.text = profileData.value.data?.gstNumber ?? "";
 
     // Load and filter expertise
-    String? profileExpertise = commonController.profileData.value.data?.expertizeField ?? "";
+    String? profileExpertise = profileData.value.data?.expertizeField ?? "";
     List<String> loadedExpertise = profileExpertise.split(",").map((e) => e.trim()).toList();
     List<String> apiExpertiseNames = getexpertiseModel.value.data?.docs?.map((e) => e.categoryName ?? "".trim()).toList() ?? [];
 
@@ -100,7 +100,7 @@ class UpdateProfileController extends GetxController {
     print("Selected expertise after filtering: $selectedMultiExpertise");
 
     // Load caste category
-    String? casteCategoryValue = commonController.profileData.value.data?.userCasteCategory ?? "";
+    String? casteCategoryValue = profileData.value.data?.userCasteCategory ?? "";
     if (casteCategoryValue.isNotEmpty) {
       try {
         selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == casteCategoryValue, orElse: () => UserCasteCategory.OTHER);
@@ -112,7 +112,7 @@ class UpdateProfileController extends GetxController {
     }
 
     // Load intro video
-    String? introVideo = commonController.profileData.value.data?.introVideo ?? '';
+    String? introVideo = profileData.value.data?.introVideo ?? '';
     if (introVideo.isNotEmpty) {
       havingIntro.value = true;
       introUploaded.value = introVideo;
@@ -120,6 +120,7 @@ class UpdateProfileController extends GetxController {
   }
 
   final rxRequestStatus = Status.COMPLETED.obs;
+  final profileData = GetProfileModel().obs;
   final getexpertiseModel = GetSubCategoryModel().obs;
   final updateProfileModel = UpdateProfileModel().obs;
   final urlData = PreSignedIntroVideoModel().obs;
@@ -130,6 +131,31 @@ class UpdateProfileController extends GetxController {
   void setupdateProfileModeldata(UpdateProfileModel value) => updateProfileModel.value = value;
   void setUrlData(PreSignedIntroVideoModel value) => urlData.value = value;
   void setgetExpertiseModeldata(GetSubCategoryModel value) => getexpertiseModel.value = value;
+  void setProfileData(GetProfileModel value) => profileData.value = value;
+
+  Future<void> getProfileApi() async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      setRxRequestStatus(Status.LOADING);
+      _api
+          .getprofileApi()
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setProfileData(value);
+            Utils.savePreferenceValues(Constants.userId, "${value.data?.id}");
+            debugPrint("user_id===>${value.data?.id}");
+            //CommonMethods.showToast(value.message);
+            Utils.printLog("Response===> ${value.toString()}");
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
 
   Future<void> getExpertiseApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
@@ -187,7 +213,6 @@ class UpdateProfileController extends GetxController {
             } else {
               Get.back();
               Get.back();
-              commonController.getProfileApi();
               CommonMethods.showToast(value.message ?? "Profile Updated Successfully...", icon: Icons.check, bgColor: Colors.green);
             }
           })
@@ -211,7 +236,7 @@ class UpdateProfileController extends GetxController {
       _api
           .getPreSignedIntroUrlApi(data)
           .then((value) {
-            setRxRequestStatus(Status.COMPLETED);
+            // setRxRequestStatus(Status.COMPLETED);
             setUrlData(value);
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> ${value.toString()}");

@@ -141,8 +141,8 @@ class EditProfile extends ParentWidget {
                 borderRadius: BorderRadius.circular(100),
                 child: controller.selectedImage.value != null
                     ? Image.file(File(controller.selectedImage.value ?? ""), width: 150, height: 150, fit: BoxFit.cover)
-                    : (controller.commonController.profileData.value.data?.avatar?.isNotEmpty ?? false)
-                    ? commonProfileNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "")
+                    : (controller.profileData.value.data?.avatar?.isNotEmpty ?? false)
+                    ? commonProfileNetworkImage(controller.profileData.value.data?.avatar ?? "")
                     : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
               ),
               Positioned(
@@ -228,7 +228,7 @@ class EditProfile extends ParentWidget {
         commonComponent(appStrings.email, commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.emailHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
         16.kH,
         if (controller.isNewUser.value) ...[
-          commonComponent(appStrings.aadhaarNumber, commonTextField(controller.aadharController.value, controller.aadharFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterAadhaarNumber, maxLines: 1, inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(12)], maxLength: 12, isCounter: true)),
+          commonComponent(appStrings.aadhaarNumber, commonTextField(controller.aadharController.value, controller.aadharFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterAadhaarNumber, maxLines: 1, keyboardType: TextInputType.numberWithOptions(decimal: false), inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(12)], maxLength: 12, isCounter: true)),
           commonComponent(appStrings.gstNumber, commonTextField(controller.gstController.value, controller.gstFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.gstNumberHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
           16.kH,
           Row(

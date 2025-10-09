@@ -180,8 +180,6 @@ class Homecontroller extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    bool isDialog = Get.arguments?['isDialog'] ?? false;
-
     scrollController.value.addListener(() {
       scrollPosition.value = scrollController.value.position.pixels;
       maxScrollExtent.value = scrollController.value.position.maxScrollExtent;
@@ -189,7 +187,7 @@ class Homecontroller extends GetxController {
 
     setGreeting();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (isDialog) {
+      if (commonController.isDialog.value) {
         screen.showSuccessDialog();
       }
     });

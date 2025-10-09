@@ -45,7 +45,14 @@ class MainProfile extends ParentWidget {
                   buildProfileOptionCard(appStrings.myAddress, appStrings.editAddRemoveAddress, Icons.location_city, () => Get.toNamed(RoutesClass.addresses)),
                   buildProfileOptionCard(appStrings.privacyPolicyTitle, appStrings.privacyPolicySubtitle, Icons.privacy_tip, () => Get.toNamed(RoutesClass.privacypolicy)),
                   buildProfileOptionCard(appStrings.termsConditions, appStrings.termsConditionsSubtitle, Icons.description, () => Get.toNamed(RoutesClass.termscondition)),
-                  buildProfileOptionCard(appStrings.settings, appStrings.settingsSubtitle, Icons.settings_outlined, () => Get.toNamed(RoutesClass.setting)),
+                  buildProfileOptionCard(
+                    appStrings.settings,
+                    appStrings.settingsSubtitle,
+                    Icons.settings_outlined,
+                    () => Get.toNamed(RoutesClass.setting)?.then((onValue) {
+                      controller.commonController.getProfileApi();
+                    }),
+                  ),
                   buildProfileOptionCard(appStrings.logout, appStrings.logoutSubtitle, Icons.logout, () => MyAlertDialog.showlogoutDialog(controller.logOutApi)),
                 ],
               ),

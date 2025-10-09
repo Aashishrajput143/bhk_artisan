@@ -21,6 +21,7 @@ import '../screens/profileManagement/main_profile.dart';
 class CommonScreenController extends GetxController {
   final _api = ProfileRepository();
   var selectedIndex = 0.obs;
+  var isDialog = false.obs;
 
   ProductController productController = Get.put(ProductController());
   OrderController orderController = Get.put(OrderController());
@@ -28,6 +29,7 @@ class CommonScreenController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    isDialog.value = Get.arguments?['isDialog'] ?? false;
     getProfileApi();
     Get.put(LocationController());
   }
@@ -61,7 +63,6 @@ class CommonScreenController extends GetxController {
     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
     BottomNavigationBarItem(icon: Icon(Icons.inventory_2), label: 'Orders'),
     BottomNavigationBarItem(icon: Icon(Icons.local_offer), label: 'Products'),
-    // BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Inventory'),
     BottomNavigationBarItem(icon: Icon(Icons.local_shipping), label: 'Logistics'),
     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
   ];
