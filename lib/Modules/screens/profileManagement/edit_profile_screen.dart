@@ -4,7 +4,7 @@ import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/common/common_back.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
-import 'package:bhk_artisan/common/get_image_photo_gallery.dart';
+import 'package:bhk_artisan/common/get_media_phone_gallery.dart';
 import 'package:bhk_artisan/common/my_utils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';

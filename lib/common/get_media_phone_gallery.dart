@@ -33,7 +33,7 @@ Future<void> pickImageFromGallery(Rxn<String> selectedImage, gallery) async {
   }
 }
 
-Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromGallery, {bool isValidate = false,int max=10,}) async {
+Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromGallery, {bool isValidate = false, int max = 10}) async {
   try {
     List<XFile> pickedFiles = [];
 
@@ -125,16 +125,20 @@ Future<void> pickVideoFromGallery(Rxn<String> selectedVideo, bool fromGallery, {
     debugPrint('Video size: ${kb.toStringAsFixed(2)} KB');
     debugPrint('Video size: ${mb.toStringAsFixed(2)} MB');
 
-    // Get video resolution
     final controller = VideoPlayerController.file(file);
     await controller.initialize();
-
+    final Duration videoDuration = controller.value.duration;
     final int width = controller.value.size.width.toInt();
     final int height = controller.value.size.height.toInt();
+    await controller.dispose();
 
     debugPrint('Video resolution: ${width}x$height');
+    debugPrint('Video duration: ${videoDuration.inSeconds} seconds');
 
-    await controller.dispose();
+    if (videoDuration > const Duration(seconds: 15)) {
+      CommonMethods.showToast("Please select a video no longer than 15 seconds", icon: Icons.warning, bgColor: Colors.red);
+      return;
+    }
 
     if (onVideoPicked != null) {
       await onVideoPicked();
