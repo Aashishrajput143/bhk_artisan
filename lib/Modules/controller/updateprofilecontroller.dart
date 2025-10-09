@@ -34,7 +34,6 @@ class UpdateProfileController extends GetxController {
   var gstFocusNode = FocusNode().obs;
   var isButtonEnabled = true.obs;
 
-
   var aadharController = TextEditingController().obs;
   var aadharFocusNode = FocusNode().obs;
 
@@ -57,7 +56,9 @@ class UpdateProfileController extends GetxController {
   }
 
   String? validateStringForm() {
-    if ((firstNameController.value.text.isEmpty) && (lastNameController.value.text.isEmpty) &&(aadharController.value.text.isEmpty) && (selectedMultiExpertise.isEmpty) && (introUploaded.value == null) && (communityController.value.text.isEmpty) && (selectedCategory.value == null)) {
+    final email = emailController.value.text.trim();
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if ((firstNameController.value.text.isEmpty) && (lastNameController.value.text.isEmpty) && (aadharController.value.text.isEmpty) && (selectedMultiExpertise.isEmpty) && (introUploaded.value == null) && (communityController.value.text.isEmpty) && (selectedCategory.value == null)) {
       return "Please fill all the mandatory fields";
     } else if (firstNameController.value.text.isEmpty) {
       return "Please Enter Your First Name";
@@ -69,10 +70,11 @@ class UpdateProfileController extends GetxController {
       return "Please Select Your Category";
     } else if (aadharController.value.text.isEmpty) {
       return "Please Enter Your Aadhar Number";
-    } else if (aadharController.value.text.length!=12) {
+    } else if (aadharController.value.text.length != 12) {
       return "Invalid Aadhar Number";
-    }
-    else if (communityController.value.text.isEmpty) {
+    } else if (!emailRegex.hasMatch(email)) {
+      return "Please Enter a Valid Email Address";
+    } else if (communityController.value.text.isEmpty) {
       return "Please Enter Your Caste";
     } else if (introUploaded.value == null) {
       return "Please Upload Your Intro";
@@ -81,45 +83,41 @@ class UpdateProfileController extends GetxController {
   }
 
   void loadData() {
-  firstNameController.value.text = commonController.profileData.value.data?.firstName ?? "";
-  lastNameController.value.text = commonController.profileData.value.data?.lastName ?? "";
-  emailController.value.text = commonController.profileData.value.data?.email ?? "";
-  communityController.value.text = commonController.profileData.value.data?.subCaste ?? "";
-  aadharController.value.text = commonController.profileData.value.data?.aadhaarNumber ?? "";
-  gstController.value.text = commonController.profileData.value.data?.gstNumber ?? "";
+    firstNameController.value.text = commonController.profileData.value.data?.firstName ?? "";
+    lastNameController.value.text = commonController.profileData.value.data?.lastName ?? "";
+    emailController.value.text = commonController.profileData.value.data?.email ?? "";
+    communityController.value.text = commonController.profileData.value.data?.subCaste ?? "";
+    aadharController.value.text = commonController.profileData.value.data?.aadhaarNumber ?? "";
+    gstController.value.text = commonController.profileData.value.data?.gstNumber ?? "";
 
-  // Load and filter expertise
-  String? profileExpertise = commonController.profileData.value.data?.expertizeField ?? "";
-  List<String> loadedExpertise = profileExpertise.split(",").map((e) => e.trim()).toList();
-  List<String> apiExpertiseNames = getexpertiseModel.value.data?.docs?.map((e) => e.categoryName??"".trim()).toList() ?? [];
+    // Load and filter expertise
+    String? profileExpertise = commonController.profileData.value.data?.expertizeField ?? "";
+    List<String> loadedExpertise = profileExpertise.split(",").map((e) => e.trim()).toList();
+    List<String> apiExpertiseNames = getexpertiseModel.value.data?.docs?.map((e) => e.categoryName ?? "".trim()).toList() ?? [];
 
-  selectedMultiExpertise.clear();
-  selectedMultiExpertise.value = loadedExpertise.where((e) => apiExpertiseNames.contains(e)).toList();
-  print("Selected expertise after filtering: $selectedMultiExpertise");
+    selectedMultiExpertise.clear();
+    selectedMultiExpertise.value = loadedExpertise.where((e) => apiExpertiseNames.contains(e)).toList();
+    print("Selected expertise after filtering: $selectedMultiExpertise");
 
-  // Load caste category
-  String? casteCategoryValue = commonController.profileData.value.data?.userCasteCategory ?? "";
-  if (casteCategoryValue.isNotEmpty) {
-    try {
-      selectedCategory.value = UserCasteCategory.values.firstWhere(
-        (e) => e.categoryValue == casteCategoryValue,
-        orElse: () => UserCasteCategory.OTHER,
-      );
-    } catch (e) {
+    // Load caste category
+    String? casteCategoryValue = commonController.profileData.value.data?.userCasteCategory ?? "";
+    if (casteCategoryValue.isNotEmpty) {
+      try {
+        selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == casteCategoryValue, orElse: () => UserCasteCategory.OTHER);
+      } catch (e) {
+        selectedCategory.value = null;
+      }
+    } else {
       selectedCategory.value = null;
     }
-  } else {
-    selectedCategory.value = null;
-  }
 
-  // Load intro video
-  String? introVideo = commonController.profileData.value.data?.introVideo ?? '';
-  if (introVideo.isNotEmpty) {
-    havingIntro.value = true;
-    introUploaded.value = introVideo;
+    // Load intro video
+    String? introVideo = commonController.profileData.value.data?.introVideo ?? '';
+    if (introVideo.isNotEmpty) {
+      havingIntro.value = true;
+      introUploaded.value = introVideo;
+    }
   }
-}
-
 
   final rxRequestStatus = Status.COMPLETED.obs;
   final getexpertiseModel = GetSubCategoryModel().obs;
@@ -140,14 +138,14 @@ class UpdateProfileController extends GetxController {
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
       productApi
-          .getallsubcategoryApi(1,100)
+          .getallsubcategoryApi(1, 100)
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
             setgetExpertiseModeldata(value);
             //CommonMethods.showToast(value.message);
             if (!isNewUser.value) {
-            loadData();
-          }
+              loadData();
+            }
             Utils.printLog("Response===> ${value.toString()}");
           })
           .onError((error, stackTrace) {
