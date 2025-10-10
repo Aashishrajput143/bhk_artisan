@@ -5,15 +5,15 @@ import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-Widget buildCircle(isCompleted, active, AddProductController controller) {
+Widget buildCircle(active, AddProductController controller) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      buildStepCircle(appStrings.stepGeneral, 01, active == 0 ? true : false, active == 0 ? false : hasCompleted(0, controller), () => controller.selectedIndex.value = 0),
+      buildStepCircle(appStrings.stepGeneral, 01, active == 0 ? true : false, active == 0 ? false : hasCompleted(0, controller), () =>controller.selectedIndex.value = 0),
       buildStepDivider(),
-      buildStepCircle(appStrings.stepDetails, 02, active == 1 ? true : false, active == 1 ? false : hasCompleted(1, controller), () => controller.selectedIndex.value = 1),
+      buildStepCircle(appStrings.stepDetails, 02, active == 1 ? true : false, active == 1 ? false : hasCompleted(1, controller), () =>controller.validateGeneralForm()? controller.selectedIndex.value = 1:null),
       buildStepDivider(),
-      buildStepCircle(appStrings.stepFiles, 03, active == 2 ? true : false, active == 2 ? false : hasCompleted(2, controller), () => controller.selectedIndex.value = 2),
+      buildStepCircle(appStrings.stepFiles, 03, active == 2 ? true : false, active == 2 ? false : hasCompleted(2, controller), () =>controller.validateDetailsForm()? controller.selectedIndex.value = 2:null),
     ],
   );
 }
@@ -24,7 +24,7 @@ bool hasCompleted(int step, AddProductController controller) {
   } else if (step == 1) {
     if ((controller.priceController.value.text.isNotEmpty) && (controller.quantityController.value.text.isNotEmpty) && (controller.materialController.value.text.isNotEmpty)) return true;
   } else if (step == 2) {
-    if (controller.imagefiles.length > 2 && controller.imagefiles.length < 5) return true;
+    if (controller.imagefiles.length >= 4 && controller.imagefiles.length <= 10) return true;
   }
   return false;
 }

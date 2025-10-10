@@ -30,6 +30,17 @@ class AddProductController extends GetxController {
   var techniqueController = TextEditingController().obs;
   var patternController = TextEditingController().obs;
 
+  var categoryError = Rxn<String>();
+  var subcategoryError = Rxn<String>();
+  var nameError = Rxn<String>();
+  var timeError = Rxn<String>();
+  var descriptionError = Rxn<String>();
+
+  var priceError = Rxn<String>();
+  var quantityError = Rxn<String>();
+  var materialError = Rxn<String>();
+  var imageError = Rxn<String>();
+
   var nameFocusNode = FocusNode().obs;
   var timeFocusNode = FocusNode().obs;
   var detaileddescriptionFocusNode = FocusNode().obs;
@@ -61,11 +72,7 @@ class AddProductController extends GetxController {
 
   var dropdownValues = 'gm'.obs;
   var dropdownValue = 'cm'.obs;
-    var isButtonEnabled = true.obs;
-
-
-  bool gm = false;
-  var clickNext = false.obs;
+  var isButtonEnabled = true.obs;
 
   var totalprice = 0.0.obs;
 
@@ -124,53 +131,84 @@ class AddProductController extends GetxController {
     return input.split(' ').where((element) => element.isNotEmpty).toList();
   }
 
-  bool validateForm() {
-    if ((selectedcategoryid.value?.isNotEmpty ?? false) &&
-        (selectedsubcategoryid.value?.isNotEmpty ?? false) &&
-        (nameController.value.text.isNotEmpty) &&
-        (detaileddescriptionController.value.text.isNotEmpty) &&
-        (priceController.value.text.isNotEmpty) &&
-        (timeController.value.text.isNotEmpty) &&
-        (materialController.value.text.isNotEmpty) &&
-        (quantityController.value.text.isNotEmpty) &&
-        (imagefiles.length >= 4)) {
-      return true;
-    }
-    return false;
-  }
-
   String? validateStringForm() {
     if ((selectedcategoryid.value?.isEmpty ?? true) && (selectedsubcategoryid.value?.isEmpty ?? true) && (nameController.value.text.isEmpty) && (detaileddescriptionController.value.text.isEmpty) && (priceController.value.text.isEmpty) && (timeController.value.text.isEmpty) && (materialController.value.text.isEmpty) && (quantityController.value.text.isEmpty) && (imagefiles.isEmpty)) {
       return "Please fill all mandatory Fields";
-    }
-    else if ((selectedcategoryid.value?.isEmpty ?? true)) {
+    } else if ((selectedcategoryid.value?.isEmpty ?? true)) {
       return "Please Select the Category";
-    }
-    else if ((selectedsubcategoryid.value?.isEmpty ?? true)) {
+    } else if ((selectedsubcategoryid.value?.isEmpty ?? true)) {
       return "Please Select the SubCategory";
-    }
-    else if ((nameController.value.text.isEmpty)) {
+    } else if ((nameController.value.text.isEmpty)) {
       return "Please Enter the Product Name";
-    }
-    else if ((detaileddescriptionController.value.text.isEmpty)) {
+    } else if ((detaileddescriptionController.value.text.isEmpty)) {
       return "Please Enter the Description";
-    }
-    else if ((priceController.value.text.isEmpty)) {
+    } else if ((priceController.value.text.isEmpty)) {
       return "Please Enter the Enter Product Price per Piece";
-    }
-    else if ((timeController.value.text.isEmpty)) {
+    } else if ((timeController.value.text.isEmpty)) {
       return "Please Enter how long it took to make (e.g. 2 days)";
-    }
-    else if ((materialController.value.text.isEmpty)) {
+    } else if ((materialController.value.text.isEmpty)) {
       return "Please Enter Material Used";
-    }
-    else if ((quantityController.value.text.isEmpty)) {
+    } else if ((quantityController.value.text.isEmpty)) {
       return "Please Enter Quantity";
-    }
-    else if ((imagefiles.length<4 || imagefiles.length>10)) {
+    } else if ((imagefiles.length < 4 || imagefiles.length > 10)) {
       return "Please Upload Min 4 and Max 10 Images";
     }
     return null;
+  }
+
+  bool validateGeneralForm() {
+    categoryError.value = null;
+    subcategoryError.value = null;
+    nameError.value = null;
+    descriptionError.value = null;
+    timeError.value = null;
+    if ((selectedcategoryid.value?.isEmpty ?? true) || (selectedsubcategoryid.value?.isEmpty ?? true) || (nameController.value.text.isEmpty) || (detaileddescriptionController.value.text.isEmpty) || (timeController.value.text.isEmpty)) {
+      if ((selectedcategoryid.value?.isEmpty ?? true)) {
+        categoryError.value = "Please Select the Category";
+      }
+      if ((selectedsubcategoryid.value?.isEmpty ?? true)) {
+        subcategoryError.value = "Please Select the SubCategory";
+      }
+      if ((nameController.value.text.isEmpty)) {
+        nameError.value = "Please Enter the Product Name";
+      }
+      if ((detaileddescriptionController.value.text.isEmpty)) {
+        descriptionError.value = "Please Enter the Detailed Description";
+      }
+      if ((timeController.value.text.isEmpty)) {
+        timeError.value = "Please Enter how long it took to make (e.g. 2 days)";
+      }
+      return false;
+    }
+    return true;
+  }
+
+  bool validateDetailsForm() {
+    priceError.value = null;
+    quantityError.value = null;
+    materialError.value = null;
+    if ((priceController.value.text.isEmpty) || (quantityController.value.text.isEmpty) || (materialController.value.text.isEmpty)) {
+      if ((priceController.value.text.isEmpty)) {
+        priceError.value = "Please Enter the Product Price";
+      }
+      if ((quantityController.value.text.isEmpty)) {
+        quantityError.value = "Please Enter the Quantity";
+      }
+      if ((materialController.value.text.isEmpty)) {
+        materialError.value = "Please Enter the Material Used";
+      }
+      return false;
+    }
+    return true;
+  }
+
+  bool validateMediaForm() {
+    imageError.value = null;
+    if ((imagefiles.length < 4 || imagefiles.length > 10)) {
+      imageError.value = "Please Upload Min 4 and Max 10 Images";
+      return false;
+    }
+    return true;
   }
 
   @override

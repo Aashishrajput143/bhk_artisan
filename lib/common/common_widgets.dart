@@ -322,54 +322,51 @@ Widget commonTextField(
   TextInputAction textInputAction = TextInputAction.done,
   List<TextInputFormatter>? inputFormatters,
 }) {
-  return StatefulBuilder(
-    builder: (context, setState) {
-      return TextField(
-        controller: controller,
-        focusNode: focusNode,
-        maxLength: maxLength,
-        onSubmitted: onSubmitted,
-        readOnly: readonly,
-        onTapOutside: (value) => focusNode.unfocus(),
-        onChanged: onChange,
-        maxLines: maxLines,
-        inputFormatters: inputFormatters,
-        keyboardType: keyboardType,
-        cursorColor: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary,
-        style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
-        decoration: InputDecoration(
-          labelText: isLabel ? hint : null,
-          hint: Text(
-            hint,
-            style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize),
-          ),
-          errorText: (error?.value?.isNotEmpty ?? false) ? error?.value : null,
-      errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: appColors.redColor, fontSize: 13) : TextStyle(color: Colors.transparent),
-          prefixText: prefix,
-          suffixText: suffix,
-          labelStyle: isLabel ? TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
-          alignLabelWithHint: true,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
-          ),
-          counterText: isCounter ? null : "",
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: contentPadding),
-        ),
-      );
-    },
+  return TextField(
+    controller: controller,
+    focusNode: focusNode,
+    maxLength: maxLength,
+    onSubmitted: onSubmitted,
+    readOnly: readonly,
+    onTapOutside: (value) => focusNode.unfocus(),
+    onChanged: onChange,
+    maxLines: maxLines,
+    inputFormatters: inputFormatters,
+    keyboardType: keyboardType,
+    cursorColor: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary,
+    style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
+    decoration: InputDecoration(
+      labelText: isLabel ? hint : null,
+      hint: Text(
+        hint,
+        style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize),
+      ),
+      errorText: (error?.value?.isNotEmpty ?? false) ? error?.value : null,
+      errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: appColors.declineColor, fontSize: 13) : TextStyle(color: Colors.transparent),
+      errorMaxLines: 2,
+      prefixText: prefix,
+      suffixText: suffix,
+      labelStyle: isLabel ? TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
+      alignLabelWithHint: true,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(radius),
+        borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
+      ),
+      counterText: isCounter ? null : "",
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(radius),
+        borderSide: BorderSide(color: isWhite ? appColors.contentWhite : appColors.border, width: borderWidth),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(radius),
+        borderSide: BorderSide(color: appColors.declineColor, width: borderWidth),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(radius),
+        borderSide: BorderSide(color: appColors.declineColor, width: borderWidth),
+      ),
+      contentPadding: EdgeInsets.symmetric(horizontal: contentPadding),
+    ),
   );
 }
 
@@ -459,7 +456,8 @@ Widget commonDescriptionTextField(
             style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize),
           ),
           errorText: (error?.value?.isNotEmpty ?? false) ? error?.value : null,
-      errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: appColors.redColor, fontSize: 13) : TextStyle(color: Colors.transparent),
+          errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: appColors.declineColor, fontSize: 13) : TextStyle(color: Colors.transparent),
+          errorMaxLines: 2,
           labelStyle: isLabel ? TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
           alignLabelWithHint: true,
           enabledBorder: OutlineInputBorder(
@@ -473,11 +471,11 @@ Widget commonDescriptionTextField(
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
+            borderSide: BorderSide(color: appColors.declineColor, width: borderWidth),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius),
-            borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
+            borderSide: BorderSide(color: appColors.declineColor, width: borderWidth),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: contentPadding),
         ),
@@ -554,28 +552,43 @@ Widget dropdownButton(List<String> items, String? selectedValue, double width, d
   );
 }
 
-Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selectedValue, double width, double height, Color color, void Function(String?) onChanged, {String hint = '', Color borderColor = Colors.transparent}) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-    decoration: BoxDecoration(
-      border: Border.all(color: borderColor, width: 1.5),
-      borderRadius: BorderRadius.circular(8.0),
-    ),
-    child: DropdownButton2<String>(
-      hint: Text(hint, style: const TextStyle(fontSize: 14, color: Colors.black)),
-      //style: TextStyle(fontSize: 14, color: Colors.black),
-      value: selectedValue,
-      items: items,
-      onChanged: onChanged,
-      dropdownStyleData: DropdownStyleData(
-        maxHeight: height * .25,
-        width: width * .918,
-        offset: const Offset(-9, -3),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: appColors.cardBackground),
+Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selectedValue, double width, double height, Color color, void Function(String?) onChanged, {String hint = '', Rxn<String>? error, Color borderColor = Colors.transparent}) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: BoxDecoration(
+          border: Border.all(color:error?.value?.isEmpty??true? borderColor:appColors.declineColor, width: 1.5),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: DropdownButton2<String>(
+          hint: Text(hint, style: const TextStyle(fontSize: 14, color: Colors.black)),
+          //style: TextStyle(fontSize: 14, color: Colors.black),
+          value: selectedValue,
+          items: items,
+          onChanged: onChanged,
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: height * .25,
+            width: width * .918,
+            offset: const Offset(-9, -3),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: appColors.cardBackground),
+          ),
+          isExpanded: true,
+          underline: const SizedBox(),
+        ),
       ),
-      isExpanded: true,
-      underline: const SizedBox(),
-    ),
+      if (error?.value?.isNotEmpty ?? false)
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0, left: 10.0),
+          child: Text(
+            error?.value ?? '',
+            style: TextStyle(color: appColors.declineColor, fontSize: 13),
+          ),
+        ),
+    ],
   );
 }
 
@@ -700,7 +713,7 @@ Widget phoneTextField(
       labelText: hint,
       labelStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
       errorText: (error?.value?.isNotEmpty ?? false) ? error?.value : null,
-      errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: appColors.redColor, fontSize: 13) : TextStyle(color: Colors.transparent),
+      errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: appColors.declineColor, fontSize: 13) : TextStyle(color: Colors.transparent),
       counterStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(radius),
@@ -712,11 +725,11 @@ Widget phoneTextField(
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(radius),
-        borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
+        borderSide: BorderSide(color: appColors.declineColor, width: borderWidth),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(radius),
-        borderSide: BorderSide(color: appColors.redColor, width: borderWidth),
+        borderSide: BorderSide(color: appColors.declineColor, width: borderWidth),
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: contentPadding, vertical: 5.0),
     ),
@@ -1172,7 +1185,7 @@ Widget commonComponent(String title, Widget component, {bool mandatory = true}) 
           if (mandatory) ...[
             Text(
               " *",
-              style: TextStyle(color: appColors.redColor, fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(color: appColors.declineColor, fontSize: 14, fontWeight: FontWeight.bold),
             ),
           ],
         ],

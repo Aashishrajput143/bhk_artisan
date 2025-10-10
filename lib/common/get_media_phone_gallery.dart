@@ -33,7 +33,7 @@ Future<void> pickImageFromGallery(Rxn<String> selectedImage, gallery) async {
   }
 }
 
-Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromGallery, {bool isValidate = false, int max = 10}) async {
+Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromGallery, {bool isValidate = false, Rxn<String>? error, int max = 10}) async {
   try {
     List<XFile> pickedFiles = [];
 
@@ -103,7 +103,9 @@ Future<void> pickMultipleImagesFromGallery(RxList<String> imageFiles, bool fromG
       debugPrint('Size: $bytes bytes / ${mb.toStringAsFixed(2)} MB');
       debugPrint('Resolution: ${width}x$height');
     }
-
+    if (imageFiles.length >= 4) {
+      error?.value = null;
+    }
     debugPrint("Total images selected: ${imageFiles.length}");
   } catch (e) {
     debugPrint("Error: $e");

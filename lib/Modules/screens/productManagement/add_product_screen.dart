@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:bhk_artisan/Modules/controller/addproduct_controller.dart';
-import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/get_media_phone_gallery.dart';
 import 'package:bhk_artisan/common/my_utils.dart';
@@ -47,7 +46,7 @@ class AddProductPage extends ParentWidget {
                     style: TextStyle(fontSize: 11.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
                   ),
                   25.kH,
-                  buildCircle(controller.selectedIndex.value, controller.selectedIndex.value, controller),
+                  buildCircle(controller.selectedIndex.value,controller),
                   16.kH,
                   if (controller.selectedIndex.value == 0) generalDetails(w, h, controller),
                   if (controller.selectedIndex.value == 1) productDetails(w, h, controller),
@@ -61,7 +60,7 @@ class AddProductPage extends ParentWidget {
               child: controller.selectedIndex.value == 0
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [commonButtonIcon(w * 0.2, 48, appColors.contentWhite, () => controller.selectedIndex.value++, hint: appStrings.nextStep, radius: 25, backgroundColor: appColors.contentButtonBrown)],
+                      children: [commonButtonIcon(w * 0.2, 48, appColors.contentWhite, () => controller.validateGeneralForm() ? controller.selectedIndex.value++ : null, hint: appStrings.nextStep, radius: 25, backgroundColor: appColors.contentButtonBrown)],
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,14 +74,14 @@ class AddProductPage extends ParentWidget {
                                 () {
                                   if (!controller.isButtonEnabled.value) return;
                                   controller.isButtonEnabled.value = false;
-                                  controller.validateStringForm() == null ? controller.addProductApi() : CommonMethods.showToast(controller.validateStringForm() ?? appStrings.pleaseFillMandatoryFields, icon: Icons.warning_amber_rounded);
+                                   controller.validateMediaForm() ? controller.addProductApi():null;
                                   enableButtonAfterDelay(controller.isButtonEnabled);
                                 },
                                 hint: appStrings.submit,
                                 radius: 25,
                                 backgroundColor: appColors.contentButtonBrown,
                               )
-                            : commonButtonIcon(w * 0.2, 48, appColors.contentWhite, () => controller.selectedIndex.value++, hint: appStrings.nextStep, radius: 25, backgroundColor: appColors.contentButtonBrown),
+                            : commonButtonIcon(w * 0.2, 48, appColors.contentWhite, () => controller.validateDetailsForm() ? controller.selectedIndex.value++ : null, hint: appStrings.nextStep, radius: 25, backgroundColor: appColors.contentButtonBrown),
                       ],
                     ),
             ),
@@ -131,12 +130,14 @@ class AddProductPage extends ParentWidget {
                 }).toList(),
                 controller.selectedcategoryid.value,
                 w,
+                error: controller.categoryError,
                 h,
                 appColors.backgroundColor,
                 (String? newValue) {
                   controller.selectedcategoryid.value = newValue;
                   print(controller.selectedcategoryid.value);
                   controller.selectedsubcategoryid.value = null;
+                  controller.categoryError.value = null;
                   controller.getSubCategoryApi();
                 },
                 hint: appStrings.selectCategory,
@@ -156,20 +157,76 @@ class AddProductPage extends ParentWidget {
                 controller.selectedsubcategoryid.value,
                 w,
                 h,
+                error: controller.subcategoryError,
                 appColors.backgroundColor,
                 (String? newValue) {
                   controller.selectedsubcategoryid.value = newValue;
+                  controller.subcategoryError.value = null;
                 },
                 hint: appStrings.selectSubCategory,
                 borderColor: appColors.border,
               ),
             ),
             16.kH,
-            commonComponent(appStrings.productName, commonTextField(controller.nameController.value, controller.nameFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterProductName, maxLines: 3, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
+            commonComponent(
+              appStrings.productName,
+              commonTextField(
+                controller.nameController.value,
+                error: controller.nameError,
+                controller.nameFocusNode.value,
+                w,
+                (value) {},
+                onChange: (value) {
+                  controller.nameController.value.text = value;
+                  controller.nameError.value = null;
+                },
+                fontSize: 14,
+                hint: appStrings.enterProductName,
+                maxLines: 3,
+                inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+              ),
+            ),
             16.kH,
-            commonComponent(appStrings.timeToMake, commonTextField(controller.timeController.value, controller.timeFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterTimeToMake,keyboardType: TextInputType.numberWithOptions(decimal: false), inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 6)),
+            commonComponent(
+              appStrings.timeToMake,
+              commonTextField(
+                controller.timeController.value,
+                error: controller.timeError,
+                onChange: (value) {
+                  controller.timeController.value.text = value;
+                  controller.timeError.value = null;
+                },
+                controller.timeFocusNode.value,
+                w,
+                (value) {},
+                fontSize: 14,
+                hint: appStrings.enterTimeToMake,
+                keyboardType: TextInputType.numberWithOptions(decimal: false),
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))],
+                maxLength: 4,
+              ),
+            ),
             16.kH,
-            commonComponent(appStrings.description, commonDescriptionTextField(controller.detaileddescriptionController.value, controller.detaileddescriptionFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterDescription, maxLines: h > 800 ? 6 : 4, minLines: 3, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter()])),
+            commonComponent(
+              appStrings.description,
+              commonDescriptionTextField(
+                controller.detaileddescriptionController.value,
+                error: controller.descriptionError,
+                onChange: (value) {
+                  controller.detaileddescriptionController.value.text = value;
+                  controller.descriptionError.value = null;
+                },
+                controller.detaileddescriptionFocusNode.value,
+                w,
+                (value) {},
+                fontSize: 14,
+                hint: appStrings.enterDescription,
+                maxLines: h > 800 ? 6 : 4,
+                minLines: 3,
+                maxLength: 1000,
+                inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter()],
+              ),
+            ),
           ],
         ),
       ),
@@ -183,13 +240,50 @@ class AddProductPage extends ParentWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            commonComponent(appStrings.productPrice, commonTextField(controller.priceController.value, controller.priceFocusNode.value, w, onChange: (value) => controller.calculateTotalPrice(), (value) {}, maxLength: 6,keyboardType: TextInputType.numberWithOptions(decimal: true), hint: appStrings.enterProductPrice, prefix: '₹ ', inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))])),
+            commonComponent(
+              appStrings.productPrice,
+              commonTextField(
+                controller.priceController.value,
+                controller.priceFocusNode.value,
+                w,
+                onChange: (value) {
+                  controller.calculateTotalPrice();
+                  controller.priceController.value.text = value;
+                  controller.priceError.value = null;
+                },
+                error: controller.priceError,
+                (value) {},
+                maxLength: 6,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                hint: appStrings.enterProductPrice,
+                prefix: '₹ ',
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))],
+              ),
+            ),
             16.kH,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: commonComponent(appStrings.quantity, commonTextField(controller.quantityController.value, controller.quantityFocusNode.value,keyboardType: TextInputType.numberWithOptions(decimal: false), w, (value) {}, onChange: (value) => controller.calculateTotalPrice(), maxLength: 6, hint: appStrings.enterQuantity, inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))])),
+                  child: commonComponent(
+                    appStrings.quantity,
+                    commonTextField(
+                      controller.quantityController.value,
+                      error: controller.quantityError,
+                      controller.quantityFocusNode.value,
+                      keyboardType: TextInputType.numberWithOptions(decimal: false),
+                      w,
+                      (value) {},
+                      onChange: (value) {
+                        controller.calculateTotalPrice();
+                        controller.quantityController.value.text = value;
+                        controller.quantityError.value = null;
+                      },
+                      maxLength: 6,
+                      hint: appStrings.enterQuantity,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))],
+                    ),
+                  ),
                 ),
                 8.kW,
                 Expanded(
@@ -251,7 +345,23 @@ class AddProductPage extends ParentWidget {
               ],
             ),
             16.kH,
-            commonComponent(appStrings.material, commonTextField(controller.materialController.value, controller.materialFocusNode.value, w, (value) {}, hint: appStrings.enterMaterial, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
+            commonComponent(
+              appStrings.material,
+              commonTextField(
+                controller.materialController.value,
+                controller.materialFocusNode.value,
+                w,
+                (value) {},
+                onChange: (value) {
+                  controller.materialController.value.text = value;
+                  controller.materialError.value = null;
+                },
+                error: controller.materialError,
+                hint: appStrings.enterMaterial,
+                maxLines: 1,
+                inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+              ),
+            ),
             16.kH,
             commonComponent(
               mandatory: false,
@@ -260,7 +370,7 @@ class AddProductPage extends ParentWidget {
                 children: [
                   Expanded(
                     flex: 6,
-                    child: commonTextField(controller.netweightController.value, controller.netweightFocusNode.value, w, (value) {}, hint: "${appStrings.enterNetWeight}(in ${controller.dropdownValues})", inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
+                    child: commonTextField(controller.netweightController.value, controller.netweightFocusNode.value, w, (value) {}, hint: "${appStrings.enterNetWeight}(in ${controller.dropdownValues})", inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
@@ -291,17 +401,17 @@ class AddProductPage extends ParentWidget {
                 children: [
                   Expanded(
                     flex: 3,
-                    child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: appStrings.length,keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
+                    child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: appStrings.length, keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
                     flex: 3,
-                    child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: appStrings.breadth,keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
+                    child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: appStrings.breadth, keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
                     flex: 3,
-                    child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: appStrings.height,keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly,FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
+                    child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: appStrings.height, keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
@@ -344,13 +454,13 @@ class AddProductPage extends ParentWidget {
             width: w,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
+              border: Border.all(color: controller.imageError.value != null ? appColors.declineColor : appColors.border),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.image, size: 50, color: Colors.grey),
+                Icon(Icons.image, size: 50, color: appColors.border),
                 8.kH,
                 Text(appStrings.uploadImagesHere),
                 5.kH,
@@ -362,11 +472,11 @@ class AddProductPage extends ParentWidget {
                     controller.imagefiles,
                     () {
                       Get.back();
-                      pickMultipleImagesFromGallery(controller.imagefiles, true, isValidate: true);
+                      pickMultipleImagesFromGallery(controller.imagefiles, true, isValidate: true, error: controller.imageError);
                     },
                     () {
                       Get.back();
-                      pickMultipleImagesFromGallery(controller.imagefiles, false);
+                      pickMultipleImagesFromGallery(controller.imagefiles, false, error: controller.imageError);
                     },
                   ),
                   child: Text(appStrings.clickToBrowse, style: TextStyle(fontSize: 12)),
@@ -375,6 +485,7 @@ class AddProductPage extends ParentWidget {
             ),
           ),
         ),
+        if (controller.imageError.value != null) ...[8.kH, Text(controller.imageError.value ?? "", style: TextStyle(color: appColors.declineColor, fontSize: 12))],
         8.kH,
         Text(appStrings.uploadImagesDesc, style: TextStyle(color: Colors.grey[600], fontSize: 13)),
         20.kH,
