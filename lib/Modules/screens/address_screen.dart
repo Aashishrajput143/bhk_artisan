@@ -75,7 +75,7 @@ class AddressScreen extends ParentWidget {
                                 controller.hasDefault.value = false;
                                 bottomDrawer(context, h * 0.8, w, controller);
                               } else {
-                                showLocationDialog(context, controller.locationController);
+                                showLocationDialog(context, controller.locationController, controller);
                               }
                             },
                             child: Icon(Icons.add, color: appColors.contentWhite),
@@ -92,7 +92,7 @@ class AddressScreen extends ParentWidget {
                         }
                         bottomDrawer(context, h * 0.8, w, controller);
                       } else {
-                        showLocationDialog(context, controller.locationController);
+                        showLocationDialog(context, controller.locationController, controller);
                       }
                     }, hint: appStrings.addAddress),
                   ),
@@ -173,14 +173,16 @@ class AddressScreen extends ParentWidget {
   void bottomDrawer(BuildContext context, double h, double w, AddressController controller, {String id = ""}) {
     controller.flatError.value = null;
     controller.streetError.value = null;
+    controller.loadLocation();
     showModalBottomSheet(
       context: context,
       isDismissible: false,
       backgroundColor: appColors.drawerbackgroundColor,
       isScrollControlled: true,
       builder: (context) {
-        return Obx(
-          () => Stack(
+        return GetBuilder<AddressController>(
+          initState: (state) => controller.loadLocation(),
+          builder: (ctrl) => Stack(
             children: [
               Container(
                 padding: const EdgeInsets.all(25),

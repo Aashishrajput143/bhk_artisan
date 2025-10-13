@@ -9,9 +9,10 @@ import 'package:bhk_artisan/resources/enums/address_type_enum.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
-class AddressController extends GetxController {
+class AddressController extends GetxController with WidgetsBindingObserver {
   final _api = AddressRepository();
 
   var cityController = TextEditingController().obs;
@@ -38,13 +39,14 @@ class AddressController extends GetxController {
   var lastChecked = "".obs;
   var isButtonEnabled = true.obs;
 
-  LocationController locationController = Get.find<LocationController>();
+  late LocationController locationController;
 
   @override
   void onInit() {
     super.onInit();
     getAddressApi();
-    locationController.getCurrentLocation();
+    WidgetsBinding.instance.addObserver(this);
+    locationController = Get.find<LocationController>();
     if (locationController.place.value != null) {
       loadLocation();
     }
@@ -61,6 +63,7 @@ class AddressController extends GetxController {
     countryController.value.text = locationController.place.value?.country ?? "";
     pinController.value.text = locationController.place.value?.postalCode ?? "";
     lanMarkController.value.text = "";
+    update();
   }
 
   void getLocationApi(int index) {
@@ -77,6 +80,24 @@ class AddressController extends GetxController {
 
   bool isAddressTypeNotExists(AddressType type) {
     return !(getAddressModel.value.data?.any((addr) => (addr.addressType ?? "").toLowerCase() == type.addressValue.toLowerCase()) ?? false);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      LocationPermission permission = await Geolocator.checkPermission();
+
+      if (serviceEnabled && (permission == LocationPermission.always || permission == LocationPermission.whileInUse)) {
+        locationController.getCurrentLocation();
+        if (locationController.place.value != null) {
+          loadLocation();
+        }
+        ever(locationController.place, (_) {
+          loadLocation();
+        });
+      }
+    }
   }
 
   String getFullAddress(GetAddressModel address, int index) {
@@ -279,5 +300,11 @@ class AddressController extends GetxController {
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
+  }
+
+  @override
+  void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.onClose();
   }
 }
