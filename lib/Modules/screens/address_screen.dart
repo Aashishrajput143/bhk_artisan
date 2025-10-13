@@ -173,7 +173,6 @@ class AddressScreen extends ParentWidget {
   void bottomDrawer(BuildContext context, double h, double w, AddressController controller, {String id = ""}) {
     controller.flatError.value = null;
     controller.streetError.value = null;
-    controller.loadLocation();
     showModalBottomSheet(
       context: context,
       isDismissible: false,
