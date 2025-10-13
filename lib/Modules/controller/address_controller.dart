@@ -38,7 +38,7 @@ class AddressController extends GetxController {
   var lastChecked = "".obs;
   var isButtonEnabled = true.obs;
 
-  LocationController locationController = Get.put(LocationController());
+  LocationController locationController = Get.find<LocationController>();
 
   @override
   void onInit() {

@@ -11,6 +11,10 @@ class LocationController extends GetxController {
   var address = "".obs;
   var error = Rxn<String>();
 
+  final rxRequestStatus = Status.COMPLETED.obs;
+  void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
+
+  Stream<Position>? _positionStream;
 
   @override
   void onInit() {
@@ -18,61 +22,58 @@ class LocationController extends GetxController {
     getCurrentLocation();
   }
 
-  final rxRequestStatus = Status.COMPLETED.obs;
-  void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
-
   Future<void> getCurrentLocation() async {
     setRxRequestStatus(Status.LOADING);
 
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      setRxRequestStatus(Status.COMPLETED);
       error.value = "Location services are disabled.";
+      setRxRequestStatus(Status.COMPLETED);
       return;
     }
 
-    permission = await Geolocator.checkPermission();
+    LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        setRxRequestStatus(Status.COMPLETED);
         error.value = "Location permissions are denied";
+        setRxRequestStatus(Status.COMPLETED);
         return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      setRxRequestStatus(Status.COMPLETED);
       error.value = "Location permissions are permanently denied";
+      setRxRequestStatus(Status.COMPLETED);
       return;
     }
 
-    Position position = await Geolocator.getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.best, distanceFilter: 0));
+    _positionStream = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.best,
+        distanceFilter: 0,
+      ),
+    );
 
-    latitude.value = position.latitude;
-    longitude.value = position.longitude;
+    _positionStream!.listen((Position position) async {
+      latitude.value = position.latitude;
+      longitude.value = position.longitude;
 
-    debugPrint("latitude===>${latitude.value}");
-    debugPrint("longitude===>${longitude.value}");
+      debugPrint("Live Latitude: ${latitude.value}");
+      debugPrint("Live Longitude: ${longitude.value}");
 
-    await getAddressFromLatLng(position);
-
-    setRxRequestStatus(Status.COMPLETED);
+      await _updateAddress(position);
+      setRxRequestStatus(Status.COMPLETED);
+    });
   }
 
-  Future<void> getAddressFromLatLng(Position position) async {
+  Future<void> _updateAddress(Position position) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
 
       if (placemarks.isNotEmpty) {
         place.value = placemarks.first;
-
         final places = placemarks.first;
 
         List<String> parts = [];
@@ -91,10 +92,7 @@ class LocationController extends GetxController {
         addIfNotEmpty(places.country);
 
         address.value = parts.join(", ");
-
-        debugPrint("Full Address ===> ${address.value}");
-      
-
+        debugPrint("Live Address: ${address.value}");
       }
     } catch (e) {
       debugPrint(e.toString());
