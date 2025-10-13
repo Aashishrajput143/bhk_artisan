@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/font.dart';
@@ -88,7 +89,7 @@ class MyAlertDialog {
   }
 }
 
-void showLocationDialog(BuildContext context) {
+void showLocationDialog(BuildContext context, LocationController controller,) {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -135,7 +136,7 @@ void showLocationDialog(BuildContext context) {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => Get.back(),
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -149,7 +150,10 @@ void showLocationDialog(BuildContext context) {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        AppSettings.openAppSettings(type: AppSettingsType.location);
+                        Get.back();
+                        AppSettings.openAppSettings(type: AppSettingsType.location).then((onValue) {
+                      controller.getCurrentLocation();
+                    });
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: appColors.brownDarkText,

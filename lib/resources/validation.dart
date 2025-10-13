@@ -10,63 +10,16 @@ class Validator {
     return RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{1,}$').hasMatch(password);
   }
 
-  static String? validateEmail(String? email) {
-    if (email == null || email.isEmpty) {
-      return null;
-    } else if (!isEmailValid(email)) {
-      return 'Enter a valid email address';
-    }
-    return null;
+  static bool isPhoneNumberValid(String phoneNumber) {
+    return RegExp(r'^[6-9]').hasMatch(phoneNumber);
   }
 
-  static String? validatePassword(String? password, String? confirmPassword, bool? validate) {
-    if (password == null || password.isEmpty) {
-      return null;
-    }
-    if (password.length < 8 && (confirmPassword?.length ?? 0) < 8) {
-      return 'Password must be 8 character long';
-    } else if (!isPasswordValid(password)) {
-      return 'Password must contain at least 1 uppercase, 1 lowercase, and 1 number';
-    } else if (password.isNotEmpty && confirmPassword != "" && confirmPassword != null && validate == true) {
-      if (password.isEmpty && confirmPassword.isEmpty) {
-        return null;
-      }
-      if (password != confirmPassword) {
-        return "Password and Confirm password do not match";
-      }
-    }
-    return null;
+  static bool isGSTNumberValid(String gstNumber) {
+    return RegExp(r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$').hasMatch(gstNumber);
   }
 
-  static String? validateAge(String dateString, requiredAge) {
-    print("$dateString ${DateTime.now().toString()}");
-    if (dateString == DateTime.now().toString() || dateString.isEmpty) {
-      return 'Date of Birth is required';
-    }
-    try {
-      DateTime birthDate = DateTime.parse(dateString);
-      DateTime today = DateTime.now();
-      int age = today.year - birthDate.year;
-
-      if (today.month < birthDate.month || (today.month == birthDate.month && today.day < birthDate.day)) {
-        age--;
-      }
-
-      if (age < requiredAge) {
-        return "Age Restriction -  Must be $requiredAge or older to sign up.";
-      } else {
-        return null;
-      }
-    } catch (e) {
-      return "Invalid date format.";
-    }
-  }
-
-  static String? validateInput(String input) {
-    if (input.trim().isEmpty) {
-      return "Input cannot be only whitespace!";
-    }
-    return null;
+  static bool isAadharNumberValid(String aadharNumber) {
+    return RegExp(r'^[2-9]{1}[0-9]{11}$').hasMatch(aadharNumber);
   }
 
   static bool validateImagesPath(File file) {

@@ -22,6 +22,9 @@ class AddressController extends GetxController {
   var lanMarkController = TextEditingController().obs;
   var pinController = TextEditingController().obs;
 
+  var flatError = Rxn<String>();
+  var streetError = Rxn<String>();
+
   var cityFocusNode = FocusNode().obs;
   var stateFocusNode = FocusNode().obs;
   var countryFocusNode = FocusNode().obs;
@@ -32,9 +35,8 @@ class AddressController extends GetxController {
 
   var addressType = AddressType.HOME.obs;
   var hasDefault = false.obs;
-  var lastChecked ="".obs;
+  var lastChecked = "".obs;
   var isButtonEnabled = true.obs;
-
 
   LocationController locationController = Get.put(LocationController());
 
@@ -98,29 +100,16 @@ class AddressController extends GetxController {
   }
 
   bool validateForm() {
-    if ((flatNameController.value.text.isNotEmpty) && (streetNameController.value.text.isNotEmpty) && (cityController.value.text.isNotEmpty) && (stateController.value.text.isNotEmpty) && (countryController.value.text.isNotEmpty) && (pinController.value.text.isNotEmpty) && (addressType.value.addressValue.isNotEmpty)) return true;
-    return false;
-  }
-
-  String? validateStringForm() {
-    if ((flatNameController.value.text.isEmpty) && (streetNameController.value.text.isEmpty) && (cityController.value.text.isEmpty) && (stateController.value.text.isEmpty) && (countryController.value.text.isEmpty) && (pinController.value.text.isEmpty) && (addressType.value.addressValue.isEmpty)) {
-      return "Please fill all mandatory Fields";
-    } else if (flatNameController.value.text.isEmpty) {
-      return "Please Enter your house/Flat/Building";
-    } else if (streetNameController.value.text.isEmpty) {
-      return "Please Enter your Street/Area/Locality";
-    } else if (cityController.value.text.isEmpty) {
-      return "Please Enter your City";
-    } else if (stateController.value.text.isEmpty) {
-      return "Please Enter your State";
-    } else if (countryController.value.text.isEmpty) {
-      return "Please Enter your Country";
-    } else if (pinController.value.text.isEmpty) {
-      return "Please Enter your Pin Code";
-    } else if (addressType.value.addressValue.isEmpty) {
-      return "Please Select your Address Type";
+    if ((flatNameController.value.text.isEmpty) || (streetNameController.value.text.isEmpty)) {
+      if ((flatNameController.value.text.isEmpty)) {
+        flatError.value = "Please Enter your house/Flat/Building";
+      }
+      if ((streetNameController.value.text.isEmpty)) {
+        streetError.value = "Please Enter your Street/Area/Locality";
+      }
+      return false;
     }
-    return null;
+    return true;
   }
 
   void setDisabledAddressType() {

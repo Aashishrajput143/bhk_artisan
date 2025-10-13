@@ -16,21 +16,6 @@ class ViewProfile extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     CommonScreenController controller = Get.put(CommonScreenController());
-
-    String formatAadhaarNumber(String aadhaar) {
-      if (aadhaar.isEmpty) return "";
-      aadhaar = aadhaar.replaceAll(RegExp(r'\s+'), ''); // remove spaces if any
-
-      String formatted = '';
-      for (int i = 0; i < aadhaar.length; i++) {
-        formatted += aadhaar[i];
-        if ((i + 1) % 4 == 0 && i + 1 != aadhaar.length) {
-          formatted += ' ';
-        }
-      }
-      return formatted;
-    }
-
     return Scaffold(
       backgroundColor: appColors.backgroundColor,
       appBar: commonAppBar(appStrings.viewProfile),
@@ -68,8 +53,13 @@ class ViewProfile extends ParentWidget {
               commonCards(appStrings.lastName, controller.profileData.value.data?.lastName ?? "", Icons.person_outline),
               commonCards(appStrings.phone, "${controller.profileData.value.data?.countryCode ?? ""} ${controller.profileData.value.data?.phoneNo ?? ""}", Icons.phone_outlined),
               if (controller.profileData.value.data?.email != null) commonCards(appStrings.email, controller.profileData.value.data?.email ?? "", Icons.email_outlined),
-              if (controller.profileData.value.data?.aadhaarNumber != null) commonCards(appStrings.aadhaarNumber, formatAadhaarNumber(controller.profileData.value.data?.aadhaarNumber ?? ""), Icons.badge_outlined),
-              if (controller.profileData.value.data?.userCasteCategory != null) commonCards(appStrings.category, "${parseUserCasteCategory(controller.profileData.value.data?.userCasteCategory)?.displayName}  ( ${controller.profileData.value.data?.subCaste} )", Icons.people_outline),
+              commonCards(appStrings.aadhaarNumber, formatAadhaarNumber(controller.profileData.value.data?.aadhaarNumber ?? ""), Icons.badge_outlined),
+              Row(
+                children: [
+                  Expanded(flex: 1, child: commonCards(appStrings.category, "${parseUserCasteCategory(controller.profileData.value.data?.userCasteCategory)?.displayName}", Icons.groups_outlined)),
+                  Expanded(flex: 1, child: commonCards(appStrings.caste, controller.profileData.value.data?.subCaste??"", Icons.people_outline)),
+                ],
+              ),
               if (controller.profileData.value.data?.gstNumber != null) commonCards(appStrings.gstNumber, controller.profileData.value.data?.gstNumber ?? "", Icons.business),
               commonCards(appStrings.expertise, controller.profileData.value.data?.expertizeField ?? appStrings.pleaseSetExpertise, Icons.work_outline),
             ],
@@ -78,6 +68,20 @@ class ViewProfile extends ParentWidget {
       ),
     );
   }
+
+  String formatAadhaarNumber(String aadhaar) {
+      if (aadhaar.isEmpty) return "";
+      aadhaar = aadhaar.replaceAll(RegExp(r'\s+'), ''); // remove spaces if any
+
+      String formatted = '';
+      for (int i = 0; i < aadhaar.length; i++) {
+        formatted += aadhaar[i];
+        if ((i + 1) % 4 == 0 && i + 1 != aadhaar.length) {
+          formatted += ' ';
+        }
+      }
+      return formatted;
+    }
 
   Widget commonCards(String title, String subtitle, IconData icon) {
     return Padding(

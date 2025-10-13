@@ -103,7 +103,7 @@ class AppStrings {
   String get uploadImages => "Upload Images";
   String get uploadImagesHere => "Upload your images here";
   String get clickToBrowse => "Click to browse";
-  String get uploadImagesDesc => "Upload up to 10 Images to showcase your product during the Auctions and social sharing. Please ensure each file is no larger than 2 MB, and support formats: JPG, JPEG, or PNG.";
+  String get uploadImagesDesc => "Upload up to 10 images to showcase your product for the auction and social sharing. Each file must be under 2 MB and in JPG, JPEG, or PNG format.";
   String get pickedFiles => "Picked Files:";
 
   //Build Step Circle Screen
@@ -130,12 +130,12 @@ class AppStrings {
 
   //Cancel Product Screen
   String get noRejectedProducts => "No Rejected Products";
-  String get emptyRejectedProductDesc => "Thanks for checking out Rejected products. we hope your products can make your routine a little more enjoyable.";
+  String get emptyRejectedProductDesc => "Thanks for checking out your rejected products. We hope your future products can make your routine a little more enjoyable.";
 
   //Product Details Screen
   String get productDetailsTitle => "Product Details";
   String get productIdPrefix => "Product ID: BHKP000";
-  String get inclusiveTaxes => "Inclusive all the taxes";
+  String get inclusiveTaxes => "Inclusive of all taxes";
   String get productQuantity => "Product Quantity";
   String get productDetails => "Product Details";
   String get dimensions => "Dimensions";
@@ -311,6 +311,7 @@ class AppStrings {
   String get addressType => 'AddressType';
   String get confirmAddress => "Confirm Address";
   String get mandatoryFields => "please fill all the mandatory fields";
+  String get fetchLocation=> "Please wait while we are fetching your location...";
 
   // Need Assistance
   String get needHelp => 'Need Help?';

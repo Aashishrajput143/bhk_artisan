@@ -7,7 +7,6 @@ import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/strings.dart';
-import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -85,7 +84,7 @@ class OtpScreen extends ParentWidget {
                         Align(
                           alignment: Alignment.topLeft,
                           child: TextButton(
-                            onPressed: () => Get.offNamed(RoutesClass.login),
+                            onPressed: () => Get.back(),
                             child: Text(appStrings.editNumber, style: TextStyle(color: appColors.contentWhite)),
                           ),
                         ),

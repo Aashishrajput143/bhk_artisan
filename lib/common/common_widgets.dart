@@ -561,7 +561,7 @@ Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selec
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
-          border: Border.all(color:error?.value?.isEmpty??true? borderColor:appColors.declineColor, width: 1.5),
+          border: Border.all(color: error?.value?.isEmpty ?? true ? borderColor : appColors.declineColor, width: 1.5),
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: DropdownButton2<String>(
@@ -583,41 +583,50 @@ Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selec
       if (error?.value?.isNotEmpty ?? false)
         Padding(
           padding: const EdgeInsets.only(top: 4.0, left: 10.0),
-          child: Text(
-            error?.value ?? '',
-            style: TextStyle(color: appColors.declineColor, fontSize: 13),
-          ),
+          child: Text(error?.value ?? '', style: TextStyle(color: appColors.declineColor, fontSize: 13)),
         ),
     ],
   );
 }
 
-Widget commonMultiDropdownButton(List<DropdownMenuItem<String>>? items, List<String> selectedItems, double width, double height, Color color, {String hint = '', Color borderColor = Colors.transparent, double? upOffset}) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-    decoration: BoxDecoration(
-      border: Border.all(color: borderColor, width: 1.5),
-      borderRadius: BorderRadius.circular(8.0),
-    ),
-    child: DropdownButtonHideUnderline(
-      child: DropdownButton2<String>(
-        isExpanded: true,
-        hint: Text(
-          selectedItems.isEmpty ? hint : selectedItems.join(", "),
-          style: const TextStyle(fontSize: 14, color: Colors.black),
-          overflow: TextOverflow.ellipsis,
+Widget commonMultiDropdownButton(List<DropdownMenuItem<String>>? items, List<String> selectedItems, double width, double height, Color color, {String hint = '',Rxn<String>? error, Color borderColor = Colors.transparent, double? upOffset}) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: BoxDecoration(
+          border: Border.all(color: error?.value?.isEmpty ?? true ? borderColor : appColors.declineColor, width: 1.5),
+          borderRadius: BorderRadius.circular(8.0),
         ),
-        items: items,
-        onChanged: (_) {},
-        dropdownStyleData: DropdownStyleData(
-          maxHeight: height * .25,
-          width: width * .9,
-          elevation: 4,
-          offset: Offset(0, upOffset ?? height * .25),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: appColors.contentWhite),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton2<String>(
+            isExpanded: true,
+            hint: Text(
+              selectedItems.isEmpty ? hint : selectedItems.join(", "),
+              style: const TextStyle(fontSize: 14, color: Colors.black),
+              overflow: TextOverflow.ellipsis,
+            ),
+            items: items,
+            onChanged: (_) {},
+            dropdownStyleData: DropdownStyleData(
+              maxHeight: height * .25,
+              width: width * .9,
+              elevation: 4,
+              offset: Offset(0, upOffset ?? height * .25),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: appColors.contentWhite),
+            ),
+          ),
         ),
       ),
-    ),
+      if (error?.value?.isNotEmpty ?? false)
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0, left: 10.0),
+          child: Text(error?.value ?? '', style: TextStyle(color: appColors.declineColor, fontSize: 13)),
+        ),
+    ],
   );
 }
 
@@ -742,28 +751,37 @@ Widget phoneTextField(
     languageCode: "en",
     onChanged: onCountryCodeChange,
     onCountryChanged: onCountryChanged,
+
+    // Implement on the IntlPhoneField Plugin for Not Opening the Country Dialog
+    //  final bool isDialogOpen;
+    //  this.isDialogOpen = false,
+    //  onTap: widget.enabled ? widget.isDialogOpen? _changeCountry:null : null,
   );
 }
 
 Widget squareCheckBoxWithLabel(bool value, ValueChanged<bool> onChanged, {String label = "Mark as default", double size = 21, double radius = 5, Color borderColor = Colors.grey, Color checkedColor = Colors.blue, Color uncheckedColor = Colors.white, TextStyle? labelStyle}) {
   return GestureDetector(
+    behavior: HitTestBehavior.opaque,
     onTap: () => onChanged(!value),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            color: value ? checkedColor : uncheckedColor,
-            borderRadius: BorderRadius.circular(radius),
-            border: Border.all(color: borderColor, width: 2),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              color: value ? checkedColor : uncheckedColor,
+              borderRadius: BorderRadius.circular(radius),
+              border: Border.all(color: borderColor, width: 2),
+            ),
+            child: value ? Icon(Icons.check, size: 16, color: appColors.contentWhite) : null,
           ),
-          child: value ? Icon(Icons.check, size: 16, color: appColors.contentWhite) : null,
-        ),
-        const SizedBox(width: 8),
-        Text(label, style: labelStyle ?? const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-      ],
+          const SizedBox(width: 8),
+          Text(label, style: labelStyle ?? const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        ],
+      ),
     ),
   );
 }

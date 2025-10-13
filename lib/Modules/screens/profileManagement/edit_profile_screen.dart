@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/common/common_back.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/get_media_phone_gallery.dart';
 import 'package:bhk_artisan/common/my_utils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -67,11 +66,7 @@ class EditProfile extends ParentWidget {
                         () {
                           if (!controller.isButtonEnabled.value) return;
                           controller.isButtonEnabled.value = false;
-                          if (controller.validateStringForm() == null) {
-                            controller.updateProfileApi();
-                          } else {
-                            CommonMethods.showToast(controller.validateStringForm() ?? appStrings.mandatoryFields);
-                          }
+                          controller.validateForm() ? controller.updateProfileApi() : null;
                           enableButtonAfterDelay(controller.isButtonEnabled);
                         },
                         hint: appStrings.save,
@@ -89,11 +84,8 @@ class EditProfile extends ParentWidget {
                             () {
                               if (!controller.isButtonEnabled.value) return;
                               controller.isButtonEnabled.value = false;
-                              if (controller.validateStringForm() == null) {
-                                controller.updateProfileApi();
-                              } else {
-                                CommonMethods.showToast(controller.validateStringForm() ?? appStrings.mandatoryFields);
-                              }
+                              print(controller.validateForm());
+                              controller.validateForm() ? controller.updateProfileApi() : null;
                               enableButtonAfterDelay(controller.isButtonEnabled);
                             },
                             hint: appStrings.save,
@@ -221,15 +213,106 @@ class EditProfile extends ParentWidget {
   Widget content(BuildContext context, double w, double h, UpdateProfileController controller) {
     return Column(
       children: [
-        commonComponent(appStrings.firstName, commonTextField(controller.firstNameController.value, controller.firstNameFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.firstNameHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
+        commonComponent(
+          appStrings.firstName,
+          commonTextField(
+            controller.firstNameController.value,
+            controller.firstNameFocusNode.value,
+            w,
+            error: controller.firstNameError,
+            (value) {},
+            onChange: (value) {
+              controller.firstNameController.value.text = value;
+              controller.firstNameError.value = null;
+            },
+            fontSize: 14,
+            hint: appStrings.firstNameHint,
+            maxLines: 1,
+            inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+          ),
+        ),
         16.kH,
-        commonComponent(appStrings.lastName, commonTextField(controller.lastNameController.value, controller.lastNameFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.lastNameHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
+        commonComponent(
+          appStrings.lastName,
+          commonTextField(
+            controller.lastNameController.value,
+            controller.lastNameFocusNode.value,
+            w,
+            error: controller.lastNameError,
+            (value) {},
+            onChange: (value) {
+              controller.lastNameController.value.text = value;
+              controller.lastNameError.value = null;
+            },
+            fontSize: 14,
+            hint: appStrings.lastNameHint,
+            maxLines: 1,
+            inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+          ),
+        ),
         16.kH,
-        commonComponent(appStrings.email, commonTextField(controller.emailController.value, controller.emailFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.emailHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
+        commonComponent(
+          appStrings.email,
+          commonTextField(
+            controller.emailController.value,
+            controller.emailFocusNode.value,
+            w,
+            error: controller.emailError,
+            (value) {},
+            onChange: (value) {
+              controller.emailController.value.text = value;
+              controller.emailError.value = null;
+            },
+            fontSize: 14,
+            hint: appStrings.emailHint,
+            maxLines: 1,
+            inputFormatters: [NoLeadingSpaceFormatter(), LengthLimitingTextInputFormatter(50)],
+          ),
+          mandatory: false,
+        ),
         16.kH,
         if (controller.isNewUser.value) ...[
-          commonComponent(appStrings.aadhaarNumber, commonTextField(controller.aadharController.value, controller.aadharFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterAadhaarNumber, maxLines: 1, keyboardType: TextInputType.numberWithOptions(decimal: false), inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(12)], maxLength: 12, isCounter: true)),
-          commonComponent(appStrings.gstNumber, commonTextField(controller.gstController.value, controller.gstFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.gstNumberHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]), mandatory: false),
+          commonComponent(
+            appStrings.aadhaarNumber,
+            commonTextField(
+              controller.aadharController.value,
+              controller.aadharFocusNode.value,
+              w,
+              error: controller.aadharError,
+              (value) {},
+              onChange: (value) {
+                controller.aadharController.value.text = value;
+                controller.aadharError.value = null;
+              },
+              fontSize: 14,
+              hint: appStrings.enterAadhaarNumber,
+              maxLines: 1,
+              keyboardType: TextInputType.numberWithOptions(decimal: false),
+              inputFormatters: [NoLeadingZeroFormatter(), FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(12)],
+              maxLength: 12,
+              isCounter: true,
+            ),
+          ),
+          controller.aadharError.value !=null?16.kH:0.kH,
+          commonComponent(
+            appStrings.gstNumber,
+            commonTextField(
+              controller.gstController.value,
+              controller.gstFocusNode.value,
+              w,
+              error: controller.gstError,
+              (value) {},
+              onChange: (value) {
+                controller.gstController.value.text = value;
+                controller.gstError.value = null;
+              },
+              fontSize: 14,
+              hint: appStrings.gstNumberHint,
+              maxLines: 1,
+              inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+            ),
+            mandatory: false,
+          ),
           16.kH,
           Row(
             children: [
@@ -247,9 +330,11 @@ class EditProfile extends ParentWidget {
                     controller.selectedCategory.value?.categoryValue,
                     w * 0.5,
                     h,
+                    error: controller.categoryError,
                     appColors.backgroundColor,
                     (String? newValue) {
                       if (newValue != null) {
+                        controller.categoryError.value = null;
                         controller.selectedCategory.value = UserCasteCategory.values.firstWhere((e) => e.categoryValue == newValue);
                       }
                     },
@@ -261,7 +346,24 @@ class EditProfile extends ParentWidget {
               10.kW,
               Expanded(
                 flex: 3,
-                child: commonComponent(appStrings.caste, commonTextField(controller.communityController.value, controller.communityFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.enterCaste, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)])),
+                child: commonComponent(
+                  appStrings.caste,
+                  commonTextField(
+                    controller.communityController.value,
+                    controller.communityFocusNode.value,
+                    w,
+                    error: controller.communityError,
+                    (value) {},
+                    onChange: (value) {
+                      controller.communityController.value.text = value;
+                      controller.communityError.value = null;
+                    },
+                    fontSize: 14,
+                    hint: appStrings.enterCaste,
+                    maxLines: 1,
+                    inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+                  ),
+                ),
               ),
             ],
           ),
@@ -286,6 +388,7 @@ class EditProfile extends ParentWidget {
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
+                    controller.expertiseError.value = null;
                     if (isSelected) {
                       controller.selectedMultiExpertise.remove(item.categoryName);
                     } else {
@@ -325,6 +428,7 @@ class EditProfile extends ParentWidget {
         controller.selectedMultiExpertise,
         w,
         h,
+        error: controller.expertiseError,
         appColors.backgroundColor,
         hint: appStrings.selectExpertise,
         borderColor: appColors.border,

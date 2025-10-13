@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class AppConstantsList {
-  static final List<String> issueType = ['Technical Problem', 'Connectivity Issue', 'User Interface Problem', 'Other'].obs;
+  static final List<String> issueType = ['Technical Problem', 'Connectivity Issue', 'User Interface Problem', 'Others'].obs;
 
   static final List<String> weights = ['gm', 'kg'].obs;
 

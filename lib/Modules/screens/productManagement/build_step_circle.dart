@@ -5,7 +5,7 @@ import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-Widget buildCircle(active, AddProductController controller) {
+Widget buildCircle(int active, AddProductController controller) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -31,6 +31,7 @@ bool hasCompleted(int step, AddProductController controller) {
 
 Widget buildStepCircle(String title, int stepNumber, bool isActive, bool completed, void Function()? onTap) {
   return GestureDetector(
+    behavior: HitTestBehavior.opaque,
     onTap: onTap,
     child: Row(
       children: [

@@ -1,10 +1,11 @@
 import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
 import 'package:bhk_artisan/Modules/model/get_subcategory_model.dart';
-import 'package:bhk_artisan/Modules/model/pre_signed_intro_video_model.dart' show PreSignedIntroVideoModel;
+import 'package:bhk_artisan/Modules/model/pre_signed_intro_video_model.dart';
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/common_constants.dart';
 import 'package:bhk_artisan/resources/enums/caste_category_enum.dart';
+import 'package:bhk_artisan/resources/validation.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,15 @@ class UpdateProfileController extends GetxController {
   var introUploaded = Rxn<String>();
   var havingIntro = false.obs;
 
+  var firstNameError = Rxn<String>();
+  var lastNameError = Rxn<String>();
+  var aadharError = Rxn<String>();
+  var communityError = Rxn<String>();
+  var categoryError = Rxn<String>();
+  var expertiseError = Rxn<String>();
+  var emailError = Rxn<String>();
+  var gstError = Rxn<String>();
+
   final Rx<UserCasteCategory?> selectedCategory = Rx<UserCasteCategory?>(null);
   final List<UserCasteCategory> casteCategories = UserCasteCategory.values;
 
@@ -54,31 +64,40 @@ class UpdateProfileController extends GetxController {
     getProfileApi();
   }
 
-  String? validateStringForm() {
-    final email = emailController.value.text.trim();
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if ((firstNameController.value.text.isEmpty) && (lastNameController.value.text.isEmpty) && (aadharController.value.text.isEmpty) && (selectedMultiExpertise.isEmpty) && (introUploaded.value == null) && (communityController.value.text.isEmpty) && (selectedCategory.value == null)) {
-      return "Please fill all the mandatory fields";
-    } else if (firstNameController.value.text.isEmpty) {
-      return "Please Enter Your First Name";
-    } else if (lastNameController.value.text.isEmpty) {
-      return "Please Enter Your Last Name";
-    } else if (selectedMultiExpertise.isEmpty) {
-      return "Please Select Your Expertise";
-    } else if (selectedCategory.value == null) {
-      return "Please Select Your Category";
-    } else if (aadharController.value.text.isEmpty) {
-      return "Please Enter Your Aadhar Number";
-    } else if (aadharController.value.text.length != 12) {
-      return "Invalid Aadhar Number";
-    } else if (emailController.value.text.isNotEmpty && !emailRegex.hasMatch(email)) {
-      return "Please Enter a Valid Email Address";
-    } else if (communityController.value.text.isEmpty) {
-      return "Please Enter Your Caste";
-    } else if (introUploaded.value == null) {
-      return "Please Upload Your Intro";
+  bool validateForm() {
+    if ((firstNameController.value.text.isEmpty) || (lastNameController.value.text.isEmpty)||(emailController.value.text.isNotEmpty && !Validator.isEmailValid(emailController.value.text.trim()))||(aadharController.value.text.isEmpty) ||!Validator.isAadharNumberValid(aadharController.value.text.trim())||((gstController.value.text.isNotEmpty) && !Validator.isGSTNumberValid(gstController.value.text.trim())) || (selectedMultiExpertise.isEmpty) || (introUploaded.value == null) || (communityController.value.text.isEmpty) || (selectedCategory.value == null)) {
+      if ((firstNameController.value.text.isEmpty)) {
+        firstNameError.value = "Please Enter Your First Name";
+      }
+      if ((lastNameController.value.text.isEmpty)) {
+        lastNameError.value = "Please Enter Your Last Name";
+      }
+      if (emailController.value.text.isNotEmpty && !Validator.isEmailValid(emailController.value.text.trim())) {
+        emailError.value = "Please Enter a Valid Email Address";
+      }
+      if ((aadharController.value.text.isEmpty)) {
+        aadharError.value = "Please Enter Your Aadhar Number";
+      } else if (!Validator.isAadharNumberValid(aadharController.value.text.trim())) {
+        aadharError.value = "Please Enter a Valid Aadhar Number";
+      }
+      if ((gstController.value.text.isNotEmpty) && !Validator.isGSTNumberValid(gstController.value.text.trim())) {
+        gstError.value = "Please Enter a Valid GST Number";
+      }
+      if (selectedMultiExpertise.isEmpty) {
+        expertiseError.value = "Please Select Your Expertise";
+      }
+      if (selectedCategory.value == null) {     
+        categoryError.value = "Please Select Your Category";
+      }
+      if (communityController.value.text.isEmpty) {
+        communityError.value = "Please Enter Your Caste";
+      }
+      if (introUploaded.value == null) {
+        CommonMethods.showToast("Please Upload Your Intro");
+      }
+      return false;
     }
-    return null;
+    return true;
   }
 
   void loadData() {

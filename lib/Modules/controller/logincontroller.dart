@@ -2,6 +2,7 @@ import 'package:bhk_artisan/Modules/model/login_model.dart';
 import 'package:bhk_artisan/common/common_constants.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/validation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:bhk_artisan/utils/utils.dart';
@@ -29,7 +30,7 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
     } else {
       if (phoneController.value.text.length != maxlength.value) {
         errorMessage.value = appStrings.loginvalidPhone;
-      } else if (!RegExp(r'^[6-9]').hasMatch(phoneController.value.text.trim())) {
+      } else if (!Validator.isPhoneNumberValid(phoneController.value.text.trim())) {
         errorMessage.value = appStrings.loginvalidPhone;
       } else {
         errorMessage.value = appStrings.loginerrormessage;
