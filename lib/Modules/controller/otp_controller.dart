@@ -16,11 +16,11 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
   final _api = LoginRepository();
   var checkInternetValue = false.obs();
   final verifyOTPData = VerifyOTPModel().obs;
-  dynamic errorMessage;
   var otpController = TextEditingController().obs;
   var otp = "".obs;
   final logInData = LoginModel().obs;
   var isButtonEnabled = true.obs;
+  var errorMessage = Rxn<String>();
 
   late final AnimationController animationController;
   void setLoginData(LoginModel value) => logInData.value = value;
@@ -89,6 +89,7 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
   }
 
   Future<void> resendOtp(context) async {
+    errorMessage.value = null;
     if (!isButtonEnabled.value) return;
     isButtonEnabled.value = false;
     otpController.value.text = "";

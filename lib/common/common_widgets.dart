@@ -589,7 +589,7 @@ Widget commonDropdownButton(List<DropdownMenuItem<String>>? items, String? selec
   );
 }
 
-Widget commonMultiDropdownButton(List<DropdownMenuItem<String>>? items, List<String> selectedItems, double width, double height, Color color, {String hint = '',Rxn<String>? error, Color borderColor = Colors.transparent, double? upOffset}) {
+Widget commonMultiDropdownButton(List<DropdownMenuItem<String>>? items, List<String> selectedItems, double width, double height, Color color, {String hint = '', Rxn<String>? error, Color borderColor = Colors.transparent, double? upOffset}) {
   return Column(
     mainAxisSize: MainAxisSize.min,
     mainAxisAlignment: MainAxisAlignment.start,
@@ -1106,35 +1106,47 @@ Widget checkButtonObjective(
   );
 }
 
-Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged, bool autoFocus = true, Color backgroundColor = Colors.grey, List<TextInputFormatter>? inputFormatters}) {
-  return PinCodeTextField(
-    appContext: context,
-    length: length,
-    inputFormatters: inputFormatters ?? [],
-    keyboardType: TextInputType.number,
-    animationType: AnimationType.fade,
-    autoFocus: autoFocus,
-    cursorColor: appColors.contentPrimary,
-    cursorHeight: fontSize,
-    textStyle: TextStyle(fontSize: fontSize, color: appColors.contentPrimary, fontWeight: FontWeight.w800, fontFamily: appFonts.NunitoBold),
-    pastedTextStyle: TextStyle(color: appColors.contentPrimary, fontFamily: appFonts.NunitoBold),
-    controller: controller,
-    pinTheme: PinTheme(
-      shape: PinCodeFieldShape.box,
-      borderRadius: BorderRadius.circular(borderRadius),
-      fieldHeight: fieldHeight ?? Get.height * 0.075,
-      fieldWidth: fieldWidth ?? Get.width * 0.14,
-      activeFillColor: backgroundColor.withValues(alpha: 0.9),
-      selectedColor: appColors.border,
-      activeColor: appColors.border,
-      selectedFillColor: backgroundColor.withValues(alpha: 0.9),
-      inactiveColor: appColors.border,
-      inactiveFillColor: backgroundColor.withValues(alpha: 0.9),
-    ),
-    enableActiveFill: true,
-    enablePinAutofill: true,
-    onChanged: onChanged,
-    onCompleted: onSubmitted,
+Widget otpField(BuildContext context, TextEditingController controller, length, void Function(String) onSubmitted, {double? fieldWidth, Rxn<String>? error, double? fieldHeight, double fontSize = 21, double borderRadius = 10, void Function(String)? onChanged, bool autoFocus = true, Color backgroundColor = Colors.grey, List<TextInputFormatter>? inputFormatters}) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      PinCodeTextField(
+        appContext: context,
+        length: length,
+        inputFormatters: inputFormatters ?? [],
+        keyboardType: TextInputType.number,
+        animationType: AnimationType.fade,
+        autoFocus: autoFocus,
+        cursorColor: appColors.contentPrimary,
+        cursorHeight: fontSize,
+        textStyle: TextStyle(fontSize: fontSize, color: appColors.contentPrimary, fontWeight: FontWeight.w800, fontFamily: appFonts.NunitoBold),
+        pastedTextStyle: TextStyle(color: appColors.contentPrimary, fontFamily: appFonts.NunitoBold),
+        controller: controller,
+        pinTheme: PinTheme(
+          shape: PinCodeFieldShape.box,
+          borderRadius: BorderRadius.circular(borderRadius),
+          fieldHeight: fieldHeight ?? Get.height * 0.075,
+          fieldWidth: fieldWidth ?? Get.width * 0.14,
+          activeFillColor: backgroundColor.withValues(alpha: 0.9),
+          selectedColor: error?.value?.isNotEmpty ?? false ? appColors.declineColor : appColors.border,
+          activeColor: error?.value?.isNotEmpty ?? false ? appColors.declineColor : appColors.border,
+          selectedFillColor: backgroundColor.withValues(alpha: 0.9),
+          inactiveColor: error?.value?.isNotEmpty ?? false ? appColors.declineColor : appColors.border,
+          inactiveFillColor: backgroundColor.withValues(alpha: 0.9),
+        ),
+        enableActiveFill: true,
+        enablePinAutofill: true,
+        onChanged: onChanged,
+        onCompleted: onSubmitted,
+      ),
+      if (error?.value?.isNotEmpty ?? false)
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Text(error?.value ?? '', style: TextStyle(color: appColors.declineColor, fontSize: 13)),
+        ),
+    ],
   );
 }
 

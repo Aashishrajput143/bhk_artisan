@@ -16,14 +16,13 @@ class AppStrings {
   String get getOTP => 'GET OTP';
   String get welcomeBack => 'Welcome back, you\'ve been missed!';
   String get letsSignIn => "Log In or Sign Up to Continue";
-  String get or => 'Or';
   String get phoneVerification => "OTP Verification";
   String get editNumber => "Edit Phone Number?";
 
   //Otp Verification
   String get verifyPhoneNumber => "Verify Phone Number";
   String get otpDesc => "We need to register your phone number before getting started";
-  String get pleaseEnterOTP => "Please Enter OTP";
+  String get pleaseEnterOTP => "Please Enter the OTP";
   String get reSend => 'Resend';
   String get reSendCode => 'Resend OTP in ';
 

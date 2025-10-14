@@ -24,7 +24,7 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   late final AnimationController animationController;
 
   void validateAndLogin() async {
-    if (phoneController.value.text.isNotEmpty && phoneController.value.text.length == maxlength.value) {
+    if (phoneController.value.text.isNotEmpty && phoneController.value.text.length == maxlength.value && Validator.isPhoneNumberValid(phoneController.value.text.trim())) {
       errorMessage.value = null;
       logInAndRegister();
     } else {

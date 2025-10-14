@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/my_utils.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -53,7 +52,18 @@ class OtpScreen extends ParentWidget {
                           textAlign: TextAlign.center,
                         ),
                         30.kH,
-                        otpField(context, controller.otpController.value, 6, onChanged: (pin) => controller.otp.value = pin.toString(), (pin) => controller.otp.value = pin.toString(), inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
+                        otpField(
+                          context,
+                          controller.otpController.value,
+                          6,
+                          onChanged: (pin) {
+                            controller.errorMessage.value = null;
+                            controller.otp.value = pin.toString();
+                          },
+                          error: controller.errorMessage,
+                          (pin) => controller.otp.value = pin.toString(),
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        ),
                         6.kH,
                         controller.startTime.value > 0
                             ? Text(
@@ -74,7 +84,7 @@ class OtpScreen extends ParentWidget {
                             if (controller.otp.value.length == 6) {
                               controller.otpVerificationApi();
                             } else {
-                              CommonMethods.showToast(appStrings.pleaseEnterOTP);
+                              controller.errorMessage.value = appStrings.pleaseEnterOTP;
                             }
                             enableButtonAfterDelay(controller.isButtonEnabled);
                           },
