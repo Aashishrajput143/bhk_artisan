@@ -61,7 +61,7 @@ class ViewProfile extends ParentWidget {
                 ],
               ),
               if (controller.profileData.value.data?.gstNumber != null) commonCards(appStrings.gstNumber, controller.profileData.value.data?.gstNumber ?? "", Icons.business),
-              commonChipsCards(appStrings.expertise,controller.profileData.value.data?.expertizeField?.split(',') ?? [], Icons.work_outline),
+              commonChipsCards(appStrings.expertise, controller.profileData.value.data?.expertizeField?.split(',') ?? [], Icons.work_outline),
             ],
           ),
         ),
@@ -92,10 +92,17 @@ class ViewProfile extends ParentWidget {
         subtitle: Wrap(
           spacing: 6.0,
           children: expertiseList.map((e) {
-            return Chip(
-              label: Text(e.trim(), style: const TextStyle(fontSize: 14, color: Colors.white)),
-              backgroundColor: appColors.brownbuttonBg,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.brown.shade50,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.brown.shade200),
+              ),
+              child: Text(
+                e,
+                style: TextStyle(fontSize: 14, color: Colors.brown.shade700, fontWeight: FontWeight.w500),
+              ),
             );
           }).toList(),
         ),

@@ -370,7 +370,7 @@ class AddProductPage extends ParentWidget {
                 children: [
                   Expanded(
                     flex: 6,
-                    child: commonTextField(controller.netweightController.value, controller.netweightFocusNode.value, w, (value) {}, hint: "${appStrings.enterNetWeight}(in ${controller.dropdownValues})", inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
+                    child: commonTextField(controller.netweightController.value,keyboardType: TextInputType.numberWithOptions(decimal: true), controller.netweightFocusNode.value, w, (value) {}, hint: "${appStrings.enterNetWeight}(in ${controller.dropdownValues})", inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
