@@ -92,7 +92,7 @@ class UpdateProfileController extends GetxController {
       if (communityController.value.text.isEmpty) {
         communityError.value = "Please Enter Your Caste";
       }
-      if (introUploaded.value == null) {
+      if (selectedIntroVideo.value == null) {
         CommonMethods.showToast("Please Upload Your Intro");
       }
       return false;
@@ -134,6 +134,7 @@ class UpdateProfileController extends GetxController {
     if (introVideo.isNotEmpty) {
       havingIntro.value = true;
       introUploaded.value = introVideo;
+      selectedIntroVideo.value = introVideo;
     }
   }
 
@@ -277,10 +278,11 @@ class UpdateProfileController extends GetxController {
       _api
           .addIntroVideoApi(selectedIntroVideo.value ?? "", presignedUrl)
           .then((value) {
-            setRxRequestStatus(Status.COMPLETED);
+            //setRxRequestStatus(Status.COMPLETED);
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> $value");
             if (value) introUploaded.value = "https://bhk-bucket-dev.s3.us-east-1.amazonaws.com/$key";
+            updateProfileApi();
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

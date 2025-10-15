@@ -66,7 +66,7 @@ class EditProfile extends ParentWidget {
                         () {
                           if (!controller.isButtonEnabled.value) return;
                           controller.isButtonEnabled.value = false;
-                          controller.validateForm() ? controller.updateProfileApi() : null;
+                          controller.validateForm() ? controller.getPreSignedIntroUrlApi() : null;
                           enableButtonAfterDelay(controller.isButtonEnabled);
                         },
                         hint: appStrings.save,
@@ -84,8 +84,7 @@ class EditProfile extends ParentWidget {
                             () {
                               if (!controller.isButtonEnabled.value) return;
                               controller.isButtonEnabled.value = false;
-                              print(controller.validateForm());
-                              controller.validateForm() ? controller.updateProfileApi() : null;
+                              controller.validateForm() ? controller.getPreSignedIntroUrlApi() : null;
                               enableButtonAfterDelay(controller.isButtonEnabled);
                             },
                             hint: appStrings.save,
@@ -179,7 +178,7 @@ class EditProfile extends ParentWidget {
           () {
             if (controller.havingIntro.value) {
               Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.introUploaded.value});
-            } else if (controller.introUploaded.value?.isEmpty ?? true) {
+            } else if (controller.selectedIntroVideo.value?.isEmpty ?? true) {
               bottomDrawer(
                 context,
                 h * 0.22,
@@ -187,11 +186,11 @@ class EditProfile extends ParentWidget {
                 controller.selectedIntroVideo,
                 () {
                   Get.back();
-                  pickVideoFromGallery(controller.selectedIntroVideo, true, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
+                  pickVideoFromGallery(controller.selectedIntroVideo, true);
                 },
                 () {
                   Get.back();
-                  pickVideoFromGallery(controller.selectedIntroVideo, false, onVideoPicked: () => controller.getPreSignedIntroUrlApi());
+                  pickVideoFromGallery(controller.selectedIntroVideo, false);
                 },
                 isVideo: true,
               );
@@ -200,7 +199,7 @@ class EditProfile extends ParentWidget {
           icon: Icons.video_call,
           hint: controller.havingIntro.value
               ? appStrings.viewIntro
-              : controller.introUploaded.value?.isNotEmpty ?? false
+              : controller.selectedIntroVideo.value?.isNotEmpty ?? false
               ? appStrings.uploadedtick
               : appStrings.uploadIntro,
           forward: false,
