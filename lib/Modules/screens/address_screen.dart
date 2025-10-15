@@ -309,11 +309,12 @@ class AddressScreen extends ParentWidget {
                                 ),
                               ),
                               8.kH,
+                              Obx(()=>
                               squareCheckBoxWithLabel(
                                 controller.hasDefault.value,
                                 (val) {
                                   if (controller.getAddressModel.value.data?.isNotEmpty ?? false) {
-                                    if ((controller.getAddressModel.value.data?.length ?? 0) >= 1) {
+                                    if ((controller.getAddressModel.value.data?.length ?? 0) > 0) {
                                       controller.hasDefault.value = val;
                                     }
                                   }
@@ -322,7 +323,7 @@ class AddressScreen extends ParentWidget {
                                 checkedColor: appColors.brownDarkText,
                                 uncheckedColor: Colors.transparent,
                                 borderColor: appColors.brownDarkText,
-                              ),
+                              )),
                               8.kH,
                             ],
                           ),
