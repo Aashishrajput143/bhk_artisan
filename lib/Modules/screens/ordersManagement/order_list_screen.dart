@@ -113,7 +113,9 @@ class OrderList extends ParentWidget {
                     if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name)
                       buildOrderDetailColumn(
                         appStrings.orderStatus,
-                        steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
+                        steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
+                            ? OrderStatus.WAIT_FOR_PICKUP.displayText
+                            : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
                             ? OrderStatus.ADMIN_APPROVED.displayText
                             : steps?.buildStatus == OrderStatus.COMPLETED.name
                             ? OrderStatus.INREVIEW.displayText
@@ -122,7 +124,7 @@ class OrderList extends ParentWidget {
                             : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                             ? OrderStatus.PENDING.displayText
                             : OrderStatus.REJECTED.displayText,
-                        color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.buildStatus == OrderStatus.COMPLETED.name
+                        color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name
                             ? appColors.acceptColor
                             : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                             ? appColors.brownDarkText
@@ -229,7 +231,9 @@ class OrderList extends ParentWidget {
                   Icon(Icons.circle, color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name ? appColors.declineColor : appColors.acceptColor, size: 8),
                   4.kW,
                   Text(
-                   steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name?appStrings.orderapproved: steps?.artisanAgreedStatus == OrderStatus.PENDING.name
+                    steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
+                        ? appStrings.orderapproved
+                        : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                         ? appStrings.orderNeedsAction
                         : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
                         ? appStrings.orderConfirmed

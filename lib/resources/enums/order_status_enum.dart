@@ -1,4 +1,4 @@
-enum OrderStatus { PENDING, REJECTED, ACCEPTED, COMPLETED, DELIVERED,INREVIEW,ADMIN_APPROVED}
+enum OrderStatus { PENDING, REJECTED, ACCEPTED, COMPLETED, DELIVERED,INREVIEW,ADMIN_APPROVED,WAIT_FOR_PICKUP}
 
 extension OrderStatusExtension on OrderStatus {
   String get displayText {
@@ -17,6 +17,8 @@ extension OrderStatusExtension on OrderStatus {
         return "In Review";
       case OrderStatus.ADMIN_APPROVED:
         return "Approved";
+      case OrderStatus.WAIT_FOR_PICKUP:
+        return "Awaiting Pickup";
     }
   }
 
@@ -34,6 +36,8 @@ extension OrderStatusExtension on OrderStatus {
         return OrderStatus.INREVIEW;
       case "ADMIN_APPROVED":
         return OrderStatus.ADMIN_APPROVED;
+      case "WAIT_FOR_PICKUP":
+        return OrderStatus.WAIT_FOR_PICKUP;
       case "PENDING":
       default:
         return OrderStatus.PENDING;

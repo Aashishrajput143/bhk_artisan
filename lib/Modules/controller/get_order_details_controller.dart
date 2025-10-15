@@ -15,7 +15,6 @@ class GetOrderDetailsController extends GetxController {
   final _api = OrderRepository();
   var id = 0.obs;
   var addressId = 0.obs;
-  var hasAddress = false.obs;
   var lastChecked = "".obs;
 
   var currentIndex = 0.obs;
@@ -115,6 +114,7 @@ class GetOrderDetailsController extends GetxController {
   final rxRequestStatus = Status.COMPLETED.obs;
   final getOrderStepModel = OrderDetailsModel().obs;
   final updateOrderStatusModel = UpdateOrderStatusModel().obs;
+  final updatePickupAddressModel = UpdateOrderStatusModel().obs;
 
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
@@ -122,6 +122,7 @@ class GetOrderDetailsController extends GetxController {
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
   void setOrderStepdata(OrderDetailsModel value) => getOrderStepModel.value = value;
   void setOrderStatusModel(UpdateOrderStatusModel value) => updateOrderStatusModel.value = value;
+  void setPickupAddressModel(UpdateOrderStatusModel value) => updatePickupAddressModel.value = value;
 
   Future<void> getOrderStepApi({bool loader = true, bool isActive = true}) async {
     var connection = await CommonMethods.checkInternetConnectivity();
@@ -147,11 +148,11 @@ class GetOrderDetailsController extends GetxController {
     }
   }
 
-  Future<void> updateOrderStatusApi(var status, var id, {bool loader = false}) async {
+  Future<void> updateOrderStatusApi(var status, {bool loader = false}) async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
-    Map<String, dynamic> data = {"buildStepId": id, "status": status};
+    Map<String, dynamic> data = {"buildStepId": id.value, "status": status};
 
     if (connection == true) {
       if (loader) setRxRequestStatus(Status.LOADING);
@@ -160,6 +161,30 @@ class GetOrderDetailsController extends GetxController {
           .then((value) {
             if (loader) setRxRequestStatus(Status.COMPLETED);
             setOrderStatusModel(value);
+            getOrderStepApi();
+            Utils.printLog("Response ${value.toString()}");
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+
+  Future<void> updatePickUpAddressApi({bool loader = false}) async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    Map<String, dynamic> data = {"buildStepId": id.value, "addressId": addressId.value};
+
+    if (connection == true) {
+      if (loader) setRxRequestStatus(Status.LOADING);
+      _api
+          .updatePickupAddressStatusApi(data)
+          .then((value) {
+            if (loader) setRxRequestStatus(Status.COMPLETED);
+            setPickupAddressModel(value);
             getOrderStepApi();
             Utils.printLog("Response ${value.toString()}");
           })

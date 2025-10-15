@@ -3,6 +3,7 @@ import 'package:bhk_artisan/Modules/controller/get_order_details_controller.dart
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/my_utils.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
@@ -95,7 +96,7 @@ class OrderDetailsPage extends ParentWidget {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.03),
       child: controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
-          ? controller.addressId.value != 0 && controller.hasAddress.value
+          ? controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
                 ? commonButtonContainer(w * 0.44, 50, appColors.cardBackground2, appColors.acceptColor, () {}, hint: appStrings.awaitingPickUp)
                 : commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => bottomDrawerSelectAddress(context, h, w, controller.addressController, controller), hint: appStrings.selectAddress)
           : (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name)
@@ -110,7 +111,7 @@ class OrderDetailsPage extends ParentWidget {
                   () => MyAlertDialog.showAlertDialog(
                     onPressed: () {
                       Get.back();
-                      controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name, controller.getOrderStepModel.value.data?.id);
+                      controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name);
                     },
                     icon: Icons.inventory_2,
                     title: appStrings.acceptOrder,
@@ -128,7 +129,7 @@ class OrderDetailsPage extends ParentWidget {
                   () => MyAlertDialog.showAlertDialog(
                     onPressed: () {
                       Get.back();
-                      controller.updateOrderStatusApi(OrderStatus.REJECTED.name, controller.getOrderStepModel.value.data?.id);
+                      controller.updateOrderStatusApi(OrderStatus.REJECTED.name);
                     },
                     icon: Icons.inventory_2,
                     title: appStrings.declineOrder,
@@ -154,7 +155,8 @@ class OrderDetailsPage extends ParentWidget {
       child: Column(
         children: [
           commonRow(
-            appStrings.orderStatus,
+            appStrings.orderStatus,controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
+                ?OrderStatus.WAIT_FOR_PICKUP.displayText:
             controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
                 ? OrderStatus.ADMIN_APPROVED.displayText
                 : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name
@@ -210,141 +212,146 @@ class OrderDetailsPage extends ParentWidget {
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return Obx(()=> Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      appStrings.selectAddress,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
-                    ),
-                  ),
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => Get.toNamed(RoutesClass.addresses)?.then((onValue) {
-                      Get.back();
-                      addresscontroller.getAddressApi();
-                      if (context.mounted) {
-                        bottomDrawerSelectAddress(context, h, w, addresscontroller, controller);
-                      }
-                    }),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        appStrings.manage,
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: appFonts.NunitoBold, color: appColors.brownDarkText),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              2.kH,
-              if (addresses.isEmpty) ...[
-                Center(
-                  child: Column(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SvgPicture.asset(appImages.emptyMap, color: appColors.brownbuttonBg),
-                      Text(appStrings.yourAddressEmpty, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      4.kH,
-                      Text(
-                        appStrings.emptyAddressDescription,
-                        style: TextStyle(fontSize: 14, color: appColors.contentSecondary),
-                        textAlign: TextAlign.center,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          appStrings.selectAddress,
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
+                        ),
+                      ),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => Get.toNamed(RoutesClass.addresses)?.then((onValue) {
+                          Get.back();
+                          addresscontroller.getAddressApi();
+                          if (context.mounted) {
+                            bottomDrawerSelectAddress(context, h, w, addresscontroller, controller);
+                          }
+                        }),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            appStrings.manage,
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: appFonts.NunitoBold, color: appColors.brownDarkText),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
-                20.kH,
-                commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () => Get.toNamed(RoutesClass.addresses), hint: appStrings.addAddress),
-              ],
-              if (addresses.isNotEmpty) ...[
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: addresses.length,
-                  itemBuilder: (context, index) {
-                    final address = addresses[index];
-                    return Obx(
-                      () => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  2.kH,
+                  if (addresses.isEmpty) ...[
+                    Center(
+                      child: Column(
                         children: [
-                          Theme(
-                            data: Theme.of(context).copyWith(
-                              radioTheme: RadioThemeData(
-                                fillColor: WidgetStateProperty.resolveWith((states) {
-                                  if (states.contains(WidgetState.selected)) {
-                                    return appColors.brownDarkText;
-                                  }
-                                  return appColors.contentPrimary;
-                                }),
-                              ),
-                            ),
-                            child: RadioMenuButton<int>(
-                              groupValue: addresses[index].id,
-                              style: ButtonStyle(overlayColor: WidgetStateProperty.all(Colors.transparent), backgroundColor: WidgetStateProperty.all(Colors.transparent), shadowColor: WidgetStateProperty.all(Colors.transparent), surfaceTintColor: WidgetStateProperty.all(Colors.transparent)),
-                              value: controller.addressId.value,
-                              onChanged: (value) {
-                                controller.addressId.value = addresses[index].id ?? 0;
-                                print(controller.addressId.value);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon((address.addressType ?? "").toAddressType().icon, size: 25, color: appColors.brownDarkText),
-                                        10.kW,
-                                        Text(
-                                          (address.addressType ?? "").toAddressType().displayName,
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: appColors.contentPending),
-                                        ),
-                                        if (address.isDefault ?? false) ...[10.kW, commonContainer(appStrings.defaultTag, appColors.brownDarkText, isBrown: true, pH: 14, borderWidth: 1.5)],
-                                      ],
-                                    ),
-                                    4.kH,
-                                    SizedBox(
-                                      width: w * 0.75,
-                                      child: Text(
-                                        softWrap: true,
-                                        overflow: TextOverflow.visible,
-                                        controller.getFullAddress(index),
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                          SvgPicture.asset(appImages.emptyMap, color: appColors.brownbuttonBg),
+                          Text(appStrings.yourAddressEmpty, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          4.kH,
+                          Text(
+                            appStrings.emptyAddressDescription,
+                            style: TextStyle(fontSize: 14, color: appColors.contentSecondary),
+                            textAlign: TextAlign.center,
                           ),
-                          if (index != addresses.length - 1) Divider(height: 1, thickness: 1),
                         ],
                       ),
-                    );
-                  },
-                ),
-                commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () {
-                  if (controller.addressId.value != 0) {
-                    controller.hasAddress.value = true;
-                    Navigator.pop(context);
-                  } else {
-                    CommonMethods.showToast(appStrings.selectAddress, icon: Icons.error, bgColor: appColors.declineColor);
-                  }
-                }, hint: appStrings.confirmAddress),
-              ],
-              16.kH,
-            ],
-          ),
-        );
+                    ),
+                    20.kH,
+                    commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () => Get.toNamed(RoutesClass.addresses), hint: appStrings.addAddress),
+                  ],
+                  if (addresses.isNotEmpty) ...[
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: addresses.length,
+                      itemBuilder: (context, index) {
+                        final address = addresses[index];
+                        return Obx(
+                          () => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Theme(
+                                data: Theme.of(context).copyWith(
+                                  radioTheme: RadioThemeData(
+                                    fillColor: WidgetStateProperty.resolveWith((states) {
+                                      if (states.contains(WidgetState.selected)) {
+                                        return appColors.brownDarkText;
+                                      }
+                                      return appColors.contentPrimary;
+                                    }),
+                                  ),
+                                ),
+                                child: RadioMenuButton<int>(
+                                  groupValue: addresses[index].id,
+                                  style: ButtonStyle(overlayColor: WidgetStateProperty.all(Colors.transparent), backgroundColor: WidgetStateProperty.all(Colors.transparent), shadowColor: WidgetStateProperty.all(Colors.transparent), surfaceTintColor: WidgetStateProperty.all(Colors.transparent)),
+                                  value: controller.addressId.value,
+                                  onChanged: (value) {
+                                    controller.addressId.value = addresses[index].id ?? 0;
+                                    print(controller.addressId.value);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon((address.addressType ?? "").toAddressType().icon, size: 25, color: appColors.brownDarkText),
+                                            10.kW,
+                                            Text(
+                                              (address.addressType ?? "").toAddressType().displayName,
+                                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: appColors.contentPending),
+                                            ),
+                                            if (address.isDefault ?? false) ...[10.kW, commonContainer(appStrings.defaultTag, appColors.brownDarkText, isBrown: true, pH: 14, borderWidth: 1.5)],
+                                          ],
+                                        ),
+                                        4.kH,
+                                        SizedBox(
+                                          width: w * 0.75,
+                                          child: Text(
+                                            softWrap: true,
+                                            overflow: TextOverflow.visible,
+                                            controller.getFullAddress(index),
+                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (index != addresses.length - 1) Divider(height: 1, thickness: 1),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () {
+                      if (controller.addressId.value != 0) {
+                        controller.updatePickUpAddressApi();
+                        Navigator.pop(context);
+                      } else {
+                        CommonMethods.showToast(appStrings.selectAddress, icon: Icons.error, bgColor: appColors.declineColor);
+                      }
+                    }, hint: appStrings.confirmAddress),
+                  ],
+                  16.kH,
+                ],
+              ),
+            ),
+            progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+          ],
+        ));
       },
     );
   }

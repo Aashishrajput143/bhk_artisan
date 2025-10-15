@@ -23,6 +23,11 @@ class OrderRepository {
     return UpdateOrderStatusModel.fromJson(response);
   }
 
+  Future<UpdateOrderStatusModel> updatePickupAddressStatusApi(var data) async {
+    dynamic response = await _apiServices.postEncodeApi(data, AppUrl.pickupAddress);
+    return UpdateOrderStatusModel.fromJson(response);
+  }
+
   Future<UpdateOrderStatusModel> updateOrderProgressApi(var data, var id) async {
     dynamic response = await _apiServices.putEncodeApi(data, "${AppUrl.orderStatus}$id/progress");
     return UpdateOrderStatusModel.fromJson(response);
