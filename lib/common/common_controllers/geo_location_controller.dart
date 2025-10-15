@@ -24,7 +24,6 @@ class LocationController extends GetxController {
 
   Future<void> getCurrentLocation() async {
     error.value = null;
-    print( error.value);
     setRxRequestStatus(Status.LOADING);
 
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -63,7 +62,6 @@ class LocationController extends GetxController {
 
       debugPrint("Live Latitude: ${latitude.value}");
       debugPrint("Live Longitude: ${longitude.value}");
-      print( error.value);
 
       await _updateAddress(position);
       setRxRequestStatus(Status.COMPLETED);

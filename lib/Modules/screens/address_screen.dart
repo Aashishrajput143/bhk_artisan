@@ -181,7 +181,7 @@ class AddressScreen extends ParentWidget {
       builder: (context) {
         return GetBuilder<AddressController>(
           initState: (state) => controller.loadLocation(),
-          builder: (ctrl) => Stack(
+          builder: (ctrl) => Obx(()=> Stack(
             children: [
               Container(
                 padding: const EdgeInsets.all(25),
@@ -359,7 +359,7 @@ class AddressScreen extends ParentWidget {
               progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
             ],
           ),
-        );
+        ));
       },
     );
   }
