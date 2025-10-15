@@ -178,6 +178,8 @@ class EditProfile extends ParentWidget {
           () {
             if (controller.havingIntro.value) {
               Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.introUploaded.value});
+            } else if (controller.selectedIntroVideo.value?.isNotEmpty ?? false) {
+              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.selectedIntroVideo.value});
             } else if (controller.selectedIntroVideo.value?.isEmpty ?? true) {
               bottomDrawer(
                 context,
@@ -200,7 +202,7 @@ class EditProfile extends ParentWidget {
           hint: controller.havingIntro.value
               ? appStrings.viewIntro
               : controller.selectedIntroVideo.value?.isNotEmpty ?? false
-              ? appStrings.uploadedtick
+              ? appStrings.viewIntro
               : appStrings.uploadIntro,
           forward: false,
           radius: 25,
@@ -292,7 +294,7 @@ class EditProfile extends ParentWidget {
               isCounter: true,
             ),
           ),
-          controller.aadharError.value !=null?16.kH:0.kH,
+          controller.aadharError.value != null ? 16.kH : 0.kH,
           commonComponent(
             appStrings.gstNumber,
             commonTextField(

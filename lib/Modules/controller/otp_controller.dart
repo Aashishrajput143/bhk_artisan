@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bhk_artisan/Modules/model/login_model.dart';
+import 'package:bhk_artisan/Modules/controller/logincontroller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,43 +14,30 @@ import '../repository/login_repository.dart';
 
 class OtpController extends GetxController with GetSingleTickerProviderStateMixin {
   final _api = LoginRepository();
-  var checkInternetValue = false.obs();
   final verifyOTPData = VerifyOTPModel().obs;
   var otpController = TextEditingController().obs;
   var otp = "".obs;
-  final logInData = LoginModel().obs;
   var isButtonEnabled = true.obs;
   var errorMessage = Rxn<String>();
 
+  LoginController loginController = Get.find<LoginController>();
+
   late final AnimationController animationController;
-  void setLoginData(LoginModel value) => logInData.value = value;
   final rxRequestStatus = Status.COMPLETED.obs;
 
   void setVerifyData(VerifyOTPModel value) => verifyOTPData.value = value;
-
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
 
   RxString error = ''.obs;
-
   void setError(String value) => error.value = value;
   var startTime = 30.obs;
-  var referenceId = 0.obs;
-  var identity = "".obs;
   Timer? timer;
-  var countryCode = "".obs;
 
   @override
   void onInit() {
     super.onInit();
     startTimerCountdown();
-    referenceId.value = Get.arguments["referenceId"];
-    identity.value = Get.arguments['identity'];
-
-    if (Get.arguments['countryCode'] != null) {
-      countryCode.value = Get.arguments['countryCode'];
-    }
     animationController = AnimationController(vsync: this, duration: const Duration(seconds: 6))..repeat();
-    debugPrint("${referenceId.value} ${identity.value} ${countryCode.value}");
   }
 
   void startTimerCountdown() {
@@ -71,7 +58,7 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
 
-      Map<String, dynamic> data = {"referenceId": referenceId.value, "otp": otp.value.toString()};
+      Map<String, dynamic> data = {"referenceId": loginController.logInData.value.data?.referenceId, "otp": otp.value.toString()};
       _api
           .verifyOtpApi(data)
           .then((value) {
@@ -93,36 +80,12 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
     if (!isButtonEnabled.value) return;
     isButtonEnabled.value = false;
     otpController.value.text = "";
-    var connection = await CommonMethods.checkInternetConnectivity();
-    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
-
-    if (connection == true) {
-      setRxRequestStatus(Status.LOADING);
-
-      Map<String, dynamic> data = {"identity": identity.value, "user_group": "ARTISAN", if (identity.value.isNotEmpty) "countryCode": countryCode.value};
-      _api
-          .logInApi(data)
-          .then((value) {
-            setRxRequestStatus(Status.COMPLETED);
-            setLoginData(value);
-            CommonMethods.showToast("${value.message} ${value.data?.oTP}");
-            Utils.printLog("Response===> ${value.toString()}");
-            startTime.value = 30;
-            otpController.value.clear();
-            startTimerCountdown();
-          })
-          .onError((error, stackTrace) {
-            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
-          });
-    } else {
-      CommonMethods.showToast(appStrings.weUnableCheckData);
-    }
+    loginController.logInAndRegister();
     enableButtonAfterDelay(isButtonEnabled);
   }
 
   redirect(VerifyOTPModel value) {
     Utils.savePreferenceValues(Constants.accessToken, "${verifyOTPData.value.data?.accessToken}");
-
     Utils.savePreferenceValues(Constants.email, "${verifyOTPData.value.data?.email}");
     if (!(value.data?.isNewUser ?? false) && (value.data?.name?.isNotEmpty ?? false)) {
       Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});

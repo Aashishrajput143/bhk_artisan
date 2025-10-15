@@ -65,7 +65,7 @@ class UpdateProfileController extends GetxController {
   }
 
   bool validateForm() {
-    if ((firstNameController.value.text.isEmpty) || (lastNameController.value.text.isEmpty)||(emailController.value.text.isNotEmpty && !Validator.isEmailValid(emailController.value.text.trim()))||(aadharController.value.text.isEmpty) ||!Validator.isAadharNumberValid(aadharController.value.text.trim())||((gstController.value.text.isNotEmpty) && !Validator.isGSTNumberValid(gstController.value.text.trim())) || (selectedMultiExpertise.isEmpty) || (introUploaded.value == null) || (communityController.value.text.isEmpty) || (selectedCategory.value == null)) {
+    if ((firstNameController.value.text.isEmpty) || (lastNameController.value.text.isEmpty)||(emailController.value.text.isNotEmpty && !Validator.isEmailValid(emailController.value.text.trim()))||(aadharController.value.text.isEmpty) ||!Validator.isAadharNumberValid(aadharController.value.text.trim())||((gstController.value.text.isNotEmpty) && !Validator.isGSTNumberValid(gstController.value.text.trim())) || (selectedMultiExpertise.isEmpty) || (selectedIntroVideo.value == null) || (communityController.value.text.isEmpty) || (selectedCategory.value == null)) {
       if ((firstNameController.value.text.isEmpty)) {
         firstNameError.value = "Please Enter Your First Name";
       }

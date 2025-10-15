@@ -137,7 +137,7 @@ Future<void> pickVideoFromGallery(Rxn<String> selectedVideo, bool fromGallery, {
     debugPrint('Video resolution: ${width}x$height');
     debugPrint('Video duration: ${videoDuration.inSeconds} seconds');
 
-    if (videoDuration > Duration(seconds: maxSeconds)) {
+    if (videoDuration.inSeconds > maxSeconds) {
       CommonMethods.showToast("Please select a video no longer than $maxSeconds seconds", icon: Icons.warning, bgColor: Colors.red);
       return;
     }
