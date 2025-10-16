@@ -216,6 +216,8 @@ class AppStrings {
   String get orderConfirmed => "Order is Confirmed";
   String get orderapproved => "Order is Approved";
   String get orderDeclined => "Order is Declined";
+  String get orderExpired =>"Order is Expired";
+  String get expired =>'Expired';
 
   //Edit Profile Screen
   String get updateProfile => 'Update Profile';

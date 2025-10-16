@@ -109,7 +109,16 @@ class OrderListHistory extends ParentWidget {
                     OrderList().buildOrderDetailColumn(appStrings.payment, '₹ ${steps?.proposedPrice ?? 0}'),
                     if (steps?.product != null) OrderList().buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
                     OrderList().buildOrderDetailColumn(appStrings.orderQty, (steps?.product?.quantity ?? 0).toString().padLeft(2, '0')),
-                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name) OrderList().buildOrderDetailColumn(appStrings.orderStatus, steps?.artisanAgreedStatus == OrderStatus.DELIVERED.name ? OrderStatus.DELIVERED.displayText : OrderStatus.REJECTED.displayText, color: steps?.artisanAgreedStatus == OrderStatus.DELIVERED.name ? appColors.brownDarkText : appColors.declineColor),
+                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)))
+                      OrderList().buildOrderDetailColumn(
+                        appStrings.orderStatus,
+                        (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate))
+                            ? appStrings.expired
+                            : steps?.artisanAgreedStatus == OrderStatus.DELIVERED.name
+                            ? OrderStatus.DELIVERED.displayText
+                            : OrderStatus.REJECTED.displayText,
+                        color: steps?.artisanAgreedStatus == OrderStatus.DELIVERED.name ? appColors.brownDarkText : appColors.declineColor,
+                      ),
                   ],
                 ),
               ),

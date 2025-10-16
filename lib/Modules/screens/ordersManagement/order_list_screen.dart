@@ -6,6 +6,7 @@ import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/stringlimitter.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -110,9 +111,11 @@ class OrderList extends ParentWidget {
                     buildOrderDetailColumn(appStrings.payment, '₹ ${steps?.proposedPrice ?? 0}'),
                     if (steps?.product != null) buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
                     buildOrderDetailColumn(appStrings.orderQty, (steps?.product?.quantity ?? 0).toString().padLeft(2, '0')),
-                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name)
+                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)))
                       buildOrderDetailColumn(
                         appStrings.orderStatus,
+                        (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate))?
+                        appStrings.expired:
                         steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
                             ? OrderStatus.WAIT_FOR_PICKUP.displayText
                             : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
@@ -124,7 +127,7 @@ class OrderList extends ParentWidget {
                             : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                             ? OrderStatus.PENDING.displayText
                             : OrderStatus.REJECTED.displayText,
-                        color: steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name
+                        color: (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate))?appColors.declineColor:steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name
                             ? appColors.acceptColor
                             : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                             ? appColors.brownDarkText
@@ -133,7 +136,7 @@ class OrderList extends ParentWidget {
                   ],
                 ),
               ),
-              if (steps?.artisanAgreedStatus == OrderStatus.PENDING.name) ...[
+              if ((steps?.artisanAgreedStatus == OrderStatus.PENDING.name) && !controller.isExpired(steps?.dueDate)) ...[
                 4.kH,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -221,16 +224,14 @@ class OrderList extends ParentWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                steps?.stepName ?? appStrings.notAvailable,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
-              ),
+              Text(StringLimiter.limitCharacters(steps?.stepName ?? appStrings.notAvailable, 35), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
               4.kH,
               Row(
                 children: [
-                  Icon(Icons.circle, color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name ? appColors.declineColor : appColors.acceptColor, size: 8),
+                  Icon(Icons.circle, color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)) ? appColors.declineColor : appColors.acceptColor, size: 8),
                   4.kW,
                   Text(
+                    (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate))?appStrings.orderExpired :
                     steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
                         ? appStrings.orderapproved
                         : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
@@ -238,7 +239,7 @@ class OrderList extends ParentWidget {
                         : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
                         ? appStrings.orderConfirmed
                         : appStrings.orderDeclined,
-                    style: TextStyle(color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name ? appColors.declineColor : appColors.acceptColor, fontSize: 11),
+                    style: TextStyle(color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)) ? appColors.declineColor : appColors.acceptColor, fontSize: 11),
                   ),
                 ],
               ),

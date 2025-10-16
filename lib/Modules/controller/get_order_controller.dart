@@ -18,6 +18,24 @@ class GetOrderController extends GetxController {
     getAllOrderStepApi();
   }
 
+  bool isExpired(String? rawDate) {
+    if (rawDate == null || rawDate.isEmpty) return true;
+
+    try {
+      final dueDate = DateTime.parse(rawDate).toLocal();
+      final now = DateTime.now();
+
+      final difference = dueDate.difference(now).inDays;
+      if (difference < 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return true;
+    }
+  }
+
   OrderController orderController = Get.find();
 
   String formatDate(String? rawDate) {
@@ -70,7 +88,7 @@ class GetOrderController extends GetxController {
             setAllOrderStepdata(value);
 
             if (isActive) {
-              final activeOrders = getFilteredOrders(value, filterAgreedStatuses: [OrderStatus.PENDING, OrderStatus.ACCEPTED, OrderStatus.COMPLETED]);
+              final activeOrders = getFilteredOrders(value, isActive: true);
               setAllActiveOrderStepdata(activeOrders);
             } else {
               final pastOrders = getFilteredOrders(value, filterAgreedStatuses: [OrderStatus.REJECTED, OrderStatus.DELIVERED]);
@@ -89,16 +107,34 @@ class GetOrderController extends GetxController {
   void calculateOrderCounts(GetAllOrderStepsModel value) {
     if (value.data == null) return;
     totalOrders.value = value.data?.length ?? 0;
-    pendingOrders.value = value.data!.where((item) => OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.PENDING).length;
-    acceptedOrders.value = value.data!.where((item) => OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.ACCEPTED).length;
+    pendingOrders.value = value.data!.where((item) => OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.PENDING && !isExpired(item.dueDate)).length;
+    acceptedOrders.value = value.data!.where((item) => OrderStatusExtension.fromString(item.buildStatus) == OrderStatus.COMPLETED || OrderStatusExtension.fromString(item.buildStatus) == OrderStatus.IN_PROGRESS).length;
     update();
   }
 
-  GetAllOrderStepsModel getFilteredOrders(GetAllOrderStepsModel value, {List<OrderStatus>? filterAgreedStatuses}) {
-    if (filterAgreedStatuses == null || filterAgreedStatuses.isEmpty) {
-      return GetAllOrderStepsModel(message: value.message, data: value.data != null ? List<Data>.from(value.data!) : []);
+  GetAllOrderStepsModel getFilteredOrders(
+    GetAllOrderStepsModel value, {
+    List<OrderStatus>? filterAgreedStatuses,
+    bool isActive = false, // 👈 add this flag
+  }) {
+    if (value.data == null) {
+      return GetAllOrderStepsModel(message: value.message, data: []);
     }
-    final filteredData = value.data?.where((item) => filterAgreedStatuses.contains(OrderStatusExtension.fromString(item.artisanAgreedStatus))).toList() ?? [];
+
+    final filteredData = value.data!.where((item) {
+      final status = OrderStatusExtension.fromString(item.artisanAgreedStatus);
+      if (isActive) {
+        final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate);
+        final isAcceptedOrCompleted = status == OrderStatus.ACCEPTED || status == OrderStatus.COMPLETED;
+
+        return isPendingAndNotExpired || isAcceptedOrCompleted;
+      }
+      final matchesFilter = filterAgreedStatuses != null && filterAgreedStatuses.contains(status);
+      final isPendingAndExpired = status == OrderStatus.PENDING && isExpired(item.dueDate);
+
+      return matchesFilter || isPendingAndExpired;
+    }).toList();
+
     return GetAllOrderStepsModel(message: value.message, data: filteredData);
   }
 

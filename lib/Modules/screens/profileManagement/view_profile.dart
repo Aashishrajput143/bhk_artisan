@@ -87,10 +87,20 @@ class ViewProfile extends ParentWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
-        leading: Icon(icon, color: Colors.black),
-        title: Text(title, style: TextStyle(color: Colors.grey)),
+        leading: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(icon, color: Colors.black),
+          ],
+        ),
+        title: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Text(title, style: TextStyle(color: Colors.grey)),
+        ),
         subtitle: Wrap(
           spacing: 6.0,
+          runSpacing: 10.0,
           children: expertiseList.map((e) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

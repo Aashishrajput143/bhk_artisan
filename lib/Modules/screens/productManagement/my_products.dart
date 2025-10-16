@@ -174,10 +174,10 @@ Widget commonCard(double w, double h, ProductDocs? list) {
               children: [
                 SizedBox(
                   width: w * 0.4,
-                  child: Text(StringLimiter.limitCharacters(list?.productName ?? "", 35), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  child: Text(StringLimiter.limitCharacters(list?.productName ?? "", 35), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                 ),
                 5.kH,
-                Text(StringLimiter.limitCharacters(list?.material ?? "", 35), style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                Text(StringLimiter.limitCharacters(list?.material ?? "", 35), style: TextStyle(fontSize: 13, color: Colors.grey[700])),
                 5.kH,
                 Row(children: [commonContainer(list?.category?.categoryName ?? "", Colors.deepPurple), 8.kW, commonContainer(list?.subCategory?.categoryName ?? "", appColors.brownDarkText)]),
               ],

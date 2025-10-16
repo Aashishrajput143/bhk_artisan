@@ -297,33 +297,36 @@ class HomeScreen extends ParentWidget {
   }
 
   Widget productCard(double w, ProductDocs? list) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        commonNetworkImage(list?.images?.isNotEmpty == true ? list!.images!.first.imageUrl ?? "" : "", width: w * 0.4, height: 180, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
-        10.kH,
-        Text(
-          list?.productName ?? "",
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),
-          textAlign: TextAlign.start,
-        ),
-        6.kH,
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "₹ ${double.parse(list?.productPricePerPiece ?? "0") * (list?.quantity ?? 0)}",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13),
-            ),
-            5.kW,
-            Text("(₹ ${list?.productPricePerPiece ?? "0"} ${appStrings.perPiece})", style: TextStyle(color: appColors.contentPending, fontSize: 12)),
-          ],
-        ),
-        3.kH,
-        Text(list?.subCategory?.categoryName ?? "", style: TextStyle(fontSize: 12, color: appColors.brownDarkText)),
-        3.kH,
-        Text(list?.material ?? "", style: TextStyle(color: appColors.contentPending, fontSize: 13)),
-      ],
+    return SizedBox(
+      width: w * 0.42,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          commonNetworkImage(list?.images?.isNotEmpty == true ? list!.images!.first.imageUrl ?? "" : "", width: w * 0.42, height: 180, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
+          10.kH,
+          Text(
+            list?.productName ?? "",
+            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+            textAlign: TextAlign.start,
+          ),
+          6.kH,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "₹ ${double.parse(list?.productPricePerPiece ?? "0") * (list?.quantity ?? 0)}",
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+              5.kW,
+              Text("(₹ ${list?.productPricePerPiece ?? "0"} ${appStrings.perPiece})", style: TextStyle(color: appColors.contentPending, fontSize: 12)),
+            ],
+          ),
+          3.kH,
+          Text(list?.subCategory?.categoryName ?? "", style: TextStyle(fontSize: 12, color: appColors.brownDarkText)),
+          3.kH,
+          Text(list?.material ?? "", style: TextStyle(color: appColors.contentPending, fontSize: 13)),
+        ],
+      ),
     );
   }
 

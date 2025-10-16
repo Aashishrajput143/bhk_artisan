@@ -34,10 +34,10 @@ class OrderDetailsPage extends ParentWidget {
             : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: controller.rxRequestStatus.value == Status.LOADING ?shimmer(w): Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(controller), 6.kH, orderCardHeader(controller), 6.kH, if (controller.getOrderStepModel.value.data?.product != null) orderDescription(controller), 6.kH, orderRequirement(h, w, controller)]),
+                  child: controller.getOrderStepModel.value.data == null ? shimmer(w) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(controller), 6.kH, orderCardHeader(controller), 6.kH, if (controller.getOrderStepModel.value.data?.product != null) orderDescription(controller), 6.kH, orderRequirement(h, w, controller)]),
                 ),
               ),
-        bottomNavigationBar: (controller.rxRequestStatus.value == Status.LOADING || controller.rxRequestStatus.value == Status.NOINTERNET) ? null : bottomButtons(context, h, w, controller),
+        bottomNavigationBar: (controller.getOrderStepModel.value.data == null || controller.rxRequestStatus.value == Status.NOINTERNET) ? null : bottomButtons(context, h, w, controller),
       ),
     );
   }
@@ -95,10 +95,12 @@ class OrderDetailsPage extends ParentWidget {
   Widget bottomButtons(BuildContext context, double h, double w, GetOrderDetailsController controller) {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.03),
-      child: controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
-          ? controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
-                ? commonButtonContainer(w * 0.44, 50, appColors.cardBackground2, appColors.acceptColor, () {}, hint: appStrings.awaitingPickUp)
-                : commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => bottomDrawerSelectAddress(context, h, w, controller.addressController, controller), hint: appStrings.selectAddress)
+      child: (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(controller.getOrderStepModel.value.data?.dueDate))
+          ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.expired)
+          : controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
+          ? commonButtonContainer(w, 50, appColors.cardBackground2, appColors.acceptColor, () {}, hint: appStrings.awaitingPickUp)
+          : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
+          ? commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => bottomDrawerSelectAddress(context, h, w, controller.addressController, controller), hint: appStrings.selectAddress)
           : (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name)
           ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,9 +157,12 @@ class OrderDetailsPage extends ParentWidget {
       child: Column(
         children: [
           commonRow(
-            appStrings.orderStatus,controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
-                ?OrderStatus.WAIT_FOR_PICKUP.displayText:
-            controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
+            appStrings.orderStatus,
+            (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(controller.getOrderStepModel.value.data?.dueDate))
+                ? appStrings.expired
+                : controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
+                ? OrderStatus.WAIT_FOR_PICKUP.displayText
+                : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
                 ? OrderStatus.ADMIN_APPROVED.displayText
                 : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name
                 ? OrderStatus.INREVIEW.displayText
@@ -166,7 +171,9 @@ class OrderDetailsPage extends ParentWidget {
                 : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name
                 ? OrderStatus.PENDING.displayText
                 : OrderStatus.REJECTED.displayText,
-            color2: controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100
+            color2: (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(controller.getOrderStepModel.value.data?.dueDate))
+                ? appColors.declineColor
+                : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100
                 ? appColors.acceptColor
                 : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name
                 ? appColors.brownDarkText
@@ -177,7 +184,16 @@ class OrderDetailsPage extends ParentWidget {
           16.kH,
           commonRow(appStrings.timeRemaining, appStrings.orderValue, color: appColors.contentSecondary, fontweight: FontWeight.w500, fontSize: 15, fontSize2: 15, color2: appColors.contentSecondary, fontweight2: FontWeight.w500),
           6.kH,
-          commonRow(controller.getOrderStepModel.value.data?.dueDate != null ? controller.getRemainingDays(controller.getOrderStepModel.value.data?.dueDate) : appStrings.asap, "₹ ${controller.getOrderStepModel.value.data?.proposedPrice ?? 0}", color: appColors.contentPrimary, fontSize: 17, fontweight: FontWeight.bold, color2: appColors.contentPrimary, fontSize2: 17, fontweight2: FontWeight.bold),
+          commonRow(
+            controller.getOrderStepModel.value.data?.dueDate != null ? controller.getRemainingDays(controller.getOrderStepModel.value.data?.dueDate, declined: controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.REJECTED.name) : appStrings.asap,
+            "₹ ${controller.getOrderStepModel.value.data?.proposedPrice ?? 0}",
+            color: appColors.contentPrimary,
+            fontSize: 17,
+            fontweight: FontWeight.bold,
+            color2: appColors.contentPrimary,
+            fontSize2: 17,
+            fontweight2: FontWeight.bold,
+          ),
         ],
       ),
     );
@@ -186,6 +202,7 @@ class OrderDetailsPage extends ParentWidget {
   Widget commonRow(String title, String subtitle, {Color color = Colors.black, double fontSize = 16, FontWeight fontweight = FontWeight.bold, Color color2 = Colors.black, double fontSize2 = 14, FontWeight fontweight2 = FontWeight.bold}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Flexible(
           flex: 5,
@@ -212,146 +229,147 @@ class OrderDetailsPage extends ParentWidget {
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return Obx(()=> Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          appStrings.selectAddress,
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
-                        ),
-                      ),
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () => Get.toNamed(RoutesClass.addresses)?.then((onValue) {
-                          Get.back();
-                          addresscontroller.getAddressApi();
-                          if (context.mounted) {
-                            bottomDrawerSelectAddress(context, h, w, addresscontroller, controller);
-                          }
-                        }),
-                        child: Padding(
+        return Obx(
+          () => Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            appStrings.manage,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: appFonts.NunitoBold, color: appColors.brownDarkText),
+                            appStrings.selectAddress,
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  2.kH,
-                  if (addresses.isEmpty) ...[
-                    Center(
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(appImages.emptyMap, color: appColors.brownbuttonBg),
-                          Text(appStrings.yourAddressEmpty, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          4.kH,
-                          Text(
-                            appStrings.emptyAddressDescription,
-                            style: TextStyle(fontSize: 14, color: appColors.contentSecondary),
-                            textAlign: TextAlign.center,
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => Get.toNamed(RoutesClass.addresses)?.then((onValue) {
+                            Get.back();
+                            addresscontroller.getAddressApi();
+                            if (context.mounted) {
+                              bottomDrawerSelectAddress(context, h, w, addresscontroller, controller);
+                            }
+                          }),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              appStrings.manage,
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: appFonts.NunitoBold, color: appColors.brownDarkText),
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    20.kH,
-                    commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () => Get.toNamed(RoutesClass.addresses), hint: appStrings.addAddress),
-                  ],
-                  if (addresses.isNotEmpty) ...[
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: addresses.length,
-                      itemBuilder: (context, index) {
-                        final address = addresses[index];
-                        return Obx(
-                          () => Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Theme(
-                                data: Theme.of(context).copyWith(
-                                  radioTheme: RadioThemeData(
-                                    fillColor: WidgetStateProperty.resolveWith((states) {
-                                      if (states.contains(WidgetState.selected)) {
-                                        return appColors.brownDarkText;
-                                      }
-                                      return appColors.contentPrimary;
-                                    }),
+                    2.kH,
+                    if (addresses.isEmpty) ...[
+                      Center(
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(appImages.emptyMap, color: appColors.brownbuttonBg),
+                            Text(appStrings.yourAddressEmpty, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            4.kH,
+                            Text(
+                              appStrings.emptyAddressDescription,
+                              style: TextStyle(fontSize: 14, color: appColors.contentSecondary),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                      20.kH,
+                      commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () => Get.toNamed(RoutesClass.addresses), hint: appStrings.addAddress),
+                    ],
+                    if (addresses.isNotEmpty) ...[
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: addresses.length,
+                        itemBuilder: (context, index) {
+                          final address = addresses[index];
+                          return Obx(
+                            () => Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Theme(
+                                  data: Theme.of(context).copyWith(
+                                    radioTheme: RadioThemeData(
+                                      fillColor: WidgetStateProperty.resolveWith((states) {
+                                        if (states.contains(WidgetState.selected)) {
+                                          return appColors.brownDarkText;
+                                        }
+                                        return appColors.contentPrimary;
+                                      }),
+                                    ),
                                   ),
-                                ),
-                                child: RadioMenuButton<int>(
-                                  groupValue: addresses[index].id,
-                                  style: ButtonStyle(overlayColor: WidgetStateProperty.all(Colors.transparent), backgroundColor: WidgetStateProperty.all(Colors.transparent), shadowColor: WidgetStateProperty.all(Colors.transparent), surfaceTintColor: WidgetStateProperty.all(Colors.transparent)),
-                                  value: controller.addressId.value,
-                                  onChanged: (value) {
-                                    controller.addressId.value = addresses[index].id ?? 0;
-                                    print(controller.addressId.value);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Icon((address.addressType ?? "").toAddressType().icon, size: 25, color: appColors.brownDarkText),
-                                            10.kW,
-                                            Text(
-                                              (address.addressType ?? "").toAddressType().displayName,
-                                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: appColors.contentPending),
-                                            ),
-                                            if (address.isDefault ?? false) ...[10.kW, commonContainer(appStrings.defaultTag, appColors.brownDarkText, isBrown: true, pH: 14, borderWidth: 1.5)],
-                                          ],
-                                        ),
-                                        4.kH,
-                                        SizedBox(
-                                          width: w * 0.75,
-                                          child: Text(
-                                            softWrap: true,
-                                            overflow: TextOverflow.visible,
-                                            controller.getFullAddress(index),
-                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+                                  child: RadioMenuButton<int>(
+                                    groupValue: addresses[index].id,
+                                    style: ButtonStyle(overlayColor: WidgetStateProperty.all(Colors.transparent), backgroundColor: WidgetStateProperty.all(Colors.transparent), shadowColor: WidgetStateProperty.all(Colors.transparent), surfaceTintColor: WidgetStateProperty.all(Colors.transparent)),
+                                    value: controller.addressId.value,
+                                    onChanged: (value) {
+                                      controller.addressId.value = addresses[index].id ?? 0;
+                                      print(controller.addressId.value);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon((address.addressType ?? "").toAddressType().icon, size: 25, color: appColors.brownDarkText),
+                                              10.kW,
+                                              Text(
+                                                (address.addressType ?? "").toAddressType().displayName,
+                                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: appColors.contentPending),
+                                              ),
+                                              if (address.isDefault ?? false) ...[10.kW, commonContainer(appStrings.defaultTag, appColors.brownDarkText, isBrown: true, pH: 14, borderWidth: 1.5)],
+                                            ],
                                           ),
-                                        ),
-                                      ],
+                                          4.kH,
+                                          SizedBox(
+                                            width: w * 0.75,
+                                            child: Text(
+                                              softWrap: true,
+                                              overflow: TextOverflow.visible,
+                                              controller.getFullAddress(index),
+                                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              if (index != addresses.length - 1) Divider(height: 1, thickness: 1),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                    commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () {
-                      if (controller.addressId.value != 0) {
-                        controller.updatePickUpAddressApi();
-                        Navigator.pop(context);
-                      } else {
-                        CommonMethods.showToast(appStrings.selectAddress, icon: Icons.error, bgColor: appColors.declineColor);
-                      }
-                    }, hint: appStrings.confirmAddress),
+                                if (index != addresses.length - 1) Divider(height: 1, thickness: 1),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () {
+                        if (controller.addressId.value != 0) {
+                          controller.updatePickUpAddressApi();
+                        } else {
+                          CommonMethods.showToast(appStrings.selectAddress, icon: Icons.error, bgColor: appColors.declineColor);
+                        }
+                      }, hint: appStrings.confirmAddress),
+                    ],
+                    16.kH,
                   ],
-                  16.kH,
-                ],
+                ),
               ),
-            ),
-            progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
-          ],
-        ));
+              progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+            ],
+          ),
+        );
       },
     );
   }
@@ -374,6 +392,8 @@ class OrderDetailsPage extends ParentWidget {
           commonRow(appStrings.product, controller.getOrderStepModel.value.data?.stepName ?? appStrings.notAvailable, color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           6.kH,
           if (controller.getOrderStepModel.value.data?.product != null) ...[commonRow(appStrings.productId, controller.getOrderStepModel.value.data?.product?.bhkProductId ?? appStrings.notAvailable, color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold), 6.kH],
+          commonRow(appStrings.quantity, (controller.getOrderStepModel.value.data?.product?.quantity ?? 0).toString(), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
+          6.kH,
           commonRow(appStrings.orderAssigned, controller.formatDate(controller.getOrderStepModel.value.data?.createdAt), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           if (controller.getOrderStepModel.value.data?.dueDate != null) ...[6.kH, commonRow(appStrings.dueDate, controller.formatDate(controller.getOrderStepModel.value.data?.dueDate), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold)],
         ],

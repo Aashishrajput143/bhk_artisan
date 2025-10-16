@@ -786,6 +786,7 @@ Widget squareCheckBoxWithLabel(bool value, ValueChanged<bool> onChanged, {String
   );
 }
 
+
 Widget commonButton(double width, double height, Color backgroundColor, Color color, VoidCallback? onChanged, {String hint = '', double radius = 12, double paddingVertical = 0, double paddingHorizontal = 0, double fontSize = 16, Color borderColor = Colors.transparent}) {
   return ElevatedButton(
     onPressed: onChanged,

@@ -80,24 +80,41 @@ class GetOrderDetailsController extends GetxController {
     }
   }
 
-  String getRemainingDays(String? rawDate) {
+  String getRemainingDays(String? rawDate,{bool declined = false}) {
     if (rawDate == null || rawDate.isEmpty) return "N/A";
 
     try {
-      final dueDate = DateTime.parse(rawDate).toLocal(); // API date → local
+      final dueDate = DateTime.parse(rawDate).toLocal();
       final now = DateTime.now();
 
       final difference = dueDate.difference(now).inDays;
-
-      if (difference < 0) {
-        return "Overdue";
+      if (difference < 0 || declined) {
+        return "No Longer Active";
       } else if (difference == 0) {
-        return "Today";
+        return "Due Today";
       } else {
         return "$difference Days";
       }
     } catch (e) {
       return "Invalid date";
+    }
+  }
+
+  bool isExpired(String? rawDate) {
+    if (rawDate == null || rawDate.isEmpty) return true;
+
+    try {
+      final dueDate = DateTime.parse(rawDate).toLocal();
+      final now = DateTime.now();
+
+      final difference = dueDate.difference(now).inDays;
+      if (difference < 0) {
+        return true;
+      }else {
+        return false;
+      }
+    } catch (e) {
+      return true;
     }
   }
 
@@ -185,7 +202,8 @@ class GetOrderDetailsController extends GetxController {
           .then((value) {
             if (loader) setRxRequestStatus(Status.COMPLETED);
             setPickupAddressModel(value);
-            getOrderStepApi();
+            Get.back();
+            getOrderStepApi(loader: false);
             Utils.printLog("Response ${value.toString()}");
           })
           .onError((error, stackTrace) {
