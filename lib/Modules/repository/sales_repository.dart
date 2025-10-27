@@ -6,8 +6,8 @@ import '../model/sales_graph_model.dart';
 class SalesRepository {
   final _apiServices = NetworkApiServices();
 
-  Future<SalesGraphModel> getsalesApi(var year) async {
-    dynamic response = await _apiServices.getApi("${AppUrl.salesgraph}$year");
+  Future<SalesGraphModel> getsalesApi() async {
+    dynamic response = await _apiServices.getApi(AppUrl.salesgraph);
     return SalesGraphModel.fromJson(response);
   }
 }

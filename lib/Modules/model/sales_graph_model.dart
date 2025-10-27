@@ -1,121 +1,91 @@
 class SalesGraphModel {
+  int? statusCode;
   String? message;
-  Data? data;
+  List<ChartFilter>? docs;
 
-  SalesGraphModel({this.message, this.data});
+  SalesGraphModel({this.statusCode, this.message, this.docs});
 
   SalesGraphModel.fromJson(Map<String, dynamic> json) {
+    statusCode = json['statusCode'];
     message = json['message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    if (json['docs'] != null) {
+      docs = <ChartFilter>[];
+      json['docs'].forEach((v) {
+        docs!.add(ChartFilter.fromJson(v));
+      });
+      
+      // reverse all filter docs lists here
+      for (var filter in docs!) {
+        filter.data = filter.data?.reversed.toList();
+      }
+    }
   }
 
+
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['message'] = message;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
+    final Map<String, dynamic> map = {};
+    map['statusCode'] = statusCode;
+    map['message'] = message;
+    if (docs != null) {
+      map['docs'] = docs!.map((v) => v.toJson()).toList();
     }
-    return data;
+    return map;
   }
 }
 
-class Data {
-  int? totalMonthsCount;
-  int? totalSales;
-  String? currentYear;
-  List<MonthsData>? monthsData;
+class ChartFilter {
+  String? filter;
+  List<ChartData>? data;
 
-  Data(
-      {this.totalMonthsCount,
-      this.totalSales,
-      this.currentYear,
-      this.monthsData});
+  ChartFilter({this.filter, this.data});
 
-  Data.fromJson(Map<String, dynamic> json) {
-    totalMonthsCount = json['totalMonthsCount'];
-    totalSales = json['totalSales'];
-    currentYear = json['currentYear'];
-    if (json['monthsData'] != null) {
-      monthsData = <MonthsData>[];
-      json['monthsData'].forEach((v) {
-        monthsData!.add(MonthsData.fromJson(v));
+  ChartFilter.fromJson(Map<String, dynamic> json) {
+    filter = json['filter'];
+    if (json['data'] != null) {
+      data = <ChartData>[];
+      json['data'].forEach((v) {
+        data!.add(ChartData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['totalMonthsCount'] = totalMonthsCount;
-    data['totalSales'] = totalSales;
-    data['currentYear'] = currentYear;
-    if (monthsData != null) {
-      data['monthsData'] = monthsData!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> map = {};
+    map['filter'] = filter;
+    if (data != null) {
+      map['data'] = data!.map((v) => v.toJson()).toList();
     }
-    return data;
-  }
-}
-
-class MonthsData {
-  String? month;
-  int? sales;
-
-  MonthsData({this.month, this.sales});
-
-  MonthsData.fromJson(Map<String, dynamic> json) {
-    month = json['month'];
-    sales = json['sales'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['month'] = month;
-    data['sales'] = sales;
-    return data;
-  }
-}
-
-class ChartFilter {
-  final String filter;
-  final List<ChartData> data;
-
-  ChartFilter({required this.filter, required this.data});
-
-  factory ChartFilter.fromJson(Map<String, dynamic> json) {
-    return ChartFilter(
-      filter: json['filter'],
-      data: (json['data'] as List)
-          .map((e) => ChartData.fromJson(e))
-          .toList(),
-    );
+    return map;
   }
 }
 
 class ChartData {
-  final String? day;
-  final String? month;
-  final String? year;
-  final int sales;
-  final int unitsSold;
+  String? day;
+  String? month;
+  int? year;
+  int? sales;
+  int? unitsSold;
 
-  ChartData({
-    this.day,
-    this.month,
-    this.year,
-    required this.sales,
-    required this.unitsSold,
-  });
+  ChartData({this.day, this.month, this.year, this.sales, this.unitsSold});
 
-  factory ChartData.fromJson(Map<String, dynamic> json) {
-    return ChartData(
-      day: json['day'],
-      month: json['month'],
-      year: json['year'],
-      sales: json['sales'] ?? 0,
-      unitsSold: json['unitsSold'] ?? 0,
-    );
+  ChartData.fromJson(Map<String, dynamic> json) {
+    day = json['day'];
+    month = json['month'];
+    year = json['year'];
+    sales = json['sales'];
+    unitsSold = json['unitsSold'];
   }
 
-  /// Get the correct X-axis label (day, month, or year)
-  String get label => day ?? month ?? year ?? "";
-}
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = {};
+    map['day'] = day;
+    map['month'] = month;
+    map['year'] = year;
+    map['sales'] = sales;
+    map['unitsSold'] = unitsSold;
+    return map;
+  }
 
+  /// Return label automatically based on filter type
+  String get label => day ?? month ?? year?.toString() ?? '';
+}

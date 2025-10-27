@@ -1,10 +1,10 @@
 import 'package:bhk_artisan/Modules/controller/logincontroller.dart';
 import 'package:bhk_artisan/Modules/model/logout_model.dart';
 import 'package:bhk_artisan/Modules/repository/login_repository.dart';
-import 'package:bhk_artisan/Modules/screens/login_screen.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/common_constants.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -65,6 +65,7 @@ class ProfileController extends GetxController {
     Utils.savePreferenceValues(Constants.email, "");
     Utils.clearPreferenceValues();
     Get.delete<LoginController>();
-    Get.offAll(() => LoginScreen());
+    Get.offAllNamed(RoutesClass.login);
+    //Get.offAll(() => LoginScreen());
   }
 }

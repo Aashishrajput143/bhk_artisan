@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/Modules/screens/aadhar_verification_screen.dart';
 import 'package:bhk_artisan/Modules/screens/address_screen.dart';
 import 'package:bhk_artisan/Modules/screens/common_screen.dart';
+import 'package:bhk_artisan/Modules/screens/ordersManagement/order_filter_screen.dart';
 import 'package:bhk_artisan/Modules/screens/ordersManagement/upload_order_image_screen.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/add_product_screen.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/product_detail_screen.dart';
@@ -31,6 +32,7 @@ class RoutesClass {
   static String verify = '/verify';
   static String addproducts = '/addproducts';
   static String ordersdetails = '/ordersdetails';
+  static String orderFilter = '/orderFilters';
   static String ordertracking = '/ordertracking';
   static String notifications = '/notifications';
   static String setting = '/setting';
@@ -57,6 +59,7 @@ class RoutesClass {
   static String gotoaddProductScreen() => addproducts;
   static String gotoProductDetailsScreen() => productDetails;
   static String gotoOrderDetailsScreen() => ordersdetails;
+  static String gotoOrderFilterScreen()=>orderFilter;
   static String gotoOrderTrackingScreen() => ordertracking;
   static String gotoNotificationScreen() => notifications;
   static String gotoSettingScreen() => setting;
@@ -83,6 +86,7 @@ class RoutesClass {
     GetPage(name: videoRecorder, page: () => VideoRecorderScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: videoPlayer, page: () => VideoPreviewPage(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: ordersdetails, page: () => OrderDetailsPage(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
+    GetPage(name: orderFilter, page: () => OrderFilterScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: uploadOrderImage, page: () => UploadOrderImageScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: ordertracking, page: () => OrderTrackingPage(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: notifications, page: () => NotificationScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),

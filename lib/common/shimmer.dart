@@ -22,7 +22,13 @@ Widget shimmerCollection(double w) {
     child: Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
-        children: List.generate(6, (index) => Padding(padding: const EdgeInsets.only(right: 12), child: shimmerContainer(width: w * 0.455,height: 100))),
+        children: List.generate(
+          6,
+          (index) => Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: shimmerContainer(width: w * 0.455, height: 100),
+          ),
+        ),
       ),
     ),
   );
@@ -80,6 +86,48 @@ Widget shimmerProduct(double w) {
             ),
           );
         },
+      ),
+    ],
+  );
+}
+
+Widget shimmerGraph(double w, double h) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(width: w * 0.5, height: 25, color: Colors.grey),
+      ),
+      16.kH,
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.grey.shade100,
+              child: Container(width: w * 0.4, height: 25, color: Colors.grey),
+            ),
+            Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.grey.shade100,
+              child: Container(width: w * 0.4, height: 25, color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
+      16.kH,
+      Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          height: h * 0.35,
+          width: double.infinity,
+          decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
+        ),
       ),
     ],
   );

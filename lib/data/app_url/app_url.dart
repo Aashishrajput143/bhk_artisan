@@ -33,7 +33,7 @@ class AppUrl {
   static String ordersDetails = '$baseUrl/product/api/build-step/details/';
   static String orderStatus = '$baseUrl/product/api/build-step/artisan/update_status';
   static String pickupAddress = '$baseUrl/product/api/build-step/assign/pickup-address';
-  static String salesgraph = '$baseUrl/api/order/totalsales?year=';
+  static String salesgraph = '$baseUrl/product/api/artisian-sales/report';
   static String updateProgress = '$baseUrl/product/api/build-step/';
   static String completeOrder = '$baseUrl/product/api/build-step/artisan/complete/';
 

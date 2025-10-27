@@ -5,10 +5,12 @@ import 'package:bhk_artisan/Modules/controller/productscreencontroller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/Modules/model/sales_graph_model.dart';
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
+import 'package:bhk_artisan/Modules/repository/sales_repository.dart';
 import 'package:bhk_artisan/Modules/screens/home_screen.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/enums/sales_type_enum.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:carousel_slider/carousel_controller.dart';
@@ -19,11 +21,9 @@ import 'package:bhk_artisan/Modules/model/get_all_order_step_model.dart' as orde
 
 class Homecontroller extends GetxController {
   final _api = ProductRepository();
+  final salesRepository = SalesRepository();
 
   var screen = HomeScreen();
-
-  var isProductGraph = true.obs;
-
   var sliderController = CarouselSliderController();
   CommonScreenController commonController = Get.find();
   ProductController productController = Get.put(ProductController());
@@ -32,72 +32,17 @@ class Homecontroller extends GetxController {
 
   var greetings = "Good Morning".obs;
 
-  var chartData = <Map<String, dynamic>>[
-    {"month": "Jan", "sales": 12000, "unitsSold": 30},
-    {"month": "Feb", "sales": 17000, "unitsSold": 40},
-    {"month": "Mar", "sales": 18000, "unitsSold": 50},
-    {"month": "Apr", "sales": 10000, "unitsSold": 20},
-    {"month": "May", "sales": 21000, "unitsSold": 60},
-    {"month": "Jun", "sales": 16000, "unitsSold": 45},
-    {"month": "Jul", "sales": 25000, "unitsSold": 70},
-    {"month": "Aug", "sales": 30000, "unitsSold": 80},
-  ];
-
-  final List<ChartFilter> chartDataFilters = [
-    ChartFilter(
-      filter: "Weekly",
-      data: [
-        ChartData(day: "Mon", sales: 4000, unitsSold: 10),
-        ChartData(day: "Tue", sales: 5000, unitsSold: 12),
-        ChartData(day: "Wed", sales: 3000, unitsSold: 8),
-        ChartData(day: "Thu", sales: 6000, unitsSold: 14),
-        ChartData(day: "Fri", sales: 7000, unitsSold: 16),
-        ChartData(day: "Sat", sales: 8000, unitsSold: 18),
-        ChartData(day: "Sun", sales: 6500, unitsSold: 15),
-      ],
-    ),
-    ChartFilter(
-      filter: "Monthly",
-      data: [
-        ChartData(month: "Jan", sales: 12000, unitsSold: 30),
-        ChartData(month: "Feb", sales: 17000, unitsSold: 40),
-        ChartData(month: "Mar", sales: 18000, unitsSold: 50),
-        ChartData(month: "Apr", sales: 10000, unitsSold: 20),
-        ChartData(month: "May", sales: 21000, unitsSold: 60),
-        ChartData(month: "Jun", sales: 16000, unitsSold: 45),
-        ChartData(month: "Jul", sales: 25000, unitsSold: 70),
-        ChartData(month: "Aug", sales: 30000, unitsSold: 80),
-      ],
-    ),
-    ChartFilter(
-      filter: "Yearly",
-      data: [
-        ChartData(year: "2022", sales: 150000, unitsSold: 400),
-        ChartData(year: "2023", sales: 180000, unitsSold: 450),
-        ChartData(year: "2024", sales: 220000, unitsSold: 500),
-        ChartData(year: "2025", sales: 250000, unitsSold: 600),
-      ],
-    ),
-  ];
-
   List<ChartData> get selectedFilterData {
-    final filter = chartDataFilters.firstWhere((e) => e.filter == dropdownmonth.value, orElse: () => chartDataFilters.first);
-    return filter.data;
-  }
+    final filters = getSalesGraphModel.value.docs;
+    if (filters == null || filters.isEmpty) return [];
 
-  double calculateTotalSalesThisYear() {
-    final yearlyFilter = chartDataFilters.firstWhere(
-      (filter) => filter.filter == "Monthly",
-      orElse: () => ChartFilter(filter: "Monthly", data: []),
-    );
+    final filter = filters.firstWhere((e) =>dropdownmonth.value == SalesType.WEEKLY.displayName?e.filter == SalesType.WEEKLY.salesValue: e.filter == dropdownmonth.value, orElse: () => filters.first);
 
-    double total = yearlyFilter.data.fold(0, (sum, data) => sum + data.sales.toDouble());
-
-    return total;
+    return filter.data ?? [];
   }
 
   String totalSales() {
-    double total = calculateTotalSalesThisYear();
+    double total = (getSalesGraphModel.value.docs?.last.data?.last.sales??0).toDouble();
     return formatNumberIndian(total);
   }
 
@@ -138,12 +83,12 @@ class Homecontroller extends GetxController {
   int currentYear = DateTime.now().year;
   RxDouble scrollPosition = 0.0.obs;
   RxDouble maxScrollExtent = 0.0.obs;
-  var dropdownmonth = 'Weekly'.obs;
+  var dropdownmonth = SalesType.WEEKLY.displayName.obs;
   var dropdownsold = 'Product Sales'.obs;
 
   var scrollController = ScrollController().obs;
 
-  List<String> daysfilter = ['Weekly', 'Monthly', 'Yearly'];
+  List<String> daysfilter = [SalesType.WEEKLY.displayName, SalesType.MONTHLY.displayName, SalesType.YEARLY.displayName];
 
   List<String> salesfilter = ['Product Sales', 'Units Sold'];
 
@@ -159,6 +104,7 @@ class Homecontroller extends GetxController {
     commonController.getProfileApi();
     scrollPosition.value = 0;
     setGreeting();
+    getSalesApi();
     getOrderController.getAllOrderStepApi();
     getProductApi("APPROVED", isLoader: getApprovedProductModel.value.data?.docs?.isEmpty ?? true ? true : false);
   }
@@ -199,12 +145,14 @@ class Homecontroller extends GetxController {
 
   final rxRequestStatus = Status.COMPLETED.obs;
   final getApprovedProductModel = ProductListingModel().obs;
+  final getSalesGraphModel = SalesGraphModel().obs;
 
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
 
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
   void setApprovedProductdata(ProductListingModel value) => getApprovedProductModel.value = value;
+  void setSalesGraphData(SalesGraphModel value) => getSalesGraphModel.value = value;
 
   Future<void> getProductApi(var status, {bool isLoader = true}) async {
     var connection = await CommonMethods.checkInternetConnectivity();
@@ -217,6 +165,27 @@ class Homecontroller extends GetxController {
           .then((value) {
             if (isLoader) setRxRequestStatus(Status.COMPLETED);
             setApprovedProductdata(value);
+            Utils.printLog("Response ${value.toString()}");
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+
+  Future<void> getSalesApi({bool isLoader = true}) async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      if (isLoader) setRxRequestStatus(Status.LOADING);
+      salesRepository
+          .getsalesApi()
+          .then((value) {
+            if (isLoader) setRxRequestStatus(Status.COMPLETED);
+            setSalesGraphData(value);
             Utils.printLog("Response ${value.toString()}");
           })
           .onError((error, stackTrace) {

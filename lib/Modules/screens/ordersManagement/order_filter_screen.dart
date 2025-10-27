@@ -1,8 +1,8 @@
+import 'package:bhk_artisan/Modules/controller/get_order_filter_controller.dart';
 import 'package:bhk_artisan/Modules/model/get_all_order_step_model.dart';
 import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
-import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
@@ -14,39 +14,34 @@ import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controller/get_order_controller.dart';
-
-class OrderList extends ParentWidget {
-  const OrderList({super.key});
+class OrderFilterScreen extends ParentWidget {
+  const OrderFilterScreen({super.key});
 
   @override
   Widget buildingView(BuildContext context, double h, double w) {
-    GetOrderController controller = Get.put(GetOrderController());
+    GetOrderFilterController controller = Get.put(GetOrderFilterController());
     controller.getAllOrderStepApi();
     return Obx(
       () => Stack(
         children: [
           Scaffold(
+            appBar: commonAppBar("${controller.type.value} ${controller.getAllOrderStepModel.value.data !=null?"(${controller.getAllOrderStepModel.value.data?.length})":""}"),
             backgroundColor: appColors.backgroundColor,
-            body: RefreshIndicator(
-              color: Colors.brown,
-              onRefresh: () => controller.ordersRefresh(),
-              child: controller.getAllActiveOrderStepModel.value.data?.isEmpty ?? false
-                  ? emptyScreen(w, h)
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: controller.rxRequestStatus.value == Status.COMPLETED
-                          ? ListView.builder(
-                              itemCount: controller.getAllActiveOrderStepModel.value.data?.length ?? 0,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                final steps = controller.getAllActiveOrderStepModel.value.data?[index];
-                                return orderContent(h, w, index, steps, controller);
-                              },
-                            )
-                          : shimmerList(w, h * 0.2, list: 4),
-                    ),
-            ),
+            body: controller.getAllOrderStepModel.value.data?.isEmpty ?? false
+                ? emptyScreen(w, h)
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: controller.getAllOrderStepModel.value.data?.isNotEmpty ?? false
+                        ? ListView.builder(
+                            itemCount: controller.getAllOrderStepModel.value.data?.length ?? 0,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final steps = controller.getAllOrderStepModel.value.data?[index];
+                              return orderContent(h, w, index, steps, controller);
+                            },
+                          )
+                        : shimmerList(w, h * 0.2, list: 4),
+                  ),
           ),
           //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
@@ -82,7 +77,7 @@ class OrderList extends ParentWidget {
     );
   }
 
-  Widget orderContent(double h, double w, int index, Data? steps, GetOrderController controller) {
+  Widget orderContent(double h, double w, int index, Data? steps, GetOrderFilterController controller) {
     return GestureDetector(
       onTap: () => Get.toNamed(RoutesClass.ordersdetails, arguments: steps?.id ?? "")?.then((onValue) {
         controller.getAllOrderStepApi();
@@ -112,12 +107,12 @@ class OrderList extends ParentWidget {
                     buildOrderDetailColumn(appStrings.payment, '₹ ${steps?.proposedPrice ?? 0}'),
                     if (steps?.product != null) buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
                     buildOrderDetailColumn(appStrings.orderQty, (steps?.product?.quantity ?? 0).toString().padLeft(2, '0')),
-                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.remainingTimes[steps?.id ?? ""] == "Expired")))
+                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)))
                       buildOrderDetailColumn(
                         appStrings.orderStatus,
-                        (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.remainingTimes[steps?.id ?? ""] == "Expired"))
-                            ? appStrings.expired
-                            : steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
+                        (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate))?
+                        appStrings.expired:
+                        steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
                             ? OrderStatus.WAIT_FOR_PICKUP.displayText
                             : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
                             ? OrderStatus.ADMIN_APPROVED.displayText
@@ -128,9 +123,7 @@ class OrderList extends ParentWidget {
                             : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                             ? OrderStatus.PENDING.displayText
                             : OrderStatus.REJECTED.displayText,
-                        color: (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.remainingTimes[steps?.id ?? ""] == "Expired"))
-                            ? appColors.declineColor
-                            : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name
+                        color: (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate))?appColors.declineColor:steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name
                             ? appColors.acceptColor
                             : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                             ? appColors.brownDarkText
@@ -139,7 +132,7 @@ class OrderList extends ParentWidget {
                   ],
                 ),
               ),
-              if ((steps?.artisanAgreedStatus == OrderStatus.PENDING.name) && !controller.isExpired(steps?.dueDate) && !((steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.remainingTimes[steps?.id ?? ""] == "Expired"))) ...[
+              if ((steps?.artisanAgreedStatus == OrderStatus.PENDING.name) && !controller.isExpired(steps?.dueDate)) ...[
                 4.kH,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -203,7 +196,7 @@ class OrderList extends ParentWidget {
     );
   }
 
-  Widget orderCardHeader(Data? steps, GetOrderController controller) {
+  Widget orderCardHeader(Data? steps, GetOrderFilterController controller) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -218,7 +211,7 @@ class OrderList extends ParentWidget {
     );
   }
 
-  Widget orderCardContent(Data? steps, GetOrderController controller) {
+  Widget orderCardContent(Data? steps, GetOrderFilterController controller) {
     return Row(
       children: [
         if (steps?.referenceImagesAddedByAdmin != null || steps?.product?.images != null) commonNetworkImage(steps?.referenceImagesAddedByAdmin?.first ?? steps?.product?.images?.first.imageUrl ?? "", width: 60, height: 60, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
@@ -231,22 +224,19 @@ class OrderList extends ParentWidget {
               4.kH,
               Row(
                 children: [
-                  Icon(Icons.circle, color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.remainingTimes[steps?.id ?? ""] == "Expired")) ? appColors.declineColor : appColors.acceptColor, size: 8),
+                  Icon(Icons.circle, color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)) ? appColors.declineColor : appColors.acceptColor, size: 8),
                   4.kW,
-                  steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.remainingTimes[steps?.id ?? ""] != "Expired"
-                      ? Obx(() => Text("${appStrings.orderNeedsAction} within ${controller.remainingTimes[steps?.id ?? ""]}", style: TextStyle(color: appColors.acceptColor, fontSize: 11)))
-                      : Text(
-                          (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.remainingTimes[steps?.id ?? ""] == "Expired"))
-                              ? appStrings.orderExpired
-                              : steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
-                              ? appStrings.orderDeclined
-                              : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
-                              ? appStrings.orderapproved
-                              : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
-                              ? appStrings.orderConfirmed
-                              : appStrings.orderDeclined,
-                          style: TextStyle(color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.remainingTimes[steps?.id ?? ""] == "Expired")) ? appColors.declineColor : appColors.acceptColor, fontSize: 11),
-                        ),
+                  Text(
+                    (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate))?appStrings.orderExpired :
+                    steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
+                        ? appStrings.orderapproved
+                        : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
+                        ? appStrings.orderNeedsAction
+                        : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
+                        ? appStrings.orderConfirmed
+                        : appStrings.orderDeclined,
+                    style: TextStyle(color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)) ? appColors.declineColor : appColors.acceptColor, fontSize: 11),
+                  ),
                 ],
               ),
               4.kH,

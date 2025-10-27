@@ -161,7 +161,7 @@ Widget commonCard(double w, double h, ProductDocs? list) {
         commonNetworkImage(
           list?.images?.isNotEmpty ?? true ? list!.images!.first.imageUrl ?? "" : "",
           width: 100,
-          height: 115,
+          height: 117,
           fit: BoxFit.cover,
           borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0)),
         ),

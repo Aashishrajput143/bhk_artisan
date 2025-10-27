@@ -131,7 +131,7 @@ class HomeScreen extends ParentWidget {
   Widget commonCollection(double h, double w, Homecontroller controller) {
     final approvedDocs = controller.getApprovedProductModel.value.data?.docs;
 
-    if (approvedDocs == null) {
+    if (approvedDocs == null || controller.getOrderController.getAllOrderStepModel.value.data == null) {
       return shimmerCollection(w);
     }
     return Column(
@@ -143,15 +143,15 @@ class HomeScreen extends ParentWidget {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                commonContainer(w, controller.getTodayOrdersCount(controller.getOrderController.getAllOrderStepModel.value.data ?? []), appColors.orangeColor[100], appColors.orangeColor, appStrings.todayOrders, Icons.shopping_cart, onTap: () => controller.commonController.selectedIndex.value = 1),
+                commonContainer(w, controller.getTodayOrdersCount(controller.getOrderController.getAllOrderStepModel.value.data ?? []), appColors.orangeColor[100], appColors.orangeColor, appStrings.todayOrders, Icons.shopping_cart, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.todayOrders)),
                 12.kW,
-                commonContainer(w, controller.getOrderController.pendingOrders.value.toString(), appColors.blueColor[100], appColors.blueColor, appStrings.needAction, Icons.touch_app, onTap: () => controller.commonController.selectedIndex.value = 1),
+                commonContainer(w, controller.getOrderController.pendingOrders.value.toString(), appColors.blueColor[100], appColors.blueColor, appStrings.needAction, Icons.touch_app, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.needAction)),
                 12.kW,
-                commonContainer(w, controller.getOrderController.acceptedOrders.value.toString(), appColors.redColor[100], appColors.redColor, appStrings.pendingOrders, Icons.pending_actions, onTap: () => controller.commonController.selectedIndex.value = 1),
+                commonContainer(w, controller.getOrderController.acceptedOrders.value.toString(), appColors.redColor[100], appColors.redColor, appStrings.pendingOrders, Icons.pending_actions, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.pendingOrders)),
                 12.kW,
                 commonContainer(w, (approvedDocs.length).toString(), appColors.blueColor[100], appColors.blueColor, appStrings.approvedProducts, Icons.local_offer, onTap: () => controller.commonController.selectedIndex.value = 2),
                 12.kW,
-                commonContainer(w, (controller.getOrderController.getAllOrderStepModel.value.data?.length ?? 0).toString(), appColors.orangeColor[100], appColors.orangeColor, appStrings.totalOrders, Icons.shopping_cart, onTap: () => controller.commonController.selectedIndex.value = 1),
+                commonContainer(w, (controller.getOrderController.getAllOrderStepModel.value.data?.length ?? 0).toString(), appColors.orangeColor[100], appColors.orangeColor, appStrings.totalOrders, Icons.shopping_cart, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.totalOrders)),
                 12.kW,
                 commonContainer(w, "₹ ${controller.totalSales()}", appColors.blueColor[100], appColors.blueColor, appStrings.annualSales, Icons.bar_chart),
               ],
@@ -332,92 +332,106 @@ class HomeScreen extends ParentWidget {
 
   Widget salesGraph(BuildContext context, double w, double h, Homecontroller controller) {
     return Obx(
-      () => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(appStrings.salesStatistics, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-          Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      () => controller.getSalesGraphModel.value.docs == null
+          ? shimmerGraph(w, h)
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: commonDropdownButton(
-                    controller.salesfilter.map((String value) {
-                      return DropdownMenuItem(
-                        alignment: AlignmentDirectional.centerStart,
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey.shade900),
+                Text(appStrings.salesStatistics, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: commonDropdownButton(
+                          controller.salesfilter.map((String value) {
+                            return DropdownMenuItem(
+                              alignment: AlignmentDirectional.centerStart,
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey.shade900),
+                              ),
+                            );
+                          }).toList(),
+                          controller.dropdownsold.value,
+                          w * 0.43,
+                          h,
+                          appColors.backgroundColor,
+                          (value) {
+                            controller.dropdownsold.value = value ?? "";
+                          },
                         ),
-                      );
-                    }).toList(),
-                    controller.dropdownsold.value,
-                    w * 0.43,
-                    h,
-                    appColors.backgroundColor,
-                    (value) {
-                      controller.dropdownsold.value = value ?? "";
-                    },
+                      ),
+                      30.kW,
+                      Expanded(
+                        child: commonDropdownButton(
+                          controller.daysfilter.map((String value) {
+                            return DropdownMenuItem(
+                              alignment: AlignmentDirectional.centerStart,
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey.shade900),
+                              ),
+                            );
+                          }).toList(),
+                          controller.dropdownmonth.value,
+                          w * 0.47,
+                          h,
+                          appColors.backgroundColor,
+                          (value) {
+                            controller.dropdownmonth.value = value ?? "";
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                30.kW,
-                Expanded(
-                  child: commonDropdownButton(
-                    controller.daysfilter.map((String value) {
-                      return DropdownMenuItem(
-                        alignment: AlignmentDirectional.centerStart,
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.grey.shade900),
-                        ),
-                      );
-                    }).toList(),
-                    controller.dropdownmonth.value,
-                    w * 0.47,
-                    h,
-                    appColors.backgroundColor,
-                    (value) {
-                      controller.dropdownmonth.value = value ?? "";
-                    },
+                SizedBox(
+                  height: h * 0.35,
+                  child: SfCartesianChart(
+                    backgroundColor: appColors.backgroundColor,
+                    primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1, labelRotation: 45),
+                    primaryYAxis: NumericAxis(
+                      axisLabelFormatter: (AxisLabelRenderDetails args) {
+                        final value = args.value;
+                        return ChartAxisLabel(controller.formatNumberIndian(value.toDouble()), args.textStyle);
+                      },
+                    ),
+                    legend: Legend(isVisible: true, toggleSeriesVisibility: false),
+                    tooltipBehavior: TooltipBehavior(enable: true),
+                    series: <CartesianSeries<ChartData, String>>[
+                      ColumnSeries<ChartData, String>(
+                        dataSource: controller.selectedFilterData,
+                        xValueMapper: (ChartData sales, _) {
+                          final label = sales.label;
+                          if (int.tryParse(label) != null) {
+                            return label;
+                          }
+                          return label.length > 3 ? label.substring(0, 3) : label;
+                        },
+                        yValueMapper: (ChartData sales, _) => controller.dropdownsold.value == "Product Sales" ? sales.sales : sales.unitsSold,
+                        name: controller.dropdownsold.value,
+                        animationDuration: 1200,
+                        width: controller.selectedFilterData.length == 1
+                            ? 0.15
+                            : controller.selectedFilterData.length <= 3
+                            ? 0.4
+                            : 0.7,
+                        gradient: AppGradients.graphGradient,
+                        dataLabelSettings: DataLabelSettings(isVisible: true, labelAlignment: ChartDataLabelAlignment.outer),
+                        dataLabelMapper: (ChartData sales, _) {
+                          final value = controller.dropdownsold.value == "Product Sales" ? sales.sales : sales.unitsSold;
+                          return value != 0 ? controller.formatNumberIndian(value!.toDouble()) : null;
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-          SizedBox(
-            height: h * 0.35,
-            child: SfCartesianChart(
-              backgroundColor: appColors.backgroundColor,
-              primaryXAxis: CategoryAxis(edgeLabelPlacement: EdgeLabelPlacement.shift, interval: 1, labelRotation: 45),
-              primaryYAxis: NumericAxis(
-                axisLabelFormatter: (AxisLabelRenderDetails args) {
-                  final value = args.value;
-                  return ChartAxisLabel(controller.formatNumberIndian(value.toDouble()), args.textStyle);
-                },
-              ),
-              legend: Legend(isVisible: true, toggleSeriesVisibility: false),
-              tooltipBehavior: TooltipBehavior(enable: true),
-              series: <CartesianSeries<ChartData, String>>[
-                ColumnSeries<ChartData, String>(
-                  dataSource: controller.selectedFilterData,
-                  xValueMapper: (ChartData sales, _) => sales.label,
-                  yValueMapper: (ChartData sales, _) => controller.dropdownsold.value == "Product Sales" ? sales.sales : sales.unitsSold,
-                  name: controller.dropdownsold.value,
-                  gradient: AppGradients.graphGradient,
-                  dataLabelSettings: DataLabelSettings(isVisible: true, labelAlignment: ChartDataLabelAlignment.outer),
-                  dataLabelMapper: (ChartData sales, _) {
-                    final value = controller.dropdownsold.value == "Product Sales" ? sales.sales : sales.unitsSold;
-                    return value != 0 ? controller.formatNumberIndian(value.toDouble()) : null;
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
