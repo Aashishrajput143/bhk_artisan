@@ -39,54 +39,62 @@ class GetOrderController extends GetxController {
     }
   }
 
+  Timer? countdownTimer;
   RxMap<int, String> remainingTimes = <int, String>{}.obs;
   RxMap<int, bool> isExpiredMap = <int, bool>{}.obs;
-  Map<int, Timer> countdownTimers = {};
+  Map<int, DateTime> expiryTimes = {};
 
-  void start48HourCountdown(String? assignedDate, {required int orderId}) {
-    countdownTimers[orderId]?.cancel();
+  void initializeCountdowns(List<Data> orders) {
+    countdownTimer?.cancel();
+    remainingTimes.clear();
+    isExpiredMap.clear();
+    expiryTimes.clear();
 
-    if (assignedDate == null) {
-      remainingTimes[orderId] = "N/A";
-      isExpiredMap[orderId] = true;
-      return;
-    }
+    for (var order in orders) {
+      if (order.id != null && order.createdAt != null) {
+        final assigned = DateTime.parse(order.createdAt!).toLocal();
+        final expiry = assigned.add(const Duration(hours: 284, minutes: 33));
+        expiryTimes[order.id!] = expiry;
 
-    try {
-      final assigned = DateTime.parse(assignedDate).toLocal();
-      final expiryTime = assigned.add(const Duration(hours: 408));
-      Duration remaining = expiryTime.difference(DateTime.now());
-
-      if (remaining.isNegative) {
-        remainingTimes[orderId] = "Expired";
-        isExpiredMap[orderId] = true;
-        return;
+        final diff = expiry.difference(DateTime.now());
+        remainingTimes[order.id!] = diff.isNegative ? "Expired" : formatDuration(diff);
+        isExpiredMap[order.id!] = diff.isNegative;
+        remainingTimes.refresh();
+        isExpiredMap.refresh();
       }
-
-      countdownTimers[orderId] = Timer.periodic(const Duration(seconds: 1), (timer) {
-        final now = DateTime.now();
-        remaining = expiryTime.difference(now);
-
-        if (remaining.isNegative) {
-          remainingTimes[orderId] = "Expired";
-          isExpiredMap[orderId] = true;
-          timer.cancel();
-        } else {
-          isExpiredMap[orderId] = false;
-          remainingTimes[orderId] = formatDuration(remaining);
-        }
-      });
-    } catch (e) {
-      remainingTimes[orderId] = "Invalid date";
-      isExpiredMap[orderId] = true;
     }
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final now = DateTime.now();
+
+      expiryTimes.forEach((orderId, expiryTime) {
+        final remaining = expiryTime.difference(now);
+        if (remaining.isNegative || remaining.inSeconds <= 0) {
+          if (remainingTimes[orderId] != "Expired" || !(isExpiredMap[orderId] ?? false)) {
+            remainingTimes[orderId] = "Expired";
+            isExpiredMap[orderId] = true;
+          }
+        } else {
+          final formatted = formatDuration(remaining);
+          if (remainingTimes[orderId] != formatted || (isExpiredMap[orderId] ?? false)) {
+            remainingTimes[orderId] = formatted;
+            isExpiredMap[orderId] = false;
+          }
+        }
+        remainingTimes.refresh();
+        isExpiredMap.refresh();
+        update();
+
+        final currentAllOrders = getAllOrderStepModel.value;
+        final activeOrders = getFilteredOrders(currentAllOrders, isActive: true);
+        final pastOrders = getFilteredOrders(currentAllOrders, isActive: false);
+        setAllActiveOrderStepdata(activeOrders);
+        setAllPastOrderStepdata(pastOrders);
+      });
+    });
   }
 
   void cancelAllCountdowns() {
-    for (final timer in countdownTimers.values) {
-      timer.cancel();
-    }
-    countdownTimers.clear();
+    countdownTimer?.cancel();
   }
 
   String formatDuration(Duration duration) {
@@ -148,7 +156,7 @@ class GetOrderController extends GetxController {
     if (connection == true) {
       cancelAllCountdowns();
       if (loader) setRxRequestStatus(Status.LOADING);
-      _api
+      await _api
           .getAllOrderStepApi()
           .then((value) {
             calculateOrderCounts(value);
@@ -161,9 +169,8 @@ class GetOrderController extends GetxController {
               setAllPastOrderStepdata(pastOrders);
             }
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              for (Data order in value.data ?? []) {
-                start48HourCountdown(order.createdAt, orderId: order.id ?? 0);
-              }
+              cancelAllCountdowns();
+              initializeCountdowns(value.data ?? []);
             });
             if (loader) setRxRequestStatus(Status.COMPLETED);
             Utils.printLog("Response ${value.toString()}");
@@ -201,15 +208,16 @@ class GetOrderController extends GetxController {
 
     final filteredData = value.data!.where((item) {
       final status = OrderStatusExtension.fromString(item.artisanAgreedStatus);
+      final transitStatus = OrderStatusExtension.fromString(item.transitStatus);
       if (isActive) {
         final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate);
         final isAcceptedOrCompleted = status == OrderStatus.ACCEPTED || status == OrderStatus.COMPLETED;
 
         return isPendingAndNotExpired || isAcceptedOrCompleted;
+      } else {
+        final isDeliveredOrExpired = status == OrderStatus.REJECTED || transitStatus == OrderStatus.DELIVERED || (status == OrderStatus.PENDING && isExpired(item.dueDate));
+        return isDeliveredOrExpired;
       }
-      final matchesFilter = filterAgreedStatuses != null && filterAgreedStatuses.contains(status);
-
-      return matchesFilter;
     }).toList();
 
     return GetAllOrderStepsModel(message: value.message, data: filteredData);

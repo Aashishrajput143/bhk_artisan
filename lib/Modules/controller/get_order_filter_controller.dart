@@ -9,6 +9,7 @@ import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -36,57 +37,82 @@ class GetOrderFilterController extends GetxController {
   }
 
   Timer? countdownTimer;
-  RxString remainingTime = "".obs;
-  RxBool isExpiredTimer = false.obs;
+  RxMap<int, String> remainingTimes = <int, String>{}.obs;
+  RxMap<int, bool> isExpiredMap = <int, bool>{}.obs;
+  Map<int, DateTime> expiryTimes = {};
 
-  void start48HourCountdown(String? assignedDate, {String? orderId}) {
+  void initializeCountdowns(List<Data> orders) {
     countdownTimer?.cancel();
+    remainingTimes.clear();
+    isExpiredMap.clear();
+    expiryTimes.clear();
 
-    if (assignedDate == null) {
-      remainingTime.value = "N/A";
-      isExpiredTimer.value = true;
-      return;
-    }
+    for (var order in orders) {
+      if (order.id != null && order.createdAt != null) {
+        final assigned = DateTime.parse(order.createdAt!).toLocal();
+        final expiry = assigned.add(const Duration(hours: 284, minutes: 33));
+        expiryTimes[order.id!] = expiry;
 
-    try {
-      final assigned = DateTime.parse(assignedDate).toLocal();
-      final expiryTime = assigned.add(const Duration(hours: 48));
-      Duration remaining = expiryTime.difference(DateTime.now());
-
-      if (remaining.isNegative) {
-        remainingTime.value = "Expired";
-        isExpiredTimer.value = true;
-        return;
+        final diff = expiry.difference(DateTime.now());
+        remainingTimes[order.id!] = diff.isNegative ? "Expired" : formatDuration(diff);
+        isExpiredMap[order.id!] = diff.isNegative;
+        remainingTimes.refresh();
+        isExpiredMap.refresh();
       }
+    }
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final now = DateTime.now();
 
-      countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        final now = DateTime.now();
-        remaining = expiryTime.difference(now);
+      expiryTimes.forEach((orderId, expiryTime) {
+        final remaining = expiryTime.difference(now);
 
-        if (remaining.isNegative) {
-          remainingTime.value = "Expired";
-          isExpiredTimer.value = true;
-          timer.cancel();
+        if (remaining.isNegative || remaining.inSeconds <= 0) {
+          if (remainingTimes[orderId] != "Expired" || !(isExpiredMap[orderId] ?? false)) {
+            remainingTimes[orderId] = "Expired";
+            isExpiredMap[orderId] = true;
+          }
         } else {
-          isExpiredTimer.value = false;
-          remainingTime.value = formatDuration(remaining);
+          final formatted = formatDuration(remaining);
+          if (remainingTimes[orderId] != formatted || (isExpiredMap[orderId] ?? false)) {
+            remainingTimes[orderId] = formatted;
+            isExpiredMap[orderId] = false;
+          }
         }
       });
-    } catch (e) {
-      remainingTime.value = "Invalid date";
-      isExpiredTimer.value = true;
-    }
+      remainingTimes.refresh();
+      isExpiredMap.refresh();
+      update();
+      final value = getAllOrderStepModel.value;
+      if (type.value == appStrings.todayOrders) {
+        final activeOrders = getFilteredOrders(value);
+        setAllOrderStepdata(activeOrders);
+      } else if (type.value == appStrings.needAction) {
+        final activeOrders = getFilteredOrders(value, isActive: true, action: true);
+        setAllOrderStepdata(activeOrders);
+      } else if (type.value == appStrings.pendingOrders) {
+        final activeOrders = getFilteredOrders(value, isActive: true);
+        setAllOrderStepdata(activeOrders);
+      } else {
+        setAllOrderStepdata(value);
+      }
+    });
+  }
+
+  void cancelAllCountdowns() {
+    countdownTimer?.cancel();
   }
 
   String formatDuration(Duration duration) {
-    int hours = duration.inHours;
-    int minutes = duration.inMinutes % 60;
-    int seconds = duration.inSeconds % 60;
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
 
     if (hours > 0) {
-      return "$hours h $minutes m $seconds s";
+      return "$hours hr ${minutes.toString().padLeft(2, '0')} min ${seconds.toString().padLeft(2, '0')} sec";
+    } else if (minutes > 0) {
+      return "$minutes min ${seconds.toString().padLeft(2, '0')} sec";
     } else {
-      return "$minutes m $seconds s";
+      return "$seconds sec";
     }
   }
 
@@ -141,6 +167,10 @@ class GetOrderFilterController extends GetxController {
             } else {
               setAllOrderStepdata(value);
             }
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              cancelAllCountdowns();
+              initializeCountdowns(value.data ?? []);
+            });
             Utils.printLog("Response ${value.toString()}");
           })
           .onError((error, stackTrace) {
@@ -206,5 +236,11 @@ class GetOrderFilterController extends GetxController {
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
+  }
+
+  @override
+  void onClose() {
+    cancelAllCountdowns();
+    super.onClose();
   }
 }

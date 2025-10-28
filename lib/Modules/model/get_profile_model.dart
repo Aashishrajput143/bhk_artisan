@@ -34,6 +34,7 @@ class Data {
   String? userGroup;
   String? expertizeField;
   String? status;
+  bool? verifyStatus;
   String? aadhaarNumber;
   double? latitude;
   double? longitude;
@@ -58,6 +59,7 @@ class Data {
       this.userGroup,
       this.expertizeField,
       this.status,
+      this.verifyStatus,
       this.aadhaarNumber,
       this.latitude,
       this.longitude,
@@ -81,6 +83,7 @@ class Data {
     userGroup = json['user_group'];
     expertizeField = json['expertizeField'];
     status = json['status'];
+    verifyStatus = json['verifyStatus'];
     aadhaarNumber = json['aadhaarNumber'];
     latitude = json['latitude'];
     longitude = json['longitude'];
@@ -107,6 +110,7 @@ class Data {
     data['user_group'] = userGroup;
     data['expertizeField'] = expertizeField;
     data['status'] = status;
+    data['verifyStatus'] = verifyStatus;
     data['aadhaarNumber'] = aadhaarNumber;
     data['latitude'] = latitude;
     data['longitude'] = longitude;
