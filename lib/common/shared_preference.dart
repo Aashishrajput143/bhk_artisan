@@ -63,7 +63,7 @@ class AppPreferences {
     await appPreferences.saveStringPreference(Constants.firstName, '');
     await appPreferences.saveStringPreference(Constants.lastName, '');
     await appPreferences.saveStringPreference(Constants.accessToken, '');
-    await appPreferences.saveBoolPreference(Constants.keepLoggedIn, false);
+    await appPreferences.saveBoolPreference(Constants.refreshToken, false);
     await appPreferences.saveBoolPreference(Constants.keepRememberIn, false);
   }
 

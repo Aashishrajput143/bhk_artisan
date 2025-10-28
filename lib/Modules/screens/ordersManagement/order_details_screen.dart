@@ -37,7 +37,7 @@ class OrderDetailsPage extends ParentWidget {
                   child: controller.getOrderStepModel.value.data == null ? shimmer(w) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(controller), 6.kH, orderCardHeader(controller), 6.kH, if (controller.getOrderStepModel.value.data?.product != null) orderDescription(controller), 6.kH, orderRequirement(h, w, controller)]),
                 ),
               ),
-        bottomNavigationBar: (controller.getOrderStepModel.value.data == null || controller.rxRequestStatus.value == Status.NOINTERNET) ? null : bottomButtons(context, h, w, controller),
+        bottomNavigationBar: (controller.getOrderStepModel.value.data == null || controller.remainingTime.value.isEmpty || controller.rxRequestStatus.value == Status.NOINTERNET) ? null : bottomButtons(context, h, w, controller),
       ),
     );
   }
@@ -95,51 +95,62 @@ class OrderDetailsPage extends ParentWidget {
   Widget bottomButtons(BuildContext context, double h, double w, GetOrderDetailsController controller) {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.03),
-      child: (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(controller.getOrderStepModel.value.data?.dueDate))
+      child: (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(controller.getOrderStepModel.value.data?.dueDate) || (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.hasExpired.value))
           ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.expired)
+          : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.REJECTED.name
+          ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.declined)
           : controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
           ? commonButtonContainer(w, 50, appColors.cardBackground2, appColors.acceptColor, () {}, hint: appStrings.awaitingPickUp)
           : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
           ? commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => bottomDrawerSelectAddress(context, h, w, controller.addressController, controller), hint: appStrings.selectAddress)
-          : (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name)
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          : (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && !controller.isExpired(controller.getOrderStepModel.value.data?.dueDate) || !(controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.hasExpired.value))
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                commonButton(
-                  w * 0.44,
-                  45,
-                  appColors.acceptColor,
-                  appColors.contentWhite,
-                  () => MyAlertDialog.showAlertDialog(
-                    onPressed: () {
-                      Get.back();
-                      controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name);
-                    },
-                    icon: Icons.inventory_2,
-                    title: appStrings.acceptOrder,
-                    subtitle: appStrings.acceptOrderSubtitle,
-                    color: appColors.acceptColor,
-                    buttonHint: appStrings.accept,
-                  ),
-                  hint: appStrings.accept,
-                ),
-                commonButton(
-                  w * 0.44,
-                  45,
-                  appColors.declineColor,
-                  appColors.contentWhite,
-                  () => MyAlertDialog.showAlertDialog(
-                    onPressed: () {
-                      Get.back();
-                      controller.updateOrderStatusApi(OrderStatus.REJECTED.name);
-                    },
-                    icon: Icons.inventory_2,
-                    title: appStrings.declineOrder,
-                    subtitle: appStrings.declineOrderSubtitle,
-                    color: appColors.declineColor,
-                    buttonHint: appStrings.decline,
-                  ),
-                  hint: appStrings.decline,
+                6.kH,
+                Obx(() => commonRow("${appStrings.orderNeedsAction} within", controller.remainingTime.value, fontSize: 17, fontSize2: 16, color2: appColors.acceptColor)),
+                25.kH,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    commonButton(
+                      w * 0.44,
+                      45,
+                      appColors.acceptColor,
+                      appColors.contentWhite,
+                      () => MyAlertDialog.showAlertDialog(
+                        onPressed: () {
+                          Get.back();
+                          controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name);
+                        },
+                        icon: Icons.inventory_2,
+                        title: appStrings.acceptOrder,
+                        subtitle: appStrings.acceptOrderSubtitle,
+                        color: appColors.acceptColor,
+                        buttonHint: appStrings.accept,
+                      ),
+                      hint: appStrings.accept,
+                    ),
+                    commonButton(
+                      w * 0.44,
+                      45,
+                      appColors.declineColor,
+                      appColors.contentWhite,
+                      () => MyAlertDialog.showAlertDialog(
+                        onPressed: () {
+                          Get.back();
+                          controller.updateOrderStatusApi(OrderStatus.REJECTED.name);
+                        },
+                        icon: Icons.inventory_2,
+                        title: appStrings.declineOrder,
+                        subtitle: appStrings.declineOrderSubtitle,
+                        color: appColors.declineColor,
+                        buttonHint: appStrings.decline,
+                      ),
+                      hint: appStrings.decline,
+                    ),
+                  ],
                 ),
               ],
             )
@@ -158,9 +169,9 @@ class OrderDetailsPage extends ParentWidget {
         children: [
           commonRow(
             appStrings.orderStatus,
-            (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(controller.getOrderStepModel.value.data?.dueDate))
+            (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(controller.getOrderStepModel.value.data?.dueDate) || (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.hasExpired.value))
                 ? appStrings.expired
-                : controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
+                :controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.REJECTED.name? OrderStatus.REJECTED.displayText:controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
                 ? OrderStatus.WAIT_FOR_PICKUP.displayText
                 : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
                 ? OrderStatus.ADMIN_APPROVED.displayText
@@ -171,7 +182,7 @@ class OrderDetailsPage extends ParentWidget {
                 : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name
                 ? OrderStatus.PENDING.displayText
                 : OrderStatus.REJECTED.displayText,
-            color2: (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(controller.getOrderStepModel.value.data?.dueDate))
+            color2: (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(controller.getOrderStepModel.value.data?.dueDate) || (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.hasExpired.value))
                 ? appColors.declineColor
                 : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100
                 ? appColors.acceptColor

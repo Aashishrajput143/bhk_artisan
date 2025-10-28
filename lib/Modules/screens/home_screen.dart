@@ -140,7 +140,7 @@ class HomeScreen extends ParentWidget {
           scrollDirection: Axis.horizontal,
           controller: controller.scrollController.value,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 16),
             child: Row(
               children: [
                 commonContainer(w, controller.getTodayOrdersCount(controller.getOrderController.getAllOrderStepModel.value.data ?? []), appColors.orangeColor[100], appColors.orangeColor, appStrings.todayOrders, Icons.shopping_cart, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.todayOrders)),
@@ -176,8 +176,8 @@ class HomeScreen extends ParentWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(
-        width: w * 0.455,
-        padding: const EdgeInsets.all(16),
+        width: w * 0.43,
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(12),
@@ -194,9 +194,11 @@ class HomeScreen extends ParentWidget {
                   child: Icon(icon, color: colorValues, size: 16),
                 ),
                 8.kW,
-                Text(
-                  title,
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black),
+                  ),
                 ),
               ],
             ),

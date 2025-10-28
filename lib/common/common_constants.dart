@@ -1,7 +1,7 @@
 class Constants {
   static const String accessToken = "accessToken";
   static const String deviceToken = "deviceToken";
-  static const String keepLoggedIn = "keepLoggedIn";
+  static const String refreshToken = "refreshToken";
   static const String keepRememberIn = "keepRememberIn";
   static const String defaultAddress = "defaultAddress";
   static const String firstName = "firstName";

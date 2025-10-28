@@ -16,6 +16,67 @@ import '../app_exceptions.dart';
 import 'base_api_services.dart';
 
 class NetworkApiServices extends BaseApiServices {
+
+  bool refresh = true;
+
+  bool isRefreshing = false;
+
+  Future<void> refreshTokenAndRetry(String url) async {
+    if (isRefreshing) {
+      return;
+    }
+    isRefreshing = true;
+    try {
+      String refreshToken = await Utils.getPreferenceValues(Constants.refreshToken) ?? "";
+      String accessToken = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
+      if (refreshToken.isEmpty || accessToken.isEmpty) {
+        throw AuthenticationException("Refresh token or access token is missing ${refreshToken.isEmpty} ${accessToken.isEmpty}");
+      }
+      Utils.printLog("Refresh Token API URL: $url");
+      Map<String, dynamic> data = {
+        "refreshToken": refreshToken,
+        "accessToken": accessToken,
+      };
+      Utils.printLog("Refresh Token API Request Body: $data");
+      String jsonBody = jsonEncode(data);
+      Utils.printLog("Final JSON Body: $jsonBody");
+      final response = await http
+          .post(
+            Uri.parse(url),
+            headers: {
+              'accesstoken': accessToken,
+              'Content-Type': 'application/json',
+            },
+            body: jsonBody,
+          )
+          .timeout(const Duration(seconds: 600));
+      Utils.printLog("Refresh Token API Response: ${response.body}");
+      if (response.statusCode == 200) {
+        var responseJson;
+        try {
+          responseJson = jsonDecode(response.body);
+        } catch (e) {
+          throw FormatException("Failed to parse response JSON: $e");
+        }
+        var data = responseJson['data'];
+        if (data != null && data.containsKey('accessToken')) {
+          String newAccessToken = data['accessToken'];
+          Utils.savePreferenceValues(Constants.accessToken, newAccessToken);
+          refresh = false;
+        } else {
+          throw Exception("Token refresh failed: 'accessToken' missing in response data");
+        }
+      } else {
+        throw Exception("Token refresh failed: ${response.body}");
+      }
+    } catch (e) {
+      Utils.printLog("Token refresh failed: $e");
+      rethrow;
+    } finally {
+      isRefreshing = false;
+    }
+  }
+
   void expired(response) async {
     final decoded = json.decode(response.body);
 

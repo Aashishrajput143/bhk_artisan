@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bhk_artisan/Modules/controller/address_controller.dart';
 import 'package:bhk_artisan/Modules/model/order_details_model.dart';
 import 'package:bhk_artisan/Modules/model/update_order_status_model.dart';
@@ -80,7 +82,7 @@ class GetOrderDetailsController extends GetxController {
     }
   }
 
-  String getRemainingDays(String? rawDate,{bool declined = false}) {
+  String getRemainingDays(String? rawDate, {bool declined = false}) {
     if (rawDate == null || rawDate.isEmpty) return "N/A";
 
     try {
@@ -110,12 +112,73 @@ class GetOrderDetailsController extends GetxController {
       final difference = dueDate.difference(now).inDays;
       if (difference < 0) {
         return true;
-      }else {
+      } else {
         return false;
       }
     } catch (e) {
       return true;
     }
+  }
+
+  Timer? countdownTimer;
+  RxString remainingTime = ''.obs;
+  RxBool hasExpired = false.obs;
+  DateTime? expiryTime;
+
+  void initializeCountdown(String? createdAt) {
+    countdownTimer?.cancel();
+    remainingTime.value = '';
+    hasExpired.value = false;
+
+    if (createdAt == null || createdAt.isEmpty) return;
+
+    final assigned = DateTime.parse(createdAt).toLocal();
+    expiryTime = assigned.add(const Duration(hours: 290, minutes: 0));
+
+    updateRemainingTime();
+    update();
+
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      updateRemainingTime();
+    });
+  }
+
+  void updateRemainingTime() {
+    if (expiryTime == null) return;
+    final now = DateTime.now();
+    final diff = expiryTime!.difference(now);
+
+    if (diff.isNegative || diff.inSeconds <= 0) {
+      countdownTimer?.cancel();
+      remainingTime.value = "Expired";
+      hasExpired.value = true;
+    } else {
+      remainingTime.value = formatDuration(diff);
+      hasExpired.value = false;
+    }
+    final value = getOrderStepModel.value;
+    setOrderStepdata(value);
+    update();
+  }
+
+  String formatDuration(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+
+    if (hours > 0) {
+      return "$hours hr ${minutes.toString().padLeft(2, '0')} min ${seconds.toString().padLeft(2, '0')} sec";
+    } else if (minutes > 0) {
+      return "$minutes min ${seconds.toString().padLeft(2, '0')} sec";
+    } else {
+      return "$seconds sec";
+    }
+  }
+
+  @override
+  void onClose() {
+    countdownTimer?.cancel();
+    super.onClose();
   }
 
   @override
@@ -147,11 +210,15 @@ class GetOrderDetailsController extends GetxController {
 
     if (connection == true) {
       if (loader) setRxRequestStatus(Status.LOADING);
-      _api
+      await _api
           .orderDetailsApi(id)
           .then((value) {
-            if (loader) setRxRequestStatus(Status.COMPLETED);
             setOrderStepdata(value);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              countdownTimer?.cancel();
+              initializeCountdown(value.data?.createdAt);
+            });
+            if (loader) setRxRequestStatus(Status.COMPLETED);
             Utils.printLog("Response ${value.toString()}");
           })
           .onError((error, stackTrace) {

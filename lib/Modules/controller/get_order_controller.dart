@@ -53,7 +53,7 @@ class GetOrderController extends GetxController {
     for (var order in orders) {
       if (order.id != null && order.createdAt != null) {
         final assigned = DateTime.parse(order.createdAt!).toLocal();
-        final expiry = assigned.add(const Duration(hours: 284, minutes: 33));
+        final expiry = assigned.add(const Duration(hours: 290, minutes: 0));
         expiryTimes[order.id!] = expiry;
 
         final diff = expiry.difference(DateTime.now());

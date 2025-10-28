@@ -112,6 +112,8 @@ class OrderFilterScreen extends ParentWidget {
                         appStrings.orderStatus,
                         (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
                             ? appStrings.expired
+                            : steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
+                            ? OrderStatus.REJECTED.displayText
                             : steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
                             ? OrderStatus.WAIT_FOR_PICKUP.displayText
                             : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
@@ -123,7 +125,7 @@ class OrderFilterScreen extends ParentWidget {
                             : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                             ? OrderStatus.PENDING.displayText
                             : OrderStatus.REJECTED.displayText,
-                        color: (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
+                        color: (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)) || steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
                             ? appColors.declineColor
                             : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name
                             ? appColors.acceptColor
@@ -216,7 +218,7 @@ class OrderFilterScreen extends ParentWidget {
   Widget orderCardContent(Data? steps, GetOrderFilterController controller) {
     return Row(
       children: [
-        if (steps?.referenceImagesAddedByAdmin != null || steps?.product?.images != null) commonNetworkImage(steps?.referenceImagesAddedByAdmin?.first ?? steps?.product?.images?.first.imageUrl ?? "", width: 60, height: 60, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12)),
+        buildImageWidget(steps),
         12.kW,
         Expanded(
           child: Column(
@@ -251,5 +253,24 @@ class OrderFilterScreen extends ParentWidget {
         ),
       ],
     );
+  }
+
+  Widget buildImageWidget(Data? steps) {
+    final hasReferenceImages = steps?.referenceImagesAddedByAdmin?.isNotEmpty ?? false;
+    final hasProductImages = steps?.product?.images?.isNotEmpty ?? false;
+
+    String? imageUrl;
+
+    if (hasReferenceImages) {
+      imageUrl = steps!.referenceImagesAddedByAdmin!.first;
+    } else if (hasProductImages) {
+      imageUrl = steps!.product!.images!.first.imageUrl;
+    }
+
+    if (imageUrl == null || imageUrl.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return commonNetworkImage(imageUrl, width: 60, height: 60, fit: BoxFit.cover, borderRadius: BorderRadius.circular(12));
   }
 }
