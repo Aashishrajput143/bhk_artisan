@@ -7,11 +7,12 @@ class AppUrl {
   //Authentication
   static String login = '$baseUrl/auth/api/auth/loginOrRegister';
   static String verifyOtp = '$baseUrl/auth/api/auth/verify';
+  static String refreshToken = '$baseUrl/auth/api/auth/renewAccessToken';
   static String logout = '$baseUrl/auth/api/logout/currentsession';
   static String loggedinuser = '$baseUrl/users/api/users/userdetails';
   static String updateprofile = '$baseUrl/users/api/users/updateprofile';
   static String presignUrl = '$baseUrl/users/api/users/presign-url';
-  static String needAssistance ='$baseUrl/users/api/users/needAssistance';
+  static String needAssistance ='$baseUrl/users/api/need-assistance';
 
 
   //address
@@ -36,5 +37,8 @@ class AppUrl {
   static String salesgraph = '$baseUrl/product/api/artisian-sales/report';
   static String updateProgress = '$baseUrl/product/api/build-step/';
   static String completeOrder = '$baseUrl/product/api/build-step/artisan/complete/';
+
+  //logistics
+  static String getAllLogistics = '$baseUrl/product/api/logistics/';
 
 }

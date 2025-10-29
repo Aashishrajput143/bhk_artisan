@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:pie_chart/pie_chart.dart' as pie;
 import 'package:syncfusion_flutter_charts/charts.dart' as chart;
@@ -484,71 +485,78 @@ Widget commonDescriptionTextField(
   );
 }
 
-Widget dropdownButton(List<String> items, String? selectedValue, double width, double height, Color color, void Function(String?) onChanged, {String hint = ''}) {
-  return Container(
-    width: width,
-    height: height,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: appColors.border), // Outer border
-    ),
-    //padding: const EdgeInsets.all(1.0),
-    child: Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton2<String>(
-          //underline: Container(),
-          hint: Padding(
-            padding: const EdgeInsets.only(left: 12.0),
-            child: selectedValue?.isNotEmpty ?? false
-                ? Text(
-                    selectedValue ?? "",
-                    style: TextStyle(fontSize: 16, color: appColors.contentPrimary, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.bold),
-                  )
-                : Text(hint),
-          ),
-          style: TextStyle(fontSize: 16, color: appColors.contentPrimary, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.bold),
-          //value: selectedValue,
-          items: items.map((item) {
-            return DropdownMenuItem<String>(
-              alignment: AlignmentDirectional.centerStart,
-              value: item,
-              child: Container(
-                width: width,
-                color: appColors.backgroundColor,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
-                      child: Text(
-                        item,
-                        style: TextStyle(fontSize: 16, color: appColors.contentPrimary, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    //if (item != items.last) Divider(thickness: 1.5, height: 1.5, color: appColors.border),
-                  ],
-                ),
+Widget dropdownButton(List<String> items, String? selectedValue, double width, double height, Color color, void Function(String?) onChanged, {String hint = '', Rxn<String>? error, Color borderColor = Colors.transparent}) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          border: Border.all(color: error?.value?.isEmpty ?? true ? borderColor : appColors.declineColor, width: 1.5),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton2<String>(
+              hint: Padding(
+                padding: const EdgeInsets.only(left: 12.0),
+                child: selectedValue?.isNotEmpty ?? false
+                    ? Text(
+                        selectedValue ?? "",
+                        style: TextStyle(fontSize: 16, color: appColors.contentPrimary, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.bold),
+                      )
+                    : Text(hint),
               ),
-            );
-          }).toList(),
-          onChanged: onChanged,
-          dropdownStyleData: DropdownStyleData(
-            maxHeight: 300,
-            width: width * 0.88,
-            offset: const Offset(4, 10),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
-            padding: EdgeInsets.zero,
-          ),
-          menuItemStyleData: const MenuItemStyleData(padding: EdgeInsets.zero),
-          isExpanded: true,
-          iconStyleData: const IconStyleData(
-            icon: Padding(padding: EdgeInsets.only(right: 8.0), child: Icon(Icons.keyboard_arrow_down, size: 22)),
+              style: TextStyle(fontSize: 16, color: appColors.contentPrimary, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.bold),
+              items: items.map((item) {
+                return DropdownMenuItem<String>(
+                  alignment: AlignmentDirectional.centerStart,
+                  value: item,
+                  child: SizedBox(
+                    width: width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
+                          child: Text(
+                            item,
+                            style: TextStyle(fontSize: 16, color: appColors.contentPrimary, fontFamily: appFonts.NunitoRegular, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: onChanged,
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: 300,
+                width: width * 0.88,
+                offset: const Offset(4, 10),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color:appColors.cardBackground),
+                padding: EdgeInsets.zero,
+              ),
+              menuItemStyleData: const MenuItemStyleData(padding: EdgeInsets.zero),
+              isExpanded: true,
+              iconStyleData: const IconStyleData(
+                icon: Padding(padding: EdgeInsets.only(right: 8.0), child: Icon(Icons.keyboard_arrow_down, size: 22)),
+              ),
+            ),
           ),
         ),
       ),
-    ),
+      if (error?.value?.isNotEmpty ?? false)
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0, left: 10.0),
+          child: Text(error?.value ?? '', style: TextStyle(color: appColors.declineColor, fontSize: 13)),
+        ),
+    ],
   );
 }
 
@@ -786,7 +794,6 @@ Widget squareCheckBoxWithLabel(bool value, ValueChanged<bool> onChanged, {String
   );
 }
 
-
 Widget commonButton(double width, double height, Color backgroundColor, Color color, VoidCallback? onChanged, {String hint = '', double radius = 12, double paddingVertical = 0, double paddingHorizontal = 0, double fontSize = 16, Color borderColor = Colors.transparent}) {
   return ElevatedButton(
     onPressed: onChanged,
@@ -849,6 +856,36 @@ Widget bottomText() {
         ],
       ),
     ),
+  );
+}
+
+Widget emptyScreen(double h, String title, String description, String imagePath, {bool useAssetImage = true, bool isThere = true, bool repeat = true}) {
+  return Column(
+    children: [
+      16.kH,
+      if (isThere) ...[
+        Text(
+          appStrings.hiThere,
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
+        ),
+        SizedBox(height: h * 0.1),
+      ],
+      useAssetImage ? Image.asset(imagePath, height: 250, fit: BoxFit.fitHeight) : Lottie.asset(imagePath, height: 250, fit: BoxFit.fitHeight, repeat: repeat),
+      16.kH,
+      Text(
+        title,
+        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
+      ),
+      10.kH,
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Text(
+          description,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+        ),
+      ),
+    ],
   );
 }
 

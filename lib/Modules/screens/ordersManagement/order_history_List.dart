@@ -1,5 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/get_order_controller.dart';
 import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.dart';
+import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -29,7 +30,7 @@ class OrderListHistory extends ParentWidget {
               color: Colors.brown,
               onRefresh: () => controller.ordersRefresh(),
               child: controller.getAllPastOrderStepModel.value.data?.isEmpty ?? false
-                  ? emptyScreen(w, h)
+                  ?emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.orderscreen)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: controller.getAllPastOrderStepModel.value.data?.isNotEmpty ?? false
@@ -50,35 +51,7 @@ class OrderListHistory extends ParentWidget {
       ),
     );
   }
-
-  Widget emptyScreen(double w, double h) {
-    return Column(
-      children: [
-        16.kH,
-        Text(
-          appStrings.hiThere,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
-        ),
-        SizedBox(height: h * 0.1),
-        Image.asset(appImages.orderscreen, height: 250, fit: BoxFit.fitHeight),
-        16.kH,
-        Text(
-          appStrings.noOrdersFound,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
-        ),
-        10.kH,
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Text(
-            appStrings.emptyOrderDesc,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-          ),
-        ),
-      ],
-    );
-  }
-
+  
   Widget orderContent(double h, double w, int index, Data? steps, GetOrderController controller) {
     return GestureDetector(
       onTap: () => Get.toNamed(RoutesClass.ordersdetails, arguments: steps?.id ?? "")?.then((onValue) {

@@ -103,7 +103,11 @@ class OrderDetailsPage extends ParentWidget {
           ? commonButtonContainer(w, 50, appColors.cardBackground2, appColors.acceptColor, () {}, hint: appStrings.awaitingPickUp)
           : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
           ? commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => bottomDrawerSelectAddress(context, h, w, controller.addressController, controller), hint: appStrings.selectAddress)
-          : (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && !controller.isExpired(controller.getOrderStepModel.value.data?.dueDate) || !(controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.hasExpired.value))
+          : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name
+          ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor2, appColors.acceptColor, () {}, hint: appStrings.waitingForApproval)
+          : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
+          ? commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => Get.toNamed(RoutesClass.uploadOrderImage, arguments: controller.getOrderStepModel.value.data?.id ?? ""), hint: appStrings.uploadCompletion)
+          : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name
           ? Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -154,10 +158,6 @@ class OrderDetailsPage extends ParentWidget {
                 ),
               ],
             )
-          : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name
-          ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor2, appColors.acceptColor, () {}, hint: appStrings.waitingForApproval)
-          : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
-          ? commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => Get.toNamed(RoutesClass.uploadOrderImage, arguments: controller.getOrderStepModel.value.data?.id ?? ""), hint: appStrings.uploadCompletion)
           : commonButtonContainer(w, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.declined),
     );
   }
@@ -171,7 +171,9 @@ class OrderDetailsPage extends ParentWidget {
             appStrings.orderStatus,
             (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(controller.getOrderStepModel.value.data?.dueDate) || (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.hasExpired.value))
                 ? appStrings.expired
-                :controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.REJECTED.name? OrderStatus.REJECTED.displayText:controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
+                : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.REJECTED.name
+                ? OrderStatus.REJECTED.displayText
+                : controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
                 ? OrderStatus.WAIT_FOR_PICKUP.displayText
                 : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
                 ? OrderStatus.ADMIN_APPROVED.displayText

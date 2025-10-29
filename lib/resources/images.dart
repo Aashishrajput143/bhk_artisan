@@ -15,6 +15,8 @@ class AppImages {
   String get check =>'assets/images/check.png';
   String get cubeBox =>'assets/images/cube_box.png';
   String get support =>'assets/images/support.png';
+  String get accountLens =>'assets/images/account_lens.png';
+  String get emptyLogistics =>'assets/json/Logistics.json';
   
 
 

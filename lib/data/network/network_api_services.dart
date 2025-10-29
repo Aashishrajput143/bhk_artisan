@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:bhk_artisan/Modules/controller/logincontroller.dart';
-import 'package:bhk_artisan/Modules/screens/login_screen.dart';
-import 'package:bhk_artisan/common/common_methods.dart';
+import 'package:bhk_artisan/data/app_url/app_url.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 import 'package:http/http.dart' as http;
 
@@ -52,7 +49,7 @@ class NetworkApiServices extends BaseApiServices {
           .timeout(const Duration(seconds: 600));
       Utils.printLog("Refresh Token API Response: ${response.body}");
       if (response.statusCode == 200) {
-        var responseJson;
+        dynamic responseJson;
         try {
           responseJson = jsonDecode(response.body);
         } catch (e) {
@@ -81,13 +78,14 @@ class NetworkApiServices extends BaseApiServices {
     final decoded = json.decode(response.body);
 
     if (decoded is Map && decoded['statusCode'] == 463) {
-      CommonMethods.showToast("Session expired. Please login again.");
+      refreshTokenAndRetry(AppUrl.refreshToken);
+      // CommonMethods.showToast("Session expired. Please login again.");
 
-      Utils.savePreferenceValues(Constants.accessToken, "");
-      Utils.savePreferenceValues(Constants.email, "");
-      await Utils.clearPreferenceValues();
-      Get.delete<LoginController>();
-      Get.offAll(() => LoginScreen());
+      // Utils.savePreferenceValues(Constants.accessToken, "");
+      // Utils.savePreferenceValues(Constants.email, "");
+      // await Utils.clearPreferenceValues();
+      // Get.delete<LoginController>();
+      // Get.offAll(() => LoginScreen());
     }
   }
 

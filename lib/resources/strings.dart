@@ -326,6 +326,22 @@ class AppStrings {
   String get contactPhone => "(246)264 845";
   String get contactEmail => "BharathasthKaushal@gmail.com";
 
+  //Logistics
+  String get logistics => "Logistics";
+  String get logisticsId =>'#BHKLOG00';
+  String get pickUpLocation => "Pick Up Location";
+  String get shipperName => "Shipper Name";
+  String get recipientName => "Recipient Name";
+  String get logisticsEmptyTitle => "No shipments Yet";
+  String get logisticsEmptyDesc => "You have no active shipments at the moment. Once orders or Products are Approved, shipment and tracking details will appear here.";
+  String get trackShipment => "Track Shipment";
+  String get logisticsHelp => "Need help with delivery? Contact our support for assistance.";
+
+  //account verification
+  String get underVerification => "Account Verification";
+  String get waitingApproval =>"Your account is waiting for approval";
+  String get underVerificationDesc => "We are currently reviewing your details and verifying your identity. It may take up to 24 hours to activate your account. We appreciate your patience during this process.";
+
   //default
   String get alert => 'Alert';
   String get yourAuthExpired => 'Your authentication has expired please login again';

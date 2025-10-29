@@ -5,6 +5,7 @@ import 'package:bhk_artisan/Modules/screens/ordersManagement/order_filter_screen
 import 'package:bhk_artisan/Modules/screens/ordersManagement/upload_order_image_screen.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/add_product_screen.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/product_detail_screen.dart';
+import 'package:bhk_artisan/Modules/screens/under_verification_screen.dart';
 import 'package:bhk_artisan/Modules/widgets/on_screen_video_screen.dart';
 import 'package:bhk_artisan/Modules/widgets/video_player_screen.dart';
 import 'package:get/get.dart';
@@ -44,6 +45,7 @@ class RoutesClass {
   static String videoPlayer = '/videoPlayer';
   static String productDetails = '/productDetails';
   static String uploadOrderImage ='/uploadOrderImage';
+  static String accountVerification = '/accountVerification';
 
   static String termscondition = '/termscondition';
   static String privacypolicy = '/privacypolicy';
@@ -73,6 +75,7 @@ class RoutesClass {
   static String gotoVideoRecorder() => videoRecorder;
   static String gotoVideoPlayerScreen() => videoPlayer;
   static String gotoUploadOrderImageScreen() =>uploadOrderImage;
+  static String gotoAccountVerificationScreen() => accountVerification;
 
   static List<GetPage> routes = [
     GetPage(name: splash, page: () => SplashScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
@@ -96,5 +99,6 @@ class RoutesClass {
     GetPage(name: termscondition, page: () => TermsConditions(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: privacypolicy, page: () => PrivacyPolicy(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: support, page: () => SupportScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
+    GetPage(name: accountVerification, page: () => UnderVerificationScreen(), transition: Transition.fade, transitionDuration: const Duration(milliseconds: 300)),
   ];
 }

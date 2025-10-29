@@ -1,5 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/get_product_controller.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/my_products.dart';
+import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -27,7 +28,7 @@ class CancelProducts extends ParentWidget {
               color: Colors.brown,
               onRefresh: () => controller.productRefresh(ProductStatus.DISAPPROVED.name),
               child: controller.getDisapprovedProductModel.value.data?.docs?.isEmpty ?? false
-                  ? emptyScreen(w, h)
+                  ? emptyScreen(h, appStrings.noRejectedProducts, appStrings.emptyRejectedProductDesc, appImages.myproductcart)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
@@ -62,32 +63,4 @@ class CancelProducts extends ParentWidget {
       ),
     );
   }
-}
-
-Widget emptyScreen(double w, double h) {
-  return Column(
-    children: [
-      16.kH,
-      Text(
-        appStrings.hiThere,
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
-      ),
-      SizedBox(height: h * 0.1),
-      Image.asset(appImages.myproductcart, height: 120, width: 130, fit: BoxFit.contain),
-      SizedBox(height: h * 0.15),
-      Text(
-        appStrings.noRejectedProducts,
-        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
-      ),
-      10.kH,
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Text(
-          appStrings.emptyRejectedProductDesc,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-        ),
-      ),
-    ],
-  );
 }

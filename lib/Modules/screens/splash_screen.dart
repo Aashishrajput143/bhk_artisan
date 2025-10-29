@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:bhk_artisan/Modules/controller/splashController.dart';
+import 'package:bhk_artisan/Modules/controller/splash_controller.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';

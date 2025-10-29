@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bhk_artisan/Modules/controller/logincontroller.dart';
+import 'package:bhk_artisan/Modules/controller/login_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

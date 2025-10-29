@@ -1,10 +1,10 @@
 import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/logout_model.dart';
 import 'package:bhk_artisan/Modules/repository/profile_repository.dart';
+import 'package:bhk_artisan/Modules/screens/support_screen.dart';
 import 'package:bhk_artisan/common/app_constants_list.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
-import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
@@ -14,17 +14,18 @@ import 'package:get/get.dart';
 class SupportController extends GetxController {
   final _api = ProfileRepository();
 
-  var nameController = TextEditingController().obs;
-  var emailController = TextEditingController().obs;
-  var phoneController = TextEditingController().obs;
   var messageController = TextEditingController().obs;
 
   List<String> issueType = AppConstantsList.issueType;
   var selectedIssueType = Rxn<String>();
+  var isButtonEnabled = true.obs;
+
+  var issueTypeError = Rxn<String>();
+  var messageError = Rxn<String>();
 
   CommonScreenController commonScreenController = Get.find();
 
-
+  final screen = SupportScreen();
 
   var emailFocusNode = FocusNode().obs;
   var nameFocusNode = FocusNode().obs;
@@ -39,11 +40,24 @@ class SupportController extends GetxController {
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
   void setneedAssistanceModeldata(LogoutModel value) => needAssistanceModel.value = value;
 
-  Future<void> updateProfileApi() async {
+  bool validateForm() {
+    if ((selectedIssueType.value == null) || (messageController.value.text.isEmpty)) {
+      if (selectedIssueType.value == null) {
+        issueTypeError.value = "Please Select Your Issue Type";
+      }
+      if (messageController.value.text.isEmpty) {
+        messageError.value = "Please Enter Your Message";
+      }
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> needSupportApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
-    Map<String, String> data = {"name": nameController.value.text, if (emailController.value.text.isNotEmpty) "email": emailController.value.text, "phoneNumber": phoneController.value.text, "message": messageController.value.text};
+    Map<String, String> data = {"issueType": selectedIssueType.value??"", "message": messageController.value.text};
 
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
@@ -53,9 +67,16 @@ class SupportController extends GetxController {
             setRxRequestStatus(Status.COMPLETED);
             setneedAssistanceModeldata(value);
             Utils.printLog("Response===> ${value.toString()}");
-            Get.back();
-            Get.back();
-            CommonMethods.showToast(value.message ?? "Request Submitted Successfully...", icon: Icons.check, bgColor: Colors.green);
+            screen.redirect(
+              Get.context!,
+              Get.width,
+              onChanged: () {
+                Get.back();
+                Get.back();
+                Get.back();
+                commonScreenController.selectedIndex.value = 0;
+              },
+            );
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
@@ -63,21 +84,5 @@ class SupportController extends GetxController {
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
-  }
-
-  redirect(context,w){
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return SuccessDialogBox(
-          width: w,
-          title: appStrings.requestSubmitted,
-          buttonHint: appStrings.buttonGoBackHome,
-          onChanged: (){Get.back();Get.back();Get.back();commonScreenController.selectedIndex.value =0;},
-          message: appStrings.requestSubmittedDesc,
-        );
-      },
-    );
   }
 }

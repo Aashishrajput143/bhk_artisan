@@ -11,7 +11,7 @@ import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controller/profilecontroller.dart';
+import '../../controller/profile_controller.dart';
 
 class MainProfile extends ParentWidget {
   const MainProfile({super.key});

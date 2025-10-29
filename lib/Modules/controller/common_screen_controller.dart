@@ -1,5 +1,5 @@
-import 'package:bhk_artisan/Modules/controller/orderscreencontroller.dart';
-import 'package:bhk_artisan/Modules/controller/productscreencontroller.dart';
+import 'package:bhk_artisan/Modules/controller/order_screen_controller.dart';
+import 'package:bhk_artisan/Modules/controller/product_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
 import 'package:bhk_artisan/Modules/repository/profile_repository.dart';
 import 'package:bhk_artisan/Modules/screens/home_screen.dart';
@@ -10,6 +10,7 @@ import 'package:bhk_artisan/common/common_constants.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/strings.dart';
+import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -89,6 +90,9 @@ class CommonScreenController extends GetxController {
             debugPrint("user_id===>${value.data?.id}");
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> ${value.toString()}");
+            if(value.data?.verifyStatus == false){
+              Get.offAllNamed(RoutesClass.accountVerification);
+            }
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

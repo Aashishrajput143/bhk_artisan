@@ -17,7 +17,7 @@ class GetProductController extends GetxController {
   final getApprovedProductModel = ProductListingModel().obs;
   final getPendingProductModel = ProductListingModel().obs;
   final getDisapprovedProductModel = ProductListingModel().obs;
-  
+
   CommonScreenController commonController = Get.find();
 
   void setError(String value) => error.value = value;
@@ -28,8 +28,15 @@ class GetProductController extends GetxController {
   void setPendingProductdata(ProductListingModel value) => getPendingProductModel.value = value;
   void setDisapprovedProductdata(ProductListingModel value) => getDisapprovedProductModel.value = value;
 
+  @override
+  void onInit() {
+    super.onInit();
+    getProductApi(ProductStatus.PENDING.name);
+    getProductApi(ProductStatus.DISAPPROVED.name);
+  }
+
   Future<void> productRefresh(var status) async {
-    getProductApi(status);
+    getProductApi(status,isLoader: false);
   }
 
   Future<void> getProductApi(var status, {bool isLoader = true}) async {

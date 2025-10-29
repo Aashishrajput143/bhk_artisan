@@ -28,7 +28,7 @@ class OrderFilterScreen extends ParentWidget {
             appBar: commonAppBar("${controller.type.value} ${controller.getAllOrderStepModel.value.data != null ? "(${controller.getAllOrderStepModel.value.data?.length})" : ""}"),
             backgroundColor: appColors.backgroundColor,
             body: controller.getAllOrderStepModel.value.data?.isEmpty ?? false
-                ? emptyScreen(w, h)
+               ?  emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.orderscreen)
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: controller.getAllOrderStepModel.value.data?.isNotEmpty ?? false
@@ -46,34 +46,6 @@ class OrderFilterScreen extends ParentWidget {
           //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
-    );
-  }
-
-  Widget emptyScreen(double w, double h) {
-    return Column(
-      children: [
-        16.kH,
-        Text(
-          appStrings.hiThere,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
-        ),
-        SizedBox(height: h * 0.1),
-        Image.asset(appImages.orderscreen, height: 250, fit: BoxFit.fitHeight),
-        16.kH,
-        Text(
-          appStrings.noOrdersAvailable,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
-        ),
-        10.kH,
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Text(
-            appStrings.emptyOrdersDesc,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-          ),
-        ),
-      ],
     );
   }
 

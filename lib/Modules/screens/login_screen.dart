@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../data/response/status.dart';
 import '../../main.dart';
-import '../controller/logincontroller.dart';
+import '../controller/login_controller.dart';
 
 class LoginScreen extends ParentWidget {
   const LoginScreen({super.key});

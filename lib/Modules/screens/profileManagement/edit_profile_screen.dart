@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../controller/updateprofilecontroller.dart';
+import '../../controller/update_profile_controller.dart';
 
 class EditProfile extends ParentWidget {
   const EditProfile({super.key});

@@ -1,8 +1,14 @@
+import 'package:bhk_artisan/Modules/controller/logistics_list_controller.dart';
+import 'package:bhk_artisan/Modules/model/get_all_logistics_model.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/address_type_enum.dart';
+import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/stringlimitter.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
@@ -13,52 +19,44 @@ class LogisticsScreen extends ParentWidget {
 
   @override
   Widget buildingView(BuildContext context, double h, double w) {
-
-    final orders = <Map<String, dynamic>>[
-    {
-      "orderId": "#110516",
-      "productName": "Wooden Elephant Carving",
-      "status": "Awaiting Pickup",
-      "shipper": "Rakesh Singh",
-      "recipient": "Aashish Chauhan",
-      "location": "Google Building 40, Mountain View, California, 94043, United States"
-    },
-    {
-      "orderId": "#110517",
-      "productName": "Banarsi Silk Saree",
-      "status": "In Transit",
-      "shipper": "Sunil Sharma",
-      "recipient": "Priya Verma",
-      "location": "500 Terry Francois St, San Francisco, CA 94158, United States"
-    },
-  ];
-
-    return Stack(
-      children: [
-        Scaffold(
-          appBar: commonAppBar("Logistics"),
-          backgroundColor: appColors.backgroundColor,
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: 2,
-              itemBuilder: (context, index) {
-                return orderContent(h, w, orders[index]);
-              },
-            ),
+    LogisticsListController controller = Get.put(LogisticsListController());
+    controller.getAllLogisticsApi();
+    return Obx(
+      () => Stack(
+        children: [
+          Scaffold(
+            appBar: commonAppBar(appStrings.logistics),
+            backgroundColor: appColors.backgroundColor,
+            body: controller.logisticsModel.value.data?.docs?.isEmpty ?? false
+                ? Padding(
+                  padding: EdgeInsets.only(top: h*0.1),
+                  child: emptyScreen(h, appStrings.logisticsEmptyTitle, appStrings.logisticsEmptyDesc, appImages.emptyLogistics,useAssetImage: false,isThere: false),
+                )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: controller.logisticsModel.value.data?.docs?.isNotEmpty ?? false
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: controller.logisticsModel.value.data?.docs?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              Docs? data = controller.logisticsModel.value.data?.docs?[index];
+                              return orderContent(h, w, data, controller);
+                            },
+                          )
+                        : Padding(padding: const EdgeInsets.only(top: 8.0), child: shimmerList(w, h * 0.2, list: 4)),
+                  ),
           ),
-        ),
-        //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.height),
-      ],
+          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.height),
+        ],
+      ),
     );
   }
 
-  Widget orderContent(double h, double w, Map<String, dynamic> order) {
+  Widget orderContent(double h, double w, Docs? data, LogisticsListController controller) {
     return GestureDetector(
-      onTap: () =>Get.toNamed(RoutesClass.ordertracking),
+      onTap: () => Get.toNamed(RoutesClass.ordertracking),
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 8.0),
+        margin: EdgeInsets.symmetric(vertical: 12.0),
         decoration: BoxDecoration(
           color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(16),
@@ -70,24 +68,24 @@ class LogisticsScreen extends ParentWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              logisticCardHeader(order),
-              logisticCardContent(order),
+              logisticCardHeader(data),
+              logisticCardContent(data),
               Divider(thickness: 1, color: Colors.grey[300]),
               Row(
                 children: [
                   Text(
-                    "Location: ",
+                    "${appStrings.pickUpLocation}: ",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
                   ),
                   Text(
-                    "Home",
+                    (data?.pickupAddress?.addressType ?? AddressType.OTHERS.name).toAddressType().name,
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: appColors.brownDarkText),
                   ),
                 ],
               ),
               2.kH,
               Text(
-                order["location"],
+                controller.getFullAddress(data),
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: appColors.contentPending),
               ),
             ],
@@ -110,7 +108,7 @@ class LogisticsScreen extends ParentWidget {
     );
   }
 
-  Widget logisticCardHeader(Map<String, dynamic> order) {
+  Widget logisticCardHeader(Docs? data) {
     return ListTile(
       contentPadding: EdgeInsets.all(0),
       minVerticalPadding: 0,
@@ -127,13 +125,13 @@ class LogisticsScreen extends ParentWidget {
           child: Image.asset(appImages.cubeBox, fit: BoxFit.contain),
         ),
       ),
-      title: Text(order["orderId"], style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-      subtitle: Text(StringLimiter.limitCharacters(order["productName"], 20), style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-      trailing: commonTags(appColors.contentWhite, bg: appColors.acceptColor, hint:order["status"], padding: 6,vPadding: 3),
+      title: Text("${appStrings.logisticsId}${data?.id ?? 0}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      subtitle: Text(StringLimiter.limitCharacters(data?.buildStep?.stepName ?? "", 20), style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+      trailing: commonTags(appColors.contentWhite, bg: appColors.acceptColor, hint: (data?.buildStep?.transitStatus)?.toLogisticsType().displayText ?? "", padding: 6, vPadding: 3),
     );
   }
 
-  Widget logisticCardContent(Map<String, dynamic> order) {
+  Widget logisticCardContent(Docs? data) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
@@ -143,12 +141,12 @@ class LogisticsScreen extends ParentWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Shipper Name:',
+                "${appStrings.shipperName}: ",
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: appColors.contentPending),
               ),
               3.kH,
               Text(
-                order["shipper"],
+                "${data?.shipper?.firstName ?? appStrings.notAvailable} ${data?.shipper?.lastName ?? ""}",
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: appColors.contentPrimary),
               ),
             ],
@@ -157,12 +155,12 @@ class LogisticsScreen extends ParentWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Recipient Name:',
+                "${appStrings.recipientName}: ",
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: appColors.contentPending),
               ),
               3.kH,
               Text(
-                order["recipient"],
+                "${data?.recipient?.firstName ?? "Available"} ${data?.recipient?.lastName ?? ""}",
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: appColors.contentPrimary),
               ),
             ],

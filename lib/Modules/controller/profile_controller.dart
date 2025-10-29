@@ -1,4 +1,4 @@
-import 'package:bhk_artisan/Modules/controller/logincontroller.dart';
+import 'package:bhk_artisan/Modules/controller/login_controller.dart';
 import 'package:bhk_artisan/Modules/model/logout_model.dart';
 import 'package:bhk_artisan/Modules/repository/login_repository.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';

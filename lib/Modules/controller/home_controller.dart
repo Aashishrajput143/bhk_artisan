@@ -1,7 +1,7 @@
 import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
 import 'package:bhk_artisan/Modules/controller/get_order_controller.dart';
-import 'package:bhk_artisan/Modules/controller/orderscreencontroller.dart';
-import 'package:bhk_artisan/Modules/controller/productscreencontroller.dart';
+import 'package:bhk_artisan/Modules/controller/order_screen_controller.dart';
+import 'package:bhk_artisan/Modules/controller/product_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/Modules/model/sales_graph_model.dart';
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';

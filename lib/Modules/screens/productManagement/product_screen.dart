@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/controller/get_product_controller.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/cancel_products.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/pending_products.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
@@ -5,7 +6,7 @@ import 'package:bhk_artisan/resources/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controller/productscreencontroller.dart';
+import '../../controller/product_screen_controller.dart';
 import 'my_products.dart';
 
 class ProductScreen extends StatelessWidget {
@@ -14,12 +15,13 @@ class ProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProductController controller = Get.put(ProductController());
+    GetProductController productController = Get.put(GetProductController());
     return Scaffold(
       appBar: appBarTab(
         tabs: [
-          Tab(text: appStrings.tabApproved),
-          Tab(text: appStrings.tabPending),
-          Tab(text: appStrings.tabRejected),
+          Obx(()=> Tab(text: "${appStrings.tabApproved} ${productController.getApprovedProductModel.value.data != null ? "(${productController.getApprovedProductModel.value.data?.docs?.length})" : ""}")),
+          Obx(()=> Tab(text: "${appStrings.tabPending} ${productController.getPendingProductModel.value.data != null ? "(${productController.getPendingProductModel.value.data?.docs?.length})" : ""}")),
+          Obx(()=> Tab(text: "${appStrings.tabRejected} ${productController.getDisapprovedProductModel.value.data != null ? "(${productController.getDisapprovedProductModel.value.data?.docs?.length})" : ""}")),
         ],
         title:appStrings.myProductsTitle,
         tabController: controller.tabController,

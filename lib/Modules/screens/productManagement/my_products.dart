@@ -30,7 +30,7 @@ class MyProducts extends ParentWidget {
               color: Colors.brown,
               onRefresh: () => controller.productRefresh(ProductStatus.APPROVED.name),
               child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
-                  ? emptyScreen(w, h)
+                  ? emptyScreen(h, appStrings.addYourProduct, appStrings.emptyProductDesc, appImages.myproductcart)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
@@ -96,34 +96,6 @@ class MyProducts extends ParentWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget emptyScreen(double w, double h) {
-    return Column(
-      children: [
-        16.kH,
-        Text(
-          appStrings.hiThere,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
-        ),
-        SizedBox(height: h * 0.1),
-        Image.asset(appImages.myproductcart, height: 120, width: 130, fit: BoxFit.contain),
-        SizedBox(height: h * 0.15),
-        Text(
-          appStrings.addYourProduct,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
-        ),
-        10.kH,
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Text(
-            appStrings.emptyProductDesc,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-          ),
-        ),
-      ],
     );
   }
 
