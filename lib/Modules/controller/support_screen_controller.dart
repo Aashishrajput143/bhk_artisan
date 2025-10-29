@@ -19,13 +19,18 @@ class SupportController extends GetxController {
   List<String> issueType = AppConstantsList.issueType;
   var selectedIssueType = Rxn<String>();
   var isButtonEnabled = true.obs;
+  var isVerified = true.obs;
 
   var issueTypeError = Rxn<String>();
   var messageError = Rxn<String>();
 
-  CommonScreenController commonScreenController = Get.find();
-
   final screen = SupportScreen();
+
+  @override
+  void onInit() {
+    isVerified.value = Get.arguments ?? true;
+    super.onInit();
+  }
 
   var emailFocusNode = FocusNode().obs;
   var nameFocusNode = FocusNode().obs;
@@ -57,7 +62,7 @@ class SupportController extends GetxController {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
-    Map<String, String> data = {"issueType": selectedIssueType.value??"", "message": messageController.value.text};
+    Map<String, String> data = {"issueType": selectedIssueType.value ?? "", "message": messageController.value.text};
 
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
@@ -71,10 +76,15 @@ class SupportController extends GetxController {
               Get.context!,
               Get.width,
               onChanged: () {
-                Get.back();
-                Get.back();
-                Get.back();
-                commonScreenController.selectedIndex.value = 0;
+                if (isVerified.value == false) {
+                  Get.back();
+                } else {
+                  CommonScreenController commonScreenController = Get.put(CommonScreenController());
+                  Get.back();
+                  Get.back();
+                  Get.back();
+                  commonScreenController.selectedIndex.value = 0;
+                }
               },
             );
           })

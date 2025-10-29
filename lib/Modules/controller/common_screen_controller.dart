@@ -24,8 +24,8 @@ class CommonScreenController extends GetxController {
   var selectedIndex = 0.obs;
   var isDialog = false.obs;
 
-  ProductController productController = Get.put(ProductController());
-  OrderController orderController = Get.put(OrderController());
+  ProductController? productController;
+  OrderController? orderController;
 
   @override
   void onInit() {
@@ -45,8 +45,8 @@ class CommonScreenController extends GetxController {
 
   void onTap(index) {
     if (index == 0) {
-      orderController.changeTab(0);
-      productController.changeTab(0);
+      orderController?.changeTab(0);
+      productController?.changeTab(0);
       update();
     }
     selectedIndex.value = index;
@@ -90,9 +90,11 @@ class CommonScreenController extends GetxController {
             debugPrint("user_id===>${value.data?.id}");
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> ${value.toString()}");
-            if(value.data?.verifyStatus == false){
+            if (value.data?.verifyStatus == false) {
               Get.offAllNamed(RoutesClass.accountVerification);
             }
+            productController = Get.put(ProductController());
+            orderController = Get.put(OrderController());
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

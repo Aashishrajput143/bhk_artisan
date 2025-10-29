@@ -25,7 +25,7 @@ class LogisticsScreen extends ParentWidget {
       () => Stack(
         children: [
           Scaffold(
-            appBar: commonAppBar(appStrings.logistics),
+            appBar: commonAppBar("${appStrings.logistics} ${controller.logisticsModel.value.data != null ? "(${controller.logisticsModel.value.data?.docs?.length})" : ""}"),
             backgroundColor: appColors.backgroundColor,
             body: controller.logisticsModel.value.data?.docs?.isEmpty ?? false
                 ? Padding(
