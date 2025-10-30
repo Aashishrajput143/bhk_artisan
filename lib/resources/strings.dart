@@ -189,14 +189,8 @@ class AppStrings {
   String get ordersDetailsTitle => "ORDERS DETAILS";
 
   //Track Order
-  String get orderTrackingTitle => "Order Tracking";
-  String get orderIdPrefixHash => "Order Id #";
   String get orderFulfillmentStatus => "Order Fulfillment Status";
   String get statusOrderReceived => "Order Received";
-  String get statusOrderCompleted => "Order Completed";
-  String get statusAwaitingPickup => "Awaiting Pickup";
-  String get statusInTransit => "In Transit";
-  String get statusOrderDelivered => "Order Delivered";
   String get deliveredDescription => "Your order has been Successfully Delivered";
   String get expectedPickup => "Expected Pickup on ";
   String get awaitingPickup => "Awaiting Pickup";
@@ -334,7 +328,7 @@ class AppStrings {
   String get recipientName => "Recipient Name";
   String get logisticsEmptyTitle => "No shipments Yet";
   String get logisticsEmptyDesc => "You have no active shipments at the moment. Once orders or Products are Approved, shipment and tracking details will appear here.";
-  String get trackShipment => "Track Shipment";
+  String get shipperDetails => "Shipper Details";
   String get logisticsHelp => "Need help with delivery? Contact our support for assistance.";
 
   //account verification

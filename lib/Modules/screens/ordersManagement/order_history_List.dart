@@ -1,5 +1,6 @@
 import 'package:bhk_artisan/Modules/controller/get_order_controller.dart';
 import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.dart';
+import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
@@ -82,10 +83,10 @@ class OrderListHistory extends ParentWidget {
                     OrderList().buildOrderDetailColumn(appStrings.payment, '₹ ${steps?.proposedPrice ?? 0}'),
                     if (steps?.product != null) OrderList().buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
                     OrderList().buildOrderDetailColumn(appStrings.orderQty, (steps?.product?.quantity ?? 0).toString().padLeft(2, '0')),
-                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)))
+                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)))
                       OrderList().buildOrderDetailColumn(
                         appStrings.orderStatus,
-                        (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate))
+                        (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate))
                             ? appStrings.expired
                             : steps?.artisanAgreedStatus == OrderStatus.DELIVERED.name
                             ? OrderStatus.DELIVERED.displayText

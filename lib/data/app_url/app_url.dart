@@ -40,5 +40,4 @@ class AppUrl {
 
   //logistics
   static String getAllLogistics = '$baseUrl/product/api/logistics/';
-
 }

@@ -4,6 +4,7 @@ import 'package:bhk_artisan/Modules/controller/order_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/get_all_order_step_model.dart';
 import 'package:bhk_artisan/Modules/model/update_order_status_model.dart';
 import 'package:bhk_artisan/Modules/repository/order_repository.dart';
+import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -21,24 +22,6 @@ class GetOrderController extends GetxController {
     getAllOrderStepApi();
   }
 
-  bool isExpired(String? rawDate) {
-    if (rawDate == null || rawDate.isEmpty) return true;
-
-    try {
-      final dueDate = DateTime.parse(rawDate).toLocal();
-      final now = DateTime.now();
-
-      final difference = dueDate.difference(now).inDays;
-      if (difference < 0) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return true;
-    }
-  }
-
   Timer? countdownTimer;
   RxMap<int, String> remainingTimes = <int, String>{}.obs;
   RxMap<int, bool> isExpiredMap = <int, bool>{}.obs;
@@ -52,11 +35,11 @@ class GetOrderController extends GetxController {
 
     for (var order in orders) {
       if (order.id != null && order.createdAt != null) {
-        final assigned = DateTime.parse(order.createdAt!).toLocal();
-        final expiry = assigned.add(const Duration(hours: 290, minutes: 0));
+        final assigned = DateTime.parse(order.createdAt!).toUtc();
+        final expiry = assigned.add(const Duration(hours: 48, minutes: 0));
         expiryTimes[order.id!] = expiry;
 
-        final diff = expiry.difference(DateTime.now());
+        final diff = expiry.difference(DateTime.now().toUtc());
         remainingTimes[order.id!] = diff.isNegative ? "Expired" : formatDuration(diff);
         isExpiredMap[order.id!] = diff.isNegative;
         remainingTimes.refresh();
@@ -64,7 +47,7 @@ class GetOrderController extends GetxController {
       }
     }
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      final now = DateTime.now();
+      final now = DateTime.now().toUtc();
 
       expiryTimes.forEach((orderId, expiryTime) {
         final remaining = expiryTime.difference(now);
@@ -87,6 +70,7 @@ class GetOrderController extends GetxController {
         final currentAllOrders = getAllOrderStepModel.value;
         final activeOrders = getFilteredOrders(currentAllOrders, isActive: true);
         final pastOrders = getFilteredOrders(currentAllOrders, isActive: false);
+        calculateOrderCounts(currentAllOrders);
         setAllActiveOrderStepdata(activeOrders);
         setAllPastOrderStepdata(pastOrders);
       });
@@ -95,20 +79,6 @@ class GetOrderController extends GetxController {
 
   void cancelAllCountdowns() {
     countdownTimer?.cancel();
-  }
-
-  String formatDuration(Duration duration) {
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes.remainder(60);
-    final seconds = duration.inSeconds.remainder(60);
-
-    if (hours > 0) {
-      return "$hours hr ${minutes.toString().padLeft(2, '0')} min ${seconds.toString().padLeft(2, '0')} sec";
-    } else if (minutes > 0) {
-      return "$minutes min ${seconds.toString().padLeft(2, '0')} sec";
-    } else {
-      return "$seconds sec";
-    }
   }
 
   OrderController orderController = Get.find();
@@ -130,9 +100,9 @@ class GetOrderController extends GetxController {
     getAllOrderStepApi();
   }
 
-  var totalOrders = 0.obs;
-  var pendingOrders = 0.obs;
-  var acceptedOrders = 0.obs;
+  var totalOrders = Rxn<int>();
+  var pendingOrders = Rxn<int>();
+  var acceptedOrders = Rxn<int>();
 
   final rxRequestStatus = Status.COMPLETED.obs;
   final getAllOrderStepModel = GetAllOrderStepsModel().obs;
@@ -159,8 +129,8 @@ class GetOrderController extends GetxController {
       await _api
           .getAllOrderStepApi()
           .then((value) {
-            calculateOrderCounts(value);
             setAllOrderStepdata(value);
+            calculateOrderCounts(value);
             if (isActive) {
               final activeOrders = getFilteredOrders(value, isActive: true);
               setAllActiveOrderStepdata(activeOrders);
@@ -186,7 +156,7 @@ class GetOrderController extends GetxController {
   void calculateOrderCounts(GetAllOrderStepsModel value) {
     if (value.data == null) return;
     totalOrders.value = value.data?.length ?? 0;
-    pendingOrders.value = value.data!.where((item) => OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.PENDING && !isExpired(item.dueDate)).length;
+    pendingOrders.value = value.data!.where((item) => OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.PENDING && !isExpired(item.dueDate) && isExpiredMap[item.id!] == false).length;
     acceptedOrders.value = value.data!
         .where(
           (item) =>
@@ -210,12 +180,12 @@ class GetOrderController extends GetxController {
       final status = OrderStatusExtension.fromString(item.artisanAgreedStatus);
       final transitStatus = OrderStatusExtension.fromString(item.transitStatus);
       if (isActive) {
-        final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate);
+        final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate) && (status == OrderStatus.PENDING && isExpired(item.dueDate) || (status == OrderStatus.PENDING && isExpiredMap[item.id!] == false));
         final isAcceptedOrCompleted = status == OrderStatus.ACCEPTED || status == OrderStatus.COMPLETED;
 
         return isPendingAndNotExpired || isAcceptedOrCompleted;
       } else {
-        final isDeliveredOrExpired = status == OrderStatus.REJECTED || transitStatus == OrderStatus.DELIVERED || (status == OrderStatus.PENDING && isExpired(item.dueDate));
+        final isDeliveredOrExpired = status == OrderStatus.REJECTED || transitStatus == OrderStatus.DELIVERED || (status == OrderStatus.PENDING && isExpired(item.dueDate) || (status == OrderStatus.PENDING && isExpiredMap[item.id!] == true));
         return isDeliveredOrExpired;
       }
     }).toList();

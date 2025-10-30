@@ -54,7 +54,7 @@ class LogisticsScreen extends ParentWidget {
 
   Widget orderContent(double h, double w, Docs? data, LogisticsListController controller) {
     return GestureDetector(
-      onTap: () => Get.toNamed(RoutesClass.ordertracking),
+      onTap: () => Get.toNamed(RoutesClass.ordertracking,arguments: data?.id),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 12.0),
         decoration: BoxDecoration(
@@ -126,8 +126,8 @@ class LogisticsScreen extends ParentWidget {
         ),
       ),
       title: Text("${appStrings.logisticsId}${data?.id ?? 0}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-      subtitle: Text(StringLimiter.limitCharacters(data?.buildStep?.stepName ?? "", 20), style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-      trailing: commonTags(appColors.contentWhite, bg: appColors.acceptColor, hint: (data?.buildStep?.transitStatus)?.toLogisticsType().displayText ?? "", padding: 6, vPadding: 3),
+      subtitle: Text(StringLimiter.limitCharacters(data?.buildStep?.stepName ?? data?.product?.productName??appStrings.notAvailable, 20), style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+      trailing: commonTags(appColors.contentWhite, bg: appColors.acceptColor, hint: (data?.currentStatus)?.toOrderType().displayText ?? "", padding: 6, vPadding: 3),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/Modules/model/get_all_order_step_model.dart';
+import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
@@ -84,10 +85,10 @@ class OrderList extends ParentWidget {
                     buildOrderDetailColumn(appStrings.payment, '₹ ${steps?.proposedPrice ?? 0}'),
                     if (steps?.product != null) buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
                     buildOrderDetailColumn(appStrings.orderQty, (steps?.product?.quantity ?? 0).toString().padLeft(2, '0')),
-                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)))
+                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)))
                       buildOrderDetailColumn(
                         appStrings.orderStatus,
-                        (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
+                        (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
                             ? appStrings.expired
                             : steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
                             ? OrderStatus.WAIT_FOR_PICKUP.displayText
@@ -100,7 +101,7 @@ class OrderList extends ParentWidget {
                             : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
                             ? OrderStatus.PENDING.displayText
                             : OrderStatus.REJECTED.displayText,
-                        color: (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
+                        color: (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
                             ? appColors.declineColor
                             : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name
                             ? appColors.acceptColor
@@ -111,7 +112,7 @@ class OrderList extends ParentWidget {
                   ],
                 ),
               ),
-              if ((steps?.artisanAgreedStatus == OrderStatus.PENDING.name && !controller.isExpired(steps?.dueDate) && !((controller.isExpiredMap[steps?.id] ?? false)))) ...[
+              if ((steps?.artisanAgreedStatus == OrderStatus.PENDING.name && !isExpired(steps?.dueDate) && !((controller.isExpiredMap[steps?.id] ?? false)))) ...[
                 4.kH,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -183,7 +184,7 @@ class OrderList extends ParentWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("${appStrings.orderIdPrefix}${steps?.id}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            Text(steps?.dueDate != null && (steps?.dueDate?.isNotEmpty ?? false) ? "${appStrings.orderCompleteBy} ${controller.formatDate(steps?.dueDate)}" : appStrings.completeSoonPossible, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+            Text(steps?.dueDate != null && (steps?.dueDate?.isNotEmpty ?? false) ? "${appStrings.orderCompleteBy} ${formatDate(steps?.dueDate)}" : appStrings.completeSoonPossible, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
           ],
         ),
       ],
@@ -203,12 +204,12 @@ class OrderList extends ParentWidget {
               4.kH,
               Row(
                 children: [
-                  Icon(Icons.circle, color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))) ? appColors.declineColor : appColors.acceptColor, size: 8),
+                  Icon(Icons.circle, color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))) ? appColors.declineColor : appColors.acceptColor, size: 8),
                   4.kW,
                   steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.remainingTimes[steps?.id] != "Expired"
                       ? Obx(() => Text("${appStrings.orderNeedsAction} within ${controller.remainingTimes[steps?.id]}", style: TextStyle(color: appColors.acceptColor, fontSize: 11)))
                       : Text(
-                          (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)))
+                          (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)))
                               ? appStrings.orderExpired
                               : steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
                               ? appStrings.orderDeclined
@@ -217,12 +218,12 @@ class OrderList extends ParentWidget {
                               : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
                               ? appStrings.orderConfirmed
                               : appStrings.orderDeclined,
-                          style: TextStyle(color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))) ? appColors.declineColor : appColors.acceptColor, fontSize: 11),
+                          style: TextStyle(color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))) ? appColors.declineColor : appColors.acceptColor, fontSize: 11),
                         ),
                 ],
               ),
               4.kH,
-              Text("${appStrings.orderAssigned} : ${controller.formatDate(steps?.createdAt)}", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+              Text("${appStrings.orderAssigned} : ${formatDate(steps?.createdAt)}", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
             ],
           ),
         ),

@@ -129,46 +129,48 @@ class HomeScreen extends ParentWidget {
   }
 
   Widget commonCollection(double h, double w, Homecontroller controller) {
-    final approvedDocs = controller.getApprovedProductModel.value.data?.docs;
+    return Obx(() {
+      final approvedDocs = controller.getApprovedProductModel.value.data?.docs;
 
-    if (approvedDocs == null || controller.getOrderController.getAllOrderStepModel.value.data == null) {
-      return shimmerCollection(w);
-    }
-    return Column(
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          controller: controller.scrollController.value,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 16),
-            child: Row(
-              children: [
-                commonContainer(w, controller.getTodayOrdersCount(controller.getOrderController.getAllOrderStepModel.value.data ?? []), appColors.orangeColor[100], appColors.orangeColor, appStrings.todayOrders, Icons.shopping_cart, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.todayOrders)),
-                12.kW,
-                commonContainer(w, controller.getOrderController.pendingOrders.value.toString(), appColors.blueColor[100], appColors.blueColor, appStrings.needAction, Icons.touch_app, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.needAction)),
-                12.kW,
-                commonContainer(w, controller.getOrderController.acceptedOrders.value.toString(), appColors.redColor[100], appColors.redColor, appStrings.pendingOrders, Icons.pending_actions, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.pendingOrders)),
-                12.kW,
-                commonContainer(w, (approvedDocs.length).toString(), appColors.blueColor[100], appColors.blueColor, appStrings.approvedProducts, Icons.local_offer, onTap: () => controller.commonController.selectedIndex.value = 2),
-                12.kW,
-                commonContainer(w, (controller.getOrderController.getAllOrderStepModel.value.data?.length ?? 0).toString(), appColors.orangeColor[100], appColors.orangeColor, appStrings.totalOrders, Icons.shopping_cart, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.totalOrders)),
-                12.kW,
-                commonContainer(w, "₹ ${controller.totalSales()}", appColors.blueColor[100], appColors.blueColor, appStrings.annualSales, Icons.bar_chart),
-              ],
+      if (approvedDocs == null || controller.getOrderController.getAllOrderStepModel.value.data == null || controller.getOrderController.pendingOrders.value == null || controller.getOrderController.acceptedOrders.value == null) {
+        return shimmerCollection(w);
+      }
+      return Column(
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            controller: controller.scrollController.value,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16),
+              child: Row(
+                children: [
+                  commonContainer(w, controller.getTodayOrdersCount(controller.getOrderController.getAllOrderStepModel.value.data ?? []), appColors.orangeColor[100], appColors.orangeColor, appStrings.todayOrders, Icons.shopping_cart, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.todayOrders)),
+                  12.kW,
+                  commonContainer(w, (controller.getOrderController.pendingOrders.value ?? 0).toString(), appColors.blueColor[100], appColors.blueColor, appStrings.needAction, Icons.touch_app, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.needAction)),
+                  12.kW,
+                  commonContainer(w, (controller.getOrderController.acceptedOrders.value ?? 0).toString(), appColors.redColor[100], appColors.redColor, appStrings.pendingOrders, Icons.pending_actions, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.pendingOrders)),
+                  12.kW,
+                  commonContainer(w, (approvedDocs.length).toString(), appColors.blueColor[100], appColors.blueColor, appStrings.approvedProducts, Icons.local_offer, onTap: () => controller.commonController.selectedIndex.value = 2),
+                  12.kW,
+                  commonContainer(w, (controller.getOrderController.getAllOrderStepModel.value.data?.length ?? 0).toString(), appColors.orangeColor[100], appColors.orangeColor, appStrings.totalOrders, Icons.shopping_cart, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.totalOrders)),
+                  12.kW,
+                  commonContainer(w, "₹ ${controller.totalSales()}", appColors.blueColor[100], appColors.blueColor, appStrings.annualSales, Icons.bar_chart),
+                ],
+              ),
             ),
           ),
-        ),
-        2.kH,
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 130),
-          child: Obx(() {
-            double progress = (controller.scrollPosition.value / controller.maxScrollExtent.value).clamp(0.0, 1.0);
-            return LinearProgressBar(maxSteps: 50, progressType: LinearProgressBar.progressTypeLinear, currentStep: controller.scrollPosition < 15 ? 2 : (progress * 50).toInt(), progressColor: appColors.progressBarColor, backgroundColor: appColors.progressBarBg, minHeight: 7, borderRadius: BorderRadius.circular(10));
-          }),
-        ),
-        20.kH,
-      ],
-    );
+          2.kH,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 130),
+            child: Obx(() {
+              double progress = (controller.scrollPosition.value / controller.maxScrollExtent.value).clamp(0.0, 1.0);
+              return LinearProgressBar(maxSteps: 50, progressType: LinearProgressBar.progressTypeLinear, currentStep: controller.scrollPosition < 15 ? 2 : (progress * 50).toInt(), progressColor: appColors.progressBarColor, backgroundColor: appColors.progressBarBg, minHeight: 7, borderRadius: BorderRadius.circular(10));
+            }),
+          ),
+          20.kH,
+        ],
+      );
+    });
   }
 
   Widget commonContainer(double w, String count, Color? color, Color colorValues, String title, IconData icon, {void Function()? onTap}) {
@@ -416,7 +418,7 @@ class HomeScreen extends ParentWidget {
                         },
                         yValueMapper: (ChartData sales, _) => controller.dropdownsold.value == "Product Sales" ? sales.sales : sales.unitsSold,
                         name: controller.dropdownsold.value,
-                        animationDuration: 1200,
+                        animationDuration: 1600,
                         width: controller.selectedFilterData.length == 1
                             ? 0.15
                             : controller.selectedFilterData.length <= 3

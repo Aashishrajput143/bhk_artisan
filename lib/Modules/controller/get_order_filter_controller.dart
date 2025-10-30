@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bhk_artisan/Modules/model/get_all_order_step_model.dart';
 import 'package:bhk_artisan/Modules/model/update_order_status_model.dart';
 import 'package:bhk_artisan/Modules/repository/order_repository.dart';
+import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -11,30 +12,11 @@ import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class GetOrderFilterController extends GetxController {
   final _api = OrderRepository();
 
   var type = appStrings.totalOrders.obs;
-
-  bool isExpired(String? rawDate) {
-    if (rawDate == null || rawDate.isEmpty) return true;
-
-    try {
-      final dueDate = DateTime.parse(rawDate).toLocal();
-      final now = DateTime.now();
-
-      final difference = dueDate.difference(now).inDays;
-      if (difference < 0) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return true;
-    }
-  }
 
   Timer? countdownTimer;
   RxMap<int, String> remainingTimes = <int, String>{}.obs;
@@ -49,11 +31,11 @@ class GetOrderFilterController extends GetxController {
 
     for (var order in orders) {
       if (order.id != null && order.createdAt != null) {
-        final assigned = DateTime.parse(order.createdAt!).toLocal();
-        final expiry = assigned.add(const Duration(hours: 290, minutes: 0));
+        final assigned = DateTime.parse(order.createdAt!).toUtc();
+        final expiry = assigned.add(const Duration(hours: 48, minutes: 0));
         expiryTimes[order.id!] = expiry;
 
-        final diff = expiry.difference(DateTime.now());
+        final diff = expiry.difference(DateTime.now().toUtc());
         remainingTimes[order.id!] = diff.isNegative ? "Expired" : formatDuration(diff);
         isExpiredMap[order.id!] = diff.isNegative;
         remainingTimes.refresh();
@@ -61,7 +43,7 @@ class GetOrderFilterController extends GetxController {
       }
     }
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      final now = DateTime.now();
+      final now = DateTime.now().toUtc();
 
       expiryTimes.forEach((orderId, expiryTime) {
         final remaining = expiryTime.difference(now);
@@ -81,7 +63,6 @@ class GetOrderFilterController extends GetxController {
       });
       remainingTimes.refresh();
       isExpiredMap.refresh();
-      update();
       final value = getAllOrderStepModel.value;
       if (type.value == appStrings.todayOrders) {
         final activeOrders = getFilteredOrders(value);
@@ -95,36 +76,12 @@ class GetOrderFilterController extends GetxController {
       } else {
         setAllOrderStepdata(value);
       }
+      update();
     });
   }
 
   void cancelAllCountdowns() {
     countdownTimer?.cancel();
-  }
-
-  String formatDuration(Duration duration) {
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes.remainder(60);
-    final seconds = duration.inSeconds.remainder(60);
-
-    if (hours > 0) {
-      return "$hours hr ${minutes.toString().padLeft(2, '0')} min ${seconds.toString().padLeft(2, '0')} sec";
-    } else if (minutes > 0) {
-      return "$minutes min ${seconds.toString().padLeft(2, '0')} sec";
-    } else {
-      return "$seconds sec";
-    }
-  }
-
-  String formatDate(String? rawDate) {
-    if (rawDate == null || rawDate.isEmpty) return "N/A";
-
-    try {
-      final dateTime = DateTime.parse(rawDate).toLocal();
-      return DateFormat("MMM dd, yyyy").format(dateTime);
-    } catch (e) {
-      return "Invalid date";
-    }
   }
 
   @override
@@ -151,7 +108,7 @@ class GetOrderFilterController extends GetxController {
 
     if (connection == true) {
       if (loader) setRxRequestStatus(Status.LOADING);
-      _api
+      await _api
           .getAllOrderStepApi()
           .then((value) {
             if (loader) setRxRequestStatus(Status.COMPLETED);
@@ -196,7 +153,7 @@ class GetOrderFilterController extends GetxController {
       final buildStatus = OrderStatusExtension.fromString(item.buildStatus);
       if (isActive) {
         if (action) {
-          final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate);
+          final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate) && isExpiredMap[item.id!] == false;
           return isPendingAndNotExpired;
         } else {
           final isAcceptedOrCompleted = (buildStatus == OrderStatus.COMPLETED || buildStatus == OrderStatus.IN_PROGRESS || (status == OrderStatus.ACCEPTED && buildStatus == OrderStatus.PENDING)) && !(status == OrderStatus.PENDING && isExpired(item.dueDate));

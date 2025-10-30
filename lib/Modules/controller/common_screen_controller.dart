@@ -3,7 +3,7 @@ import 'package:bhk_artisan/Modules/controller/product_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
 import 'package:bhk_artisan/Modules/repository/profile_repository.dart';
 import 'package:bhk_artisan/Modules/screens/home_screen.dart';
-import 'package:bhk_artisan/Modules/screens/logistics_screen.dart';
+import 'package:bhk_artisan/Modules/screens/logisticsManagement/logistics_screen.dart';
 import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_constants.dart';

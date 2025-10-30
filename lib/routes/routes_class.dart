@@ -15,7 +15,7 @@ import '../Modules/screens/notifications.dart';
 import '../Modules/screens/support_screen.dart';
 import '../Modules/screens/login_screen.dart';
 import '../Modules/screens/ordersManagement/order_details_screen.dart';
-import '../Modules/screens/ordersManagement/trackingorder.dart';
+import '../Modules/screens/logisticsManagement/logistics_details_screen.dart';
 import '../Modules/screens/otp_screen.dart';
 import '../Modules/screens/privacy_policy.dart';
 import '../Modules/screens/profileManagement/edit_profile_screen.dart';

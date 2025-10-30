@@ -4,6 +4,7 @@ import 'package:bhk_artisan/Modules/controller/address_controller.dart';
 import 'package:bhk_artisan/Modules/model/order_details_model.dart';
 import 'package:bhk_artisan/Modules/model/update_order_status_model.dart';
 import 'package:bhk_artisan/Modules/repository/order_repository.dart';
+import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -11,7 +12,6 @@ import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class GetOrderDetailsController extends GetxController {
   final _api = OrderRepository();
@@ -71,23 +71,12 @@ class GetOrderDetailsController extends GetxController {
     currentIndex.value = index;
   }
 
-  String formatDate(String? rawDate) {
-    if (rawDate == null || rawDate.isEmpty) return "N/A";
-
-    try {
-      final dateTime = DateTime.parse(rawDate).toLocal();
-      return DateFormat("MMM dd, yyyy").format(dateTime);
-    } catch (e) {
-      return "Invalid date";
-    }
-  }
-
   String getRemainingDays(String? rawDate, {bool declined = false}) {
     if (rawDate == null || rawDate.isEmpty) return "N/A";
 
     try {
-      final dueDate = DateTime.parse(rawDate).toLocal();
-      final now = DateTime.now();
+      final dueDate = DateTime.parse(rawDate);
+      final now = DateTime.now().toUtc();
 
       final difference = dueDate.difference(now).inDays;
       if (difference < 0 || declined) {
@@ -99,24 +88,6 @@ class GetOrderDetailsController extends GetxController {
       }
     } catch (e) {
       return "Invalid date";
-    }
-  }
-
-  bool isExpired(String? rawDate) {
-    if (rawDate == null || rawDate.isEmpty) return true;
-
-    try {
-      final dueDate = DateTime.parse(rawDate).toLocal();
-      final now = DateTime.now();
-
-      final difference = dueDate.difference(now).inDays;
-      if (difference < 0) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return true;
     }
   }
 
@@ -132,8 +103,8 @@ class GetOrderDetailsController extends GetxController {
 
     if (createdAt == null || createdAt.isEmpty) return;
 
-    final assigned = DateTime.parse(createdAt).toLocal();
-    expiryTime = assigned.add(const Duration(hours: 290, minutes: 0));
+    final assigned = DateTime.parse(createdAt).toUtc();
+    expiryTime = assigned.add(const Duration(hours: 48, minutes: 0));
 
     updateRemainingTime();
     update();
@@ -145,7 +116,7 @@ class GetOrderDetailsController extends GetxController {
 
   void updateRemainingTime() {
     if (expiryTime == null) return;
-    final now = DateTime.now();
+    final now = DateTime.now().toUtc();
     final diff = expiryTime!.difference(now);
 
     if (diff.isNegative || diff.inSeconds <= 0) {
@@ -159,20 +130,6 @@ class GetOrderDetailsController extends GetxController {
     final value = getOrderStepModel.value;
     setOrderStepdata(value);
     update();
-  }
-
-  String formatDuration(Duration duration) {
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes.remainder(60);
-    final seconds = duration.inSeconds.remainder(60);
-
-    if (hours > 0) {
-      return "$hours hr ${minutes.toString().padLeft(2, '0')} min ${seconds.toString().padLeft(2, '0')} sec";
-    } else if (minutes > 0) {
-      return "$minutes min ${seconds.toString().padLeft(2, '0')} sec";
-    } else {
-      return "$seconds sec";
-    }
   }
 
   @override

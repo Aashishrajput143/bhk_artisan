@@ -57,8 +57,8 @@ extension OrderStatusExtension on OrderStatus {
   }
 }
 
-extension AddressTypeParser on String {
-  OrderStatus toLogisticsType() {
+extension OrderTypeParser on String {
+  OrderStatus toOrderType() {
     switch (toUpperCase()) {
       case "REJECTED":
         return OrderStatus.REJECTED;

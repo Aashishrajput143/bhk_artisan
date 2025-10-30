@@ -379,3 +379,62 @@ Widget shimmerList(double w, double h, {int list = 2}) {
     ),
   );
 }
+
+Widget buildShimmerLogistics(double h) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16.0),
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
+      ),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 45,
+                    height: 45,
+                    decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                  ),
+                  12.kW,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(height: 12, width: 120, color: Colors.white),
+                        6.kH,
+                        Container(height: 10, width: 80, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                  12.kW,
+                  Container(width: 100, height: 30,decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.all(Radius.circular(16))),),
+                ],
+              ),
+              16.kH,
+              ...List.generate(
+                2,
+                (_) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.0),
+                  child: Container(height: h*0.15, color: Colors.white),
+                ),
+              ),
+              16.kH,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6.0),
+                child: Container(height: h*0.4, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
