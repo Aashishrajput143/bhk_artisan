@@ -31,7 +31,7 @@ class OrderListHistory extends ParentWidget {
               color: Colors.brown,
               onRefresh: () => controller.ordersRefresh(),
               child: controller.getAllPastOrderStepModel.value.data?.isEmpty ?? false
-                  ?emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.orderscreen)
+                  ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.orderscreen)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: controller.getAllPastOrderStepModel.value.data?.isNotEmpty ?? false
@@ -52,7 +52,7 @@ class OrderListHistory extends ParentWidget {
       ),
     );
   }
-  
+
   Widget orderContent(double h, double w, int index, Data? steps, GetOrderController controller) {
     return GestureDetector(
       onTap: () => Get.toNamed(RoutesClass.ordersdetails, arguments: steps?.id ?? "")?.then((onValue) {
@@ -83,10 +83,10 @@ class OrderListHistory extends ParentWidget {
                     OrderList().buildOrderDetailColumn(appStrings.payment, '₹ ${steps?.proposedPrice ?? 0}'),
                     if (steps?.product != null) OrderList().buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
                     OrderList().buildOrderDetailColumn(appStrings.orderQty, (steps?.product?.quantity ?? 0).toString().padLeft(2, '0')),
-                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)))
+                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)))
                       OrderList().buildOrderDetailColumn(
                         appStrings.orderStatus,
-                        (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate))
+                       (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
                             ? appStrings.expired
                             : steps?.artisanAgreedStatus == OrderStatus.DELIVERED.name
                             ? OrderStatus.DELIVERED.displayText

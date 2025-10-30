@@ -50,13 +50,12 @@ class ProfileController extends GetxController {
   }
 
   Future<void> initSplashLogic() async {
-    await Future.delayed(Duration.zero);
     final context = Get.context!;
     if (context.mounted) {
       await precacheImage(AssetImage(appImages.bhkbackground), context);
       Utils.printLog("Login background image preloaded");
       setRxRequestStatus(Status.COMPLETED);
-      await redirect();
+      redirect();
     }
   }
 

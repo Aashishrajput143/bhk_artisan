@@ -167,11 +167,7 @@ class GetOrderController extends GetxController {
     update();
   }
 
-  GetAllOrderStepsModel getFilteredOrders(
-    GetAllOrderStepsModel value, {
-    List<OrderStatus>? filterAgreedStatuses,
-    bool isActive = false, // 👈 add this flag
-  }) {
+  GetAllOrderStepsModel getFilteredOrders(GetAllOrderStepsModel value, {List<OrderStatus>? filterAgreedStatuses, bool isActive = false}) {
     if (value.data == null) {
       return GetAllOrderStepsModel(message: value.message, data: []);
     }
@@ -179,14 +175,17 @@ class GetOrderController extends GetxController {
     final filteredData = value.data!.where((item) {
       final status = OrderStatusExtension.fromString(item.artisanAgreedStatus);
       final transitStatus = OrderStatusExtension.fromString(item.transitStatus);
+
       if (isActive) {
-        final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate) && (status == OrderStatus.PENDING && isExpired(item.dueDate) || (status == OrderStatus.PENDING && isExpiredMap[item.id!] == false));
+        final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate) && (isExpiredMap[item.id!] == false);
         final isAcceptedOrCompleted = status == OrderStatus.ACCEPTED || status == OrderStatus.COMPLETED;
 
         return isPendingAndNotExpired || isAcceptedOrCompleted;
       } else {
-        final isDeliveredOrExpired = status == OrderStatus.REJECTED || transitStatus == OrderStatus.DELIVERED || (status == OrderStatus.PENDING && isExpired(item.dueDate) || (status == OrderStatus.PENDING && isExpiredMap[item.id!] == true));
-        return isDeliveredOrExpired;
+        final isDeliveredOrExpired = status == OrderStatus.REJECTED || transitStatus == OrderStatus.DELIVERED || (status == OrderStatus.PENDING && isExpired(item.dueDate)) || (status == OrderStatus.PENDING && isExpiredMap[item.id!] == true);
+        final isAdminApprovedAccepted = status == OrderStatus.ACCEPTED && OrderStatusExtension.fromString(item.buildStatus) == OrderStatus.ADMIN_APPROVED;
+
+        return isDeliveredOrExpired && !isAdminApprovedAccepted;
       }
     }).toList();
 

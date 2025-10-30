@@ -17,7 +17,6 @@ class SplashController extends GetxController with GetSingleTickerProviderStateM
   }
 
   Future<void> initSplashLogic() async {
-    await Future.delayed(Duration.zero);
     final context = Get.context!;
     if (context.mounted) {
       await precacheImage(AssetImage(appImages.bhkbackground), context);

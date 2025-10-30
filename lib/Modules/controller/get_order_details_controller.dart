@@ -8,6 +8,7 @@ import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,10 @@ class GetOrderDetailsController extends GetxController {
       final now = DateTime.now().toUtc();
 
       final difference = dueDate.difference(now).inDays;
-      if (difference < 0 || declined) {
+      if(difference < 0 && (getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name) || (getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name)) {
+        return "Done";
+      }
+      else if (difference < 0 || declined || isExpired(rawDate) || (hasExpired.value)) {
         return "No Longer Active";
       } else if (difference == 0) {
         return "Due Today";

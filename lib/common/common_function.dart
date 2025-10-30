@@ -15,19 +15,18 @@ bool isExpired(String? rawDate) {
   if (rawDate == null || rawDate.isEmpty) return true;
 
   try {
-    final dueDate = DateTime.parse(rawDate);
-    final now = DateTime.now().toUtc();
+    final dueDate = DateTime.parse(rawDate).toUtc();
+    final dueDateOnly = DateTime.utc(dueDate.year, dueDate.month, dueDate.day);
 
-    final difference = dueDate.difference(now).inDays;
-    if (difference < 0) {
-      return true;
-    } else {
-      return false;
-    }
+    final now = DateTime.now().toUtc();
+    final todayOnly = DateTime.utc(now.year, now.month, now.day);
+
+    return todayOnly.isAfter(dueDateOnly);
   } catch (e) {
     return true;
   }
 }
+
 
 String formatDuration(Duration duration) {
   final hours = duration.inHours;
