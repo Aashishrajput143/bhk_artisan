@@ -45,7 +45,7 @@ extension LogisticsTypeParser on String {
         return Logisticstatus.DELIVERED;
       case "PICKED":
         return Logisticstatus.PICKED;
-      case "IN-TRANSIT":
+      case "IN_TRANSIT":
         return Logisticstatus.IN_TRANSIT;
       case "ORDER_COMPLETED":
         return Logisticstatus.ORDER_COMPLETED;

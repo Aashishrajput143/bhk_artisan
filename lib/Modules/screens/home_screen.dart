@@ -179,7 +179,7 @@ class HomeScreen extends ParentWidget {
       onTap: onTap,
       child: Container(
         width: w * 0.43,
-        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 12),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(12),
