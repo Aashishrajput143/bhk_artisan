@@ -40,7 +40,7 @@ class OrderTrackingPage extends ParentWidget {
                       20.kH,
                       logisticStatus(controller.logisticsModel.value.data?.trackingHistory),
                       20.kH,
-                      logisticExpected(w, "${appStrings.expectedPickup}${formatDate(controller.logisticsModel.value.data?.expectedPickupDate)}"),
+                      logisticExpected(w, controller.logisticsModel.value.data),
                       30.kH,
                     ],
                   )
@@ -99,7 +99,7 @@ class OrderTrackingPage extends ParentWidget {
           16.kH,
           ...List.generate(filteredHistory.length, (index) {
             final item = filteredHistory[index];
-            final bool isCompleted = index < filteredHistory.length - 1;
+            final bool isCompleted = item.isStepCompleted ?? false;
             final bool isLast = index == filteredHistory.length - 1;
 
             return buildTimelineItem(status: item.status?.toLogisticsType().displayText ?? '', date: formatDate(item.date), isCompleted: isCompleted, islast: isLast,description: item.status?.toLogisticsType() == Logisticstatus.DELIVERED ? appStrings.deliveredDescription:null);
@@ -198,7 +198,7 @@ class OrderTrackingPage extends ParentWidget {
     );
   }
 
-  Widget logisticExpected(double w, String hint) {
+  Widget logisticExpected(double w, Data? data) {
     return Container(
       width: w,
       height: 45,
@@ -210,7 +210,7 @@ class OrderTrackingPage extends ParentWidget {
       ),
       child: Center(
         child: Text(
-          hint,
+         data?.currentStatus == Logisticstatus.DELIVERED.name?appStrings.packageDelivered :data?.currentStatus == Logisticstatus.PICKED.name?appStrings.packagePicked:"${appStrings.expectedPickup}${formatDate(data?.expectedPickupDate)}",
           style: TextStyle(fontSize: 18, fontFamily: appFonts.NunitoBold, fontWeight: FontWeight.w600, color: appColors.brownDarkText),
         ),
       ),

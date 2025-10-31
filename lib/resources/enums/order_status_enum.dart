@@ -1,4 +1,4 @@
-enum OrderStatus { PENDING, REJECTED, ACCEPTED, COMPLETED, DELIVERED,INREVIEW,ADMIN_APPROVED,WAIT_FOR_PICKUP,IN_PROGRESS,PICKED,INTRANSIT}
+enum OrderStatus { PENDING, REJECTED, ACCEPTED, COMPLETED, DELIVERED,INREVIEW,ADMIN_APPROVED,WAIT_FOR_PICKUP,IN_PROGRESS,PICKED,IN_TRANSIT}
 
 extension OrderStatusExtension on OrderStatus {
   String get displayText {
@@ -17,7 +17,7 @@ extension OrderStatusExtension on OrderStatus {
         return "In Progress";
       case OrderStatus.DELIVERED:
         return "Delivered";
-      case OrderStatus.INTRANSIT:
+      case OrderStatus.IN_TRANSIT:
         return "In Transit";
       case OrderStatus.INREVIEW:
         return "In Review";
@@ -44,8 +44,8 @@ extension OrderStatusExtension on OrderStatus {
         return OrderStatus.IN_PROGRESS;
       case "PICKED":
         return OrderStatus.PICKED;
-      case "INTRANSIT":
-        return OrderStatus.INTRANSIT;
+      case "IN_TRANSIT":
+        return OrderStatus.IN_TRANSIT;
       case "ADMIN_APPROVED":
         return OrderStatus.ADMIN_APPROVED;
       case "WAIT_FOR_PICKUP":
@@ -74,8 +74,8 @@ extension OrderTypeParser on String {
         return OrderStatus.IN_PROGRESS;
       case "PICKED":
         return OrderStatus.PICKED;
-      case "INTRANSIT":
-        return OrderStatus.INTRANSIT;
+      case "IN_TRANSIT":
+        return OrderStatus.IN_TRANSIT;
       case "ADMIN_APPROVED":
         return OrderStatus.ADMIN_APPROVED;
       case "WAIT_FOR_PICKUP":

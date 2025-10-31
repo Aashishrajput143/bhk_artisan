@@ -1,4 +1,4 @@
-enum Logisticstatus {ORDER_RECEIVED,ORDER_COMPLETED, DELIVERED,WAIT_FOR_PICKUP,PICKED,INTRANSIT}
+enum Logisticstatus {ORDER_RECEIVED,ORDER_COMPLETED, DELIVERED,WAIT_FOR_PICKUP,PICKED,IN_TRANSIT}
 
 extension LogisticstatusExtension on Logisticstatus {
   String get displayText {
@@ -11,7 +11,7 @@ extension LogisticstatusExtension on Logisticstatus {
         return "Delivered";
       case Logisticstatus.ORDER_COMPLETED:
         return "Order Completed";
-      case Logisticstatus.INTRANSIT:
+      case Logisticstatus.IN_TRANSIT:
         return "In Transit";
       case Logisticstatus.WAIT_FOR_PICKUP:
         return "Awaiting Pickup";
@@ -24,8 +24,8 @@ extension LogisticstatusExtension on Logisticstatus {
         return Logisticstatus.DELIVERED;
       case "PICKED":
         return Logisticstatus.PICKED;
-      case "INTRANSIT":
-        return Logisticstatus.INTRANSIT;
+      case "IN_TRANSIT":
+        return Logisticstatus.IN_TRANSIT;
       case "ORDER_COMPLETED":
         return Logisticstatus.ORDER_COMPLETED;
       case "ORDER_RECEIVED":
@@ -45,8 +45,8 @@ extension LogisticsTypeParser on String {
         return Logisticstatus.DELIVERED;
       case "PICKED":
         return Logisticstatus.PICKED;
-      case "INTRANSIT":
-        return Logisticstatus.INTRANSIT;
+      case "IN-TRANSIT":
+        return Logisticstatus.IN_TRANSIT;
       case "ORDER_COMPLETED":
         return Logisticstatus.ORDER_COMPLETED;
       case "ORDER_RECEIVED":

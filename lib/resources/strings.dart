@@ -193,7 +193,8 @@ class AppStrings {
   String get statusOrderReceived => "Order Received";
   String get deliveredDescription => "Your order has been Successfully Delivered";
   String get expectedPickup => "Expected Pickup on ";
-  String get awaitingPickup => "Awaiting Pickup";
+  String get packageDelivered => "Package Delivered Successfully";
+  String get packagePicked =>"Package has been Picked";
 
   // Order History Screen
   String get noOrdersFound => "No Orders Found";

@@ -213,13 +213,15 @@ class TrackingHistory {
   String? date;
   String? status;
   String? remarks;
+  bool? isStepCompleted;
 
-  TrackingHistory({this.date, this.status, this.remarks});
+  TrackingHistory({this.date, this.status, this.remarks, this.isStepCompleted});
 
   TrackingHistory.fromJson(Map<String, dynamic> json) {
     date = json['date'];
     status = json['status'];
     remarks = json['remarks'];
+    isStepCompleted = json['isStepCompleted'];
   }
 
   Map<String, dynamic> toJson() {
@@ -227,6 +229,7 @@ class TrackingHistory {
     data['date'] = this.date;
     data['status'] = this.status;
     data['remarks'] = this.remarks;
+    data['isStepCompleted'] = this.isStepCompleted;
     return data;
   }
 }
