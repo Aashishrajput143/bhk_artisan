@@ -42,7 +42,7 @@ class SupportScreen extends ParentWidget {
                       controller.messageController.value,
                       controller.messageFocusNode.value,
                       w,
-                      maxLines:controller.messageError.value?.isNotEmpty??false?19: 20,
+                      maxLines:h<700?16: controller.messageError.value?.isNotEmpty??false?19: 20,
                       minLines: 12,
                       error: controller.messageError,
                       onChange: (value) {
