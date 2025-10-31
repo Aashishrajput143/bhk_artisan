@@ -179,7 +179,7 @@ class HomeScreen extends ParentWidget {
       onTap: onTap,
       child: Container(
         width: w * 0.43,
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 14),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(12),
@@ -195,11 +195,11 @@ class HomeScreen extends ParentWidget {
                   backgroundColor: colorValues.withValues(alpha: 0.2),
                   child: Icon(icon, color: colorValues, size: 16),
                 ),
-                8.kW,
+                6.kW,
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black),
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black),
                   ),
                 ),
               ],
