@@ -162,6 +162,8 @@ class OrderTrackingPage extends ParentWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
             child: Column(
               children: [
+                commonRow(appStrings.productName, data?.buildStep?.stepName ?? data?.product?.productName ?? appStrings.notAvailable, fontSize: 15, fontweight: FontWeight.w600, color: appColors.contentPrimary, fontSize2: 16, fontweight2: FontWeight.w600, color2: appColors.contentPrimary),
+                10.kH,
                 commonRow(appStrings.orderQty, (data?.product?.quantity ?? 0).toString(), fontSize: 15, fontweight: FontWeight.w600, color: appColors.contentPrimary, fontSize2: 16, fontweight2: FontWeight.w600, color2: appColors.contentPrimary),
                 10.kH,
                 commonRow(appStrings.material, data?.buildStep?.materials ?? data?.product?.material ?? "", fontSize: 15, fontweight: FontWeight.w600, color: appColors.contentPrimary, fontSize2: 16, fontweight2: FontWeight.w600, color2: appColors.contentPrimary),

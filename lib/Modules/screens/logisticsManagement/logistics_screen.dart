@@ -160,7 +160,7 @@ class LogisticsScreen extends ParentWidget {
               ),
               3.kH,
               Text(
-                "${data?.recipient?.firstName ?? "Available"} ${data?.recipient?.lastName ?? ""}",
+                "${data?.recipient?.firstName ?? appStrings.notAvailable} ${data?.recipient?.lastName ?? ""}",
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: appColors.contentPrimary),
               ),
             ],

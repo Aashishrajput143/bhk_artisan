@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 
 class AppConstantsList {
-  static final List<String> issueType = ["Account Verification Issue", "Payment Query", "Account Updation Issue", 'Technical Problem', 'Connectivity Issue', 'User Interface Problem', 'Others'].obs;
-
   static final List<String> weights = ['gm', 'kg'].obs;
 
   static final List<String> measureunits = ['cm', 'inches'].obs;

@@ -2,10 +2,10 @@ import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/logout_model.dart';
 import 'package:bhk_artisan/Modules/repository/profile_repository.dart';
 import 'package:bhk_artisan/Modules/screens/support_screen.dart';
-import 'package:bhk_artisan/common/app_constants_list.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/enums/support_type_enum.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -16,21 +16,13 @@ class SupportController extends GetxController {
 
   var messageController = TextEditingController().obs;
 
-  List<String> issueType = AppConstantsList.issueType;
+  RxList<String> issueType = IssueType.values.map((e) => e.displayName).toList().obs;
   var selectedIssueType = Rxn<String>();
   var isButtonEnabled = true.obs;
-  var isVerified = true.obs;
-
   var issueTypeError = Rxn<String>();
   var messageError = Rxn<String>();
 
   final screen = SupportScreen();
-
-  @override
-  void onInit() {
-    isVerified.value = Get.arguments ?? true;
-    super.onInit();
-  }
 
   var emailFocusNode = FocusNode().obs;
   var nameFocusNode = FocusNode().obs;
@@ -62,7 +54,7 @@ class SupportController extends GetxController {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
-    Map<String, String> data = {"issueType": selectedIssueType.value ?? "", "message": messageController.value.text};
+    Map<String, String> data = {"issueType": selectedIssueType.value?.toIssueType().name ?? "", "message": messageController.value.text};
 
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
@@ -76,15 +68,11 @@ class SupportController extends GetxController {
               Get.context!,
               Get.width,
               onChanged: () {
-                if (isVerified.value == false) {
-                  Get.back();
-                } else {
-                  CommonScreenController commonScreenController = Get.put(CommonScreenController());
-                  Get.back();
-                  Get.back();
-                  Get.back();
-                  commonScreenController.selectedIndex.value = 0;
-                }
+                CommonScreenController commonScreenController = Get.put(CommonScreenController());
+                Get.back();
+                Get.back();
+                Get.back();
+                commonScreenController.selectedIndex.value = 0;
               },
             );
           })
