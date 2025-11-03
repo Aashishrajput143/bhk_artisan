@@ -12,7 +12,7 @@ class LogisticsRepository {
   }
 
   Future<GetLogisticsDetailsModel> getLogisticsDetailsApi(var id) async {
-    dynamic response = await _apiServices.getApi("${AppUrl.getAllLogistics}/$id");
+    dynamic response = await _apiServices.getApi("${AppUrl.getAllLogistics}$id");
     return GetLogisticsDetailsModel.fromJson(response);
   }
 }

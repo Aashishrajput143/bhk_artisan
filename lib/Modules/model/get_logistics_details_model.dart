@@ -8,13 +8,13 @@ class GetLogisticsDetailsModel {
   GetLogisticsDetailsModel.fromJson(Map<String, dynamic> json) {
     statusCode = json['statusCode'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -91,79 +91,79 @@ class Data {
     if (json['trackingHistory'] != null) {
       trackingHistory = <TrackingHistory>[];
       json['trackingHistory'].forEach((v) {
-        trackingHistory!.add(new TrackingHistory.fromJson(v));
+        trackingHistory!.add(TrackingHistory.fromJson(v));
       });
     }
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     shipper =
-        json['shipper'] != null ? new Shipper.fromJson(json['shipper']) : null;
+        json['shipper'] != null ? Shipper.fromJson(json['shipper']) : null;
     recipient = json['recipient'] != null
-        ? new Recipient.fromJson(json['recipient'])
+        ? Recipient.fromJson(json['recipient'])
         : null;
     pickupAddress = json['pickupAddress'] != null
-        ? new PickupAddress.fromJson(json['pickupAddress'])
+        ? PickupAddress.fromJson(json['pickupAddress'])
         : null;
     deliveryAddress = json['deliveryAddress'] != null
-        ? new PickupAddress.fromJson(json['deliveryAddress'])
+        ? PickupAddress.fromJson(json['deliveryAddress'])
         : null;
     product =
-        json['product'] != null ? new Product.fromJson(json['product']) : null;
+        json['product'] != null ? Product.fromJson(json['product']) : null;
     employee = json['employee'] != null
-        ? new Shipper.fromJson(json['employee'])
+        ? Shipper.fromJson(json['employee'])
         : null;
     buildStep = json['buildStep'] != null
-        ? new BuildStep.fromJson(json['buildStep'])
+        ? BuildStep.fromJson(json['buildStep'])
         : null;
     destination = json['destination'] != null
-        ? new Recipient.fromJson(json['destination'])
+        ? Recipient.fromJson(json['destination'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['trackingId'] = this.trackingId;
-    data['itemName'] = this.itemName;
-    data['shipperId'] = this.shipperId;
-    data['recipientId'] = this.recipientId;
-    data['destinationId'] = this.destinationId;
-    data['pickupAddressId'] = this.pickupAddressId;
-    data['deliveryAddressId'] = this.deliveryAddressId;
-    data['productId'] = this.productId;
-    data['employeeId'] = this.employeeId;
-    data['buildStepId'] = this.buildStepId;
-    data['currentStatus'] = this.currentStatus;
-    data['expectedPickupDate'] = this.expectedPickupDate;
-    if (this.trackingHistory != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['trackingId'] = trackingId;
+    data['itemName'] = itemName;
+    data['shipperId'] = shipperId;
+    data['recipientId'] = recipientId;
+    data['destinationId'] = destinationId;
+    data['pickupAddressId'] = pickupAddressId;
+    data['deliveryAddressId'] = deliveryAddressId;
+    data['productId'] = productId;
+    data['employeeId'] = employeeId;
+    data['buildStepId'] = buildStepId;
+    data['currentStatus'] = currentStatus;
+    data['expectedPickupDate'] = expectedPickupDate;
+    if (trackingHistory != null) {
       data['trackingHistory'] =
-          this.trackingHistory!.map((v) => v.toJson()).toList();
+          trackingHistory!.map((v) => v.toJson()).toList();
     }
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    if (this.shipper != null) {
-      data['shipper'] = this.shipper!.toJson();
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    if (shipper != null) {
+      data['shipper'] = shipper!.toJson();
     }
-    if (this.recipient != null) {
-      data['recipient'] = this.recipient!.toJson();
+    if (recipient != null) {
+      data['recipient'] = recipient!.toJson();
     }
-    if (this.pickupAddress != null) {
-      data['pickupAddress'] = this.pickupAddress!.toJson();
+    if (pickupAddress != null) {
+      data['pickupAddress'] = pickupAddress!.toJson();
     }
-    if (this.deliveryAddress != null) {
-      data['deliveryAddress'] = this.deliveryAddress!.toJson();
+    if (deliveryAddress != null) {
+      data['deliveryAddress'] = deliveryAddress!.toJson();
     }
-    if (this.product != null) {
-      data['product'] = this.product!.toJson();
+    if (product != null) {
+      data['product'] = product!.toJson();
     }
-    if (this.employee != null) {
-      data['employee'] = this.employee!.toJson();
+    if (employee != null) {
+      data['employee'] = employee!.toJson();
     }
-    if (this.buildStep != null) {
-      data['buildStep'] = this.buildStep!.toJson();
+    if (buildStep != null) {
+      data['buildStep'] = buildStep!.toJson();
     }
-    if (this.destination != null) {
-      data['destination'] = this.destination!.toJson();
+    if (destination != null) {
+      data['destination'] = destination!.toJson();
     }
     return data;
   }
@@ -185,11 +185,11 @@ class TrackingHistory {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = this.date;
-    data['status'] = this.status;
-    data['remarks'] = this.remarks;
-    data['isStepCompleted'] = this.isStepCompleted;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['date'] = date;
+    data['status'] = status;
+    data['remarks'] = remarks;
+    data['isStepCompleted'] = isStepCompleted;
     return data;
   }
 }
@@ -254,24 +254,24 @@ class Shipper {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['createdAt'] = this.createdAt;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['email'] = this.email;
-    data['phoneNo'] = this.phoneNo;
-    data['isPhoneNoVerified'] = this.isPhoneNoVerified;
-    data['isEmailVerified'] = this.isEmailVerified;
-    data['countryCode'] = this.countryCode;
-    data['status'] = this.status;
-    data['verifyStatus'] = this.verifyStatus;
-    data['roleName'] = this.roleName;
-    data['user_group'] = this.userGroup;
-    data['expertizeField'] = this.expertizeField;
-    data['aadhaarNumber'] = this.aadhaarNumber;
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createdAt'] = createdAt;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['email'] = email;
+    data['phoneNo'] = phoneNo;
+    data['isPhoneNoVerified'] = isPhoneNoVerified;
+    data['isEmailVerified'] = isEmailVerified;
+    data['countryCode'] = countryCode;
+    data['status'] = status;
+    data['verifyStatus'] = verifyStatus;
+    data['roleName'] = roleName;
+    data['user_group'] = userGroup;
+    data['expertizeField'] = expertizeField;
+    data['aadhaarNumber'] = aadhaarNumber;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
     return data;
   }
 }
@@ -344,27 +344,27 @@ class Recipient {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['createdAt'] = this.createdAt;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['email'] = this.email;
-    data['phoneNo'] = this.phoneNo;
-    data['isPhoneNoVerified'] = this.isPhoneNoVerified;
-    data['isEmailVerified'] = this.isEmailVerified;
-    data['countryCode'] = this.countryCode;
-    data['gstNumber'] = this.gstNumber;
-    data['avatar'] = this.avatar;
-    data['status'] = this.status;
-    data['verifyStatus'] = this.verifyStatus;
-    data['roleName'] = this.roleName;
-    data['user_group'] = this.userGroup;
-    data['expertizeField'] = this.expertizeField;
-    data['user_caste_category'] = this.userCasteCategory;
-    data['subCaste'] = this.subCaste;
-    data['introVideo'] = this.introVideo;
-    data['aadhaarNumber'] = this.aadhaarNumber;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createdAt'] = createdAt;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['email'] = email;
+    data['phoneNo'] = phoneNo;
+    data['isPhoneNoVerified'] = isPhoneNoVerified;
+    data['isEmailVerified'] = isEmailVerified;
+    data['countryCode'] = countryCode;
+    data['gstNumber'] = gstNumber;
+    data['avatar'] = avatar;
+    data['status'] = status;
+    data['verifyStatus'] = verifyStatus;
+    data['roleName'] = roleName;
+    data['user_group'] = userGroup;
+    data['expertizeField'] = expertizeField;
+    data['user_caste_category'] = userCasteCategory;
+    data['subCaste'] = subCaste;
+    data['introVideo'] = introVideo;
+    data['aadhaarNumber'] = aadhaarNumber;
     return data;
   }
 }
@@ -419,21 +419,21 @@ class PickupAddress {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['createdAt'] = this.createdAt;
-    data['isDefault'] = this.isDefault;
-    data['street'] = this.street;
-    data['houseNo'] = this.houseNo;
-    data['postalCode'] = this.postalCode;
-    data['city'] = this.city;
-    data['country'] = this.country;
-    data['state'] = this.state;
-    data['addressType'] = this.addressType;
-    data['customAddressType'] = this.customAddressType;
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
-    data['landmark'] = this.landmark;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createdAt'] = createdAt;
+    data['isDefault'] = isDefault;
+    data['street'] = street;
+    data['houseNo'] = houseNo;
+    data['postalCode'] = postalCode;
+    data['city'] = city;
+    data['country'] = country;
+    data['state'] = state;
+    data['addressType'] = addressType;
+    data['customAddressType'] = customAddressType;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
+    data['landmark'] = landmark;
     return data;
   }
 }
@@ -494,23 +494,23 @@ class Product {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['productId'] = this.productId;
-    data['bhkProductId'] = this.bhkProductId;
-    data['product_name'] = this.productName;
-    data['description'] = this.description;
-    data['productPricePerPiece'] = this.productPricePerPiece;
-    data['quantity'] = this.quantity;
-    data['material'] = this.material;
-    data['discount'] = this.discount;
-    data['netWeight'] = this.netWeight;
-    data['dimension'] = this.dimension;
-    data['product_status'] = this.productStatus;
-    data['admin_approval_status'] = this.adminApprovalStatus;
-    data['adminRemarks'] = this.adminRemarks;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['build_status'] = this.buildStatus;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['productId'] = productId;
+    data['bhkProductId'] = bhkProductId;
+    data['product_name'] = productName;
+    data['description'] = description;
+    data['productPricePerPiece'] = productPricePerPiece;
+    data['quantity'] = quantity;
+    data['material'] = material;
+    data['discount'] = discount;
+    data['netWeight'] = netWeight;
+    data['dimension'] = dimension;
+    data['product_status'] = productStatus;
+    data['admin_approval_status'] = adminApprovalStatus;
+    data['adminRemarks'] = adminRemarks;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['build_status'] = buildStatus;
     return data;
   }
 }
@@ -585,27 +585,27 @@ class BuildStep {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['stepName'] = this.stepName;
-    data['description'] = this.description;
-    data['instructions'] = this.instructions;
-    data['dueDate'] = this.dueDate;
-    data['materials'] = this.materials;
-    data['stepNumber'] = this.stepNumber;
-    data['artisanAgreedStatus'] = this.artisanAgreedStatus;
-    data['progress'] = this.progress;
-    data['adminReviewStatus'] = this.adminReviewStatus;
-    data['transitStatus'] = this.transitStatus;
-    data['proposedPrice'] = this.proposedPrice;
-    data['adminRemarks'] = this.adminRemarks;
-    data['buildStatus'] = this.buildStatus;
-    data['progressStatus'] = this.progressStatus;
-    data['artisianCompletedAt'] = this.artisianCompletedAt;
-    data['artisianAssignedAt'] = this.artisianAssignedAt;
-    data['artisianAgreedAt'] = this.artisianAgreedAt;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['stepName'] = stepName;
+    data['description'] = description;
+    data['instructions'] = instructions;
+    data['dueDate'] = dueDate;
+    data['materials'] = materials;
+    data['stepNumber'] = stepNumber;
+    data['artisanAgreedStatus'] = artisanAgreedStatus;
+    data['progress'] = progress;
+    data['adminReviewStatus'] = adminReviewStatus;
+    data['transitStatus'] = transitStatus;
+    data['proposedPrice'] = proposedPrice;
+    data['adminRemarks'] = adminRemarks;
+    data['buildStatus'] = buildStatus;
+    data['progressStatus'] = progressStatus;
+    data['artisianCompletedAt'] = artisianCompletedAt;
+    data['artisianAssignedAt'] = artisianAssignedAt;
+    data['artisianAgreedAt'] = artisianAgreedAt;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }

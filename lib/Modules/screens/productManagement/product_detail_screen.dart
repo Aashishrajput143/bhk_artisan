@@ -22,21 +22,21 @@ class ProductDetailScreen extends ParentWidget {
           Scaffold(
             backgroundColor: appColors.backgroundColor,
             appBar: commonAppBar(appStrings.productDetailsTitle),
-            body:controller.rxRequestStatus.value == Status.NOINTERNET
-            ? noInternetConnection(onRefresh: () => controller.getProductDetailsApi(), lastChecked: controller.lastChecked.value)
-            :  SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: controller.getProductModel.value.data?.productName?.isEmpty ?? true
-                    ? shimmerProductDetails(h, w)
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(children: [productImageCarousel(h, w, controller), 20.kH, productTitleSection(h, w, controller)]),
-                        ],
-                      ),
-              ),
-            ),
+            body: controller.rxRequestStatus.value == Status.NOINTERNET
+                ? noInternetConnection(onRefresh: () => controller.getProductDetailsApi(), lastChecked: controller.lastChecked.value)
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: controller.getProductModel.value.data?.productName?.isEmpty ?? true
+                          ? shimmerProductDetails(h, w)
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(children: [productImageCarousel(h, w, controller), 20.kH, productTitleSection(h, w, controller)]),
+                              ],
+                            ),
+                    ),
+                  ),
           ),
           //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
@@ -50,35 +50,53 @@ class ProductDetailScreen extends ParentWidget {
       children: [
         Column(
           children: [
-            CarouselSlider(
-              items: controller.getProductModel.value.data?.images?.isNotEmpty ?? false ? controller.getProductModel.value.data?.images?.map<Widget>((image) => commonNetworkImage(image.imageUrl ?? "", width: w, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))).toList() : [commonNetworkImage("", width: w, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))],
-              carouselController: controller.slidercontroller,
-              options: CarouselOptions(
-                height: h * 0.43,
-                enlargeCenterPage: true,
-                viewportFraction: 1,
-                enableInfiniteScroll: false,
-                aspectRatio: 2.0,
-                onPageChanged: (index, reason) {
-                  int current = controller.currentIndex.value;
-                  controller.currentIndex.value = index;
-                  if (!controller.thumbnailScrollController.hasClients) return;
-                  double itemWidth = w * 0.165 + controller.thumbMargin.value;
-                  double currentOffset = controller.thumbnailScrollController.offset;
-                  double maxScroll = controller.thumbnailScrollController.position.maxScrollExtent;
-                  int diff = index - current;
-                  double targetOffset;
-                  if (diff > 0) {
-                    targetOffset = (currentOffset + itemWidth).clamp(0, maxScroll);
-                  } else if (diff < 0) {
-                    targetOffset = (currentOffset - itemWidth).clamp(0, maxScroll);
-                  } else {
-                    targetOffset = currentOffset;
-                  }
+            Stack(
+              children: [
+                CarouselSlider(
+                  items: controller.getProductModel.value.data?.images?.isNotEmpty ?? false
+                      ? controller.getProductModel.value.data?.images?.map<Widget>((image) => commonNetworkImage(image.imageUrl ?? "", width: w, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))).toList()
+                      : [commonNetworkImage("", width: w, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))],
+                  carouselController: controller.slidercontroller,
+                  options: CarouselOptions(
+                    height: h * 0.43,
+                    enlargeCenterPage: true,
+                    viewportFraction: 1,
+                    enableInfiniteScroll: false,
+                    aspectRatio: 2.0,
+                    onPageChanged: (index, reason) {
+                      int current = controller.currentIndex.value;
+                      controller.currentIndex.value = index;
+                      if (!controller.thumbnailScrollController.hasClients) return;
+                      double itemWidth = w * 0.165 + controller.thumbMargin.value;
+                      double currentOffset = controller.thumbnailScrollController.offset;
+                      double maxScroll = controller.thumbnailScrollController.position.maxScrollExtent;
+                      int diff = index - current;
+                      double targetOffset;
+                      if (diff > 0) {
+                        targetOffset = (currentOffset + itemWidth).clamp(0, maxScroll);
+                      } else if (diff < 0) {
+                        targetOffset = (currentOffset - itemWidth).clamp(0, maxScroll);
+                      } else {
+                        targetOffset = currentOffset;
+                      }
 
-                  controller.thumbnailScrollController.animateTo(targetOffset, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
-                },
-              ),
+                      controller.thumbnailScrollController.animateTo(targetOffset, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+                    },
+                  ),
+                ),
+                Positioned(
+                  right: 12,
+                  top: 12,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(12)),
+                    child: Text(
+                      "${controller.currentIndex.value+1} / ${controller.getProductModel.value.data?.images?.length ?? 0}",
+                      style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

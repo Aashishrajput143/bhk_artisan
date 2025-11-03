@@ -244,7 +244,7 @@ class HomeScreen extends ParentWidget {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 20.0, mainAxisSpacing: 7.0, childAspectRatio: 0.6),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 20.0, childAspectRatio: 0.56),
                 itemCount: min(4, controller.getApprovedProductModel.value.data?.docs?.length ?? 0),
                 itemBuilder: (context, index) {
                   return GestureDetector(

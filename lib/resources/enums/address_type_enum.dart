@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum AddressType {
-    HOME,
-    OFFICE,
-    OTHERS
-}
+enum AddressType { HOME, OFFICE, OTHERS }
 
 extension AddressTypeDisplayExtension on AddressType {
   String get displayName {
@@ -57,4 +53,3 @@ extension AddressTypeIconExtension on AddressType {
     }
   }
 }
-

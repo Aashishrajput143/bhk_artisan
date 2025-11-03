@@ -147,7 +147,7 @@ class AddressScreen extends ParentWidget {
                 }
               } else if (value == appStrings.edit) {
                 controller.getLocationApi(index);
-                bottomDrawer(context, h * 0.8, w, controller, id: (address?.id ?? 0).toString());
+                bottomDrawer(context, h * 0.8, w, controller, id: (address?.id ?? 0).toString(),index: index);
               } else if (value == appStrings.markasDefault) {
                 controller.editAddressApi((address?.id ?? 0).toString(), isDefault: true);
               }
@@ -170,7 +170,7 @@ class AddressScreen extends ParentWidget {
     );
   }
 
-  void bottomDrawer(BuildContext context, double h, double w, AddressController controller, {String id = ""}) {
+  void bottomDrawer(BuildContext context, double h, double w, AddressController controller, {String id = "", int index = -1 }) {
     controller.flatError.value = null;
     controller.streetError.value = null;
     showModalBottomSheet(
@@ -180,7 +180,7 @@ class AddressScreen extends ParentWidget {
       isScrollControlled: true,
       builder: (context) {
         return GetBuilder<AddressController>(
-          initState: (state) => controller.loadLocation(),
+          initState: (state) => id.isNotEmpty?controller.getLocationApi(index): controller.loadLocation(),
           builder: (ctrl) => Obx(()=> Stack(
             children: [
               Container(

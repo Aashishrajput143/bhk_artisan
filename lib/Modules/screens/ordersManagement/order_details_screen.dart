@@ -259,7 +259,7 @@ class OrderDetailsPage extends ParentWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             appStrings.selectAddress,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
                           ),
                         ),
                         GestureDetector(
@@ -524,13 +524,25 @@ class OrderDetailsPage extends ParentWidget {
             ),
           ),
           Positioned(
-            left: 8,
-            child: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: controller.goPrevious, color: Colors.black, iconSize: 30, splashRadius: 24),
+            right: 12,
+            top: 12,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(12)),
+              child: Text(
+                "${controller.currentIndex.value + 1} / ${controller.getOrderStepModel.value.data?.referenceImagesAddedByAdmin?.length ?? 0}",
+                style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+            ),
           ),
-          Positioned(
-            right: 8,
-            child: IconButton(icon: Icon(Icons.arrow_forward_ios), onPressed: () => controller.goNext(controller.getOrderStepModel.value.data?.referenceImagesAddedByAdmin?.length ?? 0), color: Colors.black, iconSize: 30, splashRadius: 24),
-          ),
+          // Positioned(
+          //   left: 8,
+          //   child: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: controller.goPrevious, color: Colors.black, iconSize: 30, splashRadius: 24),
+          // ),
+          // Positioned(
+          //   right: 8,
+          //   child: IconButton(icon: Icon(Icons.arrow_forward_ios), onPressed: () => controller.goNext(controller.getOrderStepModel.value.data?.referenceImagesAddedByAdmin?.length ?? 0), color: Colors.black, iconSize: 30, splashRadius: 24),
+          // ),
         ],
       ),
     );
