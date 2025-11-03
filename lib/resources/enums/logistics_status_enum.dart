@@ -33,7 +33,7 @@ extension LogisticstatusExtension on Logisticstatus {
       case "WAIT_FOR_PICKUP":
         return Logisticstatus.WAIT_FOR_PICKUP;
       default:
-        return Logisticstatus.WAIT_FOR_PICKUP;
+        return Logisticstatus.ORDER_COMPLETED;
     }
   }
 }
@@ -54,7 +54,7 @@ extension LogisticsTypeParser on String {
       case "WAIT_FOR_PICKUP":
         return Logisticstatus.WAIT_FOR_PICKUP;
       default:
-        return Logisticstatus.WAIT_FOR_PICKUP;
+        return Logisticstatus.ORDER_COMPLETED;
     }
   }
 }
