@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 
 Widget buildCircle(int active, AddProductController controller) {
   return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
       buildStepCircle(appStrings.stepGeneral, 01, active == 0 ? true : false, active == 0 ? false : hasCompleted(0, controller), () =>controller.selectedIndex.value = 0),
       buildStepDivider(),
@@ -46,19 +46,18 @@ Widget buildStepCircle(String title, int stepNumber, bool isActive, bool complet
           title,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: isActive ? Colors.black : appColors.contentdescBrownColor),
         ),
+        2.kW
       ],
     ),
   );
 }
 
 Widget buildStepDivider() {
-  return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 5),
-    child: Row(
-      children: [
-        Container(height: 2, color: Colors.grey[300], width: Get.width * 0.13),
-        Icon(Icons.arrow_forward_ios, size: 10, color: Colors.grey[500]),
-      ],
-    ),
+  return Row(
+    children: [
+      Container(height: 2, color: Colors.grey[300], width: Get.width * 0.13),
+      Icon(Icons.arrow_forward_ios, size: 10, color: Colors.grey[500]),
+    ],
   );
 }
+
