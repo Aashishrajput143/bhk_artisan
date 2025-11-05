@@ -177,7 +177,6 @@ class AddProductPage extends ParentWidget {
                 w,
                 (value) {},
                 onChange: (value) {
-                  controller.nameController.value.text = value;
                   controller.nameError.value = null;
                 },
                 fontSize: 14,
@@ -193,7 +192,6 @@ class AddProductPage extends ParentWidget {
                 controller.timeController.value,
                 error: controller.timeError,
                 onChange: (value) {
-                  controller.timeController.value.text = value;
                   controller.timeError.value = null;
                 },
                 controller.timeFocusNode.value,
@@ -213,7 +211,6 @@ class AddProductPage extends ParentWidget {
                 controller.detaileddescriptionController.value,
                 error: controller.descriptionError,
                 onChange: (value) {
-                  controller.detaileddescriptionController.value.text = value;
                   controller.descriptionError.value = null;
                 },
                 controller.detaileddescriptionFocusNode.value,
@@ -248,7 +245,6 @@ class AddProductPage extends ParentWidget {
                 w,
                 onChange: (value) {
                   controller.calculateTotalPrice();
-                  controller.priceController.value.text = value;
                   controller.priceError.value = null;
                 },
                 error: controller.priceError,
@@ -276,7 +272,6 @@ class AddProductPage extends ParentWidget {
                       (value) {},
                       onChange: (value) {
                         controller.calculateTotalPrice();
-                        controller.quantityController.value.text = value;
                         controller.quantityError.value = null;
                       },
                       maxLength: 6,
@@ -353,7 +348,6 @@ class AddProductPage extends ParentWidget {
                 w,
                 (value) {},
                 onChange: (value) {
-                  controller.materialController.value.text = value;
                   controller.materialError.value = null;
                 },
                 error: controller.materialError,

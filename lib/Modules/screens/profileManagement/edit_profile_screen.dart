@@ -223,7 +223,6 @@ class EditProfile extends ParentWidget {
             error: controller.firstNameError,
             (value) {},
             onChange: (value) {
-              controller.firstNameController.value.text = value;
               controller.firstNameError.value = null;
             },
             fontSize: 14,
@@ -242,7 +241,6 @@ class EditProfile extends ParentWidget {
             error: controller.lastNameError,
             (value) {},
             onChange: (value) {
-              controller.lastNameController.value.text = value;
               controller.lastNameError.value = null;
             },
             fontSize: 14,
@@ -261,7 +259,6 @@ class EditProfile extends ParentWidget {
             error: controller.emailError,
             (value) {},
             onChange: (value) {
-              controller.emailController.value.text = value;
               controller.emailError.value = null;
             },
             fontSize: 14,
@@ -282,7 +279,6 @@ class EditProfile extends ParentWidget {
               error: controller.aadharError,
               (value) {},
               onChange: (value) {
-                controller.aadharController.value.text = value;
                 controller.aadharError.value = null;
               },
               fontSize: 14,
@@ -304,7 +300,6 @@ class EditProfile extends ParentWidget {
               error: controller.gstError,
               (value) {},
               onChange: (value) {
-                controller.gstController.value.text = value;
                 controller.gstError.value = null;
               },
               fontSize: 14,
@@ -356,7 +351,6 @@ class EditProfile extends ParentWidget {
                     error: controller.communityError,
                     (value) {},
                     onChange: (value) {
-                      controller.communityController.value.text = value;
                       controller.communityError.value = null;
                     },
                     fontSize: 14,

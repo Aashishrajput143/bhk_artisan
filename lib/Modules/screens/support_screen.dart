@@ -46,7 +46,6 @@ class SupportScreen extends ParentWidget {
                       minLines: 12,
                       error: controller.messageError,
                       onChange: (value) {
-                        controller.messageController.value.text = value;
                         controller.messageError.value = null;
                       },
                       (value) {},

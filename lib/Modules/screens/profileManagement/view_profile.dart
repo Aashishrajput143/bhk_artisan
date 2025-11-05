@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/Modules/controller/common_screen_controller.dart';
+import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
@@ -67,20 +68,6 @@ class ViewProfile extends ParentWidget {
         ),
       ),
     );
-  }
-
-  String formatAadhaarNumber(String aadhaar) {
-    if (aadhaar.isEmpty) return "";
-    aadhaar = aadhaar.replaceAll(RegExp(r'\s+'), ''); // remove spaces if any
-
-    String formatted = '';
-    for (int i = 0; i < aadhaar.length; i++) {
-      formatted += aadhaar[i];
-      if ((i + 1) % 4 == 0 && i + 1 != aadhaar.length) {
-        formatted += ' ';
-      }
-    }
-    return formatted;
   }
 
   Widget commonChipsCards(String title, List expertiseList, IconData icon) {

@@ -11,6 +11,26 @@ String formatDate(String? rawDate) {
   }
 }
 
+String formatAadhaarNumber(String aadhaar) {
+  if (aadhaar.isEmpty) return "";
+  aadhaar = aadhaar.replaceAll(RegExp(r'\s+'), '');
+
+  if (aadhaar.length < 12) {
+    return aadhaar;
+  }
+
+  String masked = 'XXXXXXXX${aadhaar.substring(aadhaar.length - 4)}';
+  String formatted = '';
+  for (int i = 0; i < masked.length; i++) {
+    formatted += masked[i];
+    if ((i + 1) % 4 == 0 && i + 1 != masked.length) {
+      formatted += ' ';
+    }
+  }
+
+  return formatted;
+}
+
 bool isExpired(String? rawDate) {
   if (rawDate == null || rawDate.isEmpty) return true;
 

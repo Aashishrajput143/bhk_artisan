@@ -227,7 +227,6 @@ class AddressScreen extends ParentWidget {
                                   error: controller.flatError,
                                   (value) {},
                                   onChange: (value) {
-                                    controller.flatNameController.value.text = value;
                                     controller.flatError.value = null;
                                   },
                                   fontSize: 14,
@@ -246,7 +245,6 @@ class AddressScreen extends ParentWidget {
                                   error: controller.streetError,
                                   (value) {},
                                   onChange: (value) {
-                                    controller.streetNameController.value.text = value;
                                     controller.streetError.value = null;
                                   },
                                   fontSize: 14,
