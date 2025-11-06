@@ -236,7 +236,7 @@ class OrderFilterScreen extends ParentWidget {
                 ],
               ),
               4.kH,
-              Text("${appStrings.orderAssigned} : ${formatDate(steps?.createdAt)}", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+              Text("${appStrings.orderAssigned} : ${formatDate(steps?.artisianAssignedAt??steps?.createdAt)}", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
             ],
           ),
         ),

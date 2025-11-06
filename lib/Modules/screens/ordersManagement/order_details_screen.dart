@@ -407,7 +407,7 @@ class OrderDetailsPage extends ParentWidget {
           if (controller.getOrderStepModel.value.data?.product != null) ...[commonRow(appStrings.productId, controller.getOrderStepModel.value.data?.product?.bhkProductId ?? appStrings.notAvailable, color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold), 6.kH],
           commonRow(appStrings.quantity, (controller.getOrderStepModel.value.data?.product?.quantity ?? 0).toString(), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           6.kH,
-          commonRow(appStrings.orderAssigned, formatDate(controller.getOrderStepModel.value.data?.createdAt), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
+          commonRow(appStrings.orderAssigned, formatDate(controller.getOrderStepModel.value.data?.artisianAssignedAt??controller.getOrderStepModel.value.data?.createdAt), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           if (controller.getOrderStepModel.value.data?.dueDate != null) ...[6.kH, commonRow(appStrings.dueDate, formatDate(controller.getOrderStepModel.value.data?.dueDate), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold)],
         ],
       ),

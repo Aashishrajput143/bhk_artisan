@@ -30,13 +30,13 @@ class GetOrderFilterController extends GetxController {
     expiryTimes.clear();
 
     for (var order in orders) {
-      if (order.id != null && order.createdAt != null) {
-        final assigned = DateTime.parse(order.createdAt!).toUtc();
+      if (order.id != null && (order.artisianAssignedAt != null || order.createdAt !=null)) {
+        final assigned = DateTime.parse(order.artisianAssignedAt??order.createdAt!).toUtc();
         final expiry = assigned.add(const Duration(hours: 48, minutes: 0));
         expiryTimes[order.id!] = expiry;
 
         final diff = expiry.difference(DateTime.now().toUtc());
-        remainingTimes[order.id!] = diff.isNegative ? "Expired" : formatDuration(diff);
+        remainingTimes[order.id!] = diff.isNegative ? appStrings.expired : formatDuration(diff);
         isExpiredMap[order.id!] = diff.isNegative;
         remainingTimes.refresh();
         isExpiredMap.refresh();
@@ -49,8 +49,8 @@ class GetOrderFilterController extends GetxController {
         final remaining = expiryTime.difference(now);
 
         if (remaining.isNegative || remaining.inSeconds <= 0) {
-          if (remainingTimes[orderId] != "Expired" || !(isExpiredMap[orderId] ?? false)) {
-            remainingTimes[orderId] = "Expired";
+          if (remainingTimes[orderId] != appStrings.expired || !(isExpiredMap[orderId] ?? false)) {
+            remainingTimes[orderId] = appStrings.expired;
             isExpiredMap[orderId] = true;
           }
         } else {
@@ -161,7 +161,7 @@ class GetOrderFilterController extends GetxController {
         }
       } else {
         final today = DateTime.now();
-        final orderDate = DateTime.tryParse(item.createdAt ?? '') ?? DateTime(1900);
+        final orderDate = DateTime.tryParse(item.artisianAssignedAt ?? item.createdAt??"") ?? DateTime(1900);
         final isToday = orderDate.year == today.year && orderDate.month == today.month && orderDate.day == today.day;
 
         return isToday;

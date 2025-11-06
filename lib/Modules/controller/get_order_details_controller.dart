@@ -100,14 +100,14 @@ class GetOrderDetailsController extends GetxController {
   RxBool hasExpired = false.obs;
   DateTime? expiryTime;
 
-  void initializeCountdown(String? createdAt) {
+  void initializeCountdown(String? assignedAt) {
     countdownTimer?.cancel();
     remainingTime.value = '';
     hasExpired.value = false;
 
-    if (createdAt == null || createdAt.isEmpty) return;
+    if (assignedAt == null || assignedAt.isEmpty) return;
 
-    final assigned = DateTime.parse(createdAt).toUtc();
+    final assigned = DateTime.parse(assignedAt).toUtc();
     expiryTime = assigned.add(const Duration(hours: 48, minutes: 0));
 
     updateRemainingTime();
@@ -177,7 +177,7 @@ class GetOrderDetailsController extends GetxController {
             setOrderStepdata(value);
             WidgetsBinding.instance.addPostFrameCallback((_) {
               countdownTimer?.cancel();
-              initializeCountdown(value.data?.createdAt);
+              initializeCountdown(value.data?.artisianAssignedAt??value.data?.createdAt);
             });
             if (loader) setRxRequestStatus(Status.COMPLETED);
             Utils.printLog("Response ${value.toString()}");
