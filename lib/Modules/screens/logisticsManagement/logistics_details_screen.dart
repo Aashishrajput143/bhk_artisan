@@ -212,7 +212,7 @@ class OrderTrackingPage extends ParentWidget {
       ),
       child: Center(
         child: Text(
-         data?.currentStatus == Logisticstatus.DELIVERED.name?appStrings.packageDelivered :data?.currentStatus == Logisticstatus.PICKED.name?appStrings.packagePicked:"${appStrings.expectedPickup}${formatDate(data?.expectedPickupDate)}",
+         data?.currentStatus == Logisticstatus.DELIVERED.name?appStrings.packageDelivered :data?.currentStatus == Logisticstatus.IN_TRANSIT.name?appStrings.packageInTransit:data?.currentStatus == Logisticstatus.PICKED.name?appStrings.packagePicked:"${appStrings.expectedPickup}${formatDate(data?.expectedPickupDate)}",
           style: TextStyle(fontSize: 18, fontFamily: appFonts.NunitoBold, fontWeight: FontWeight.w600, color: appColors.brownDarkText),
         ),
       ),

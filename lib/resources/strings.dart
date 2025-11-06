@@ -195,6 +195,7 @@ class AppStrings {
   String get expectedPickup => "Expected Pickup on ";
   String get packageDelivered => "Package Delivered Successfully";
   String get packagePicked =>"Package has been Picked";
+  String get packageInTransit =>"Package is being transported";
 
   // Order History Screen
   String get noOrdersFound => "No Orders Found";
