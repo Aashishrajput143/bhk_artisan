@@ -1,19 +1,14 @@
 import 'package:bhk_artisan/Modules/controller/get_order_controller.dart';
 import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.dart';
-import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
-import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/strings.dart';
-import 'package:bhk_artisan/routes/routes_class.dart';
-import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../model/get_all_order_step_model.dart';
 
 class OrderListHistory extends ParentWidget {
   const OrderListHistory({super.key});
@@ -40,7 +35,7 @@ class OrderListHistory extends ParentWidget {
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 final steps = controller.getAllPastOrderStepModel.value.data?[index];
-                                return orderContent(h, w, index, steps, controller);
+                                return OrderList().orderContent(h, w, index, steps, controller);
                               },
                             )
                           : shimmerList(w, h * 0.2, list: 4),
@@ -49,56 +44,6 @@ class OrderListHistory extends ParentWidget {
           ),
           //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, MediaQuery.of(context).size.height, MediaQuery.of(context).size.width),
         ],
-      ),
-    );
-  }
-
-  Widget orderContent(double h, double w, int index, Data? steps, GetOrderController controller) {
-    return GestureDetector(
-      onTap: () => Get.toNamed(RoutesClass.ordersdetails, arguments: steps?.id ?? "")?.then((onValue) {
-        controller.getAllOrderStepApi(isActive: false);
-      }),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10.0),
-        decoration: BoxDecoration(
-          color: appColors.cardBackground,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade300, width: 1.5),
-          boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              OrderList().orderCardHeader(steps, controller),
-              8.kH,
-              OrderList().orderCardContent(steps, controller),
-              Divider(thickness: 1, color: Colors.grey[300]),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    OrderList().buildOrderDetailColumn(appStrings.payment, '₹ ${steps?.proposedPrice ?? 0}'),
-                    if (steps?.product != null) OrderList().buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
-                    OrderList().buildOrderDetailColumn(appStrings.orderQty, (steps?.product?.quantity ?? 0).toString().padLeft(2, '0')),
-                    if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)))
-                      OrderList().buildOrderDetailColumn(
-                        appStrings.orderStatus,
-                       (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
-                            ? appStrings.expired
-                            : steps?.artisanAgreedStatus == OrderStatus.DELIVERED.name
-                            ? OrderStatus.DELIVERED.displayText
-                            : OrderStatus.REJECTED.displayText,
-                        color: steps?.artisanAgreedStatus == OrderStatus.DELIVERED.name ? appColors.brownDarkText : appColors.declineColor,
-                      ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

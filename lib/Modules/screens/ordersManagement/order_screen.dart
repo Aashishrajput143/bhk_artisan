@@ -20,8 +20,8 @@ class OrderScreen extends StatelessWidget {
       backgroundColor: appColors.backgroundColor,
       appBar: appBarTab(
         tabs: [
-          Tab(text: "${appStrings.tabActiveOrders} ${orderController.getAllActiveOrderStepModel.value.data != null ? "(${orderController.getAllActiveOrderStepModel.value.data?.length})" : ""}"),
-          Tab(text: "${appStrings.tabPastOrders} ${orderController.getAllPastOrderStepModel.value.data != null ? "(${orderController.getAllPastOrderStepModel.value.data?.length})" : ""}"),
+         Obx(()=> Tab(text: "${appStrings.tabActiveOrders} ${orderController.getAllActiveOrderStepModel.value.data != null ? "(${orderController.getAllActiveOrderStepModel.value.data?.length})" : ""}")),
+          Obx(()=>  Tab(text: "${appStrings.tabPastOrders} ${orderController.getAllPastOrderStepModel.value.data != null ? "(${orderController.getAllPastOrderStepModel.value.data?.length})" : ""}")),
         ],
         title: appStrings.ordersDetailsTitle,
         tabController: controller.tabController,

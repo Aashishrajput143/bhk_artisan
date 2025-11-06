@@ -114,7 +114,7 @@ class OrderDetailsPage extends ParentWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 6.kH,
-                Obx(() => commonRow("${appStrings.orderNeedsAction} within", controller.remainingTime.value, fontSize: 17, fontSize2: 16, color2: appColors.acceptColor)),
+                Obx(() => commonRow(appStrings.orderNeedsAction, controller.remainingTime.value, fontSize: 17, fontSize2: 16, color2: appColors.acceptColor)),
                 25.kH,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -226,7 +226,7 @@ class OrderDetailsPage extends ParentWidget {
           ),
         ),
         Flexible(
-          flex: 4,
+          flex: 5,
           child: Text(
             textAlign: TextAlign.end,
             subtitle,

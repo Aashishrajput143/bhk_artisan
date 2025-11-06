@@ -189,7 +189,7 @@ class OrderTrackingPage extends ParentWidget {
           ),
         ),
         Flexible(
-          flex: 5,
+          flex: 6,
           child: Text(
             textAlign: TextAlign.end,
             subtitle,

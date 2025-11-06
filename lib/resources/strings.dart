@@ -207,11 +207,15 @@ class AppStrings {
   String get noOrdersAvailable => "No Orders Available";
   String get emptyOrdersDesc => "Once an order is allocated, it will appear here with complete details for your review and action.";
   String get orderCompleteBy => "Order to be completed by";
-  String get orderNeedsAction => "Order Needs Action";
+  String get orderNeedsAction => "Needs Action within";
   String get orderConfirmed => "Order is Confirmed";
   String get orderapproved => "Order is Approved";
   String get orderDeclined => "Order is Declined";
   String get orderExpired =>"Order is Expired";
+  String get order =>"Order is Expired";
+  String get orderPicked =>"Order is Picked";
+  String get orderInTransit =>"Order is In Transit";
+  String get orderDelivered =>"Order is Delivered";
   String get expired =>'Expired';
 
   //Edit Profile Screen

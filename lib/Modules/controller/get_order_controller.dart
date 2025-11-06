@@ -175,17 +175,28 @@ class GetOrderController extends GetxController {
     final filteredData = value.data!.where((item) {
       final status = OrderStatusExtension.fromString(item.artisanAgreedStatus);
       final transitStatus = OrderStatusExtension.fromString(item.transitStatus);
+      final buildStatus = OrderStatusExtension.fromString(item.buildStatus);
+
+      // if (isActive) {
+      //   final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate) && (isExpiredMap[item.id!] == false);
+      //   final isAcceptedOrCompleted = status == OrderStatus.ACCEPTED || buildStatus == OrderStatus.COMPLETED;
+
+      //   return isPendingAndNotExpired || isAcceptedOrCompleted;
+      // } else {
+      //   final isDeliveredOrExpired = status == OrderStatus.REJECTED || transitStatus == OrderStatus.DELIVERED || (status == OrderStatus.PENDING && isExpired(item.dueDate)) || (status == OrderStatus.PENDING && isExpiredMap[item.id!] == true);
+      //   final isAdminApprovedAccepted = status == OrderStatus.ACCEPTED && buildStatus == OrderStatus.ADMIN_APPROVED;
+
+      //   return isDeliveredOrExpired && !isAdminApprovedAccepted;
+      // }
 
       if (isActive) {
-        final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate) && (isExpiredMap[item.id!] == false);
-        final isAcceptedOrCompleted = status == OrderStatus.ACCEPTED || status == OrderStatus.COMPLETED;
-
-        return isPendingAndNotExpired || isAcceptedOrCompleted;
+        final isPendingAndNotExpired = (status == OrderStatus.PENDING && (isExpiredMap[item.id!] == false) && !isExpired(item.dueDate))||(status == OrderStatus.ACCEPTED && isExpired(item.dueDate) && transitStatus != OrderStatus.DELIVERED)||(status == OrderStatus.ACCEPTED && isExpired(item.dueDate) && buildStatus == OrderStatus.PENDING);
+        return isPendingAndNotExpired;
       } else {
-        final isDeliveredOrExpired = status == OrderStatus.REJECTED || transitStatus == OrderStatus.DELIVERED || (status == OrderStatus.PENDING && isExpired(item.dueDate)) || (status == OrderStatus.PENDING && isExpiredMap[item.id!] == true);
-        final isAdminApprovedAccepted = status == OrderStatus.ACCEPTED && OrderStatusExtension.fromString(item.buildStatus) == OrderStatus.ADMIN_APPROVED;
+        final isDeliveredOrExpired = status == OrderStatus.REJECTED ||(status == OrderStatus.PENDING && isExpired(item.dueDate)) ||(status == OrderStatus.PENDING && (isExpiredMap[item.id!] == true)) || (status == OrderStatus.ACCEPTED && buildStatus == OrderStatus.ADMIN_APPROVED && transitStatus == OrderStatus.DELIVERED);
+        // ||(status==OrderStatus.ACCEPTED && isExpired(item.dueDate))
 
-        return isDeliveredOrExpired && !isAdminApprovedAccepted;
+        return isDeliveredOrExpired;
       }
     }).toList();
 

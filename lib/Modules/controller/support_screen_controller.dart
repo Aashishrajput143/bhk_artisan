@@ -54,7 +54,7 @@ class SupportController extends GetxController {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
-    Map<String, String> data = {"issueType": selectedIssueType.value?.toIssueType().name ?? "", "message": messageController.value.text};
+    Map<String, String> data = {"issueType": selectedIssueType.value?.toIssueType().name ?? "", "issueDescription": messageController.value.text};
 
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
