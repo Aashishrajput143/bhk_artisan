@@ -91,7 +91,7 @@ class ProductDetailScreen extends ParentWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(12)),
                     child: Text(
-                      "${controller.currentIndex.value+1} / ${controller.getProductModel.value.data?.images?.length ?? 0}",
+                      "${controller.currentIndex.value + 1} / ${controller.getProductModel.value.data?.images?.length ?? 0}",
                       style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
                     ),
                   ),
@@ -181,6 +181,8 @@ class ProductDetailScreen extends ParentWidget {
           "${appStrings.productIdPrefix}${controller.getProductModel.value.data?.productId ?? "0"}",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPending),
         ),
+        //6.kH,
+        //Row(children: [commonContainer(controller.getProductModel.value.data?.category?.categoryName ?? "", Colors.deepPurple), 8.kW, commonContainer(controller.getProductModel.value.data?.subCategory?.categoryName ?? "", appColors.brownDarkText)]),
         12.kH,
         Text(
           controller.getProductModel.value.data?.description ?? "",

@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 
@@ -10,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   //await availableCameras();
+  Get.put(LocationController());
   runApp(MyApp());
 }
 

@@ -109,57 +109,61 @@ class OrderDetailsPage extends ParentWidget {
           : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
           ? commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => Get.toNamed(RoutesClass.uploadOrderImage, arguments: controller.getOrderStepModel.value.data?.id ?? ""), hint: appStrings.uploadCompletion)
           : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name
-          ? Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                6.kH,
-                Obx(() => commonRow(appStrings.orderNeedsAction, controller.remainingTime.value, fontSize: 17, fontSize2: 16, color2: appColors.acceptColor)),
-                25.kH,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    commonButton(
-                      w * 0.44,
-                      45,
-                      appColors.acceptColor,
-                      appColors.contentWhite,
-                      () => MyAlertDialog.showAlertDialog(
-                        onPressed: () {
-                          Get.back();
-                          controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name);
-                        },
-                        icon: Icons.inventory_2,
-                        title: appStrings.acceptOrder,
-                        subtitle: appStrings.acceptOrderSubtitle,
-                        color: appColors.acceptColor,
-                        buttonHint: appStrings.accept,
-                      ),
-                      hint: appStrings.accept,
-                    ),
-                    commonButton(
-                      w * 0.44,
-                      45,
-                      appColors.declineColor,
-                      appColors.contentWhite,
-                      () => MyAlertDialog.showAlertDialog(
-                        onPressed: () {
-                          Get.back();
-                          controller.updateOrderStatusApi(OrderStatus.REJECTED.name);
-                        },
-                        icon: Icons.inventory_2,
-                        title: appStrings.declineOrder,
-                        subtitle: appStrings.declineOrderSubtitle,
-                        color: appColors.declineColor,
-                        buttonHint: appStrings.decline,
-                      ),
-                      hint: appStrings.decline,
-                    ),
-                  ],
-                ),
-              ],
-            )
+          ? buttomButtons(h, w, controller)
           : commonButtonContainer(w, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.declined),
+    );
+  }
+
+  Widget buttomButtons(double h, double w, GetOrderDetailsController controller) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        6.kH,
+        Obx(() => commonRow(appStrings.orderNeedsAction, controller.remainingTime.value, fontSize: 17, fontSize2: 16, color2: appColors.acceptColor)),
+        25.kH,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            commonButton(
+              w * 0.44,
+              45,
+              appColors.acceptColor,
+              appColors.contentWhite,
+              () => MyAlertDialog.showAlertDialog(
+                onPressed: () {
+                  Get.back();
+                  controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name);
+                },
+                icon: Icons.inventory_2,
+                title: appStrings.acceptOrder,
+                subtitle: appStrings.acceptOrderSubtitle,
+                color: appColors.acceptColor,
+                buttonHint: appStrings.accept,
+              ),
+              hint: appStrings.accept,
+            ),
+            commonButton(
+              w * 0.44,
+              45,
+              appColors.declineColor,
+              appColors.contentWhite,
+              () => MyAlertDialog.showAlertDialog(
+                onPressed: () {
+                  Get.back();
+                  controller.updateOrderStatusApi(OrderStatus.REJECTED.name);
+                },
+                icon: Icons.inventory_2,
+                title: appStrings.declineOrder,
+                subtitle: appStrings.declineOrderSubtitle,
+                color: appColors.declineColor,
+                buttonHint: appStrings.decline,
+              ),
+              hint: appStrings.decline,
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -168,33 +172,7 @@ class OrderDetailsPage extends ParentWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          commonRow(
-            appStrings.orderStatus,
-            (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(controller.getOrderStepModel.value.data?.dueDate) || (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.hasExpired.value))
-                ? appStrings.expired
-                : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.REJECTED.name
-                ? OrderStatus.REJECTED.displayText
-                : controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
-                ? OrderStatus.WAIT_FOR_PICKUP.displayText
-                : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
-                ? OrderStatus.ADMIN_APPROVED.displayText
-                : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name
-                ? OrderStatus.INREVIEW.displayText
-                : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
-                ? OrderStatus.ACCEPTED.displayText
-                : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name
-                ? OrderStatus.PENDING.displayText
-                : OrderStatus.REJECTED.displayText,
-            color2: (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(controller.getOrderStepModel.value.data?.dueDate) || (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.hasExpired.value))
-                ? appColors.declineColor
-                : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100
-                ? appColors.acceptColor
-                : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name
-                ? appColors.brownDarkText
-                : appColors.declineColor,
-            fontSize2: 17,
-            color: appColors.contentPrimary,
-          ),
+          commonRow(appStrings.orderStatus, orderStatusString(controller), color2: orderStatusColor(controller), fontSize2: 17, color: appColors.contentPrimary),
           16.kH,
           commonRow(appStrings.timeRemaining, appStrings.orderValue, color: appColors.contentSecondary, fontweight: FontWeight.w500, fontSize: 15, fontSize2: 15, color2: appColors.contentSecondary, fontweight2: FontWeight.w500),
           6.kH,
@@ -211,6 +189,34 @@ class OrderDetailsPage extends ParentWidget {
         ],
       ),
     );
+  }
+
+  Color orderStatusColor(GetOrderDetailsController controller) {
+    return (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(controller.getOrderStepModel.value.data?.dueDate) || (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.hasExpired.value))
+        ? appColors.declineColor
+        : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(controller.getOrderStepModel.value.data?.progressPercentage?.toString() ?? "0") == 100
+        ? appColors.acceptColor
+        : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name
+        ? appColors.brownDarkText
+        : appColors.declineColor;
+  }
+
+  String orderStatusString(GetOrderDetailsController controller) {
+    return (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(controller.getOrderStepModel.value.data?.dueDate) || (controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.hasExpired.value))
+        ? appStrings.expired
+        : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.REJECTED.name
+        ? OrderStatus.REJECTED.displayText
+        : controller.getOrderStepModel.value.data?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
+        ? OrderStatus.WAIT_FOR_PICKUP.displayText
+        : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
+        ? OrderStatus.ADMIN_APPROVED.displayText
+        : controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name
+        ? OrderStatus.INREVIEW.displayText
+        : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
+        ? OrderStatus.ACCEPTED.displayText
+        : controller.getOrderStepModel.value.data?.artisanAgreedStatus == OrderStatus.PENDING.name
+        ? OrderStatus.PENDING.displayText
+        : OrderStatus.REJECTED.displayText;
   }
 
   Widget commonRow(String title, String subtitle, {Color color = Colors.black, double fontSize = 16, FontWeight fontweight = FontWeight.bold, Color color2 = Colors.black, double fontSize2 = 14, FontWeight fontweight2 = FontWeight.bold}) {
@@ -301,72 +307,7 @@ class OrderDetailsPage extends ParentWidget {
                       commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () => Get.toNamed(RoutesClass.addresses), hint: appStrings.addAddress),
                     ],
                     if (addresses.isNotEmpty) ...[
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: addresses.length,
-                        itemBuilder: (context, index) {
-                          final address = addresses[index];
-                          return Obx(
-                            () => Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Theme(
-                                  data: Theme.of(context).copyWith(
-                                    radioTheme: RadioThemeData(
-                                      fillColor: WidgetStateProperty.resolveWith((states) {
-                                        if (states.contains(WidgetState.selected)) {
-                                          return appColors.brownDarkText;
-                                        }
-                                        return appColors.contentPrimary;
-                                      }),
-                                    ),
-                                  ),
-                                  child: RadioMenuButton<int>(
-                                    groupValue: addresses[index].id,
-                                    style: ButtonStyle(overlayColor: WidgetStateProperty.all(Colors.transparent), backgroundColor: WidgetStateProperty.all(Colors.transparent), shadowColor: WidgetStateProperty.all(Colors.transparent), surfaceTintColor: WidgetStateProperty.all(Colors.transparent)),
-                                    value: controller.addressId.value,
-                                    onChanged: (value) {
-                                      controller.addressId.value = addresses[index].id ?? 0;
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Icon((address.addressType ?? "").toAddressType().icon, size: 25, color: appColors.brownDarkText),
-                                              10.kW,
-                                              Text(
-                                                (address.addressType ?? "").toAddressType().displayName,
-                                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: appColors.contentPending),
-                                              ),
-                                              if (address.isDefault ?? false) ...[10.kW, commonContainer(appStrings.defaultTag, appColors.brownDarkText, isBrown: true, pH: 14, borderWidth: 1.5)],
-                                            ],
-                                          ),
-                                          4.kH,
-                                          SizedBox(
-                                            width: w * 0.75,
-                                            child: Text(
-                                              softWrap: true,
-                                              overflow: TextOverflow.visible,
-                                              controller.getFullAddress(index),
-                                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                if (index != addresses.length - 1) Divider(height: 1, thickness: 1),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                      addressContent(h, w, addresscontroller, controller),
                       commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () {
                         if (controller.addressId.value != 0) {
                           controller.updatePickUpAddressApi();
@@ -380,6 +321,76 @@ class OrderDetailsPage extends ParentWidget {
                 ),
               ),
               progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget addressContent(double h, double w, AddressController addresscontroller, GetOrderDetailsController controller) {
+    final addresses = addresscontroller.getAddressModel.value.data ?? [];
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: addresses.length,
+      itemBuilder: (context, index) {
+        final address = addresses[index];
+        return Obx(
+          () => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Theme(
+                data: Theme.of(context).copyWith(
+                  radioTheme: RadioThemeData(
+                    fillColor: WidgetStateProperty.resolveWith((states) {
+                      if (states.contains(WidgetState.selected)) {
+                        return appColors.brownDarkText;
+                      }
+                      return appColors.contentPrimary;
+                    }),
+                  ),
+                ),
+                child: RadioMenuButton<int>(
+                  groupValue: addresses[index].id,
+                  style: ButtonStyle(overlayColor: WidgetStateProperty.all(Colors.transparent), backgroundColor: WidgetStateProperty.all(Colors.transparent), shadowColor: WidgetStateProperty.all(Colors.transparent), surfaceTintColor: WidgetStateProperty.all(Colors.transparent)),
+                  value: controller.addressId.value,
+                  onChanged: (value) {
+                    controller.addressId.value = addresses[index].id ?? 0;
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon((address.addressType ?? "").toAddressType().icon, size: 25, color: appColors.brownDarkText),
+                            10.kW,
+                            Text(
+                              (address.addressType ?? "").toAddressType().displayName,
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: appColors.contentPending),
+                            ),
+                            if (address.isDefault ?? false) ...[10.kW, commonContainer(appStrings.defaultTag, appColors.brownDarkText, isBrown: true, pH: 14, borderWidth: 1.5)],
+                          ],
+                        ),
+                        4.kH,
+                        SizedBox(
+                          width: w * 0.75,
+                          child: Text(
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            controller.getFullAddress(index),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              if (index != addresses.length - 1) Divider(height: 1, thickness: 1),
             ],
           ),
         );
@@ -407,7 +418,7 @@ class OrderDetailsPage extends ParentWidget {
           if (controller.getOrderStepModel.value.data?.product != null) ...[commonRow(appStrings.productId, controller.getOrderStepModel.value.data?.product?.bhkProductId ?? appStrings.notAvailable, color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold), 6.kH],
           commonRow(appStrings.quantity, (controller.getOrderStepModel.value.data?.product?.quantity ?? 0).toString(), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           6.kH,
-          commonRow(appStrings.orderAssigned, formatDate(controller.getOrderStepModel.value.data?.artisianAssignedAt??controller.getOrderStepModel.value.data?.createdAt), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
+          commonRow(appStrings.orderAssigned, formatDate(controller.getOrderStepModel.value.data?.artisianAssignedAt ?? controller.getOrderStepModel.value.data?.createdAt), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold),
           if (controller.getOrderStepModel.value.data?.dueDate != null) ...[6.kH, commonRow(appStrings.dueDate, formatDate(controller.getOrderStepModel.value.data?.dueDate), color: appColors.contentPending, fontweight: FontWeight.w500, fontSize2: 16, color2: appColors.contentPrimary, fontweight2: FontWeight.bold)],
         ],
       ),
@@ -432,10 +443,7 @@ class OrderDetailsPage extends ParentWidget {
               ),
             ),
           ),
-          Text(
-            controller.getOrderStepModel.value.data?.product?.description ?? appStrings.notAvailable,
-            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: appColors.contentPrimary),
-          ),
+          commonText(controller.getOrderStepModel.value.data?.product?.description,fontWeight: FontWeight.w400),
         ],
       ),
     );
@@ -454,43 +462,19 @@ class OrderDetailsPage extends ParentWidget {
             ],
           ),
           16.kH,
-          Text(
-            appStrings.orderDescription,
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
-          ),
+          commonText(appStrings.orderDescription,isHeading: true),
           6.kH,
-          Text(
-            controller.getOrderStepModel.value.data?.description ?? appStrings.notAvailable,
-            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-          ),
+          commonText(controller.getOrderStepModel.value.data?.description),
           16.kH,
-          Text(
-            appStrings.materialsRequired,
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
-          ),
+          commonText(appStrings.materialsRequired,isHeading: true),
           6.kH,
-          Text(
-            controller.getOrderStepModel.value.data?.materials ?? appStrings.notAvailable,
-            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-          ),
+          commonText(controller.getOrderStepModel.value.data?.materials),
           16.kH,
-          Text(
-            appStrings.specialInstructions,
-            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
-          ),
+          commonText(appStrings.specialInstructions, isHeading: true),
           6.kH,
-          Text(
-            controller.getOrderStepModel.value.data?.instructions ?? appStrings.notAvailable,
-            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-          ),
+          commonText(controller.getOrderStepModel.value.data?.instructions),
           16.kH,
-          if (controller.getOrderStepModel.value.data?.referenceImagesAddedByAdmin?.isNotEmpty ?? false) ...[
-            Text(
-              appStrings.imageForReference,
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: appColors.contentSecondary),
-            ),
-            12.kH,
-          ],
+          if (controller.getOrderStepModel.value.data?.referenceImagesAddedByAdmin?.isNotEmpty ?? false) ...[commonText(appStrings.imageForReference, isHeading: true), 12.kH],
           if ((controller.getOrderStepModel.value.data?.referenceImagesAddedByAdmin?.length ?? 0) > 1) orderImageCarousel(h, w, controller),
           if ((controller.getOrderStepModel.value.data?.referenceImagesAddedByAdmin?.length ?? 0) == 1)
             Container(
@@ -500,6 +484,13 @@ class OrderDetailsPage extends ParentWidget {
           12.kH,
         ],
       ),
+    );
+  }
+
+  Widget commonText(String? text, {bool isHeading = false,FontWeight? fontWeight}) {
+    return Text(
+      text ?? appStrings.notAvailable,
+      style: TextStyle(fontSize: isHeading?17:14, fontWeight: fontWeight??FontWeight.w500, color: isHeading?appColors.contentSecondary: appColors.contentPrimary),
     );
   }
 

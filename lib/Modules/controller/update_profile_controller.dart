@@ -1,14 +1,19 @@
+import 'package:bhk_artisan/Modules/model/add_address_model.dart';
 import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
 import 'package:bhk_artisan/Modules/model/get_subcategory_model.dart';
 import 'package:bhk_artisan/Modules/model/pre_signed_intro_video_model.dart';
+import 'package:bhk_artisan/Modules/repository/address_repository.dart';
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
+import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/common_constants.dart';
+import 'package:bhk_artisan/resources/enums/address_type_enum.dart';
 import 'package:bhk_artisan/resources/enums/caste_category_enum.dart';
 import 'package:bhk_artisan/resources/validation.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import '../../common/common_methods.dart';
 import '../../data/response/status.dart';
@@ -16,9 +21,11 @@ import '../../resources/strings.dart';
 import '../model/update_profile_model.dart';
 import '../repository/profile_repository.dart';
 
-class UpdateProfileController extends GetxController {
+class UpdateProfileController extends GetxController with WidgetsBindingObserver{
   final _api = ProfileRepository();
   final productApi = ProductRepository();
+  final apiAddress = AddressRepository();
+
   var selectedImage = Rxn<String>();
   var selectedIntroVideo = Rxn<String>();
 
@@ -55,9 +62,13 @@ class UpdateProfileController extends GetxController {
   final Rx<UserCasteCategory?> selectedCategory = Rx<UserCasteCategory?>(null);
   final List<UserCasteCategory> casteCategories = UserCasteCategory.values;
 
+  late LocationController locationController;
+
   @override
   void onInit() async {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
+    locationController = Get.find<LocationController>();
     if (Get.arguments?['isNewUser'] != null) {
       isNewUser.value = Get.arguments['isNewUser'];
     }
@@ -99,6 +110,31 @@ class UpdateProfileController extends GetxController {
     }
     return true;
   }
+
+  Future<void> getLocation() async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(locationController.latitude.value, locationController.longitude.value);
+
+      if (placemarks.isNotEmpty) {
+        final places = placemarks.first;
+
+        List<String> parts = [];
+        void addIfNotEmpty(String? value) {
+          if (value != null && value.trim().isNotEmpty) {
+            parts.add(value.trim());
+          }
+        }
+
+        addIfNotEmpty(places.locality);
+        addIfNotEmpty(places.administrativeArea);
+        addIfNotEmpty(places.postalCode);
+        addIfNotEmpty(places.country);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
 
   void loadData() {
     firstNameController.value.text = profileData.value.data?.firstName ?? "";
@@ -143,6 +179,7 @@ class UpdateProfileController extends GetxController {
   final getexpertiseModel = GetSubCategoryModel().obs;
   final updateProfileModel = UpdateProfileModel().obs;
   final urlData = PreSignedIntroVideoModel().obs;
+  final addAddressModel = AddAddressModel().obs;
 
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
@@ -151,6 +188,8 @@ class UpdateProfileController extends GetxController {
   void setUrlData(PreSignedIntroVideoModel value) => urlData.value = value;
   void setgetExpertiseModeldata(GetSubCategoryModel value) => getexpertiseModel.value = value;
   void setProfileData(GetProfileModel value) => profileData.value = value;
+  void setaddAddressModeldata(AddAddressModel value) => addAddressModel.value = value;
+
 
   Future<void> getProfileApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
@@ -227,6 +266,7 @@ class UpdateProfileController extends GetxController {
             Utils.printLog("Response===> ${value.toString()}");
             Utils.setBoolPreferenceValues(Constants.isNewUser, false);
             if (isNewUser.value) {
+              if(profileData.value.data?.hasAddress == false) addAddressApi(profileData.value.data?.id);
               Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
             } else {
               Get.back();
@@ -290,5 +330,47 @@ class UpdateProfileController extends GetxController {
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
+  }
+
+  Future<void> addAddressApi(var id) async {
+    var connection = await CommonMethods.checkInternetConnectivity();
+    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
+
+    if (connection == true) {
+      setRxRequestStatus(Status.LOADING);
+
+      Map<String, dynamic> data = {
+        "userId": id,
+        "isDefault": true,
+        "houseNo": locationController.place.value?.name ?? "",
+        "street": locationController.place.value?.street ?? locationController.place.value?.subLocality ?? "",
+        "city": locationController.place.value?.locality ?? "",
+        "state": locationController.place.value?.administrativeArea ?? "",
+        "country": locationController.place.value?.country ?? "",
+        "postalCode": locationController.place.value?.postalCode ?? "",
+        "addressType": AddressType.HOME.name,
+        "latitude": locationController.latitude.value,
+        "longitude": locationController.longitude.value,
+      };
+
+      apiAddress
+          .addAddressApi(data)
+          .then((value) {
+            setRxRequestStatus(Status.COMPLETED);
+            setaddAddressModeldata(value);
+            Utils.printLog("Response===> ${value.toString()}");
+          })
+          .onError((error, stackTrace) {
+            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
+          });
+    } else {
+      CommonMethods.showToast(appStrings.weUnableCheckData);
+    }
+  }
+
+  @override
+  void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.onClose();
   }
 }

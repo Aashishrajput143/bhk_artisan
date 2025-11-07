@@ -49,19 +49,11 @@ class LocationController extends GetxController {
       return;
     }
 
-    _positionStream = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.best,
-        distanceFilter: 0,
-      ),
-    );
+    _positionStream = Geolocator.getPositionStream(locationSettings: const LocationSettings(accuracy: LocationAccuracy.best, distanceFilter: 0));
 
     _positionStream!.listen((Position position) async {
       latitude.value = position.latitude;
       longitude.value = position.longitude;
-
-      debugPrint("Live Latitude: ${latitude.value}");
-      debugPrint("Live Longitude: ${longitude.value}");
 
       await _updateAddress(position);
       setRxRequestStatus(Status.COMPLETED);
@@ -70,8 +62,7 @@ class LocationController extends GetxController {
 
   Future<void> _updateAddress(Position position) async {
     try {
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
+      List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
 
       if (placemarks.isNotEmpty) {
         place.value = placemarks.first;
@@ -87,13 +78,13 @@ class LocationController extends GetxController {
         addIfNotEmpty(places.name);
         addIfNotEmpty(places.street);
         addIfNotEmpty(places.subLocality);
+        places.subLocality?.isEmpty ?? false ? addIfNotEmpty(places.thoroughfare) : null;
         addIfNotEmpty(places.locality);
         addIfNotEmpty(places.administrativeArea);
         addIfNotEmpty(places.postalCode);
         addIfNotEmpty(places.country);
 
         address.value = parts.join(", ");
-        debugPrint("Live Address: ${address.value}");
       }
     } catch (e) {
       debugPrint(e.toString());
