@@ -28,7 +28,7 @@ class PendingProducts extends ParentWidget {
               color: Colors.brown,
               onRefresh: () => controller.productRefresh(ProductStatus.PENDING.name),
               child: controller.getPendingProductModel.value.data?.docs?.isEmpty ?? false
-                  ? emptyScreen(h, appStrings.noPendingProducts, appStrings.emptyPendingProductDesc, appImages.myproductcart)
+                  ? emptyScreen(h, appStrings.noPendingProducts, appStrings.emptyPendingProductDesc, appImages.addbasket,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(

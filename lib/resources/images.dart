@@ -3,8 +3,6 @@ class AppImages {
   String get googleIcon => 'assets/images/google_icon.png';
   String get bhkbackground => 'assets/images/BHKbackground.jpg';
   String get profile => 'assets/images/Profile.png';
-  String get myproductcart => 'assets/images/myproductcart.png';
-  String get orderscreen => 'assets/images/orderscreen.gif';
   String get loaderouter => 'assets/images/splashscreenouter.png';
   String get aadharbanner => 'assets/images/aadhar_banner.png';
   String get cube => 'assets/images/cube.png';
@@ -17,6 +15,8 @@ class AppImages {
   String get support =>'assets/images/support.png';
   String get accountLens =>'assets/images/account_lens.png';
   String get emptyLogistics =>'assets/json/Logistics.json';
+  String get addbasket =>'assets/json/addbasket.json';
+  String get noOrder =>'assets/json/noOrder.json';
   
 
 

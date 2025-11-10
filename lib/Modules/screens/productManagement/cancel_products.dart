@@ -28,7 +28,7 @@ class CancelProducts extends ParentWidget {
               color: Colors.brown,
               onRefresh: () => controller.productRefresh(ProductStatus.DISAPPROVED.name),
               child: controller.getDisapprovedProductModel.value.data?.docs?.isEmpty ?? false
-                  ? emptyScreen(h, appStrings.noRejectedProducts, appStrings.emptyRejectedProductDesc, appImages.myproductcart)
+                  ? emptyScreen(h, appStrings.noRejectedProducts, appStrings.emptyRejectedProductDesc, appImages.addbasket,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(

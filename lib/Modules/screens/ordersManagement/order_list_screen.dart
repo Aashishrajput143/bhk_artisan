@@ -33,7 +33,7 @@ class OrderList extends ParentWidget {
               color: Colors.brown,
               onRefresh: () => controller.ordersRefresh(),
               child: controller.getAllActiveOrderStepModel.value.data?.isEmpty ?? false
-                  ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.orderscreen)
+                  ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: controller.rxRequestStatus.value == Status.COMPLETED
@@ -98,8 +98,6 @@ class OrderList extends ParentWidget {
                             ? appStrings.expired
                             : steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
                             ? OrderStatus.REJECTED.displayText
-                            : steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name
-                            ? OrderStatus.WAIT_FOR_PICKUP.displayText
                             : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
                             ? OrderStatus.ADMIN_APPROVED.displayText
                             : steps?.buildStatus == OrderStatus.COMPLETED.name
@@ -229,6 +227,8 @@ class OrderList extends ParentWidget {
                               ? appStrings.orderPicked
                               : (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)))
                               ? appStrings.orderExpired
+                              : steps?.buildStatus == OrderStatus.COMPLETED.name
+                              ? appStrings.orderInReview
                               : steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
                               ? appStrings.orderDeclined
                               : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name

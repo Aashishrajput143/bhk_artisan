@@ -26,7 +26,7 @@ class OrderListHistory extends ParentWidget {
               color: Colors.brown,
               onRefresh: () => controller.ordersRefresh(),
               child: controller.getAllPastOrderStepModel.value.data?.isEmpty ?? false
-                  ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.orderscreen)
+                  ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: controller.getAllPastOrderStepModel.value.data?.isNotEmpty ?? false

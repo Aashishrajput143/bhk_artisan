@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
@@ -25,7 +26,8 @@ class VideoPreviewController extends GetxController {
   void onInit() {
     super.onInit();
     path.value = Get.arguments?["path"];
-    setVideo(path.value ?? "https://bhk-bucket-dev.s3.us-east-1.amazonaws.com/uploads/videos/1755860145000-52376cd0-b277-406c-9817-ffc39c20870b.mp4");
+    setVideo(appStrings.introVideoUrl);
+    //setVideo(path.value ?? appStrings.introVideoUrl);
   }
 
   void setVideo(String path) {

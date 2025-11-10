@@ -35,7 +35,6 @@ class AppUrl {
   static String orderStatus = '$baseUrl/product/api/build-step/artisan/update_status';
   static String pickupAddress = '$baseUrl/product/api/build-step/assign/pickup-address';
   static String salesgraph = '$baseUrl/product/api/artisian-sales/report';
-  static String updateProgress = '$baseUrl/product/api/build-step/';
   static String completeOrder = '$baseUrl/product/api/build-step/artisan/complete/';
 
   //logistics

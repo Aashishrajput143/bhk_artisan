@@ -181,8 +181,8 @@ class ProductDetailScreen extends ParentWidget {
           "${appStrings.productIdPrefix}${controller.getProductModel.value.data?.productId ?? "0"}",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPending),
         ),
-        //6.kH,
-        //Row(children: [commonContainer(controller.getProductModel.value.data?.category?.categoryName ?? "", Colors.deepPurple), 8.kW, commonContainer(controller.getProductModel.value.data?.subCategory?.categoryName ?? "", appColors.brownDarkText)]),
+        6.kH,
+        Row(children: [commonContainer(controller.getProductModel.value.data?.categoryId?.categoryName ?? "", Colors.deepPurple), 8.kW, commonContainer(controller.getProductModel.value.data?.subCategoryId?.categoryName ?? "", appColors.brownDarkText)]),
         12.kH,
         Text(
           controller.getProductModel.value.data?.description ?? "",

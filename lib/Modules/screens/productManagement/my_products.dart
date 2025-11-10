@@ -30,7 +30,7 @@ class MyProducts extends ParentWidget {
               color: Colors.brown,
               onRefresh: () => controller.productRefresh(ProductStatus.APPROVED.name),
               child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
-                  ? emptyScreen(h, appStrings.addYourProduct, appStrings.emptyProductDesc, appImages.myproductcart)
+                  ? emptyScreen(h, appStrings.addYourProduct, appStrings.emptyProductDesc, appImages.addbasket,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(

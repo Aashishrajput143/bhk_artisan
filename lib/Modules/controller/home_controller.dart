@@ -42,7 +42,7 @@ class Homecontroller extends GetxController {
   }
 
   String totalSales() {
-    double total = (getSalesGraphModel.value.docs?.last.data?.last.sales??0).toDouble();
+    double total = getSalesGraphModel.value.docs?.last.data?.isNotEmpty??false?(getSalesGraphModel.value.docs?.last.data?.last.sales??0).toDouble():0;
     return formatNumberIndian(total);
   }
 

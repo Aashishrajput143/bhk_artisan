@@ -66,7 +66,8 @@ class EditProfile extends ParentWidget {
                         () {
                           if (!controller.isButtonEnabled.value) return;
                           controller.isButtonEnabled.value = false;
-                          controller.validateForm() ? controller.getPreSignedIntroUrlApi() : null;
+                          controller.validateForm() ? controller.updateProfileApi() : null;
+                          //controller.validateForm() ? controller.getPreSignedIntroUrlApi() : null;
                           enableButtonAfterDelay(controller.isButtonEnabled);
                         },
                         hint: appStrings.save,
@@ -84,7 +85,8 @@ class EditProfile extends ParentWidget {
                             () {
                               if (!controller.isButtonEnabled.value) return;
                               controller.isButtonEnabled.value = false;
-                              controller.validateForm() ? controller.getPreSignedIntroUrlApi() : null;
+                              controller.validateForm() ? controller.updateProfileApi() : null;
+                              //controller.validateForm() ? controller.getPreSignedIntroUrlApi() : null;
                               enableButtonAfterDelay(controller.isButtonEnabled);
                             },
                             hint: appStrings.save,

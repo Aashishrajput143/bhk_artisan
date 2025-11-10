@@ -7,6 +7,7 @@ class AppStrings {
 
   //Splash Screen
   String get appNameSplash => "Bharathasth Kaushal";
+  String get introVideoUrl => "https://cdn.pixabay.com/video/2021/09/11/88266-606175711_large.mp4";
 
   //login Screen
   String get phone => 'Phone Number';
@@ -212,6 +213,7 @@ class AppStrings {
   String get orderConfirmed => "Order is Confirmed";
   String get orderapproved => "Order is Approved";
   String get orderDeclined => "Order is Declined";
+  String get orderInReview => "Order is waiting for Approval";
   String get orderExpired =>"Order is Expired";
   String get order =>"Order is Expired";
   String get orderPicked =>"Order is Picked";

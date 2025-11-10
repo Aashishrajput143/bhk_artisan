@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:bhk_artisan/Modules/controller/address_controller.dart';
 import 'package:bhk_artisan/Modules/model/order_details_model.dart';
 import 'package:bhk_artisan/Modules/model/update_order_status_model.dart';
 import 'package:bhk_artisan/Modules/repository/order_repository.dart';
@@ -17,42 +16,10 @@ import 'package:get/get.dart';
 class GetOrderDetailsController extends GetxController {
   final _api = OrderRepository();
   var id = 0.obs;
-  var addressId = 0.obs;
   var lastChecked = "".obs;
 
   var currentIndex = 0.obs;
   final PageController pageController = PageController();
-  AddressController addressController = Get.put(AddressController());
-
-  void setDefaultSelection() {
-    final addresses = addressController.getAddressModel.value.data ?? [];
-    final defaultAddress = addresses.firstWhere((a) => a.isDefault == true);
-
-    if (defaultAddress.id != null) {
-      addressId.value = defaultAddress.id ?? 0;
-    }
-  }
-
-  String getFullAddress(int index) {
-    final address = addressController.getAddressModel.value;
-    List<String> parts = [];
-
-    void addIfNotEmpty(String? value) {
-      if (value != null && value.trim().isNotEmpty) {
-        parts.add(value.trim());
-      }
-    }
-
-    addIfNotEmpty(address.data?[index].houseNo);
-    addIfNotEmpty(address.data?[index].street);
-    addIfNotEmpty(address.data?[index].landmark);
-    addIfNotEmpty(address.data?[index].city);
-    addIfNotEmpty(address.data?[index].state);
-    addIfNotEmpty(address.data?[index].postalCode);
-    addIfNotEmpty(address.data?[index].country);
-
-    return parts.join(", ");
-  }
 
   void goPrevious() {
     if (currentIndex.value > 0) {
@@ -148,14 +115,12 @@ class GetOrderDetailsController extends GetxController {
     id.value = Get.arguments ?? 0;
     if (id.value != 0) {
       getOrderStepApi();
-      ever(addressController.getAddressModel, (_) => setDefaultSelection());
     }
   }
 
   final rxRequestStatus = Status.COMPLETED.obs;
   final getOrderStepModel = OrderDetailsModel().obs;
   final updateOrderStatusModel = UpdateOrderStatusModel().obs;
-  final updatePickupAddressModel = UpdateOrderStatusModel().obs;
 
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
@@ -163,7 +128,6 @@ class GetOrderDetailsController extends GetxController {
   void setRxRequestStatus(Status value) => rxRequestStatus.value = value;
   void setOrderStepdata(OrderDetailsModel value) => getOrderStepModel.value = value;
   void setOrderStatusModel(UpdateOrderStatusModel value) => updateOrderStatusModel.value = value;
-  void setPickupAddressModel(UpdateOrderStatusModel value) => updatePickupAddressModel.value = value;
 
   Future<void> getOrderStepApi({bool loader = true, bool isActive = true}) async {
     var connection = await CommonMethods.checkInternetConnectivity();
@@ -207,31 +171,6 @@ class GetOrderDetailsController extends GetxController {
             if (loader) setRxRequestStatus(Status.COMPLETED);
             setOrderStatusModel(value);
             getOrderStepApi();
-            Utils.printLog("Response ${value.toString()}");
-          })
-          .onError((error, stackTrace) {
-            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
-          });
-    } else {
-      CommonMethods.showToast(appStrings.weUnableCheckData);
-    }
-  }
-
-  Future<void> updatePickUpAddressApi({bool loader = false}) async {
-    var connection = await CommonMethods.checkInternetConnectivity();
-    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
-
-    Map<String, dynamic> data = {"buildStepId": id.value, "addressId": addressId.value};
-
-    if (connection == true) {
-      if (loader) setRxRequestStatus(Status.LOADING);
-      _api
-          .updatePickupAddressStatusApi(data)
-          .then((value) {
-            if (loader) setRxRequestStatus(Status.COMPLETED);
-            setPickupAddressModel(value);
-            Get.back();
-            getOrderStepApi(loader: false);
             Utils.printLog("Response ${value.toString()}");
           })
           .onError((error, stackTrace) {
