@@ -2,6 +2,7 @@ import 'package:bhk_artisan/Modules/controller/logistics_list_controller.dart';
 import 'package:bhk_artisan/Modules/model/get_all_logistics_model.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/address_type_enum.dart';
@@ -27,7 +28,7 @@ class LogisticsScreen extends ParentWidget {
           Scaffold(
             appBar: commonAppBar("${appStrings.logistics} ${controller.logisticsModel.value.data != null ? "(${controller.logisticsModel.value.data?.docs?.length})" : ""}"),
             backgroundColor: appColors.backgroundColor,
-            body: controller.logisticsModel.value.data?.docs?.isEmpty ?? false
+            body: controller.logisticsModel.value.data?.docs?.isEmpty ?? false || controller.rxRequestStatus.value == Status.ERROR
                 ? Padding(
                   padding: EdgeInsets.only(top: h*0.1),
                   child: emptyScreen(h, appStrings.logisticsEmptyTitle, appStrings.logisticsEmptyDesc, appImages.emptyLogistics,useAssetImage: false,isThere: false),

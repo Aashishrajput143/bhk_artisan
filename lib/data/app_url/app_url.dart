@@ -38,5 +38,5 @@ class AppUrl {
   static String completeOrder = '$baseUrl/product/api/build-step/artisan/complete/';
 
   //logistics
-  static String getAllLogistics = '$baseUrl/product/api/logistics/';
+  static String getAllLogistics = '$baseUrl/product/api/logistics';
 }

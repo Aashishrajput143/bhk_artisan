@@ -4,6 +4,7 @@ import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/my_alert_dialog.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/order_status_enum.dart';
@@ -28,7 +29,7 @@ class OrderFilterScreen extends ParentWidget {
           Scaffold(
             appBar: commonAppBar("${controller.type.value} ${controller.getAllOrderStepModel.value.data != null ? "(${controller.getAllOrderStepModel.value.data?.length})" : ""}"),
             backgroundColor: appColors.backgroundColor,
-            body: controller.getAllOrderStepModel.value.data?.isEmpty ?? false
+            body: controller.rxRequestStatus.value == Status.ERROR?emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false):controller.getAllOrderStepModel.value.data?.isEmpty ?? false
                ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false)
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),

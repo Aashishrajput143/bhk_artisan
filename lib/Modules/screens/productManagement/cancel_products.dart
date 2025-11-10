@@ -2,6 +2,7 @@ import 'package:bhk_artisan/Modules/controller/get_product_controller.dart';
 import 'package:bhk_artisan/Modules/screens/productManagement/my_products.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/product_status_enum.dart';
@@ -27,7 +28,7 @@ class CancelProducts extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.productRefresh(ProductStatus.DISAPPROVED.name),
-              child: controller.getDisapprovedProductModel.value.data?.docs?.isEmpty ?? false
+              child: controller.rxRequestStatus.value == Status.ERROR?emptyScreen(h, appStrings.noRejectedProducts, appStrings.emptyRejectedProductDesc, appImages.addbasket,useAssetImage: false):controller.getDisapprovedProductModel.value.data?.docs?.isEmpty ?? false
                   ? emptyScreen(h, appStrings.noRejectedProducts, appStrings.emptyRejectedProductDesc, appImages.addbasket,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),

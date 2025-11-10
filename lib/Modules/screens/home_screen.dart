@@ -7,6 +7,7 @@ import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.d
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/product_status_enum.dart';
@@ -31,7 +32,7 @@ class HomeScreen extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            appBar: controller.commonController.profileData.value.data?.firstName?.isNotEmpty ?? false ? appBarHome(controller) : shimmerAppBarHome(w),
+            appBar: (controller.commonController.profileData.value.data?.firstName?.isNotEmpty ?? false)||(controller.commonController.rxRequestStatus.value == Status.ERROR) ? appBarHome(controller) : shimmerAppBarHome(w),
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: controller.dashboardRefresh,
@@ -130,9 +131,9 @@ class HomeScreen extends ParentWidget {
 
   Widget commonCollection(double h, double w, Homecontroller controller) {
     return Obx(() {
-      final approvedDocs = controller.getApprovedProductModel.value.data?.docs;
+      final approvedDocs = (controller.getApprovedProductModel.value.data?.docs??0).toString();
 
-      if (approvedDocs == null || controller.getOrderController.getAllOrderStepModel.value.data == null || controller.getOrderController.pendingOrders.value == null || controller.getOrderController.acceptedOrders.value == null) {
+      if ((controller.getOrderController.getAllOrderStepModel.value.data == null || controller.getOrderController.pendingOrders.value == null || controller.getOrderController.acceptedOrders.value == null)&& (controller.rxRequestStatus.value != Status.ERROR)) {
         return shimmerCollection(w);
       }
       return Column(
@@ -150,7 +151,7 @@ class HomeScreen extends ParentWidget {
                   12.kW,
                   commonContainer(w, (controller.getOrderController.acceptedOrders.value ?? 0).toString(), appColors.redColor[100], appColors.redColor, appStrings.pendingOrders, Icons.pending_actions, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.pendingOrders)),
                   12.kW,
-                  commonContainer(w, (approvedDocs.length).toString(), appColors.blueColor[100], appColors.blueColor, appStrings.approvedProducts, Icons.local_offer, onTap: () => controller.commonController.selectedIndex.value = 2),
+                  commonContainer(w, approvedDocs, appColors.blueColor[100], appColors.blueColor, appStrings.approvedProducts, Icons.local_offer, onTap: () => controller.commonController.selectedIndex.value = 2),
                   12.kW,
                   commonContainer(w, (controller.getOrderController.getAllOrderStepModel.value.data?.length ?? 0).toString(), appColors.orangeColor[100], appColors.orangeColor, appStrings.totalOrders, Icons.shopping_cart, onTap: () => Get.toNamed(RoutesClass.orderFilter, arguments: appStrings.totalOrders)),
                   12.kW,
@@ -260,7 +261,7 @@ class HomeScreen extends ParentWidget {
               ),
             ],
           )
-        : shimmerProduct(w);
+        : controller.rxRequestStatus.value == Status.ERROR?SizedBox():shimmerProduct(w);
   }
 
   Widget getRecentOrder(double w, double h, Homecontroller controller) {
@@ -297,7 +298,7 @@ class HomeScreen extends ParentWidget {
               ),
             ],
           )
-        : shimmerList(w, h * 0.2);
+        : controller.rxRequestStatus.value == Status.ERROR?SizedBox():shimmerList(w, h * 0.2);
   }
 
   Widget productCard(double w, ProductDocs? list) {
@@ -336,7 +337,7 @@ class HomeScreen extends ParentWidget {
 
   Widget salesGraph(BuildContext context, double w, double h, Homecontroller controller) {
     return Obx(
-      () => controller.getSalesGraphModel.value.docs == null
+      () => controller.getSalesGraphModel.value.docs == null && controller.rxRequestStatus.value != Status.ERROR
           ? shimmerGraph(w, h)
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -23,7 +23,7 @@ class OrderList extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetOrderController controller = Get.put(GetOrderController());
-    controller.getAllOrderStepApi();
+    controller.getAllOrderStepApi(loader: controller.getAllOrderStepModel.value.data !=null?false:true);
     return Obx(
       () => Stack(
         children: [
@@ -32,7 +32,7 @@ class OrderList extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.ordersRefresh(),
-              child: controller.getAllActiveOrderStepModel.value.data?.isEmpty ?? false
+              child:controller.rxRequestStatus.value == Status.ERROR?emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false): controller.getAllActiveOrderStepModel.value.data?.isEmpty ?? false
                   ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -1,6 +1,7 @@
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/product_status_enum.dart';
@@ -29,7 +30,7 @@ class MyProducts extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.productRefresh(ProductStatus.APPROVED.name),
-              child: controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
+              child: controller.rxRequestStatus.value == Status.ERROR?emptyScreen(h, appStrings.addYourProduct, appStrings.emptyProductDesc, appImages.addbasket,useAssetImage: false): controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
                   ? emptyScreen(h, appStrings.addYourProduct, appStrings.emptyProductDesc, appImages.addbasket,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),

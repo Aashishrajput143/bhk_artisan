@@ -2,6 +2,7 @@ import 'package:bhk_artisan/Modules/controller/get_order_controller.dart';
 import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
@@ -16,7 +17,7 @@ class OrderListHistory extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetOrderController controller = Get.put(GetOrderController());
-    controller.getAllOrderStepApi(isActive: false);
+    controller.getAllOrderStepApi(loader: controller.getAllOrderStepModel.value.data !=null?false:true,isActive: false);
     return Obx(
       () => Stack(
         children: [
@@ -25,7 +26,7 @@ class OrderListHistory extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.ordersRefresh(),
-              child: controller.getAllPastOrderStepModel.value.data?.isEmpty ?? false
+              child: controller.rxRequestStatus.value == Status.ERROR?emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false):controller.getAllPastOrderStepModel.value.data?.isEmpty ?? false
                   ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
