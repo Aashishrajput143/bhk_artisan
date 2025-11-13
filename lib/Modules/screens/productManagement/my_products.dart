@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
+import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -30,8 +31,10 @@ class MyProducts extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.productRefresh(ProductStatus.APPROVED.name),
-              child: controller.rxRequestStatus.value == Status.ERROR?emptyScreen(h, appStrings.addYourProduct, appStrings.emptyProductDesc, appImages.addbasket,useAssetImage: false): controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
-                  ? emptyScreen(h, appStrings.addYourProduct, appStrings.emptyProductDesc, appImages.addbasket,useAssetImage: false)
+              child: controller.rxRequestStatus.value == Status.ERROR
+                  ? emptyScreen(h, appStrings.addYourProduct, appStrings.emptyProductDesc, appImages.addbasket, useAssetImage: false)
+                  : controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
+                  ? emptyScreen(h, appStrings.addYourProduct, appStrings.emptyProductDesc, appImages.addbasket, useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
@@ -79,7 +82,7 @@ class MyProducts extends ParentWidget {
             behavior: HitTestBehavior.opaque,
             onTap: () {
               Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
-                controller.commonController.productController?.changeTab(onValue??0);
+                controller.commonController.productController.changeTab(onValue ?? 0);
                 controller.getProductApi(ProductStatus.PENDING.name, isLoader: false);
               });
             },
@@ -109,7 +112,7 @@ class MyProducts extends ParentWidget {
         appColors.contentButtonBrown,
         appColors.contentWhite,
         () => Get.toNamed(RoutesClass.addproducts)?.then((onValue) {
-          controller.commonController.productController?.changeTab(onValue??0);
+          controller.commonController.productController.changeTab(onValue ?? 0);
           controller.getProductApi(ProductStatus.PENDING.name, isLoader: false);
         }),
         radius: 30,
@@ -150,7 +153,7 @@ Widget commonCard(double w, double h, ProductDocs? list) {
                   child: Text(StringLimiter.limitCharacters(list?.productName ?? "", 35), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                 ),
                 5.kH,
-                Text(StringLimiter.limitCharacters(list?.material ?? "", 35), style: TextStyle(fontSize: 13, color: Colors.grey[700])),
+                Text(StringLimiter.limitCharacters(list?.material ?? "", 30), style: TextStyle(fontSize: 13, color: Colors.grey[700])),
                 5.kH,
                 Row(children: [commonContainer(list?.category?.categoryName ?? "", Colors.deepPurple), 8.kW, commonContainer(list?.subCategory?.categoryName ?? "", appColors.brownDarkText)]),
               ],
@@ -174,7 +177,7 @@ Widget cornerTag(double w, ProductDocs? list) {
         borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), bottomLeft: Radius.circular(10.0)),
       ),
       child: Text(
-        "₹ ${double.parse(list?.productPricePerPiece ?? "0") * (list?.quantity ?? 0)}",
+        "₹ ${formatNumberIndian(double.parse(list?.productPricePerPiece ?? "0") * (list?.quantity ?? 0).toDouble())}",
         style: TextStyle(color: appColors.contentWhite, fontWeight: FontWeight.bold, fontSize: 12),
         textAlign: TextAlign.center,
       ),

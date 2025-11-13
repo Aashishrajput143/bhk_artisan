@@ -81,7 +81,7 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
         !Validator.isAadharNumberValid(aadharController.value.text.trim()) ||
         ((gstController.value.text.isNotEmpty) && !Validator.isGSTNumberValid(gstController.value.text.trim())) ||
         (selectedMultiExpertise.isEmpty) ||
-        (selectedIntroVideo.value == null) ||
+        (profileData.value.data?.introVideo?.isEmpty ?? true && selectedIntroVideo.value ==null ) ||
         (communityController.value.text.isEmpty) ||
         (selectedCategory.value == null)) {
       if ((firstNameController.value.text.isEmpty)) {
@@ -170,12 +170,6 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
     } else {
       selectedCategory.value = null;
     }
-
-    // Load intro video
-    String? introVideo = profileData.value.data?.introVideo ?? '';
-    if (introVideo.isNotEmpty) {
-      selectedIntroVideo.value = introVideo;
-    }
   }
 
   final rxRequestStatus = Status.COMPLETED.obs;
@@ -256,7 +250,6 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
       if (lastNameController.value.text.isNotEmpty) "lastName": lastNameController.value.text,
       if (emailController.value.text.isNotEmpty) "email": emailController.value.text,
       if (selectedMultiExpertise.isNotEmpty) "expertizeField": selectedMultiExpertise.join(","),
-      //if (selectedIntroVideo.isNotEmpty ?? false) "introVideo": selectedIntroVideo.value ?? "",
       if (gstController.value.text.isNotEmpty) "gstNumber": gstController.value.text,
       if (aadharController.value.text.isNotEmpty) "aadhaarNumber": aadharController.value.text,
       if (selectedCategory.value?.categoryValue.isNotEmpty ?? false) "user_caste_category": selectedCategory.value?.categoryValue ?? "",

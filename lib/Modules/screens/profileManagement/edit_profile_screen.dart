@@ -178,8 +178,8 @@ class EditProfile extends ParentWidget {
           backgroundColor: appColors.brownbuttonBg,
           appColors.contentWhite,
           () {
-            if (controller.selectedIntroVideo.value?.isNotEmpty??false) {
-              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.selectedIntroVideo.value});
+            if (controller.selectedIntroVideo.value !=null||(controller.profileData.value.data?.introVideo?.isNotEmpty??false)) {
+              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path':controller.selectedIntroVideo.value ?? controller.profileData.value.data?.introVideo});
             } else{
               bottomDrawer(
                 context,
@@ -199,7 +199,7 @@ class EditProfile extends ParentWidget {
             }
           },
           icon: Icons.video_call,
-          hint: controller.selectedIntroVideo.value?.isNotEmpty ?? false
+          hint: controller.selectedIntroVideo.value !=null||(controller.profileData.value.data?.introVideo?.isNotEmpty??false)
               ? appStrings.viewIntro
               : appStrings.uploadIntro,
           forward: false,

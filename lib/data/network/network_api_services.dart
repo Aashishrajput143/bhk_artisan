@@ -322,7 +322,6 @@ class NetworkApiServices extends BaseApiServices {
       request.fields.addAll(data);
       request.headers['accesstoken'] = token;
 
-      // ⬇️ Loop through the list of file objects
       for (var fileObj in files) {
         String key = fileObj["key"] ?? "";
         String path = fileObj["path"] ?? "";

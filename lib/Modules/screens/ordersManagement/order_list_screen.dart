@@ -23,7 +23,7 @@ class OrderList extends ParentWidget {
   @override
   Widget buildingView(BuildContext context, double h, double w) {
     GetOrderController controller = Get.put(GetOrderController());
-    controller.getAllOrderStepApi(loader: controller.getAllOrderStepModel.value.data !=null?false:true);
+    controller.ordersRefresh();
     return Obx(
       () => Stack(
         children: [

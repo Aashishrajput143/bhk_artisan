@@ -4,6 +4,7 @@ import 'package:bhk_artisan/Modules/controller/home_controller.dart';
 import 'package:bhk_artisan/Modules/model/product_listing_model.dart';
 import 'package:bhk_artisan/Modules/model/sales_graph_model.dart';
 import 'package:bhk_artisan/Modules/screens/ordersManagement/order_list_screen.dart';
+import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
@@ -32,7 +33,7 @@ class HomeScreen extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            appBar: (controller.commonController.profileData.value.data?.firstName?.isNotEmpty ?? false)||(controller.commonController.rxRequestStatus.value == Status.ERROR) ? appBarHome(controller) : shimmerAppBarHome(w),
+            appBar: (controller.commonController.profileData.value.data?.firstName?.isNotEmpty ?? false) || (controller.commonController.rxRequestStatus.value == Status.ERROR) ? appBarHome(controller) : shimmerAppBarHome(w),
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: controller.dashboardRefresh,
@@ -131,9 +132,9 @@ class HomeScreen extends ParentWidget {
 
   Widget commonCollection(double h, double w, Homecontroller controller) {
     return Obx(() {
-      final approvedDocs = (controller.getApprovedProductModel.value.data?.docs?.length??0).toString();
+      final approvedDocs = (controller.getApprovedProductModel.value.data?.docs?.length ?? 0).toString();
 
-      if ((controller.getOrderController.getAllOrderStepModel.value.data == null || controller.getOrderController.pendingOrders.value == null || controller.getOrderController.acceptedOrders.value == null)&& (controller.rxRequestStatus.value != Status.ERROR)) {
+      if ((controller.getOrderController.getAllOrderStepModel.value.data == null || controller.getOrderController.pendingOrders.value == null || controller.getOrderController.acceptedOrders.value == null) && (controller.rxRequestStatus.value != Status.ERROR)) {
         return shimmerCollection(w);
       }
       return Column(
@@ -180,7 +181,7 @@ class HomeScreen extends ParentWidget {
       onTap: onTap,
       child: Container(
         width: w * 0.43,
-        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(12),
@@ -245,7 +246,7 @@ class HomeScreen extends ParentWidget {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 16.0, mainAxisSpacing: 20, childAspectRatio: 0.6),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 16.0, mainAxisSpacing: 20, childAspectRatio: 0.5),
                 itemCount: min(4, controller.getApprovedProductModel.value.data?.docs?.length ?? 0),
                 itemBuilder: (context, index) {
                   return GestureDetector(
@@ -261,7 +262,9 @@ class HomeScreen extends ParentWidget {
               ),
             ],
           )
-        : controller.rxRequestStatus.value == Status.ERROR?SizedBox():shimmerProduct(w);
+        : controller.rxRequestStatus.value == Status.ERROR
+        ? SizedBox()
+        : shimmerProduct(w);
   }
 
   Widget getRecentOrder(double w, double h, Homecontroller controller) {
@@ -298,7 +301,9 @@ class HomeScreen extends ParentWidget {
               ),
             ],
           )
-        : controller.rxRequestStatus.value == Status.ERROR?SizedBox():shimmerList(w, h * 0.2);
+        : controller.rxRequestStatus.value == Status.ERROR
+        ? SizedBox()
+        : shimmerList(w, h * 0.2);
   }
 
   Widget productCard(double w, ProductDocs? list) {
@@ -319,7 +324,7 @@ class HomeScreen extends ParentWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "₹ ${double.parse(list?.productPricePerPiece ?? "0") * (list?.quantity ?? 0)}",
+                "₹ ${formatNumberIndian(double.parse(list?.productPricePerPiece ?? "0") * (list?.quantity ?? 0).toDouble())}",
                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13),
               ),
               5.kW,
@@ -402,7 +407,7 @@ class HomeScreen extends ParentWidget {
                     primaryYAxis: NumericAxis(
                       axisLabelFormatter: (AxisLabelRenderDetails args) {
                         final value = args.value;
-                        return ChartAxisLabel(controller.formatNumberIndian(value.toDouble()), args.textStyle);
+                        return ChartAxisLabel(formatNumberIndian(value.toDouble()), args.textStyle);
                       },
                     ),
                     legend: Legend(isVisible: true, toggleSeriesVisibility: false),
@@ -429,7 +434,7 @@ class HomeScreen extends ParentWidget {
                         dataLabelSettings: DataLabelSettings(isVisible: true, labelAlignment: ChartDataLabelAlignment.outer),
                         dataLabelMapper: (ChartData sales, _) {
                           final value = controller.dropdownsold.value == "Product Sales" ? sales.sales : sales.unitsSold;
-                          return value != 0 ? controller.formatNumberIndian(value!.toDouble()) : null;
+                          return value != 0 ? formatNumberIndian(value!.toDouble()) : null;
                         },
                       ),
                     ],

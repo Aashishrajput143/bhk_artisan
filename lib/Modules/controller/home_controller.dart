@@ -7,6 +7,7 @@ import 'package:bhk_artisan/Modules/model/sales_graph_model.dart';
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
 import 'package:bhk_artisan/Modules/repository/sales_repository.dart';
 import 'package:bhk_artisan/Modules/screens/home_screen.dart';
+import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -44,23 +45,6 @@ class Homecontroller extends GetxController {
   String totalSales() {
     double total = getSalesGraphModel.value.docs?.last.data?.isNotEmpty??false?(getSalesGraphModel.value.docs?.last.data?.last.sales??0).toDouble():0;
     return formatNumberIndian(total);
-  }
-
-  String formatNumberIndian(double number) {
-    if (number >= 10000000) {
-      return "${removeTrailingZero(number / 10000000)}Cr";
-    } else if (number >= 100000) {
-      return "${removeTrailingZero(number / 100000)}L";
-    } else {
-      return removeTrailingZero(number);
-    }
-  }
-
-  String removeTrailingZero(double value) {
-    if (value == value.roundToDouble()) {
-      return value.toInt().toString();
-    }
-    return value.toStringAsFixed(1);
   }
 
   String getTodayOrdersCount(List<orderstep.Data> orders) {

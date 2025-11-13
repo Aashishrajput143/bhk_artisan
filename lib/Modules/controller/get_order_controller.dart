@@ -19,7 +19,8 @@ class GetOrderController extends GetxController {
   final _api = OrderRepository();
 
   Future<void> ordersRefresh() async {
-    getAllOrderStepApi();
+    getAllOrderStepApi(loader: getAllOrderStepModel.value.data !=null?false:true);
+    getAllOrderStepApi(loader: getAllOrderStepModel.value.data !=null?false:true,isActive: false);
   }
 
   Timer? countdownTimer;
@@ -190,11 +191,10 @@ class GetOrderController extends GetxController {
       // }
 
       if (isActive) {
-        final isPendingAndNotExpired = (status == OrderStatus.PENDING && (isExpiredMap[item.id!] == false) && !isExpired(item.dueDate))||(status == OrderStatus.ACCEPTED && isExpired(item.dueDate) && transitStatus != OrderStatus.DELIVERED)||(status == OrderStatus.ACCEPTED && isExpired(item.dueDate) && buildStatus == OrderStatus.PENDING);
+        final isPendingAndNotExpired = (status == OrderStatus.PENDING && (isExpiredMap[item.id!] == false) && !isExpired(item.dueDate))||(status == OrderStatus.ACCEPTED && isExpired(item.dueDate) && transitStatus != OrderStatus.DELIVERED)||(status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.IN_PROGRESS)||(status==OrderStatus.ACCEPTED && !isExpired(item.dueDate));
         return isPendingAndNotExpired;
       } else {
         final isDeliveredOrExpired = status == OrderStatus.REJECTED ||(status == OrderStatus.PENDING && isExpired(item.dueDate)) ||(status == OrderStatus.PENDING && (isExpiredMap[item.id!] == true)) || (status == OrderStatus.ACCEPTED && buildStatus == OrderStatus.ADMIN_APPROVED && transitStatus == OrderStatus.DELIVERED);
-        // ||(status==OrderStatus.ACCEPTED && isExpired(item.dueDate))
 
         return isDeliveredOrExpired;
       }

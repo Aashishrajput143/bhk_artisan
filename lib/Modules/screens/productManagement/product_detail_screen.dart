@@ -1,4 +1,5 @@
 import 'package:bhk_artisan/Modules/controller/product_details_controller.dart';
+import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/data/response/status.dart';
@@ -193,7 +194,7 @@ class ProductDetailScreen extends ParentWidget {
           Row(
             children: [
               Text(
-                "₹ ${double.parse(controller.getProductModel.value.data?.productPricePerPiece ?? "0") * (controller.getProductModel.value.data?.quantity ?? 0)}",
+                 "₹ ${formatNumberIndian(double.parse(controller.getProductModel.value.data?.productPricePerPiece ?? "0") * (controller.getProductModel.value.data?.quantity ?? 0).toDouble())}",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
               ),
               10.kW,

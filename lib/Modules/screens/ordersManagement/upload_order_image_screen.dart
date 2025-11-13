@@ -64,7 +64,7 @@ class UploadOrderImageScreen extends ParentWidget {
                 () {
                   if (!controller.isButtonEnabled.value) return;
                   controller.isButtonEnabled.value = false;
-                  controller.validateStringForm() == null ?bottomDrawerSelectAddress(context, h, w, controller.addressController, controller) : CommonMethods.showToast(controller.validateStringForm() ?? appStrings.pleaseUploadImages, icon: Icons.warning_amber_rounded);
+                  controller.validateStringForm() == null ? bottomDrawerSelectAddress(context, h, w, controller.addressController, controller) : CommonMethods.showToast(controller.validateStringForm() ?? appStrings.pleaseUploadImages, icon: Icons.warning_amber_rounded);
                   enableButtonAfterDelay(controller.isButtonEnabled);
                 },
                 hint: appStrings.markAsCompleted,
@@ -132,11 +132,11 @@ class UploadOrderImageScreen extends ParentWidget {
 
   Widget pickedfiles(double w, double h, UploadOrderImageController controller) {
     return SizedBox(
-     // height:h>700?h*0.26: h * 0.24,
-      height: h * 0.24,
+      height: h > 900 ? h * 0.26 : h * 0.22,
+      //height: h * 0.24,
       child: GridView.builder(
         itemCount: controller.imagefiles.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 16,childAspectRatio: 0.94),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 16, childAspectRatio: 0.94),
         physics: const AlwaysScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return Column(

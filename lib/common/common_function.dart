@@ -1,5 +1,22 @@
 import 'package:intl/intl.dart';
 
+String formatNumberIndian(double number) {
+    if (number >= 10000000) {
+      return "${removeTrailingZero(number / 10000000)}Cr";
+    } else if (number >= 100000) {
+      return "${removeTrailingZero(number / 100000)}L";
+    } else {
+      return removeTrailingZero(number);
+    }
+  }
+
+  String removeTrailingZero(double value) {
+    if (value == value.roundToDouble()) {
+      return value.toInt().toString();
+    }
+    return value.toStringAsFixed(2);
+  }
+
 String formatDate(String? rawDate) {
   if (rawDate == null || rawDate.isEmpty) return "N/A";
 

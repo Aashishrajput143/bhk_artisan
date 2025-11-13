@@ -55,7 +55,9 @@ class LogisticsScreen extends ParentWidget {
 
   Widget orderContent(double h, double w, Docs? data, LogisticsListController controller) {
     return GestureDetector(
-      onTap: () => Get.toNamed(RoutesClass.ordertracking,arguments: data?.id),
+      onTap: () => Get.toNamed(RoutesClass.ordertracking,arguments: data?.id)?.then((onValue) {
+        controller.getAllLogisticsApi();
+      }),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 12.0),
         decoration: BoxDecoration(

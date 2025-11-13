@@ -85,26 +85,6 @@ class AddProductPage extends ParentWidget {
                       ],
                     ),
             ),
-            // bottomNavigationBar: Padding(
-            //   padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.04),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       controller.selectedIndex.value > 0 ? commonOutlinedButtonIcon(w * 0.2, 48, Colors.black, () => controller.selectedIndex.value--, hint: appStrings.previousStep, radius: 25, forward: false, icon: Icons.arrow_back) : SizedBox(),
-            //       controller.selectedIndex.value < 2 ? commonButtonIcon(w * 0.2, 48, appColors.contentWhite, () => controller.selectedIndex.value++, hint: appStrings.nextStep, radius: 25, backgroundColor: appColors.contentButtonBrown) : SizedBox(),
-            //       if (controller.selectedIndex.value == 2)
-            //         commonButtonIcon(
-            //           w * 0.2,
-            //           48,
-            //           appColors.contentWhite,
-            //           () => controller.validateStringForm() == null ? controller.addProductApi() : CommonMethods.showToast(controller.validateStringForm() ?? appStrings.pleaseFillMandatoryFields, icon: Icons.warning_amber_rounded),
-            //           hint: appStrings.submit,
-            //           radius: 25,
-            //           backgroundColor: appColors.contentButtonBrown,
-            //         ),
-            //     ],
-            //   ),
-            // ),
           ),
           progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
@@ -492,15 +472,11 @@ class AddProductPage extends ParentWidget {
 
   Widget pickedfiles(double w, double h, AddProductController controller) {
     return SizedBox(
-      height: h > 1000
-          ? h * 0.25
-          : h > 700
-          ? h * 0.25
-          : h * 0.2,
+      height:h>900?h*0.26:h * 0.22,
+      //height: h * 0.24,
       child: GridView.builder(
-        shrinkWrap: true,
         itemCount: controller.imagefiles.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 16),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 16,childAspectRatio: 0.94),
         physics: const AlwaysScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return Column(

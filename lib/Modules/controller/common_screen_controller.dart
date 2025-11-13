@@ -23,7 +23,7 @@ class CommonScreenController extends GetxController {
   var selectedIndex = 0.obs;
   var isDialog = false.obs;
 
-  ProductController? productController;
+  ProductController productController = Get.put(ProductController());
 
   @override
   void onInit() {
@@ -86,7 +86,6 @@ class CommonScreenController extends GetxController {
             if (value.data?.verifyStatus == false) {
               Get.offAllNamed(RoutesClass.accountVerification);
             }
-            productController = Get.put(ProductController());
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

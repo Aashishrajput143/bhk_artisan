@@ -8,6 +8,8 @@ class AppStrings {
   //Splash Screen
   String get appNameSplash => "Bharathasth Kaushal";
   String get introVideoUrl => "https://cdn.pixabay.com/video/2021/09/11/88266-606175711_large.mp4";
+  String get xcompanyId =>'2917DA28-C412-5525-E814-A3E1E80638CB';
+
 
   //login Screen
   String get phone => 'Phone Number';

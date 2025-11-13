@@ -1,14 +1,21 @@
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
+import 'package:bhk_artisan/resources/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+
+class HttpHeader {
+  Map<String, String> httpHeader() {
+    return {"x-company-id": appStrings.xcompanyId};
+  }
+}
 
 class AvatarWithBlurHash {
   Widget circleAvatarWithBlurHash({required String blurHash, String? imageUrl, double radius = 70, BoxFit fit = BoxFit.cover, String? defaultImage}) {
     return CircleAvatar(
       radius: radius,
-      backgroundColor:  appColors.backgroundColor,
+      backgroundColor: appColors.backgroundColor,
       child: ClipOval(
         child: SizedBox(
           width: radius * 2,
@@ -16,6 +23,7 @@ class AvatarWithBlurHash {
           child: (imageUrl == null || imageUrl.isEmpty)
               ? BlurHash(hash: blurHash, imageFit: BoxFit.cover)
               : CachedNetworkImage(
+                  httpHeaders: HttpHeader().httpHeader(),
                   imageUrl: imageUrl,
                   fit: BoxFit.cover,
                   width: radius * 2,
@@ -33,11 +41,12 @@ class AvatarWithBlurHash {
       borderRadius: borderRadius ?? BorderRadius.circular(0),
       child: Container(
         decoration: BoxDecoration(color: appColors.backgroundColor, borderRadius: borderRadius ?? BorderRadius.circular(0)),
-        width: width??150,
-        height: height??150,
+        width: width ?? 150,
+        height: height ?? 150,
         child: (imageUrl == null || imageUrl.isEmpty)
             ? BlurHash(hash: blurHash, imageFit: fit)
             : CachedNetworkImage(
+                httpHeaders: HttpHeader().httpHeader(),
                 imageUrl: imageUrl,
                 fit: fit,
                 width: width,
@@ -49,20 +58,21 @@ class AvatarWithBlurHash {
     );
   }
 
-  Widget avatarWithBlurHashIcon({required String blurHash, String? imageUrl, double? width, double? height, BoxFit fit = BoxFit.cover, BorderRadius? borderRadius, IconData? icon = Icons.broken_image,bool isLoaded = false}) {
+  Widget avatarWithBlurHashIcon({required String blurHash, String? imageUrl, double? width, double? height, BoxFit fit = BoxFit.cover, BorderRadius? borderRadius, IconData? icon = Icons.broken_image, bool isLoaded = false}) {
     return ClipRRect(
       borderRadius: borderRadius ?? BorderRadius.circular(0),
       child: Container(
         decoration: BoxDecoration(color: Colors.brown.shade100, borderRadius: borderRadius ?? BorderRadius.circular(0)),
-        width: width??150,
-        height: height??150,
+        width: width ?? 150,
+        height: height ?? 150,
         child: (imageUrl == null || imageUrl.isEmpty)
             ? BlurHash(hash: blurHash, imageFit: fit)
             : CachedNetworkImage(
+                httpHeaders: HttpHeader().httpHeader(),
                 imageUrl: imageUrl,
                 fit: fit,
-                width: width??150,
-                height: height??150,
+                width: width ?? 150,
+                height: height ?? 150,
                 placeholder: (context, url) => BlurHash(hash: blurHash, imageFit: fit),
                 errorWidget: (context, url, error) => Icon(icon, color: Colors.grey, size: 40),
               ),
