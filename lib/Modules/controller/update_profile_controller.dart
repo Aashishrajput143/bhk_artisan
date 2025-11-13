@@ -21,7 +21,7 @@ import '../../resources/strings.dart';
 import '../model/update_profile_model.dart';
 import '../repository/profile_repository.dart';
 
-class UpdateProfileController extends GetxController with WidgetsBindingObserver{
+class UpdateProfileController extends GetxController with WidgetsBindingObserver {
   final _api = ProfileRepository();
   final productApi = ProductRepository();
   final apiAddress = AddressRepository();
@@ -47,8 +47,6 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
   var selectedMultiExpertise = <String>[].obs;
 
   var isNewUser = false.obs;
-  var introUploaded = Rxn<String>();
-  var havingIntro = false.obs;
 
   var firstNameError = Rxn<String>();
   var lastNameError = Rxn<String>();
@@ -76,7 +74,16 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
   }
 
   bool validateForm() {
-    if ((firstNameController.value.text.isEmpty) || (lastNameController.value.text.isEmpty)||(emailController.value.text.isNotEmpty && !Validator.isEmailValid(emailController.value.text.trim()))||(aadharController.value.text.isEmpty) ||!Validator.isAadharNumberValid(aadharController.value.text.trim())||((gstController.value.text.isNotEmpty) && !Validator.isGSTNumberValid(gstController.value.text.trim())) || (selectedMultiExpertise.isEmpty) || (selectedIntroVideo.value == null) || (communityController.value.text.isEmpty) || (selectedCategory.value == null)) {
+    if ((firstNameController.value.text.isEmpty) ||
+        (lastNameController.value.text.isEmpty) ||
+        (emailController.value.text.isNotEmpty && !Validator.isEmailValid(emailController.value.text.trim())) ||
+        (aadharController.value.text.isEmpty) ||
+        !Validator.isAadharNumberValid(aadharController.value.text.trim()) ||
+        ((gstController.value.text.isNotEmpty) && !Validator.isGSTNumberValid(gstController.value.text.trim())) ||
+        (selectedMultiExpertise.isEmpty) ||
+        (selectedIntroVideo.value == null) ||
+        (communityController.value.text.isEmpty) ||
+        (selectedCategory.value == null)) {
       if ((firstNameController.value.text.isEmpty)) {
         firstNameError.value = "Please Enter Your First Name";
       }
@@ -97,7 +104,7 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
       if (selectedMultiExpertise.isEmpty) {
         expertiseError.value = "Please Select Your Expertise";
       }
-      if (selectedCategory.value == null) {     
+      if (selectedCategory.value == null) {
         categoryError.value = "Please Select Your Category";
       }
       if (communityController.value.text.isEmpty) {
@@ -135,7 +142,6 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
     }
   }
 
-
   void loadData() {
     firstNameController.value.text = profileData.value.data?.firstName ?? "";
     lastNameController.value.text = profileData.value.data?.lastName ?? "";
@@ -168,8 +174,6 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
     // Load intro video
     String? introVideo = profileData.value.data?.introVideo ?? '';
     if (introVideo.isNotEmpty) {
-      havingIntro.value = true;
-      introUploaded.value = introVideo;
       selectedIntroVideo.value = introVideo;
     }
   }
@@ -189,7 +193,6 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
   void setgetExpertiseModeldata(GetSubCategoryModel value) => getexpertiseModel.value = value;
   void setProfileData(GetProfileModel value) => profileData.value = value;
   void setaddAddressModeldata(AddAddressModel value) => addAddressModel.value = value;
-
 
   Future<void> getProfileApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
@@ -243,12 +246,17 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
+    List<Map<String, String>> files = [
+      {"key": "avatar", "path": selectedImage.value ?? ""},
+      {"key": "introVideo", "path": selectedIntroVideo.value ?? ""},
+    ];
+
     Map<String, String> data = {
       if (firstNameController.value.text.isNotEmpty) "firstName": firstNameController.value.text,
       if (lastNameController.value.text.isNotEmpty) "lastName": lastNameController.value.text,
       if (emailController.value.text.isNotEmpty) "email": emailController.value.text,
       if (selectedMultiExpertise.isNotEmpty) "expertizeField": selectedMultiExpertise.join(","),
-      if (introUploaded.isNotEmpty ?? false) "introVideo": introUploaded.value ?? "",
+      //if (selectedIntroVideo.isNotEmpty ?? false) "introVideo": selectedIntroVideo.value ?? "",
       if (gstController.value.text.isNotEmpty) "gstNumber": gstController.value.text,
       if (aadharController.value.text.isNotEmpty) "aadhaarNumber": aadharController.value.text,
       if (selectedCategory.value?.categoryValue.isNotEmpty ?? false) "user_caste_category": selectedCategory.value?.categoryValue ?? "",
@@ -259,14 +267,14 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
       setRxRequestStatus(Status.LOADING);
       Utils.printLog("Profile image===> ${selectedImage.value}");
       _api
-          .updateProfileApi(data, selectedImage.value?.toString())
+          .updateProfileApi(data, files)
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
             setupdateProfileModeldata(value);
             Utils.printLog("Response===> ${value.toString()}");
             Utils.setBoolPreferenceValues(Constants.isNewUser, false);
             if (isNewUser.value) {
-              if(profileData.value.data?.hasAddress == false) addAddressApi(profileData.value.data?.id);
+              if (profileData.value.data?.hasAddress == false) addAddressApi(profileData.value.data?.id);
               Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
             } else {
               Get.back();
@@ -321,7 +329,7 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
             //setRxRequestStatus(Status.COMPLETED);
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> $value");
-            if (value) introUploaded.value = "https://bhk-bucket-dev.s3.us-east-1.amazonaws.com/$key";
+            if (value) selectedIntroVideo.value = "https://bhk-bucket-dev.s3.us-east-1.amazonaws.com/$key";
             updateProfileApi();
           })
           .onError((error, stackTrace) {

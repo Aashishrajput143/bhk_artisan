@@ -120,18 +120,18 @@ class HomeScreen extends ParentWidget {
           ),
         ],
       ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.notifications_none, color: appColors.contentWhite),
-          onPressed: () => Get.toNamed(RoutesClass.notifications),
-        ),
-      ],
+      // actions: [
+      //   IconButton(
+      //     icon: Icon(Icons.notifications_none, color: appColors.contentWhite),
+      //     onPressed: () => Get.toNamed(RoutesClass.notifications),
+      //   ),
+      // ],
     );
   }
 
   Widget commonCollection(double h, double w, Homecontroller controller) {
     return Obx(() {
-      final approvedDocs = (controller.getApprovedProductModel.value.data?.docs??0).toString();
+      final approvedDocs = (controller.getApprovedProductModel.value.data?.docs?.length??0).toString();
 
       if ((controller.getOrderController.getAllOrderStepModel.value.data == null || controller.getOrderController.pendingOrders.value == null || controller.getOrderController.acceptedOrders.value == null)&& (controller.rxRequestStatus.value != Status.ERROR)) {
         return shimmerCollection(w);
@@ -245,7 +245,7 @@ class HomeScreen extends ParentWidget {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 20.0, childAspectRatio: 0.56),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 16.0, mainAxisSpacing: 20, childAspectRatio: 0.6),
                 itemCount: min(4, controller.getApprovedProductModel.value.data?.docs?.length ?? 0),
                 itemBuilder: (context, index) {
                   return GestureDetector(
@@ -327,9 +327,9 @@ class HomeScreen extends ParentWidget {
             ],
           ),
           3.kH,
-          Text(list?.subCategory?.categoryName ?? "", style: TextStyle(fontSize: 12, color: appColors.brownDarkText)),
+          Text(list?.category?.categoryName ?? "", style: TextStyle(fontSize: 12, color: appColors.contentPrimary)),
           3.kH,
-          Text(list?.material ?? "", style: TextStyle(color: appColors.contentPending, fontSize: 13)),
+          Text(list?.subCategory?.categoryName ?? "", style: TextStyle(color: appColors.brownDarkText, fontSize: 13)),
         ],
       ),
     );

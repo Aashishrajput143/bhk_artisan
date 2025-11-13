@@ -27,7 +27,7 @@ class ProductDetailScreen extends ParentWidget {
                 : SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.all(16),
-                      child: controller.getProductModel.value.data?.productName?.isEmpty ?? true
+                      child: controller.getProductModel.value.data == null
                           ? shimmerProductDetails(h, w)
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +55,7 @@ class ProductDetailScreen extends ParentWidget {
                 CarouselSlider(
                   items: controller.getProductModel.value.data?.images?.isNotEmpty ?? false
                       ? controller.getProductModel.value.data?.images?.map<Widget>((image) => commonNetworkImage(image.imageUrl ?? "", width: w, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))).toList()
-                      : [commonNetworkImage("", width: w, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))],
+                      : [commonNetworkImage("NA", width: w, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8)))],
                   carouselController: controller.slidercontroller,
                   options: CarouselOptions(
                     height: h * 0.43,
@@ -91,7 +91,7 @@ class ProductDetailScreen extends ParentWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(12)),
                     child: Text(
-                      "${controller.currentIndex.value + 1} / ${controller.getProductModel.value.data?.images?.length ?? 0}",
+                      "${controller.getProductModel.value.data?.images?.isNotEmpty ?? false ? controller.currentIndex.value + 1 : 0} / ${controller.getProductModel.value.data?.images?.length ?? 0}",
                       style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
                     ),
                   ),
@@ -154,13 +154,13 @@ class ProductDetailScreen extends ParentWidget {
                   itemCount: 5,
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      margin: const EdgeInsets.only(right: 4),
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.transparent, width: 2),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: commonNetworkImage("", width: w * 0.185, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: commonNetworkImage("NA", width: w * 0.165, fit: BoxFit.cover, borderRadius: BorderRadius.all(Radius.circular(8))),
                     );
                   },
                 ),

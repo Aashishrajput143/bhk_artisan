@@ -132,7 +132,7 @@ Widget commonCard(double w, double h, ProductDocs? list) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         commonNetworkImage(
-          list?.images?.isNotEmpty ?? true ? list!.images!.first.imageUrl ?? "" : "",
+          list?.images?.isNotEmpty ?? true ? list!.images!.first.imageUrl ?? "NA" : "NA",
           width: 100,
           height: 117,
           fit: BoxFit.cover,

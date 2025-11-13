@@ -85,8 +85,7 @@ class UploadOrderImageController extends GetxController {
 
       Map<String, String> data = {"progress_percentage": "100","progress_status":OrderStatus.COMPLETED.name,"addressId": addressId.value};
       _api
-          // .updateOrderImageApi(data, imagefiles, id)
-          .updateOrderImageApi(data, null, id)
+          .updateOrderImageApi(data, imagefiles, id)
           .then((value) {
             setRxRequestStatus(Status.COMPLETED);
             setaddProductModeldata(value);

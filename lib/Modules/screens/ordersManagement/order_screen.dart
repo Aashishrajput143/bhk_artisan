@@ -16,6 +16,7 @@ class OrderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     OrderController controller = Get.put(OrderController());
     GetOrderController orderController = Get.put(GetOrderController());
+    controller.changeTab(0);
     return Scaffold(
       backgroundColor: appColors.backgroundColor,
       appBar: appBarTab(

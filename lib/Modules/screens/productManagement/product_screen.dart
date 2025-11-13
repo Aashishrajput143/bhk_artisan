@@ -16,6 +16,7 @@ class ProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     ProductController controller = Get.put(ProductController());
     GetProductController productController = Get.put(GetProductController());
+    controller.changeTab(0);
     return Scaffold(
       appBar: appBarTab(
         tabs: [

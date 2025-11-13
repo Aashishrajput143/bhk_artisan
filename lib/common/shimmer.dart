@@ -168,20 +168,20 @@ PreferredSizeWidget shimmerAppBarHome(double w) {
         ),
       ],
     ),
-    actions: [
-      Padding(
-        padding: const EdgeInsets.only(right: 10),
-        child: Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
-          highlightColor: Colors.grey.shade100,
-          child: Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
-          ),
-        ),
-      ),
-    ],
+    // actions: [
+    //   Padding(
+    //     padding: const EdgeInsets.only(right: 10),
+    //     child: Shimmer.fromColors(
+    //       baseColor: Colors.grey.shade300,
+    //       highlightColor: Colors.grey.shade100,
+    //       child: Container(
+    //         width: 24,
+    //         height: 24,
+    //         decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+    //       ),
+    //     ),
+    //   ),
+    // ],
   );
 }
 

@@ -1,4 +1,3 @@
-import 'package:bhk_artisan/Modules/controller/order_screen_controller.dart';
 import 'package:bhk_artisan/Modules/controller/product_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
 import 'package:bhk_artisan/Modules/repository/profile_repository.dart';
@@ -25,7 +24,6 @@ class CommonScreenController extends GetxController {
   var isDialog = false.obs;
 
   ProductController? productController;
-  OrderController? orderController;
 
   @override
   void onInit() {
@@ -44,11 +42,6 @@ class CommonScreenController extends GetxController {
   }
 
   void onTap(index) {
-    if (index == 0) {
-      orderController?.changeTab(0);
-      productController?.changeTab(0);
-      update();
-    }
     selectedIndex.value = index;
   }
 
@@ -94,7 +87,6 @@ class CommonScreenController extends GetxController {
               Get.offAllNamed(RoutesClass.accountVerification);
             }
             productController = Get.put(ProductController());
-            orderController = Get.put(OrderController());
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

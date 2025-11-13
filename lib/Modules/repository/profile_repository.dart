@@ -13,8 +13,8 @@ class ProfileRepository {
     return GetProfileModel.fromJson(response);
   }
 
-  Future<UpdateProfileModel> updateProfileApi(var data, var path) async {
-    dynamic response = await _apiServices.multiPartApi(data, AppUrl.updateprofile, path, "avatar");
+  Future<UpdateProfileModel> updateProfileApi(var data, List<Map<String, String>> files) async {
+    dynamic response = await _apiServices.multiPartApi(data, AppUrl.updateprofile, files);
     return UpdateProfileModel.fromJson(response);
   }
 
@@ -24,12 +24,12 @@ class ProfileRepository {
   }
 
   Future<bool> addIntroVideoApi(String path, String presignedUrl) async {
-    dynamic response = await _apiServices.uploadFileToS3WithPresignedUrl(path,presignedUrl);
+    dynamic response = await _apiServices.uploadFileToS3WithPresignedUrl(path, presignedUrl);
     return response;
   }
 
   Future<LogoutModel> needSupportApi(var data) async {
-    dynamic response = await _apiServices.postEncodeApi(data,AppUrl.needAssistance);
+    dynamic response = await _apiServices.postEncodeApi(data, AppUrl.needAssistance);
     return LogoutModel.fromJson(response);
   }
 }

@@ -13,7 +13,6 @@ import '../app_exceptions.dart';
 import 'base_api_services.dart';
 
 class NetworkApiServices extends BaseApiServices {
-
   bool refresh = true;
 
   bool isRefreshing = false;
@@ -30,23 +29,11 @@ class NetworkApiServices extends BaseApiServices {
         throw AuthenticationException("Refresh token or access token is missing ${refreshToken.isEmpty} ${accessToken.isEmpty}");
       }
       Utils.printLog("Refresh Token API URL: $url");
-      Map<String, dynamic> data = {
-        "refreshToken": refreshToken,
-        "accessToken": accessToken,
-      };
+      Map<String, dynamic> data = {"refreshToken": refreshToken, "accessToken": accessToken};
       Utils.printLog("Refresh Token API Request Body: $data");
       String jsonBody = jsonEncode(data);
       Utils.printLog("Final JSON Body: $jsonBody");
-      final response = await http
-          .post(
-            Uri.parse(url),
-            headers: {
-              'accesstoken': accessToken,
-              'Content-Type': 'application/json',
-            },
-            body: jsonBody,
-          )
-          .timeout(const Duration(seconds: 600));
+      final response = await http.post(Uri.parse(url), headers: {'accesstoken': accessToken, 'Content-Type': 'application/json'}, body: jsonBody).timeout(const Duration(seconds: 600));
       Utils.printLog("Refresh Token API Response: ${response.body}");
       if (response.statusCode == 200) {
         dynamic responseJson;
@@ -321,34 +308,38 @@ class NetworkApiServices extends BaseApiServices {
   }
 
   @override
-  Future<dynamic> multiPartApi(var data, String url, String? path, var keys) async {
+  Future<dynamic> multiPartApi(var data, String url, List<Map<String, String>> files) async {
     Utils.printLog(url);
     Utils.printLog(data);
-    Utils.printLog(path);
+    Utils.printLog(files);
+
     dynamic responseJson;
     String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
 
     try {
       var request = http.MultipartRequest("POST", Uri.parse(url));
+
       request.fields.addAll(data);
       request.headers['accesstoken'] = token;
-      if (path != null) {
-        request.files.add(await http.MultipartFile.fromPath(keys, path));
+
+      // ⬇️ Loop through the list of file objects
+      for (var fileObj in files) {
+        String key = fileObj["key"] ?? "";
+        String path = fileObj["path"] ?? "";
+
+        if (path.isNotEmpty) {
+          request.files.add(await http.MultipartFile.fromPath(key, path));
+        }
       }
-      final response = await request.send();
-      final responseHttp = await http.Response.fromStream(response);
-      expired(responseHttp);
-      responseJson = returnResponse(responseHttp);
-    } on SocketException {
-      throw InternetException('');
-    } on RequestTimeOut {
-      throw RequestTimeOut('');
-    } on TimeoutException {
-      throw RequestTimeOut('');
-    } on UnauthorizedException {
-      throw AuthenticationException('');
+
+      final streamed = await request.send();
+      final response = await http.Response.fromStream(streamed);
+      expired(response);
+      responseJson = returnResponse(response);
+    } catch (e) {
+      throw Exception("Upload failed: $e");
     }
-    Utils.printLog(responseJson);
+
     return responseJson;
   }
 

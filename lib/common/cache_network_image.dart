@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,7 +8,7 @@ class AvatarWithBlurHash {
   Widget circleAvatarWithBlurHash({required String blurHash, String? imageUrl, double radius = 70, BoxFit fit = BoxFit.cover, String? defaultImage}) {
     return CircleAvatar(
       radius: radius,
-      backgroundColor: Colors.grey[200],
+      backgroundColor:  appColors.backgroundColor,
       child: ClipOval(
         child: SizedBox(
           width: radius * 2,
@@ -31,7 +32,7 @@ class AvatarWithBlurHash {
     return ClipRRect(
       borderRadius: borderRadius ?? BorderRadius.circular(0),
       child: Container(
-        decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(12.0)),
+        decoration: BoxDecoration(color: appColors.backgroundColor, borderRadius: borderRadius ?? BorderRadius.circular(0)),
         width: width??150,
         height: height??150,
         child: (imageUrl == null || imageUrl.isEmpty)
@@ -48,11 +49,11 @@ class AvatarWithBlurHash {
     );
   }
 
-  Widget avatarWithBlurHashIcon({required String blurHash, String? imageUrl, double? width, double? height, BoxFit fit = BoxFit.cover, BorderRadius? borderRadius, IconData? icon = Icons.broken_image}) {
+  Widget avatarWithBlurHashIcon({required String blurHash, String? imageUrl, double? width, double? height, BoxFit fit = BoxFit.cover, BorderRadius? borderRadius, IconData? icon = Icons.broken_image,bool isLoaded = false}) {
     return ClipRRect(
       borderRadius: borderRadius ?? BorderRadius.circular(0),
       child: Container(
-        decoration: BoxDecoration(color: Colors.brown.shade100, borderRadius: BorderRadius.circular(12.0)),
+        decoration: BoxDecoration(color: Colors.brown.shade100, borderRadius: borderRadius ?? BorderRadius.circular(0)),
         width: width??150,
         height: height??150,
         child: (imageUrl == null || imageUrl.isEmpty)

@@ -8,6 +8,6 @@ abstract class BaseApiServices{
 
   Future<dynamic> postEncodeApi(dynamic data,String url);
 
-  Future<dynamic> multiPartApi(var data, String url, String path,var key);
+  Future<dynamic> multiPartApi(var data, String url, List<Map<String, String>> files);
 
 }

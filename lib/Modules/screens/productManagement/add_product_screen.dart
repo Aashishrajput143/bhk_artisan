@@ -74,8 +74,7 @@ class AddProductPage extends ParentWidget {
                                 () {
                                   if (!controller.isButtonEnabled.value) return;
                                   controller.isButtonEnabled.value = false;
-                                  controller.addProductApi();
-                                  // controller.validateMediaForm() ? controller.addProductApi():null;
+                                  controller.validateMediaForm() ? controller.addProductApi():null;
                                   enableButtonAfterDelay(controller.isButtonEnabled);
                                 },
                                 hint: appStrings.submit,
