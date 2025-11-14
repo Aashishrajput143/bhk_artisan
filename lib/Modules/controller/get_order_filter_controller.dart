@@ -156,7 +156,7 @@ class GetOrderFilterController extends GetxController {
           final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate) && isExpiredMap[item.id!] == false;
           return isPendingAndNotExpired;
         } else {
-          final isAcceptedOrCompleted = (buildStatus == OrderStatus.COMPLETED || buildStatus == OrderStatus.IN_PROGRESS || (status == OrderStatus.ACCEPTED && buildStatus == OrderStatus.PENDING)) && !(status == OrderStatus.PENDING && isExpired(item.dueDate));
+          final isAcceptedOrCompleted = (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.IN_PROGRESS) || (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.COMPLETED);
           return isAcceptedOrCompleted;
         }
       } else {

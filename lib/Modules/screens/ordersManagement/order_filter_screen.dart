@@ -82,87 +82,97 @@ class OrderFilterScreen extends ParentWidget {
                     if (steps?.product != null) buildOrderDetailColumn(appStrings.productId, steps?.product?.bhkProductId ?? "BHK000"),
                     buildOrderDetailColumn(appStrings.orderQty, (steps?.product?.quantity ?? 0).toString().padLeft(2, '0')),
                     if (steps?.artisanAgreedStatus != OrderStatus.PENDING.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)))
-                      buildOrderDetailColumn(
-                        appStrings.orderStatus,
-                        (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.DELIVERED.name)
-                            ? OrderStatus.DELIVERED.displayText
-                            : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.IN_TRANSIT.name)
-                            ? OrderStatus.IN_TRANSIT.displayText
-                            : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.PICKED.name)
-                            ? OrderStatus.PICKED.displayText
-                            : (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
-                            ? appStrings.expired
-                            : steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
-                            ? OrderStatus.REJECTED.displayText
-                            : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
-                            ? OrderStatus.ADMIN_APPROVED.displayText
-                            : steps?.buildStatus == OrderStatus.COMPLETED.name
-                            ? OrderStatus.INREVIEW.displayText
-                            : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
-                            ? OrderStatus.ACCEPTED.displayText
-                            : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
-                            ? OrderStatus.PENDING.displayText
-                            : OrderStatus.REJECTED.displayText,
-                        color: (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)) || steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
-                            ? appColors.declineColor
-                            : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name
-                            ? appColors.acceptColor
-                            : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
-                            ? appColors.brownDarkText
-                            : appColors.declineColor,
-                      ),
+                      buildOrderDetailColumn(appStrings.orderStatus, orderStatusString(steps, controller), color: orderStatusColor(steps, controller)),
                   ],
                 ),
               ),
-              if ((steps?.artisanAgreedStatus == OrderStatus.PENDING.name && !isExpired(steps?.dueDate) && !((controller.isExpiredMap[steps?.id] ?? false)))) ...[
-                4.kH,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    commonButton(
-                      w * 0.4,
-                      45,
-                      appColors.acceptColor,
-                      appColors.contentWhite,
-                      () => MyAlertDialog.showAlertDialog(
-                        onPressed: () {
-                          Get.back();
-                          controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name, steps?.id);
-                        },
-                        icon: Icons.inventory_2,
-                        title: appStrings.acceptOrder,
-                        subtitle: appStrings.acceptOrderSubtitle,
-                        color: appColors.acceptColor,
-                        buttonHint: appStrings.accept,
-                      ),
-                      hint: appStrings.accept,
-                    ),
-                    commonButton(
-                      w * 0.4,
-                      45,
-                      appColors.declineColor,
-                      appColors.contentWhite,
-                      () => MyAlertDialog.showAlertDialog(
-                        onPressed: () {
-                          Get.back();
-                          controller.updateOrderStatusApi(OrderStatus.REJECTED.name, steps?.id);
-                        },
-                        icon: Icons.inventory_2,
-                        title: appStrings.declineOrder,
-                        subtitle: appStrings.declineOrderSubtitle,
-                        color: appColors.declineColor,
-                        buttonHint: appStrings.decline,
-                      ),
-                      hint: appStrings.decline,
-                    ),
-                  ],
-                ),
-              ],
+              if (((steps?.artisanAgreedStatus == OrderStatus.PENDING.name) && !isExpired(steps?.dueDate) && !((controller.isExpiredMap[steps?.id] ?? false)))) ...[4.kH, actionButtons(w, steps, controller)],
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget actionButtons(double w, Data? steps, GetOrderFilterController controller) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        commonButton(
+          w * 0.4,
+          45,
+          appColors.acceptColor,
+          appColors.contentWhite,
+          () => MyAlertDialog.showAlertDialog(
+            onPressed: () {
+              Get.back();
+              controller.updateOrderStatusApi(OrderStatus.ACCEPTED.name, steps?.id);
+            },
+            icon: Icons.inventory_2,
+            title: appStrings.acceptOrder,
+            subtitle: appStrings.acceptOrderSubtitle,
+            color: appColors.acceptColor,
+            buttonHint: appStrings.accept,
+          ),
+          hint: appStrings.accept,
+        ),
+        commonButton(
+          w * 0.4,
+          45,
+          appColors.declineColor,
+          appColors.contentWhite,
+          () => MyAlertDialog.showAlertDialog(
+            onPressed: () {
+              Get.back();
+              controller.updateOrderStatusApi(OrderStatus.REJECTED.name, steps?.id);
+            },
+            icon: Icons.inventory_2,
+            title: appStrings.declineOrder,
+            subtitle: appStrings.declineOrderSubtitle,
+            color: appColors.declineColor,
+            buttonHint: appStrings.decline,
+          ),
+          hint: appStrings.decline,
+        ),
+      ],
+    );
+  }
+
+  Color orderStatusColor(Data? steps, GetOrderFilterController controller) {
+    return (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) ||
+            (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(steps?.dueDate) && (steps?.buildStatus == (OrderStatus.IN_PROGRESS.name) || steps?.buildStatus == (OrderStatus.PENDING.name))) ||
+            (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)) ||
+            steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
+        ? appColors.declineColor
+        : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name
+        ? appColors.acceptColor
+        : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
+        ? appColors.brownDarkText
+        : appColors.declineColor;
+  }
+
+  String orderStatusString(Data? steps, GetOrderFilterController controller) {
+    return (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.DELIVERED.name)
+        ? OrderStatus.DELIVERED.displayText
+        : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.IN_TRANSIT.name)
+        ? OrderStatus.IN_TRANSIT.displayText
+        : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.PICKED.name)
+        ? OrderStatus.PICKED.displayText
+        : (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) ||
+              (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(steps?.dueDate) && (steps?.buildStatus == (OrderStatus.IN_PROGRESS.name) || steps?.buildStatus == (OrderStatus.PENDING.name))) ||
+              (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
+        ? appStrings.expired
+        : steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
+        ? OrderStatus.REJECTED.displayText
+        : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
+        ? OrderStatus.ADMIN_APPROVED.displayText
+        : steps?.buildStatus == OrderStatus.COMPLETED.name
+        ? OrderStatus.INREVIEW.displayText
+        : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
+        ? OrderStatus.ACCEPTED.displayText
+        : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
+        ? OrderStatus.PENDING.displayText
+        : OrderStatus.REJECTED.displayText;
   }
 
   Widget buildOrderDetailColumn(String title, String value, {Color? color}) {
@@ -206,7 +216,7 @@ class OrderFilterScreen extends ParentWidget {
               4.kH,
               Row(
                 children: [
-                  Icon(Icons.circle, color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))) ? appColors.declineColor : appColors.acceptColor, size: 8),
+                  Icon(Icons.circle, color: orderStatusColor(steps, controller), size: 8),
                   4.kW,
                   steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpiredMap[steps?.id] == false && !isExpired(steps?.dueDate)
                       ? Obx(
@@ -214,35 +224,38 @@ class OrderFilterScreen extends ParentWidget {
                             child: Text("${appStrings.orderNeedsAction} ${controller.remainingTimes[steps?.id]}", style: TextStyle(color: appColors.acceptColor, fontSize: 11)),
                           ),
                         )
-                      : Text(
-                          (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.DELIVERED.name)
-                              ? appStrings.orderDelivered
-                              : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.IN_TRANSIT.name)
-                              ? appStrings.orderInTransit
-                              : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.PICKED.name)
-                              ? appStrings.orderPicked
-                              : (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)))
-                              ? appStrings.orderExpired
-                              : steps?.buildStatus == OrderStatus.COMPLETED.name
-                              ? appStrings.orderInReview
-                              : steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
-                              ? appStrings.orderDeclined
-                              : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
-                              ? appStrings.orderapproved
-                              : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
-                              ? appStrings.orderConfirmed
-                              : appStrings.orderDeclined,
-                          style: TextStyle(color: steps?.artisanAgreedStatus == OrderStatus.REJECTED.name || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))) ? appColors.declineColor : appColors.acceptColor, fontSize: 11),
-                        ),
+                      : Text(orderConfirmedString(steps, controller), style: TextStyle(color: orderStatusColor(steps, controller), fontSize: 11)),
                 ],
               ),
               4.kH,
-              Text("${appStrings.orderAssigned} : ${formatDate(steps?.artisianAssignedAt??steps?.createdAt)}", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+              Text("${appStrings.orderAssigned} : ${formatDate(steps?.artisianAssignedAt ?? steps?.createdAt)}", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
             ],
           ),
         ),
       ],
     );
+  }
+
+  String orderConfirmedString(Data? steps, GetOrderFilterController controller) {
+    return (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.DELIVERED.name)
+        ? appStrings.orderDelivered
+        : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.IN_TRANSIT.name)
+        ? appStrings.orderInTransit
+        : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.PICKED.name)
+        ? appStrings.orderPicked
+        : (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) ||
+              (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(steps?.dueDate) && (steps?.buildStatus == (OrderStatus.IN_PROGRESS.name) || steps?.buildStatus == (OrderStatus.PENDING.name))) ||
+              (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
+        ? appStrings.orderExpired
+        : steps?.buildStatus == OrderStatus.COMPLETED.name
+        ? appStrings.orderInReview
+        : steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
+        ? appStrings.orderDeclined
+        : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
+        ? appStrings.orderapproved
+        : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
+        ? appStrings.orderConfirmed
+        : appStrings.orderDeclined;
   }
 
   Widget buildImageWidget(Data? steps) {

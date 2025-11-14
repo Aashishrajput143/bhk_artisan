@@ -19,8 +19,8 @@ class GetOrderController extends GetxController {
   final _api = OrderRepository();
 
   Future<void> ordersRefresh() async {
-    getAllOrderStepApi(loader: getAllOrderStepModel.value.data !=null?false:true);
-    getAllOrderStepApi(loader: getAllOrderStepModel.value.data !=null?false:true,isActive: false);
+    getAllOrderStepApi(loader: getAllOrderStepModel.value.data != null ? false : true);
+    getAllOrderStepApi(loader: getAllOrderStepModel.value.data != null ? false : true, isActive: false);
   }
 
   Timer? countdownTimer;
@@ -35,8 +35,8 @@ class GetOrderController extends GetxController {
     expiryTimes.clear();
 
     for (var order in orders) {
-      if (order.id != null && (order.artisianAssignedAt != null || order.createdAt !=null)) {
-        final assigned = DateTime.parse(order.artisianAssignedAt??order.createdAt!).toUtc();
+      if (order.id != null && (order.artisianAssignedAt != null || order.createdAt != null)) {
+        final assigned = DateTime.parse(order.artisianAssignedAt ?? order.createdAt!).toUtc();
         final expiry = assigned.add(const Duration(hours: 48, minutes: 0));
         expiryTimes[order.id!] = expiry;
 
@@ -158,14 +158,11 @@ class GetOrderController extends GetxController {
     if (value.data == null) return;
     totalOrders.value = value.data?.length ?? 0;
     pendingOrders.value = value.data!.where((item) => OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.PENDING && !isExpired(item.dueDate) && isExpiredMap[item.id!] == false).length;
-    acceptedOrders.value = value.data!
-        .where(
-          (item) =>
-              (OrderStatusExtension.fromString(item.buildStatus) == OrderStatus.COMPLETED || OrderStatusExtension.fromString(item.buildStatus) == OrderStatus.IN_PROGRESS || (OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.ACCEPTED && OrderStatusExtension.fromString(item.buildStatus) == OrderStatus.PENDING)) &&
-              !(OrderStatusExtension.fromString(item.artisanAgreedStatus) == OrderStatus.PENDING && isExpired(item.dueDate)),
-        )
-        .length;
-    update();
+    acceptedOrders.value = value.data!.where((item) {
+      final buildStatus = OrderStatusExtension.fromString(item.buildStatus);
+      final status = OrderStatusExtension.fromString(item.artisanAgreedStatus);
+      return (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.IN_PROGRESS) || (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.COMPLETED);
+    }).length;
   }
 
   GetAllOrderStepsModel getFilteredOrders(GetAllOrderStepsModel value, {List<OrderStatus>? filterAgreedStatuses, bool isActive = false}) {
@@ -178,23 +175,20 @@ class GetOrderController extends GetxController {
       final transitStatus = OrderStatusExtension.fromString(item.transitStatus);
       final buildStatus = OrderStatusExtension.fromString(item.buildStatus);
 
-      // if (isActive) {
-      //   final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate) && (isExpiredMap[item.id!] == false);
-      //   final isAcceptedOrCompleted = status == OrderStatus.ACCEPTED || buildStatus == OrderStatus.COMPLETED;
-
-      //   return isPendingAndNotExpired || isAcceptedOrCompleted;
-      // } else {
-      //   final isDeliveredOrExpired = status == OrderStatus.REJECTED || transitStatus == OrderStatus.DELIVERED || (status == OrderStatus.PENDING && isExpired(item.dueDate)) || (status == OrderStatus.PENDING && isExpiredMap[item.id!] == true);
-      //   final isAdminApprovedAccepted = status == OrderStatus.ACCEPTED && buildStatus == OrderStatus.ADMIN_APPROVED;
-
-      //   return isDeliveredOrExpired && !isAdminApprovedAccepted;
-      // }
-
       if (isActive) {
-        final isPendingAndNotExpired = (status == OrderStatus.PENDING && (isExpiredMap[item.id!] == false) && !isExpired(item.dueDate))||(status == OrderStatus.ACCEPTED && isExpired(item.dueDate) && transitStatus != OrderStatus.DELIVERED)||(status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.IN_PROGRESS)||(status==OrderStatus.ACCEPTED && !isExpired(item.dueDate));
+        final isPendingAndNotExpired =
+            (status == OrderStatus.PENDING && (isExpiredMap[item.id!] == false)) ||
+            (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && (buildStatus == OrderStatus.IN_PROGRESS || buildStatus == OrderStatus.PENDING)) ||
+            (status == OrderStatus.ACCEPTED && buildStatus == OrderStatus.COMPLETED) ||
+            (status == OrderStatus.ACCEPTED && (buildStatus == OrderStatus.ADMIN_APPROVED && (transitStatus != OrderStatus.DELIVERED)));
         return isPendingAndNotExpired;
       } else {
-        final isDeliveredOrExpired = status == OrderStatus.REJECTED ||(status == OrderStatus.PENDING && isExpired(item.dueDate)) ||(status == OrderStatus.PENDING && (isExpiredMap[item.id!] == true)) || (status == OrderStatus.ACCEPTED && buildStatus == OrderStatus.ADMIN_APPROVED && transitStatus == OrderStatus.DELIVERED);
+        final isDeliveredOrExpired =
+            status == OrderStatus.REJECTED ||
+            (status == OrderStatus.PENDING && isExpired(item.dueDate)) ||
+            (status == OrderStatus.PENDING && (isExpiredMap[item.id!] == true)) ||
+            (status == OrderStatus.ACCEPTED && buildStatus == OrderStatus.ADMIN_APPROVED && transitStatus == OrderStatus.DELIVERED) ||
+            (status == OrderStatus.ACCEPTED && isExpired(item.dueDate) && (buildStatus == OrderStatus.IN_PROGRESS || buildStatus == OrderStatus.PENDING));
 
         return isDeliveredOrExpired;
       }
