@@ -28,7 +28,7 @@ class CancelProducts extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.productRefresh(ProductStatus.DISAPPROVED.name),
-              child: controller.rxRequestStatus.value == Status.ERROR?emptyScreen(h, appStrings.noRejectedProducts, appStrings.emptyRejectedProductDesc, appImages.addbasket,useAssetImage: false):controller.getDisapprovedProductModel.value.data?.docs?.isEmpty ?? false
+              child: controller.rxRequestStatus.value == Status.SERVERERROR?emptyScreen(h, appStrings.noRejectedProducts, appStrings.emptyRejectedProductDesc, appImages.addbasket,useAssetImage: false):controller.getDisapprovedProductModel.value.data?.docs?.isEmpty ?? false
                   ? emptyScreen(h, appStrings.noRejectedProducts, appStrings.emptyRejectedProductDesc, appImages.addbasket,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),

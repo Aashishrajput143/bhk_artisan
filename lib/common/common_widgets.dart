@@ -100,12 +100,15 @@ void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setErr
           Utils.printLog("ErrorState===> $errorMap");
           if (showMessage) {
             CommonMethods.showToast(errorMap['message'].toString());
+            setRxRequestStatus?.call(Status.COMPLETED);
             return;
           }
         }
       }
       CommonMethods.showToast("An unexpected error occurred.");
+      setRxRequestStatus?.call(Status.COMPLETED);
     } else {
+      setRxRequestStatus?.call(Status.SERVERERROR);
       CommonMethods.showToast(errorStr);
     }
   } catch (e) {

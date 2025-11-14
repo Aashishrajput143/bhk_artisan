@@ -29,7 +29,7 @@ class OrderFilterScreen extends ParentWidget {
           Scaffold(
             appBar: commonAppBar("${controller.type.value} ${controller.getAllOrderStepModel.value.data != null ? "(${controller.getAllOrderStepModel.value.data?.length})" : ""}"),
             backgroundColor: appColors.backgroundColor,
-            body: controller.rxRequestStatus.value == Status.ERROR?emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false):controller.getAllOrderStepModel.value.data?.isEmpty ?? false
+            body: controller.rxRequestStatus.value == Status.SERVERERROR?emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false):controller.getAllOrderStepModel.value.data?.isEmpty ?? false
                ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false)
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),

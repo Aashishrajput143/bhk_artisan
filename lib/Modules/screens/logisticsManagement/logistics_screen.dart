@@ -28,7 +28,7 @@ class LogisticsScreen extends ParentWidget {
           Scaffold(
             appBar: commonAppBar("${appStrings.logistics} ${controller.logisticsModel.value.data != null ? "(${controller.logisticsModel.value.data?.docs?.length})" : ""}"),
             backgroundColor: appColors.backgroundColor,
-            body: controller.logisticsModel.value.data?.docs?.isEmpty ?? false || controller.rxRequestStatus.value == Status.ERROR
+            body: controller.logisticsModel.value.data?.docs?.isEmpty ?? false || controller.rxRequestStatus.value == Status.SERVERERROR
                 ? Padding(
                   padding: EdgeInsets.only(top: h*0.1),
                   child: emptyScreen(h, appStrings.logisticsEmptyTitle, appStrings.logisticsEmptyDesc, appImages.emptyLogistics,useAssetImage: false,isThere: false),

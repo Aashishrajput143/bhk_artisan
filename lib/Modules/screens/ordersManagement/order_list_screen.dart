@@ -32,7 +32,7 @@ class OrderList extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.ordersRefresh(),
-              child: controller.rxRequestStatus.value == Status.ERROR
+              child: controller.rxRequestStatus.value == Status.SERVERERROR
                   ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder, useAssetImage: false)
                   : controller.getAllActiveOrderStepModel.value.data?.isEmpty ?? false
                   ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder, useAssetImage: false)
@@ -150,7 +150,7 @@ class OrderList extends ParentWidget {
             (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)) ||
             steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
         ? appColors.declineColor
-        : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name
+        : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name||steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpiredMap[steps?.id] == false && !isExpired(steps?.dueDate)
         ? appColors.acceptColor
         : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
         ? appColors.brownDarkText

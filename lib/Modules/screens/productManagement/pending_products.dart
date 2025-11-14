@@ -28,7 +28,7 @@ class PendingProducts extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.productRefresh(ProductStatus.PENDING.name),
-              child:controller.rxRequestStatus.value == Status.ERROR?emptyScreen(h, appStrings.noPendingProducts, appStrings.emptyPendingProductDesc, appImages.addbasket,useAssetImage: false): controller.getPendingProductModel.value.data?.docs?.isEmpty ?? false
+              child:controller.rxRequestStatus.value == Status.SERVERERROR?emptyScreen(h, appStrings.noPendingProducts, appStrings.emptyPendingProductDesc, appImages.addbasket,useAssetImage: false): controller.getPendingProductModel.value.data?.docs?.isEmpty ?? false
                   ? emptyScreen(h, appStrings.noPendingProducts, appStrings.emptyPendingProductDesc, appImages.addbasket,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),

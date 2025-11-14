@@ -33,7 +33,7 @@ class HomeScreen extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            appBar: (controller.commonController.profileData.value.data?.firstName?.isNotEmpty ?? false) || (controller.commonController.rxRequestStatus.value == Status.ERROR) ? appBarHome(controller) : shimmerAppBarHome(w),
+            appBar: (controller.commonController.profileData.value.data?.firstName?.isNotEmpty ?? false) || (controller.commonController.rxRequestStatus.value == Status.SERVERERROR) ? appBarHome(controller) : shimmerAppBarHome(w),
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: controller.dashboardRefresh,
@@ -134,7 +134,7 @@ class HomeScreen extends ParentWidget {
     return Obx(() {
       final approvedDocs = (controller.getApprovedProductModel.value.data?.docs?.length ?? 0).toString();
 
-      if ((controller.getOrderController.getAllOrderStepModel.value.data == null || controller.getOrderController.pendingOrders.value == null || controller.getOrderController.acceptedOrders.value == null) && (controller.rxRequestStatus.value != Status.ERROR)) {
+      if ((controller.getOrderController.getAllOrderStepModel.value.data == null || controller.getOrderController.pendingOrders.value == null || controller.getOrderController.acceptedOrders.value == null) && (controller.rxRequestStatus.value != Status.SERVERERROR)) {
         return shimmerCollection(w);
       }
       return Column(
@@ -262,7 +262,7 @@ class HomeScreen extends ParentWidget {
               ),
             ],
           )
-        : controller.rxRequestStatus.value == Status.ERROR
+        : controller.rxRequestStatus.value == Status.SERVERERROR
         ? SizedBox()
         : shimmerProduct(w);
   }
@@ -301,7 +301,7 @@ class HomeScreen extends ParentWidget {
               ),
             ],
           )
-        : controller.rxRequestStatus.value == Status.ERROR
+        : controller.rxRequestStatus.value == Status.SERVERERROR
         ? SizedBox()
         : shimmerList(w, h * 0.2);
   }
@@ -342,7 +342,7 @@ class HomeScreen extends ParentWidget {
 
   Widget salesGraph(BuildContext context, double w, double h, Homecontroller controller) {
     return Obx(
-      () => controller.getSalesGraphModel.value.docs == null && controller.rxRequestStatus.value != Status.ERROR
+      () => controller.getSalesGraphModel.value.docs == null && controller.rxRequestStatus.value != Status.SERVERERROR
           ? shimmerGraph(w, h)
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,

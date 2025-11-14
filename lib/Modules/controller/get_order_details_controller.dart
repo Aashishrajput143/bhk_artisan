@@ -75,7 +75,7 @@ class GetOrderDetailsController extends GetxController {
     if (assignedAt == null || assignedAt.isEmpty) return;
 
     final assigned = DateTime.parse(assignedAt).toUtc();
-    expiryTime = assigned.add(const Duration(hours: 48, minutes: 0));
+    expiryTime = assigned.add(commonDuration());
 
     updateRemainingTime();
     update();

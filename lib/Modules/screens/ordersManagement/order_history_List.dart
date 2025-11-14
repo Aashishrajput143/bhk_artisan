@@ -26,7 +26,7 @@ class OrderListHistory extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.ordersRefresh(),
-              child: controller.rxRequestStatus.value == Status.ERROR?emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false):controller.getAllPastOrderStepModel.value.data?.isEmpty ?? false
+              child: controller.rxRequestStatus.value == Status.SERVERERROR?emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false):controller.getAllPastOrderStepModel.value.data?.isEmpty ?? false
                   ? emptyScreen(h, appStrings.noOrdersAvailable, appStrings.emptyOrdersDesc, appImages.noOrder,useAssetImage: false)
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),

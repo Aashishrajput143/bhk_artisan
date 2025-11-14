@@ -31,7 +31,7 @@ class MyProducts extends ParentWidget {
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: () => controller.productRefresh(ProductStatus.APPROVED.name),
-              child: controller.rxRequestStatus.value == Status.ERROR
+              child: controller.rxRequestStatus.value == Status.SERVERERROR
                   ? emptyScreen(h, appStrings.addYourProduct, appStrings.emptyProductDesc, appImages.addbasket, useAssetImage: false)
                   : controller.getApprovedProductModel.value.data?.docs?.isEmpty ?? false
                   ? emptyScreen(h, appStrings.addYourProduct, appStrings.emptyProductDesc, appImages.addbasket, useAssetImage: false)
