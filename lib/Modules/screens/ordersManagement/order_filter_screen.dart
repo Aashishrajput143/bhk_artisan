@@ -123,14 +123,21 @@ class OrderFilterScreen extends ParentWidget {
           appColors.contentWhite,
           () => MyAlertDialog.showAlertDialog(
             onPressed: () {
-              Get.back();
-              controller.updateOrderStatusApi(OrderStatus.REJECTED.name, steps?.id);
+              if (controller.reasonController.value.text.isNotEmpty) {
+                Get.back();
+                controller.updateOrderStatusApi(OrderStatus.REJECTED.name, steps?.id,isDeclined: true);
+              } else {
+                controller.reasonError.value = appStrings.specifyReason;
+              }
             },
             icon: Icons.inventory_2,
             title: appStrings.declineOrder,
             subtitle: appStrings.declineOrderSubtitle,
             color: appColors.declineColor,
             buttonHint: appStrings.decline,
+            haveTextField: true,
+            controller: controller.reasonController.value,
+            error: controller.reasonError,
           ),
           hint: appStrings.decline,
         ),
@@ -142,9 +149,10 @@ class OrderFilterScreen extends ParentWidget {
     return (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) ||
             (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(steps?.dueDate) && (steps?.buildStatus == (OrderStatus.IN_PROGRESS.name) || steps?.buildStatus == (OrderStatus.PENDING.name))) ||
             (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false)) ||
-            steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
+            steps?.artisanAgreedStatus == OrderStatus.REJECTED.name ||
+            steps?.buildStatus == OrderStatus.ADMIN_REJECTED.name
         ? appColors.declineColor
-        : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name
+        : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || steps?.transitStatus == OrderStatus.WAIT_FOR_PICKUP.name || steps?.buildStatus == OrderStatus.COMPLETED.name || steps?.artisanAgreedStatus == OrderStatus.PENDING.name && controller.isExpiredMap[steps?.id] == false && !isExpired(steps?.dueDate)
         ? appColors.acceptColor
         : steps?.artisanAgreedStatus == OrderStatus.PENDING.name
         ? appColors.brownDarkText
@@ -158,14 +166,16 @@ class OrderFilterScreen extends ParentWidget {
         ? OrderStatus.IN_TRANSIT.displayText
         : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.PICKED.name)
         ? OrderStatus.PICKED.displayText
-        : (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) ||
-              (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(steps?.dueDate) && (steps?.buildStatus == (OrderStatus.IN_PROGRESS.name) || steps?.buildStatus == (OrderStatus.PENDING.name))) ||
-              (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
-        ? appStrings.expired
+        : (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || steps?.artisanAgreedStatus == OrderStatus.EXPIRED.name
+        ? appStrings.actionMissed
+        : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(steps?.dueDate) && (steps?.buildStatus == (OrderStatus.IN_PROGRESS.name) || steps?.buildStatus == (OrderStatus.PENDING.name))) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
+        ? OrderStatus.EXPIRED.displayText
         : steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
         ? OrderStatus.REJECTED.displayText
         : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
         ? OrderStatus.ADMIN_APPROVED.displayText
+        : steps?.buildStatus == OrderStatus.ADMIN_REJECTED.name
+        ? OrderStatus.ADMIN_REJECTED.displayText
         : steps?.buildStatus == OrderStatus.COMPLETED.name
         ? OrderStatus.INREVIEW.displayText
         : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
@@ -243,16 +253,18 @@ class OrderFilterScreen extends ParentWidget {
         ? appStrings.orderInTransit
         : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name && steps?.transitStatus == OrderStatus.PICKED.name)
         ? appStrings.orderPicked
-        : (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) ||
-              (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(steps?.dueDate) && (steps?.buildStatus == (OrderStatus.IN_PROGRESS.name) || steps?.buildStatus == (OrderStatus.PENDING.name))) ||
-              (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
-        ? appStrings.orderExpired
+        : (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(steps?.dueDate)) || steps?.artisanAgreedStatus == OrderStatus.EXPIRED.name
+        ? appStrings.orderMissed
+        : (steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(steps?.dueDate) && (steps?.buildStatus == (OrderStatus.IN_PROGRESS.name) || steps?.buildStatus == (OrderStatus.PENDING.name))) || (steps?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.isExpiredMap[steps?.id] ?? false))
+        ? appStrings.orderdeadlineMissed
         : steps?.buildStatus == OrderStatus.COMPLETED.name
         ? appStrings.orderInReview
         : steps?.artisanAgreedStatus == OrderStatus.REJECTED.name
         ? appStrings.orderDeclined
         : steps?.buildStatus == OrderStatus.ADMIN_APPROVED.name
         ? appStrings.orderapproved
+        : steps?.buildStatus == OrderStatus.ADMIN_REJECTED.name
+        ? appStrings.orderrejected
         : steps?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
         ? appStrings.orderConfirmed
         : appStrings.orderDeclined;

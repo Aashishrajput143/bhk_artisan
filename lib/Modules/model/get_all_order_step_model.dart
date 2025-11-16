@@ -11,6 +11,7 @@ class GetAllOrderStepsModel {
       json['data'].forEach((v) {
         data!.add(Data.fromJson(v));
       });
+      data = data!.reversed.toList();
     }
   }
 
@@ -289,7 +290,7 @@ class Images {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['imageId'] = imageId;
     data['imageUrl'] = imageUrl;
     data['imageOrder'] = imageOrder;

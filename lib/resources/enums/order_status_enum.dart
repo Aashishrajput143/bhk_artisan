@@ -1,10 +1,12 @@
-enum OrderStatus { PENDING, REJECTED, ACCEPTED, COMPLETED, DELIVERED,INREVIEW,ADMIN_APPROVED,WAIT_FOR_PICKUP,IN_PROGRESS,PICKED,IN_TRANSIT}
+enum OrderStatus { PENDING, EXPIRED, REJECTED, ACCEPTED, COMPLETED, DELIVERED,INREVIEW,ADMIN_APPROVED,ADMIN_REJECTED,WAIT_FOR_PICKUP,IN_PROGRESS,PICKED,IN_TRANSIT}
 
 extension OrderStatusExtension on OrderStatus {
   String get displayText {
     switch (this) {
       case OrderStatus.REJECTED:
         return "Declined";
+      case OrderStatus.EXPIRED:
+        return "Deadline Missed";
       case OrderStatus.ACCEPTED:
         return "Accepted";
       case OrderStatus.PENDING:
@@ -23,6 +25,8 @@ extension OrderStatusExtension on OrderStatus {
         return "In Review";
       case OrderStatus.ADMIN_APPROVED:
         return "Approved";
+      case OrderStatus.ADMIN_REJECTED:
+        return "Rejected";
       case OrderStatus.WAIT_FOR_PICKUP:
         return "Awaiting Pickup";
       }
@@ -40,6 +44,8 @@ extension OrderStatusExtension on OrderStatus {
         return OrderStatus.DELIVERED;
       case "INREVIEW":
         return OrderStatus.INREVIEW;
+      case "EXPIRED":
+        return OrderStatus.EXPIRED;
       case "IN_PROGRESS":
         return OrderStatus.IN_PROGRESS;
       case "PICKED":
@@ -48,6 +54,8 @@ extension OrderStatusExtension on OrderStatus {
         return OrderStatus.IN_TRANSIT;
       case "ADMIN_APPROVED":
         return OrderStatus.ADMIN_APPROVED;
+      case "ADMIN_REJECTED":
+        return OrderStatus.ADMIN_REJECTED;
       case "WAIT_FOR_PICKUP":
         return OrderStatus.WAIT_FOR_PICKUP;
       case "PENDING":
@@ -66,6 +74,8 @@ extension OrderTypeParser on String {
         return OrderStatus.ACCEPTED;
       case "COMPLETED":
         return OrderStatus.COMPLETED;
+      case "EXPIRED":
+        return OrderStatus.EXPIRED;
       case "DELIVERED":
         return OrderStatus.DELIVERED;
       case "INREVIEW":
@@ -78,6 +88,8 @@ extension OrderTypeParser on String {
         return OrderStatus.IN_TRANSIT;
       case "ADMIN_APPROVED":
         return OrderStatus.ADMIN_APPROVED;
+      case "ADMIN_REJECTED":
+        return OrderStatus.ADMIN_REJECTED;
       case "WAIT_FOR_PICKUP":
         return OrderStatus.WAIT_FOR_PICKUP;
       case "PENDING":

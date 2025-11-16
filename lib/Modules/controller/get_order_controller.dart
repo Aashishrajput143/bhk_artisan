@@ -104,6 +104,9 @@ class GetOrderController extends GetxController {
   var totalOrders = Rxn<int>();
   var pendingOrders = Rxn<int>();
   var acceptedOrders = Rxn<int>();
+  var reasonController = TextEditingController().obs;
+  var reasonError = Rxn<String>();
+
 
   final rxRequestStatus = Status.COMPLETED.obs;
   final getAllOrderStepModel = GetAllOrderStepsModel().obs;
@@ -161,7 +164,7 @@ class GetOrderController extends GetxController {
     acceptedOrders.value = value.data!.where((item) {
       final buildStatus = OrderStatusExtension.fromString(item.buildStatus);
       final status = OrderStatusExtension.fromString(item.artisanAgreedStatus);
-      return (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.IN_PROGRESS) || (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.COMPLETED);
+      return (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && (buildStatus == OrderStatus.IN_PROGRESS||buildStatus == OrderStatus.PENDING)) || (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.COMPLETED)||(status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.ADMIN_REJECTED);
     }).length;
   }
 
@@ -180,11 +183,11 @@ class GetOrderController extends GetxController {
             (status == OrderStatus.PENDING && (isExpiredMap[item.id!] == false)) ||
             (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && (buildStatus == OrderStatus.IN_PROGRESS || buildStatus == OrderStatus.PENDING)) ||
             (status == OrderStatus.ACCEPTED && buildStatus == OrderStatus.COMPLETED) ||
-            (status == OrderStatus.ACCEPTED && (buildStatus == OrderStatus.ADMIN_APPROVED && (transitStatus != OrderStatus.DELIVERED)));
+            (status == OrderStatus.ACCEPTED && (buildStatus == OrderStatus.ADMIN_APPROVED && (transitStatus != OrderStatus.DELIVERED))||(status == OrderStatus.ACCEPTED && (buildStatus == OrderStatus.ADMIN_REJECTED && (transitStatus != OrderStatus.DELIVERED))));
         return isPendingAndNotExpired;
       } else {
         final isDeliveredOrExpired =
-            status == OrderStatus.REJECTED ||
+            status == OrderStatus.REJECTED || status ==OrderStatus.EXPIRED||
             (status == OrderStatus.PENDING && isExpired(item.dueDate)) ||
             (status == OrderStatus.PENDING && (isExpiredMap[item.id!] == true)) ||
             (status == OrderStatus.ACCEPTED && buildStatus == OrderStatus.ADMIN_APPROVED && transitStatus == OrderStatus.DELIVERED) ||
@@ -197,11 +200,11 @@ class GetOrderController extends GetxController {
     return GetAllOrderStepsModel(message: value.message, data: filteredData);
   }
 
-  Future<void> updateOrderStatusApi(var status, var id, {bool loader = false}) async {
+  Future<void> updateOrderStatusApi(var status, var id, {bool loader = false,bool isDeclined = false}) async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
-    Map<String, dynamic> data = {"buildStepId": id, "status": status};
+    Map<String, dynamic> data = {"buildStepId": id, "status": status,if(isDeclined) "artisan_remarks":reasonController.value.text};
 
     if (connection == true) {
       if (loader) setRxRequestStatus(Status.LOADING);

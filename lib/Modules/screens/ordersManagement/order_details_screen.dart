@@ -31,7 +31,21 @@ class OrderDetailsPage extends ParentWidget {
             : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: controller.getOrderStepModel.value.data == null ? shimmer(w) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [orderStatus(controller), 6.kH, orderCardHeader(controller), 6.kH, if (controller.getOrderStepModel.value.data?.product != null) orderDescription(controller), 6.kH, orderRequirement(h, w, controller)]),
+                  child: controller.getOrderStepModel.value.data == null
+                      ? shimmer(w)
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            orderStatus(controller),
+                            6.kH,
+                            orderCardHeader(controller),
+                            6.kH,
+                            if ((controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name || controller.getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_REJECTED.name) && controller.getOrderStepModel.value.data?.adminRemarks != null) ...[orderRemarks(controller), 6.kH],
+                            if (controller.getOrderStepModel.value.data?.product != null) orderDescription(controller),
+                            6.kH,
+                            orderRequirement(h, w, controller),
+                          ],
+                        ),
                 ),
               ),
         bottomNavigationBar: (controller.getOrderStepModel.value.data == null || controller.remainingTime.value.isEmpty || controller.rxRequestStatus.value == Status.NOINTERNET) ? null : bottomButtons(context, h, w, controller),
@@ -93,8 +107,10 @@ class OrderDetailsPage extends ParentWidget {
     Data? data = controller.getOrderStepModel.value.data;
     return Padding(
       padding: EdgeInsets.fromLTRB(16.0, 4, 16, h * 0.03),
-      child: (data?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(data?.dueDate)) || (data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(data?.dueDate) && (data?.buildStatus == (OrderStatus.IN_PROGRESS.name) || data?.buildStatus == (OrderStatus.PENDING.name))) || (data?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.hasExpired.value))
-          ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.expired)
+      child: (data?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(data?.dueDate)) || data?.artisanAgreedStatus == OrderStatus.EXPIRED.name
+          ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.orderMissed)
+          : (data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(data?.dueDate) && (data?.buildStatus == (OrderStatus.IN_PROGRESS.name) || data?.buildStatus == OrderStatus.PENDING.name)) || (data?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.hasExpired.value))
+          ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.orderdeadlineButton)
           : data?.artisanAgreedStatus == OrderStatus.REJECTED.name
           ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.declined)
           : (data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && data?.buildStatus == OrderStatus.ADMIN_APPROVED.name && data?.transitStatus == OrderStatus.DELIVERED.name)
@@ -107,8 +123,8 @@ class OrderDetailsPage extends ParentWidget {
           ? commonButtonContainer(w, 50, appColors.cardBackground2, appColors.acceptColor, () {}, hint: appStrings.awaitingPickUp)
           : data?.buildStatus == OrderStatus.COMPLETED.name
           ? commonButtonContainer(w, 50, appColors.contentBrownLinearColor2, appColors.acceptColor, () {}, hint: appStrings.waitingForApproval)
-          : data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
-          ? commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => Get.toNamed(RoutesClass.uploadOrderImage, arguments: data?.id ?? ""), hint: appStrings.uploadCompletion)
+          : (data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || data?.buildStatus == OrderStatus.ADMIN_REJECTED.name)
+          ? commonButton(w, 50, appColors.contentButtonBrown, appColors.contentWhite, () => Get.toNamed(RoutesClass.uploadOrderImage, arguments: data?.id ?? ""), hint: data?.buildStatus == OrderStatus.ADMIN_REJECTED.name ? appStrings.uploadReCompletion : appStrings.uploadCompletion)
           : data?.artisanAgreedStatus == OrderStatus.PENDING.name
           ? buttomButtons(h, w, controller)
           : commonButtonContainer(w, 50, appColors.contentBrownLinearColor3, appColors.declineColor, () {}, hint: appStrings.declined),
@@ -157,14 +173,21 @@ class OrderDetailsPage extends ParentWidget {
           appColors.contentWhite,
           () => MyAlertDialog.showAlertDialog(
             onPressed: () {
-              Get.back();
-              controller.updateOrderStatusApi(OrderStatus.REJECTED.name);
+              if (controller.reasonController.value.text.isNotEmpty) {
+                Get.back();
+                controller.updateOrderStatusApi(OrderStatus.REJECTED.name,isDeclined: true);
+              } else {
+                controller.reasonError.value = appStrings.specifyReason;
+              }
             },
             icon: Icons.inventory_2,
             title: appStrings.declineOrder,
             subtitle: appStrings.declineOrderSubtitle,
             color: appColors.declineColor,
             buttonHint: appStrings.decline,
+            haveTextField: true,
+            controller: controller.reasonController.value,
+            error: controller.reasonError,
           ),
           hint: appStrings.decline,
         ),
@@ -199,7 +222,10 @@ class OrderDetailsPage extends ParentWidget {
 
   Color orderStatusColor(GetOrderDetailsController controller) {
     Data? data = controller.getOrderStepModel.value.data;
-    return (data?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(data?.dueDate)) || (data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(data?.dueDate) && (data?.buildStatus == (OrderStatus.IN_PROGRESS.name) || data?.buildStatus == (OrderStatus.PENDING.name))) || (data?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.hasExpired.value))
+    return (data?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(data?.dueDate)) ||
+            (data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(data?.dueDate) && (data?.buildStatus == (OrderStatus.IN_PROGRESS.name) || data?.buildStatus == (OrderStatus.PENDING.name))) ||
+            (data?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.hasExpired.value)) ||
+            data?.buildStatus == OrderStatus.ADMIN_REJECTED.name
         ? appColors.declineColor
         : data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name || double.tryParse(data?.progressPercentage?.toString() ?? "0") == 100
         ? appColors.acceptColor
@@ -216,12 +242,16 @@ class OrderDetailsPage extends ParentWidget {
         ? OrderStatus.IN_TRANSIT.displayText
         : (data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && data?.buildStatus == OrderStatus.ADMIN_APPROVED.name && data?.transitStatus == OrderStatus.PICKED.name)
         ? OrderStatus.PICKED.displayText
-        : (data?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(data?.dueDate)) || (data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(data?.dueDate) && (data?.buildStatus == (OrderStatus.IN_PROGRESS.name) || data?.buildStatus == (OrderStatus.PENDING.name))) || (data?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.hasExpired.value))
-        ? appStrings.expired
+        : (data?.artisanAgreedStatus == OrderStatus.PENDING.name && isExpired(data?.dueDate)) || data?.artisanAgreedStatus == OrderStatus.EXPIRED.name
+        ? appStrings.actionMissed
+        : (data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name && isExpired(data?.dueDate) && (data?.buildStatus == (OrderStatus.IN_PROGRESS.name) || data?.buildStatus == (OrderStatus.PENDING.name))) || (data?.artisanAgreedStatus == OrderStatus.PENDING.name && (controller.hasExpired.value))
+        ? OrderStatus.EXPIRED.displayText
         : data?.artisanAgreedStatus == OrderStatus.REJECTED.name
         ? OrderStatus.REJECTED.displayText
         : data?.buildStatus == OrderStatus.ADMIN_APPROVED.name
         ? OrderStatus.ADMIN_APPROVED.displayText
+        : data?.buildStatus == OrderStatus.ADMIN_REJECTED.name
+        ? OrderStatus.ADMIN_REJECTED.displayText
         : data?.buildStatus == OrderStatus.COMPLETED.name
         ? OrderStatus.INREVIEW.displayText
         : data?.artisanAgreedStatus == OrderStatus.ACCEPTED.name
@@ -303,6 +333,26 @@ class OrderDetailsPage extends ParentWidget {
             ),
           ),
           commonText(data?.product?.description, fontWeight: FontWeight.w400),
+        ],
+      ),
+    );
+  }
+
+  Widget orderRemarks(GetOrderDetailsController controller) {
+    Data? data = controller.getOrderStepModel.value.data;
+    return orderCard(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(data?.buildStatus == OrderStatus.ADMIN_REJECTED.name ? Icons.cancel : Icons.check_circle, size: 30, color: data?.buildStatus == OrderStatus.ADMIN_REJECTED.name ? appColors.declineColor : appColors.acceptColor),
+              8.kW,
+              Text(appStrings.orderRemarks, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          16.kH,
+          commonText(data?.adminRemarks ?? appStrings.notAvailable, fontWeight: FontWeight.w400),
         ],
       ),
     );

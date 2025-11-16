@@ -17,6 +17,8 @@ class GetOrderDetailsController extends GetxController {
   final _api = OrderRepository();
   var id = 0.obs;
   var lastChecked = "".obs;
+  var reasonController = TextEditingController().obs;
+  var reasonError = Rxn<String>();
 
   var currentIndex = 0.obs;
   final PageController pageController = PageController();
@@ -157,11 +159,11 @@ class GetOrderDetailsController extends GetxController {
     }
   }
 
-  Future<void> updateOrderStatusApi(var status, {bool loader = false}) async {
+  Future<void> updateOrderStatusApi(var status, {bool loader = false,bool isDeclined = false}) async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
-    Map<String, dynamic> data = {"buildStepId": id.value, "status": status};
+    Map<String, dynamic> data = {"buildStepId": id.value, "status": status,if(isDeclined) "artisan_remarks":reasonController.value.text};
 
     if (connection == true) {
       if (loader) setRxRequestStatus(Status.LOADING);

@@ -49,7 +49,7 @@ String formatAadhaarNumber(String aadhaar) {
 }
 
 bool isExpired(String? rawDate) {
-  if (rawDate == null || rawDate.isEmpty) return true;
+  if (rawDate == null || rawDate.isEmpty) return false;
 
   try {
     final dueDate = DateTime.parse(rawDate).toUtc();
@@ -64,9 +64,11 @@ bool isExpired(String? rawDate) {
   }
 }
 
-Duration commonDuration() {
+Duration commonDuration({bool is48Hours = true}) {
   final offset = DateTime.now().timeZoneOffset;
-
+  if(is48Hours){
+    return const Duration(hours: 48);
+  }
   if (offset.inHours == 5 && offset.inMinutes == 330) {
     return const Duration(hours: 42, minutes: 30);
   }

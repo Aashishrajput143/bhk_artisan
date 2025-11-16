@@ -17,6 +17,8 @@ class GetOrderFilterController extends GetxController {
   final _api = OrderRepository();
 
   var type = appStrings.totalOrders.obs;
+  var reasonController = TextEditingController().obs;
+  var reasonError = Rxn<String>();
 
   Timer? countdownTimer;
   RxMap<int, String> remainingTimes = <int, String>{}.obs;
@@ -156,7 +158,7 @@ class GetOrderFilterController extends GetxController {
           final isPendingAndNotExpired = status == OrderStatus.PENDING && !isExpired(item.dueDate) && isExpiredMap[item.id!] == false;
           return isPendingAndNotExpired;
         } else {
-          final isAcceptedOrCompleted = (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.IN_PROGRESS) || (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.COMPLETED);
+          final isAcceptedOrCompleted = (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && (buildStatus == OrderStatus.IN_PROGRESS||buildStatus == OrderStatus.PENDING)) || (status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.COMPLETED)||(status == OrderStatus.ACCEPTED && !isExpired(item.dueDate) && buildStatus == OrderStatus.ADMIN_REJECTED);
           return isAcceptedOrCompleted;
         }
       } else {
@@ -171,11 +173,11 @@ class GetOrderFilterController extends GetxController {
     return GetAllOrderStepsModel(message: value.message, data: filteredData);
   }
 
-  Future<void> updateOrderStatusApi(var status, var id, {bool loader = false}) async {
+  Future<void> updateOrderStatusApi(var status, var id, {bool loader = false,bool isDeclined = false}) async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
-    Map<String, dynamic> data = {"buildStepId": id, "status": status};
+    Map<String, dynamic> data = {"buildStepId": id, "status": status,if(isDeclined) "artisan_remarks":reasonController.value.text};
 
     if (connection == true) {
       if (loader) setRxRequestStatus(Status.LOADING);

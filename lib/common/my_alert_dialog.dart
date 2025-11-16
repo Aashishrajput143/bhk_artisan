@@ -48,7 +48,11 @@ class MyAlertDialog {
     );
   }
 
-  static void showAlertDialog({String? title, IconData? icon, String? subtitle, Function()? onPressed, String? buttonHint, Color? color}) {
+  static void showAlertDialog({String? title, IconData? icon, String? subtitle, Function()? onPressed, String? buttonHint, Color? color, bool haveTextField = false, TextEditingController? controller, FocusNode? focusNode,Rxn<String>? error}) {
+    final TextEditingController textController = controller ?? TextEditingController();
+    final FocusNode textFocusNode = focusNode ?? FocusNode();
+    textController.clear();
+    error?.value =null;
     Get.dialog(
       AlertDialog(
         backgroundColor: appColors.contentWhite,
@@ -60,7 +64,16 @@ class MyAlertDialog {
             Text(title ?? "Discard Changes", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ],
         ),
-        content: Text(subtitle ?? "Are you sure you want to discard your changes?", style: TextStyle(fontSize: 14)),
+        content: haveTextField
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(subtitle ?? "Are you sure you want to discard your changes?", style: TextStyle(fontSize: 14)),
+                  10.kH,
+                  Obx(()=> commonTextField(textController, textFocusNode, Get.width, (value) {},error: error,onChange: (value)=>error?.value=null, hint: "Enter your reason...")),
+                ],
+              )
+            : Text(subtitle ?? "Are you sure you want to discard your changes?", style: TextStyle(fontSize: 14)),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,7 +82,7 @@ class MyAlertDialog {
                 onPressed: () {
                   Get.back();
                 },
-                child: Text("CANCEL", style: TextStyle(color: appColors.brownDarkText)),
+                child: Text("CANCEL", style: TextStyle(color: appColors.brownDarkText,fontWeight: FontWeight.bold)),
               ),
               TextButton(
                 onPressed:
@@ -78,7 +91,7 @@ class MyAlertDialog {
                       Get.back();
                       Get.back();
                     },
-                child: Text(buttonHint ?? "DISCARD", style: TextStyle(color: color ?? appColors.brownDarkText)),
+                child: Text(buttonHint?.toUpperCase() ?? "DISCARD", style: TextStyle(color: color ?? appColors.brownDarkText,fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -137,7 +150,7 @@ void showLocationDialog(BuildContext context, LocationController controller, Add
                     child: ElevatedButton.icon(
                       onPressed: () {
                         Get.back();
-                        AppSettings.openAppSettings(type: AppSettingsType.location,asAnotherTask: false);
+                        AppSettings.openAppSettings(type: AppSettingsType.location, asAnotherTask: false);
                         controller.getCurrentLocation();
                         addressController.loadLocation();
                       },

@@ -178,9 +178,12 @@ class AppStrings {
   String get specialInstructions => "Special Instructions";
   String get imageForReference => "Image for Reference"; 
   String get manage =>'Manage';
+  String get orderRemarks =>'Order Remarks';
+  String get specifyReason =>"Please specify the Reason..";
 
   //Upload Order Image
   String get uploadCompletion => "Upload Completion";
+  String get uploadReCompletion => "Re-Upload Completion";
   String get finishedProduct => "Finished Product";
   String get addPicturesCompletedOrder => "Add pictures of the completed order.";
   String get uploadImagesOrderDesc => "Upload up to 10 images of the completed product to confirm the order and for record keeping. Please ensure each file is no larger than 2 MB, and use one of the supported formats: JPG, JPEG, or PNG.";
@@ -214,14 +217,18 @@ class AppStrings {
   String get orderNeedsAction => "Needs Action within";
   String get orderConfirmed => "Order is Confirmed";
   String get orderapproved => "Order is Approved";
+
+  String get orderrejected => "Order Rejected - Update Required";
   String get orderDeclined => "Order is Declined";
   String get orderInReview => "Order is waiting for Approval";
-  String get orderExpired =>"Order is Expired";
-  String get order =>"Order is Expired";
+  String get orderdeadlineMissed => "Order deadline has been missed";
+  String get orderdeadlineButton => "You missed the Order Deadline";
+  String get orderMissed =>"Order action has been missed";
   String get orderPicked =>"Order is Picked";
   String get orderInTransit =>"Order is In Transit";
   String get orderDelivered =>"Order is Delivered";
   String get expired =>'Expired';
+  String get actionMissed =>'Action Missed';
 
   //Edit Profile Screen
   String get updateProfile => 'Update Profile';
