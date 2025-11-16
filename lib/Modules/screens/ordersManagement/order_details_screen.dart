@@ -197,6 +197,7 @@ class OrderDetailsPage extends ParentWidget {
 
   Widget orderStatus(GetOrderDetailsController controller) {
     Data? data = controller.getOrderStepModel.value.data;
+    String time = controller.getRemainingDays(data?.dueDate, declined: data?.artisanAgreedStatus == OrderStatus.REJECTED.name);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -206,9 +207,9 @@ class OrderDetailsPage extends ParentWidget {
           commonRow(appStrings.timeRemaining, appStrings.orderValue, color: appColors.contentSecondary, fontweight: FontWeight.w500, fontSize: 15, fontSize2: 15, color2: appColors.contentSecondary, fontweight2: FontWeight.w500),
           6.kH,
           commonRow(
-            data?.dueDate != null ? controller.getRemainingDays(data?.dueDate, declined: data?.artisanAgreedStatus == OrderStatus.REJECTED.name) : appStrings.asap,
+            data?.dueDate != null ?  time: appStrings.asap,
             "₹ ${data?.proposedPrice ?? 0}",
-            color: appColors.contentPrimary,
+            color: time=="2 Days"?appColors.declineColor:appColors.contentPrimary,
             fontSize: 17,
             fontweight: FontWeight.bold,
             color2: appColors.contentPrimary,
