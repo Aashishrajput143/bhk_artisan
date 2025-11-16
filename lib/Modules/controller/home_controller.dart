@@ -53,9 +53,9 @@ class Homecontroller extends GetxController {
 
     return orders
         .where((order) {
-          if (order.createdAt == null) return false;
+          if (order.artisianAssignedAt == null && order.createdAt == null) return false;
 
-          final created = DateTime.parse(order.createdAt!);
+          final created = DateTime.parse(order.artisianAssignedAt??order.createdAt!);
           final createdDate = DateTime(created.year, created.month, created.day);
 
           return createdDate == today;
