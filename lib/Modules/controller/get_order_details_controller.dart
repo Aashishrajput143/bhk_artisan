@@ -19,6 +19,7 @@ class GetOrderDetailsController extends GetxController {
   var lastChecked = "".obs;
   var reasonController = TextEditingController().obs;
   var reasonError = Rxn<String>();
+  var showDeadlineHeader = false.obs;
 
   var currentIndex = 0.obs;
   final PageController pageController = PageController();
@@ -49,19 +50,31 @@ class GetOrderDetailsController extends GetxController {
       final now = DateTime.now().toUtc();
 
       final difference = dueDate.difference(now).inDays;
-      if(difference < 0 && (getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name) || (getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name)) {
+      if (difference < 0 && (getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name) || (getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name)) {
         return "Done";
-      }
-      else if (difference < 0 || declined || isExpired(rawDate) || (hasExpired.value)) {
+      } else if (difference < 0 || declined || isExpired(rawDate) || (hasExpired.value)) {
         return "No Longer Active";
       } else if (difference == 0) {
         return "Due Today";
       } else {
+        if (difference == 1) return "$difference Day";
         return "$difference Days";
       }
     } catch (e) {
       return "Invalid date";
     }
+  }
+
+  void showDeadlineAlertIfNeeded(String? dueDate) {
+    try {
+      final time = getRemainingDays(dueDate);
+
+      if (time == "2 Days" || time == "1 Day" || time == "Due Today") {
+        showDeadlineHeader.value = true;
+      } else {
+        showDeadlineHeader.value = false;
+      }
+    } catch (_) {}
   }
 
   Timer? countdownTimer;
@@ -143,7 +156,8 @@ class GetOrderDetailsController extends GetxController {
             setOrderStepdata(value);
             WidgetsBinding.instance.addPostFrameCallback((_) {
               countdownTimer?.cancel();
-              initializeCountdown(value.data?.artisianAssignedAt??value.data?.createdAt);
+              initializeCountdown(value.data?.artisianAssignedAt ?? value.data?.createdAt);
+              showDeadlineAlertIfNeeded(value.data?.dueDate);
             });
             if (loader) setRxRequestStatus(Status.COMPLETED);
             Utils.printLog("Response ${value.toString()}");
@@ -159,11 +173,11 @@ class GetOrderDetailsController extends GetxController {
     }
   }
 
-  Future<void> updateOrderStatusApi(var status, {bool loader = false,bool isDeclined = false}) async {
+  Future<void> updateOrderStatusApi(var status, {bool loader = false, bool isDeclined = false}) async {
     var connection = await CommonMethods.checkInternetConnectivity();
     Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
 
-    Map<String, dynamic> data = {"buildStepId": id.value, "status": status,if(isDeclined) "artisan_remarks":reasonController.value.text};
+    Map<String, dynamic> data = {"buildStepId": id.value, "status": status, if (isDeclined) "artisan_remarks": reasonController.value.text};
 
     if (connection == true) {
       if (loader) setRxRequestStatus(Status.LOADING);

@@ -178,9 +178,9 @@ class EditProfile extends ParentWidget {
           backgroundColor: appColors.brownbuttonBg,
           appColors.contentWhite,
           () {
-            if (controller.selectedIntroVideo.value !=null||(controller.profileData.value.data?.introVideo?.isNotEmpty??false)) {
-              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path':controller.selectedIntroVideo.value ?? controller.profileData.value.data?.introVideo});
-            } else{
+            if (controller.selectedIntroVideo.value != null || (controller.profileData.value.data?.introVideo?.isNotEmpty ?? false)) {
+              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.selectedIntroVideo.value ?? controller.profileData.value.data?.introVideo});
+            } else {
               bottomDrawer(
                 context,
                 h * 0.22,
@@ -199,9 +199,7 @@ class EditProfile extends ParentWidget {
             }
           },
           icon: Icons.video_call,
-          hint: controller.selectedIntroVideo.value !=null||(controller.profileData.value.data?.introVideo?.isNotEmpty??false)
-              ? appStrings.viewIntro
-              : appStrings.uploadIntro,
+          hint: controller.selectedIntroVideo.value != null || (controller.profileData.value.data?.introVideo?.isNotEmpty ?? false) ? appStrings.viewIntro : appStrings.uploadIntro,
           forward: false,
           radius: 25,
         ),
@@ -289,24 +287,29 @@ class EditProfile extends ParentWidget {
             ),
           ),
           controller.aadharError.value != null ? 16.kH : 0.kH,
-          commonComponent(
-            appStrings.gstNumber,
-            commonTextField(
-              controller.gstController.value,
-              controller.gstFocusNode.value,
-              w,
-              error: controller.gstError,
-              (value) {},
-              onChange: (value) {
-                controller.gstError.value = null;
-              },
-              fontSize: 14,
-              hint: appStrings.gstNumberHint,
-              maxLines: 1,
-              inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
-            ),
-            mandatory: false,
+        ],
+        commonComponent(
+          appStrings.gstNumber,
+          commonTextField(
+            controller.gstController.value,
+            controller.gstFocusNode.value,
+            w,
+            error: controller.gstError,
+            (value) {},
+            onChange: (value) {
+              controller.gstError.value = null;
+            },
+            fontSize: 14,
+            maxLength: 15,
+            isCounter: true,
+            textCapitalization: TextCapitalization.characters,
+            hint: appStrings.gstNumberHint,
+            maxLines: 1,
+            inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(15)],
           ),
+          mandatory: false,
+        ),
+        if (controller.isNewUser.value) ...[
           16.kH,
           Row(
             children: [

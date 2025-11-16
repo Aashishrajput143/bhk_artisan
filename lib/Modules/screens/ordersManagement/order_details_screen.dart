@@ -36,6 +36,7 @@ class OrderDetailsPage extends ParentWidget {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            if (controller.showDeadlineHeader.value) deadlineHeader(controller),
                             orderStatus(controller),
                             6.kH,
                             orderCardHeader(controller),
@@ -49,6 +50,33 @@ class OrderDetailsPage extends ParentWidget {
                 ),
               ),
         bottomNavigationBar: (controller.getOrderStepModel.value.data == null || controller.remainingTime.value.isEmpty || controller.rxRequestStatus.value == Status.NOINTERNET) ? null : bottomButtons(context, h, w, controller),
+      ),
+    );
+  }
+
+  Widget deadlineHeader(GetOrderDetailsController controller) {
+    Data? data = controller.getOrderStepModel.value.data;
+    String time = controller.getRemainingDays(data?.dueDate, declined: data?.artisanAgreedStatus == OrderStatus.REJECTED.name);
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.red[100],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: appColors.declineColor),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.warning_amber, color: appColors.declineColor),
+          10.kW,
+          Expanded(
+            child: Text(
+              "Only $time remaining to complete this order.",
+              style: TextStyle(color: Colors.red[900], fontWeight: FontWeight.w600, fontSize: 14),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -175,7 +203,7 @@ class OrderDetailsPage extends ParentWidget {
             onPressed: () {
               if (controller.reasonController.value.text.isNotEmpty) {
                 Get.back();
-                controller.updateOrderStatusApi(OrderStatus.REJECTED.name,isDeclined: true);
+                controller.updateOrderStatusApi(OrderStatus.REJECTED.name, isDeclined: true);
               } else {
                 controller.reasonError.value = appStrings.specifyReason;
               }
@@ -206,16 +234,7 @@ class OrderDetailsPage extends ParentWidget {
           16.kH,
           commonRow(appStrings.timeRemaining, appStrings.orderValue, color: appColors.contentSecondary, fontweight: FontWeight.w500, fontSize: 15, fontSize2: 15, color2: appColors.contentSecondary, fontweight2: FontWeight.w500),
           6.kH,
-          commonRow(
-            data?.dueDate != null ?  time: appStrings.asap,
-            "₹ ${data?.proposedPrice ?? 0}",
-            color: time=="2 Days"?appColors.declineColor:appColors.contentPrimary,
-            fontSize: 17,
-            fontweight: FontWeight.bold,
-            color2: appColors.contentPrimary,
-            fontSize2: 17,
-            fontweight2: FontWeight.bold,
-          ),
+          commonRow(data?.dueDate != null ? time : appStrings.asap, "₹ ${data?.proposedPrice ?? 0}", color: time == "2 Days" ? appColors.declineColor : appColors.contentPrimary, fontSize: 17, fontweight: FontWeight.bold, color2: appColors.contentPrimary, fontSize2: 17, fontweight2: FontWeight.bold),
         ],
       ),
     );
