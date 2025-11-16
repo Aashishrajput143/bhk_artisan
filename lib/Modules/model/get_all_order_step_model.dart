@@ -11,7 +11,6 @@ class GetAllOrderStepsModel {
       json['data'].forEach((v) {
         data!.add(Data.fromJson(v));
       });
-      data = data!.reversed.toList();
     }
   }
 
