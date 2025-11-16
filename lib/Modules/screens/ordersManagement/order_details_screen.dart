@@ -36,7 +36,7 @@ class OrderDetailsPage extends ParentWidget {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (controller.showDeadlineHeader.value) deadlineHeader(controller),
+                            if (controller.showDeadlineHeader.value !=null) deadlineHeader(controller),
                             orderStatus(controller),
                             6.kH,
                             orderCardHeader(controller),
@@ -55,9 +55,6 @@ class OrderDetailsPage extends ParentWidget {
   }
 
   Widget deadlineHeader(GetOrderDetailsController controller) {
-    Data? data = controller.getOrderStepModel.value.data;
-    String time = controller.getRemainingDays(data?.dueDate, declined: data?.artisanAgreedStatus == OrderStatus.REJECTED.name);
-
     return Container(
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.only(bottom: 12),
@@ -72,7 +69,7 @@ class OrderDetailsPage extends ParentWidget {
           10.kW,
           Expanded(
             child: Text(
-              "Only $time remaining to complete this order.",
+              controller.showDeadlineHeader.value??"",
               style: TextStyle(color: Colors.red[900], fontWeight: FontWeight.w600, fontSize: 14),
             ),
           ),

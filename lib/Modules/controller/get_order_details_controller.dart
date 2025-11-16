@@ -19,7 +19,7 @@ class GetOrderDetailsController extends GetxController {
   var lastChecked = "".obs;
   var reasonController = TextEditingController().obs;
   var reasonError = Rxn<String>();
-  var showDeadlineHeader = false.obs;
+  var showDeadlineHeader = Rxn<String>();
 
   var currentIndex = 0.obs;
   final PageController pageController = PageController();
@@ -70,9 +70,12 @@ class GetOrderDetailsController extends GetxController {
       final time = getRemainingDays(dueDate);
 
       if (time == "2 Days" || time == "1 Day" || time == "Due Today") {
-        showDeadlineHeader.value = true;
-      } else {
-        showDeadlineHeader.value = false;
+        if(time == "Due Today"){
+          showDeadlineHeader.value = "Today you need to complete this order.";
+        }else{
+          showDeadlineHeader.value = "Only $time remaining to complete this order.";
+        }
+        
       }
     } catch (_) {}
   }
