@@ -352,10 +352,10 @@ class AppStrings {
   String get logisticsEmptyTitle => "No shipments Yet";
   String get logisticsEmptyDesc => "You have no active shipments at the moment. Once orders or products are approved, shipment and tracking details will appear here.";
   String get shipperDetails => "Shipper Details";
-  String get logisticsHelp => "Need help with delivery? Contact our support for assistance.";
 
   //account verification
   String get underVerification => "Account Verification";
+  String get backtoLogin =>'Back to Login';
   String get waitingApproval =>"Your account is waiting for approval";
   String get underVerificationDesc => "We are currently reviewing your details and verifying your identity. It may take up to 24 hours to activate your account. We appreciate your patience during this process.";
 
