@@ -13,7 +13,9 @@ class SplashController extends GetxController with GetSingleTickerProviderStateM
   void onInit() {
     super.onInit();
     animationController = AnimationController(vsync: this, duration: const Duration(seconds: 6))..repeat();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
     initSplashLogic();
+  });
   }
 
   Future<void> initSplashLogic() async {

@@ -920,7 +920,7 @@ Widget bottomText() {
   );
 }
 
-Widget emptyScreen(double h, String title, String description, String imagePath, {bool useAssetImage = true, bool isThere = true, bool repeat = true}) {
+Widget emptyScreen(double h, String title, String description, String imagePath, {bool useAssetImage = true, bool isThere = true, bool repeat = true,double? imageSize =250, double? fontSizeTitle = 22,double? fontSizeDesc = 16}) {
   return SingleChildScrollView(
     child: Column(
       children: [
@@ -932,11 +932,11 @@ Widget emptyScreen(double h, String title, String description, String imagePath,
           ),
           SizedBox(height: h * 0.1),
         ],
-        useAssetImage ? Image.asset(imagePath, height: 250, fit: BoxFit.fitHeight) : Lottie.asset(imagePath, height: 250, fit: BoxFit.fitHeight, repeat: repeat),
+        useAssetImage ? Image.asset(imagePath, height: imageSize, fit: BoxFit.fitHeight) : Lottie.asset(imagePath, height: imageSize, fit: BoxFit.fitHeight, repeat: repeat),
         16.kH,
         Text(
           title,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
+          style: TextStyle(fontSize: fontSizeTitle, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
         ),
         10.kH,
         Padding(
@@ -944,7 +944,7 @@ Widget emptyScreen(double h, String title, String description, String imagePath,
           child: Text(
             description,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+            style: TextStyle(fontSize: fontSizeDesc, color: Colors.grey[700]),
           ),
         ),
       ],
