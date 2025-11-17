@@ -4,7 +4,6 @@ import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/caste_category_enum.dart';
-import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -26,7 +25,7 @@ class ViewProfile extends ParentWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              getProfileImage(h, w, controller),
+              getProfileImage(h, w, controller.profileData.value.data?.avatar),
               20.kH,
               if (controller.profileData.value.data?.introVideo?.isNotEmpty ?? false)
                 commonButtonIcon(
@@ -115,20 +114,6 @@ class ViewProfile extends ParentWidget {
         title: Text(title, style: TextStyle(color: Colors.grey)),
         subtitle: Text(subtitle, style: TextStyle(fontSize: 16, color: Colors.black)),
       ),
-    );
-  }
-
-  Widget getProfileImage(double h, double w, CommonScreenController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Center(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: controller.profileData.value.data?.avatar?.isNotEmpty ?? false ? commonProfileNetworkImage(controller.profileData.value.data?.avatar ?? "", width: 150, height: 150) : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
-          ),
-        ),
-      ],
     );
   }
 }

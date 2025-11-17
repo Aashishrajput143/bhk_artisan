@@ -134,14 +134,13 @@ class RemoveTrailingPeriodsFormatter extends TextInputFormatter {
       return newValue;
     }
 
-    // ✅ Preserve new lines, but collapse multiple spaces within each line
     String newText = newValue.text
         .split('\n') // Split text by lines
         .map((line) => line.replaceAll(RegExp(r' {2,}'), ' ')) // Replace multiple spaces with one
         .join('\n'); // Join lines back with newline
 
     // Remove trailing periods from words
-    newText = newText.replaceAllMapped(RegExp(r'(\w+)\.'), (match) {
+    newText = newText.replaceAllMapped(RegExp(r'(\w+)'), (match) {
       return match.group(1) ?? '';
     });
 
@@ -160,9 +159,6 @@ class RemoveTrailingPeriodsFormatter extends TextInputFormatter {
     );
   }
 }
-
-
-
 
 
 class RangeInputFormatter extends TextInputFormatter {

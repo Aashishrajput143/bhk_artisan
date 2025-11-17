@@ -260,7 +260,7 @@ class EditProfile extends ParentWidget {
             fontSize: 14,
             hint: appStrings.emailHint,
             maxLines: 1,
-            inputFormatters: [NoLeadingSpaceFormatter(), LengthLimitingTextInputFormatter(50)],
+            inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), LengthLimitingTextInputFormatter(50)],
           ),
           mandatory: false,
         ),

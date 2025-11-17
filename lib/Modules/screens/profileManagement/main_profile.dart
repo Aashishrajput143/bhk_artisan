@@ -4,7 +4,6 @@ import 'package:bhk_artisan/common/my_utils.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
-import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
@@ -28,10 +27,10 @@ class MainProfile extends ParentWidget {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  getProfileImage(h, w, controller),
+                  getProfileImage(h, w, controller.commonController.profileData.value.data?.avatar),
                   10.kH,
                   Text(
-                    controller.commonController.profileData.value.data?.name ?? "User".toUpperCase(),
+                    controller.commonController.profileData.value.data?.name ?? appStrings.userDefault.toUpperCase(),
                     style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                   3.kH,
@@ -59,23 +58,6 @@ class MainProfile extends ParentWidget {
             ),
           ),
           progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
-        ],
-      ),
-    );
-  }
-
-  Widget getProfileImage(double h, double w, ProfileController controller) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 30.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: controller.commonController.profileData.value.data?.avatar?.isNotEmpty ?? false ? commonProfileNetworkImage(controller.commonController.profileData.value.data?.avatar ?? "") : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
-            ),
-          ),
         ],
       ),
     );

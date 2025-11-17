@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:bhk_artisan/common/cache_network_image.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/gradient.dart';
 import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:bhk_artisan/utils/utils.dart';
@@ -128,6 +130,51 @@ PreferredSizeWidget commonAppBar(String title, {bool automaticallyImplyLeading =
     title: Text(title.toUpperCase(), style: TextStyle(fontSize: 16, color: appColors.contentWhite)),
   );
 }
+
+void showZoomableCircleImage({required String? imageUrl, Widget? placeholder}) {
+  final TransformationController controllerZoom = TransformationController();
+  Get.dialog(
+    Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.all(16),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+        child: ClipOval(
+          child: InteractiveViewer(
+            transformationController: controllerZoom,
+            minScale: 1.0,
+            maxScale: 4.0,
+            onInteractionEnd: (_) {
+              controllerZoom.value = Matrix4.identity();
+            },
+            child: Container(
+              height: Get.width * 0.9,
+              width: Get.width * 0.9,
+              decoration: const BoxDecoration(shape: BoxShape.circle),
+              child: imageUrl != null ? commonProfileNetworkImage(imageUrl, height: Get.width * 0.9, width: Get.width * 0.9, fit: BoxFit.cover) : placeholder ?? Image.asset(appImages.profile, height: Get.width * 0.9, width: Get.width * 0.9, fit: BoxFit.cover),
+            ),
+          ),
+        ),
+      ),
+    ),
+    barrierDismissible: true,
+    barrierColor: Colors.black.withValues(alpha: 0.2),
+  );
+}
+
+Widget getProfileImage(double h, double w, String? imageUrl) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 30.0),
+      child: Center(
+        child: GestureDetector(
+          onTap: ()=>showZoomableCircleImage(imageUrl: imageUrl),
+          child: ClipOval(
+            child: imageUrl?.isNotEmpty ?? false ? commonProfileNetworkImage(imageUrl??"") : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
+          ),
+        ),
+      ),
+    );
+  }
 
 PreferredSizeWidget appBarTab({required TabController? tabController, required List<Widget> tabs, required String title}) {
   return AppBar(
@@ -371,7 +418,7 @@ Widget commonTextField(
         borderRadius: BorderRadius.circular(radius),
         borderSide: BorderSide(color: appColors.declineColor, width: borderWidth),
       ),
-      contentPadding: EdgeInsets.symmetric(horizontal: contentPadding),
+      contentPadding: EdgeInsets.symmetric(horizontal: contentPadding, vertical: 8),
     ),
   );
 }
@@ -709,11 +756,14 @@ Widget phoneTextField(
   String hint = '',
   bool isWhite = false,
   bool enabled = true,
-  double contentPadding = 12,
+  double contentPadding = 16,
   dynamic maxLines = 1,
   bool readonly = false,
   double radius = 8,
   double borderWidth = 1,
+  double fontSize = 12,
+  bool isLabel = false,
+  bool autoFocus = false,
   String initialValue = "IN",
   TextInputType keyboardType = TextInputType.phone,
   void Function(String)? onChange,
@@ -725,15 +775,21 @@ Widget phoneTextField(
   return IntlPhoneField(
     focusNode: focusNode,
     controller: controller,
-    autofocus: true,
+    autofocus: autoFocus,
+    showDropdownIcon: false,
     enabled: enabled,
+    flagsButtonMargin: EdgeInsets.only(left: contentPadding),
     inputFormatters: inputFormatters,
     onSubmitted: onSubmitted,
     invalidNumberMessage: error?.value,
     decoration: InputDecoration(
       errorMaxLines: 2,
-      labelText: hint,
-      labelStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
+      labelText: isLabel ? hint : null,
+      hint: Text(
+        hint,
+        style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize),
+      ),
+      labelStyle: isLabel ? TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary, fontSize: fontSize) : null,
       errorText: (error?.value?.isNotEmpty ?? false) ? error?.value : null,
       errorStyle: error?.value?.isNotEmpty ?? false ? TextStyle(color: appColors.declineColor, fontSize: 13) : TextStyle(color: Colors.transparent),
       counterStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary),
@@ -753,12 +809,12 @@ Widget phoneTextField(
         borderRadius: BorderRadius.circular(radius),
         borderSide: BorderSide(color: appColors.declineColor, width: borderWidth),
       ),
-      contentPadding: EdgeInsets.symmetric(horizontal: contentPadding, vertical: 5.0),
+      contentPadding: EdgeInsets.symmetric(vertical: 5.0),
     ),
     style: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
     dropdownTextStyle: TextStyle(color: isWhite ? appColors.contentWhite : appColors.contentPrimary),
     cursorColor: isWhite ? appColors.contentWhite : appColors.contentPlaceholderPrimary,
-    dropdownIcon: const Icon(Icons.arrow_drop_down, color: Colors.transparent),
+    //dropdownIcon: const Icon(Icons.arrow_drop_down, color: Colors.transparent),
     initialCountryCode: initialValue,
     //countries: allCountries?null: countries.where((c) => c.code == 'IN').toList(),
     languageCode: "en",
@@ -865,32 +921,34 @@ Widget bottomText() {
 }
 
 Widget emptyScreen(double h, String title, String description, String imagePath, {bool useAssetImage = true, bool isThere = true, bool repeat = true}) {
-  return Column(
-    children: [
-      16.kH,
-      if (isThere) ...[
+  return SingleChildScrollView(
+    child: Column(
+      children: [
+        16.kH,
+        if (isThere) ...[
+          Text(
+            appStrings.hiThere,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
+          ),
+          SizedBox(height: h * 0.1),
+        ],
+        useAssetImage ? Image.asset(imagePath, height: 250, fit: BoxFit.fitHeight) : Lottie.asset(imagePath, height: 250, fit: BoxFit.fitHeight, repeat: repeat),
+        16.kH,
         Text(
-          appStrings.hiThere,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
+          title,
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
         ),
-        SizedBox(height: h * 0.1),
+        10.kH,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Text(
+            description,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+          ),
+        ),
       ],
-      useAssetImage ? Image.asset(imagePath, height: 250, fit: BoxFit.fitHeight) : Lottie.asset(imagePath, height: 250, fit: BoxFit.fitHeight, repeat: repeat),
-      16.kH,
-      Text(
-        title,
-        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[900]),
-      ),
-      10.kH,
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Text(
-          description,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-        ),
-      ),
-    ],
+    ),
   );
 }
 
