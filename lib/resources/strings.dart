@@ -48,6 +48,13 @@ class AppStrings {
   String get cancel => 'CANCEL';
   String get exit => 'EXIT';
 
+  //Navigation BottomBar
+  String get home =>'Home';
+  String get orders=>'Orders';
+  String get products=>'Products';
+  String get logistics=>'Logistics';
+  String get profile=>'Profile';
+
   //Home Screen
   String get success => "Success!";
   String get loginSuccess => "You have successfully logged into the system";
@@ -338,7 +345,6 @@ class AppStrings {
   String get contactEmail => "BharathasthKaushal@gmail.com";
 
   //Logistics
-  String get logistics => "Logistics";
   String get logisticsId =>'#BHKLOG00';
   String get pickUpLocation => "Pick Up Location";
   String get shipperName => "Shipper Name";
