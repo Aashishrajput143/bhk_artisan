@@ -342,6 +342,33 @@ class NetworkApiServices extends BaseApiServices {
     return responseJson;
   }
 
+  Future patchApi(String url) async {
+    Utils.printLog("PATCH URL: $url");
+
+    dynamic responseJson;
+    String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
+
+    try {
+      final response = await http.patch(Uri.parse(url), headers: {'Content-Type': 'application/json', 'accesstoken': token}).timeout(const Duration(seconds: 600));
+
+      expired(response);
+      responseJson = returnResponse(response);
+
+      Utils.printLog('PATCH Response: $response');
+    } on SocketException {
+      throw InternetException('');
+    } on RequestTimeOut {
+      throw RequestTimeOut('');
+    } on TimeoutException {
+      throw RequestTimeOut('');
+    } on UnauthorizedException {
+      throw AuthenticationException('');
+    }
+
+    Utils.printLog(responseJson);
+    return responseJson;
+  }
+
   @override
   Future postEncodeApi(data, String url) async {
     Utils.printLog(url);

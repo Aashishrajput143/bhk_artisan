@@ -1,3 +1,4 @@
+import 'package:bhk_artisan/Modules/model/delete_account_model.dart';
 import 'package:bhk_artisan/Modules/model/login_model.dart';
 import 'package:bhk_artisan/Modules/model/logout_model.dart';
 import 'package:bhk_artisan/Modules/model/verify_otp_model.dart';
@@ -21,5 +22,10 @@ class LoginRepository {
   Future<LogoutModel> logoutApi() async {
     dynamic response = await _apiServices.getApi(AppUrl.logout);
     return LogoutModel.fromJson(response);
+  }
+
+  Future<DeleteAccountModel> deleteAccount() async {
+    dynamic response = await _apiServices.patchApi(AppUrl.deleteAccount);
+    return DeleteAccountModel.fromJson(response);
   }
 }

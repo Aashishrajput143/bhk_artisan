@@ -1,5 +1,9 @@
+import 'package:bhk_artisan/Modules/controller/profile_controller.dart';
 import 'package:bhk_artisan/Modules/screens/profileManagement/main_profile.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
+import 'package:bhk_artisan/common/my_alert_dialog.dart';
+import 'package:bhk_artisan/common/my_utils.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/strings.dart';
@@ -12,22 +16,43 @@ class SettingProfile extends ParentWidget {
 
   @override
   Widget buildingView(BuildContext context, double h, double w) {
-    return Scaffold(
-      backgroundColor: appColors.backgroundColor,
-      appBar: commonAppBar(appStrings.settings),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 5, 20, 20),
-          child: Column(
-            children: [
-              MainProfile().buildProfileOptionCard(appStrings.editProfile, appStrings.editProfileSubtitle, Icons.edit, () => Get.toNamed(RoutesClass.editprofile)),
-              MainProfile().buildProfileOptionCard(appStrings.deleteAccount, appStrings.deleteAccountSubtitle, Icons.delete, () {}),
-              MainProfile().buildProfileOptionCard(appStrings.verifyAadhaar, appStrings.verifyAadhaarSubtitle, Icons.verified, () => Get.toNamed(RoutesClass.aadharVerification)),
-              MainProfile().buildProfileOptionCard(appStrings.needAssistance, appStrings.needAssistanceSubtitle, Icons.message, () => Get.toNamed(RoutesClass.support)),
-            ],
+    ProfileController controller = Get.find();
+    return Obx(()=> Stack(
+      children: [
+        Scaffold(
+          backgroundColor: appColors.backgroundColor,
+          appBar: commonAppBar(appStrings.settings),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 20),
+              child: Column(
+                children: [
+                  MainProfile().buildProfileOptionCard(appStrings.editProfile, appStrings.editProfileSubtitle, Icons.edit, () => Get.toNamed(RoutesClass.editprofile)),
+                  MainProfile().buildProfileOptionCard(
+                    appStrings.deleteAccount,
+                    appStrings.deleteAccountSubtitle,
+                    Icons.delete,
+                    () => MyAlertDialog.showAlertDialog(
+                      title: appStrings.deleteAccount,
+                      icon: Icons.delete_forever,
+                      subtitle: appStrings.deleteAccountDesc,
+                      buttonHint: appStrings.delete,
+                      color: appColors.declineColor,
+                      onPressed: () {
+                        Get.back();
+                        controller.deleteAccountApi();
+                      },
+                    ),
+                  ),
+                  MainProfile().buildProfileOptionCard(appStrings.verifyAadhaar, appStrings.verifyAadhaarSubtitle, Icons.verified, () => Get.toNamed(RoutesClass.aadharVerification)),
+                  MainProfile().buildProfileOptionCard(appStrings.needAssistance, appStrings.needAssistanceSubtitle, Icons.message, () => Get.toNamed(RoutesClass.support)),
+                ],
+              ),
+            ),
           ),
         ),
-      ),
-    );
+        progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+      ],
+    ));
   }
 }

@@ -13,6 +13,7 @@ class AppUrl {
   static String updateprofile = '$baseUrl/users/api/users/updateprofile';
   static String presignUrl = '$baseUrl/users/api/users/presign-url';
   static String needAssistance ='$baseUrl/users/api/need-assistance';
+  static String deleteAccount ='$baseUrl/users/api/users/delete-my-account';
 
 
   //address

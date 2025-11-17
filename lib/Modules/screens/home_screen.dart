@@ -33,7 +33,7 @@ class HomeScreen extends ParentWidget {
         children: [
           Scaffold(
             backgroundColor: appColors.backgroundColor,
-            appBar: (controller.commonController.profileData.value.data?.firstName?.isNotEmpty ?? false) || (controller.commonController.rxRequestStatus.value == Status.SERVERERROR) ? appBarHome(controller) : shimmerAppBarHome(w),
+            appBar: (controller.commonController.profileData.value.data ==null) || (controller.commonController.rxRequestStatus.value == Status.SERVERERROR) ? shimmerAppBarHome(w): appBarHome(controller),
             body: RefreshIndicator(
               color: Colors.brown,
               onRefresh: controller.dashboardRefresh,
