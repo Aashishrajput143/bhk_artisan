@@ -25,6 +25,10 @@ class AddressController extends GetxController with WidgetsBindingObserver {
 
   var flatError = Rxn<String>();
   var streetError = Rxn<String>();
+  var cityError = Rxn<String>();
+  var stateError = Rxn<String>();
+  var countryError = Rxn<String>();
+  var pinError = Rxn<String>();
 
   var cityFocusNode = FocusNode().obs;
   var stateFocusNode = FocusNode().obs;
@@ -57,7 +61,7 @@ class AddressController extends GetxController with WidgetsBindingObserver {
 
   void loadLocation() {
     flatNameController.value.text = locationController.place.value?.name ?? "";
-    streetNameController.value.text = locationController.place.value?.street ?? locationController.place.value?.subLocality ?? "";
+    streetNameController.value.text = locationController.place.value?.street ?? locationController.place.value?.subLocality??"";
     cityController.value.text = locationController.place.value?.locality ?? "";
     stateController.value.text = locationController.place.value?.administrativeArea ?? "";
     countryController.value.text = locationController.place.value?.country ?? "";
@@ -66,9 +70,18 @@ class AddressController extends GetxController with WidgetsBindingObserver {
     update();
   }
 
+  void clearError(){
+    flatError.value = null;
+    streetError.value = null;
+    cityError.value =null;
+    stateError.value =null;
+    countryError.value =null;
+    pinError.value =null;
+  }
+
   void getLocationApi(int index) {
     hasDefault.value = getAddressModel.value.data?[index].isDefault ?? false;
-    addressType.value = (getAddressModel.value.data?[index].addressType ?? "OTHERS").toAddressType();
+    addressType.value = (getAddressModel.value.data?[index].addressType ?? AddressType.OTHERS.name).toAddressType();
     flatNameController.value.text = getAddressModel.value.data?[index].houseNo ?? "";
     streetNameController.value.text = getAddressModel.value.data?[index].street ?? "";
     cityController.value.text = getAddressModel.value.data?[index].city ?? "";
@@ -121,12 +134,24 @@ class AddressController extends GetxController with WidgetsBindingObserver {
   }
 
   bool validateForm() {
-    if ((flatNameController.value.text.isEmpty) || (streetNameController.value.text.isEmpty)) {
+    if ((flatNameController.value.text.isEmpty) || (streetNameController.value.text.isEmpty)|| (cityController.value.text.isEmpty)|| (stateController.value.text.isEmpty)|| (countryController.value.text.isEmpty)|| (pinController.value.text.isEmpty)) {
       if ((flatNameController.value.text.isEmpty)) {
         flatError.value = "Please Enter your house/Flat/Building";
       }
       if ((streetNameController.value.text.isEmpty)) {
         streetError.value = "Please Enter your Street/Area/Locality";
+      }
+      if ((cityController.value.text.isEmpty)) {
+        cityError.value = "Please Enter your City";
+      }
+      if ((stateController.value.text.isEmpty)) {
+        stateError.value = "Please Enter your State";
+      }
+      if ((countryController.value.text.isEmpty)) {
+        countryError.value = "Please Enter your Country";
+      }
+      if ((pinController.value.text.isEmpty)) {
+        pinError.value = "Please Enter your Pin Code";
       }
       return false;
     }

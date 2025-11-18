@@ -341,7 +341,7 @@ class AppStrings {
   String get requestSubmitted => 'Request Submitted';
   String get requestSubmittedDesc => 'Your request has been submitted and an executive will reach out to you shortly.';
   String get buttonGoBackHome => 'Go Back Home';
-  String get contactPhone => "(246)264 845";
+  String get contactPhone => "+91 1145789087";
   String get contactEmail => "BharathasthKaushal@gmail.com";
 
   //Logistics

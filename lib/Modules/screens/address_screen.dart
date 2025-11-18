@@ -147,7 +147,7 @@ class AddressScreen extends ParentWidget {
                 }
               } else if (value == appStrings.edit) {
                 controller.getLocationApi(index);
-                bottomDrawer(context, h * 0.8, w, controller, id: (address?.id ?? 0).toString(),index: index);
+                bottomDrawer(context, h * 0.8, w, controller, id: (address?.id ?? 0).toString(), index: index);
               } else if (value == appStrings.markasDefault) {
                 controller.editAddressApi((address?.id ?? 0).toString(), isDefault: true);
               }
@@ -156,11 +156,6 @@ class AddressScreen extends ParentWidget {
             itemBuilder: (BuildContext context) => [if (!(address?.isDefault ?? false)) PopupMenuItem(value: appStrings.markasDefault, child: Text(appStrings.markasDefault)), PopupMenuItem(value: appStrings.delete, child: Text(appStrings.delete)), PopupMenuItem(value: appStrings.edit, child: Text(appStrings.edit))],
           ),
         ),
-        // 6.kH,
-        // Text(
-        //   address.name,
-        //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
-        // ),
         Text(
           controller.getFullAddress(controller.getAddressModel.value, index),
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: appColors.contentPrimary),
@@ -170,9 +165,8 @@ class AddressScreen extends ParentWidget {
     );
   }
 
-  void bottomDrawer(BuildContext context, double h, double w, AddressController controller, {String id = "", int index = -1 }) {
-    controller.flatError.value = null;
-    controller.streetError.value = null;
+  void bottomDrawer(BuildContext context, double h, double w, AddressController controller, {String id = "", int index = -1}) {
+    controller.clearError();
     showModalBottomSheet(
       context: context,
       isDismissible: false,
@@ -180,184 +174,236 @@ class AddressScreen extends ParentWidget {
       isScrollControlled: true,
       builder: (context) {
         return GetBuilder<AddressController>(
-          initState: (state) => id.isNotEmpty?controller.getLocationApi(index): controller.loadLocation(),
-          builder: (ctrl) => Obx(()=> Stack(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(25),
-                height: h,
-                width: w,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      horizontalTitleGap: 0,
-                      contentPadding: EdgeInsets.all(0),
-                      title: Text(
-                        appStrings.addressDetails,
-                        style: TextStyle(fontSize: 18, color: appColors.contentPrimary, fontFamily: appFonts.robotoSlabBold, fontWeight: FontWeight.bold),
+          initState: (state) => id.isNotEmpty ? controller.getLocationApi(index) : controller.loadLocation(),
+          builder: (ctrl) => Obx(
+            () => Stack(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(25),
+                  height: h,
+                  width: w,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        horizontalTitleGap: 0,
+                        contentPadding: EdgeInsets.all(0),
+                        title: Text(
+                          appStrings.addressDetails,
+                          style: TextStyle(fontSize: 18, color: appColors.contentPrimary, fontFamily: appFonts.robotoSlabBold, fontWeight: FontWeight.bold),
+                        ),
+                        leading: Icon(Icons.place, size: 25.0, color: appColors.brownDarkText),
+                        trailing: GestureDetector(
+                          onTap: () => Get.back(),
+                          child: SizedBox(width: 40, height: 40, child: Icon(Icons.close, size: 30, color: appColors.contentPrimary)),
+                        ),
                       ),
-                      leading: Icon(Icons.place, size: 25.0, color: appColors.brownDarkText),
-                      trailing: GestureDetector(
-                        onTap: () => Get.back(),
-                        child: SizedBox(width: 40, height: 40, child: Icon(Icons.close, size: 30, color: appColors.contentPrimary)),
+                      const Divider(height: 1),
+                      10.kH,
+                      Text(
+                        appStrings.addressDetailsDescription,
+                        style: TextStyle(fontSize: 13.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    const Divider(height: 1),
-                    10.kH,
-                    Text(
-                      appStrings.addressDetailsDescription,
-                      style: TextStyle(fontSize: 13.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
-                    ),
-                    20.kH,
-                    if (controller.locationController.rxRequestStatus.value == Status.LOADING) fetchingLocation(),
-                    if (controller.locationController.rxRequestStatus.value == Status.COMPLETED) ...[
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              commonComponent(
-                                appStrings.houseBuilding,
-                                commonTextField(
-                                  controller.flatNameController.value,
-                                  controller.flatFocusNode.value,
-                                  w,
-                                  error: controller.flatError,
-                                  (value) {},
-                                  onChange: (value) {
-                                    controller.flatError.value = null;
-                                  },
-                                  fontSize: 14,
-                                  hint: appStrings.houseBuildingHint,
-                                  maxLines: 1,
-                                  inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
-                                ),
-                              ),
-                              16.kH,
-                              commonComponent(
-                                appStrings.streetArea,
-                                commonTextField(
-                                  controller.streetNameController.value,
-                                  controller.streetFocusNode.value,
-                                  w,
-                                  error: controller.streetError,
-                                  (value) {},
-                                  onChange: (value) {
-                                    controller.streetError.value = null;
-                                  },
-                                  fontSize: 14,
-                                  hint: appStrings.streetAreaHint,
-                                  maxLines: 1,
-                                  inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
-                                ),
-                              ),
-                              16.kH,
-                              commonComponent(
-                                appStrings.landMark,
-                                commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.landMarkHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
-                                mandatory: false,
-                              ),
-                              16.kH,
-                              commonComponent(
-                                appStrings.city,
-                                commonTextField(controller.cityController.value, controller.cityFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.cityHint, maxLines: 1, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
-                                mandatory: false,
-                              ),
-                              16.kH,
-                              commonComponent(
-                                appStrings.state,
-                                commonTextField(controller.stateController.value, controller.stateFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.stateHint, maxLines: 1, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
-                                mandatory: false,
-                              ),
-                              16.kH,
-                              commonComponent(
-                                appStrings.country,
-                                commonTextField(controller.countryController.value, controller.countryFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.countryHint, maxLines: 1, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
-                                mandatory: false,
-                              ),
-                              16.kH,
-                              commonComponent(
-                                appStrings.pinCode,
-                                commonTextField(controller.pinController.value, controller.pinFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.pinCodeHint, maxLines: 1, maxLength: 6, readonly: true, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
-                                mandatory: false,
-                              ),
-                              20.kH,
-                              commonComponent(
-                                appStrings.addressType,
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: AddressType.values.map((type) {
-                                      final isSelectable = controller.isAddressTypeSelectable(type, editingId: id);
-                                      final isSelected = controller.addressType.value == type;
-
-                                      return commonIconTags(
-                                        borderColor: isSelectable ? (isSelected ? appColors.brownDarkText : appColors.border) : appColors.border,
-                                        isSelectable ? (isSelected ? appColors.brownDarkText : appColors.contentPrimary) : appColors.buttonTextStateDisabled,
-                                        type.icon,
-                                        onTap: () => isSelectable ? controller.addressType.value = type : null,
-                                        hint: type.displayName,
-                                        bold: true,
-                                      );
-                                    }).toList(),
+                      20.kH,
+                      if (controller.locationController.rxRequestStatus.value == Status.LOADING) fetchingLocation(),
+                      if (controller.locationController.rxRequestStatus.value == Status.COMPLETED) ...[
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                commonComponent(
+                                  appStrings.houseBuilding,
+                                  commonTextField(
+                                    controller.flatNameController.value,
+                                    controller.flatFocusNode.value,
+                                    w,
+                                    error: controller.flatError,
+                                    (value) {},
+                                    onChange: (value) {
+                                      controller.flatError.value = null;
+                                    },
+                                    fontSize: 14,
+                                    hint: appStrings.houseBuildingHint,
+                                    maxLines: 1,
+                                    inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
                                   ),
                                 ),
-                              ),
-                              8.kH,
-                              Obx(()=>
-                              squareCheckBoxWithLabel(
-                                controller.hasDefault.value,
-                                (val) {
-                                  if (controller.getAddressModel.value.data?.isNotEmpty ?? false) {
-                                    if ((controller.getAddressModel.value.data?.length ?? 0) > 0) {
-                                      controller.hasDefault.value = val;
-                                    }
-                                  }
-                                },
-                                label: appStrings.markasDefault,
-                                checkedColor: appColors.brownDarkText,
-                                uncheckedColor: Colors.transparent,
-                                borderColor: appColors.brownDarkText,
-                              )),
-                              8.kH,
-                            ],
+                                16.kH,
+                                commonComponent(
+                                  appStrings.streetArea,
+                                  commonTextField(
+                                    controller.streetNameController.value,
+                                    controller.streetFocusNode.value,
+                                    w,
+                                    error: controller.streetError,
+                                    (value) {},
+                                    onChange: (value) {
+                                      controller.streetError.value = null;
+                                    },
+                                    fontSize: 14,
+                                    hint: appStrings.streetAreaHint,
+                                    maxLines: 1,
+                                    inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+                                  ),
+                                ),
+                                16.kH,
+                                commonComponent(
+                                  appStrings.landMark,
+                                  commonTextField(controller.lanMarkController.value, controller.landMarkFocusNode.value, w, (value) {}, fontSize: 14, hint: appStrings.landMarkHint, maxLines: 1, inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)]),
+                                  mandatory: false,
+                                ),
+                                16.kH,
+                                commonComponent(
+                                  appStrings.city,
+                                  commonTextField(
+                                    controller.cityController.value,
+                                    controller.cityFocusNode.value,
+                                    w,
+                                    error: controller.cityError,
+                                    (value) {},
+                                    onChange: (value) {
+                                      controller.cityError.value = null;
+                                    },
+                                    fontSize: 14,
+                                    hint: appStrings.cityHint,
+                                    maxLines: 1,
+                                    inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+                                  ),
+                                ),
+                                16.kH,
+                                commonComponent(
+                                  appStrings.state,
+                                  commonTextField(
+                                    controller.stateController.value,
+                                    controller.stateFocusNode.value,
+                                    w,
+                                    error: controller.stateError,
+                                    (value) {},
+                                    onChange: (value) {
+                                      controller.stateError.value = null;
+                                    },
+                                    fontSize: 14,
+                                    hint: appStrings.stateHint,
+                                    maxLines: 1,
+                                    inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+                                  ),
+                                ),
+                                16.kH,
+                                commonComponent(
+                                  appStrings.country,
+                                  commonTextField(
+                                    controller.countryController.value,
+                                    controller.countryFocusNode.value,
+                                    w,
+                                    error: controller.countryError,
+                                    (value) {},
+                                    onChange: (value) {
+                                      controller.countryError.value = null;
+                                    },
+                                    fontSize: 14,
+                                    hint: appStrings.countryHint,
+                                    maxLines: 1,
+                                    inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+                                  ),
+                                ),
+                                16.kH,
+                                commonComponent(
+                                  appStrings.pinCode,
+                                  commonTextField(
+                                    controller.pinController.value,
+                                    controller.pinFocusNode.value,
+                                    w,
+                                    error: controller.pinError,
+                                    (value) {},
+                                    onChange: (value) {
+                                      controller.pinError.value = null;
+                                    },
+                                    fontSize: 14,
+                                    hint: appStrings.pinCodeHint,
+                                    maxLines: 1,
+                                    maxLength: 6,
+                                    inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+                                  ),
+                                ),
+                                20.kH,
+                                commonComponent(
+                                  appStrings.addressType,
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: AddressType.values.map((type) {
+                                        final isSelectable = controller.isAddressTypeSelectable(type, editingId: id);
+                                        final isSelected = controller.addressType.value == type;
+
+                                        return commonIconTags(
+                                          borderColor: isSelectable ? (isSelected ? appColors.brownDarkText : appColors.border) : appColors.border,
+                                          isSelectable ? (isSelected ? appColors.brownDarkText : appColors.contentPrimary) : appColors.buttonTextStateDisabled,
+                                          type.icon,
+                                          onTap: () => isSelectable ? controller.addressType.value = type : null,
+                                          hint: type.displayName,
+                                          bold: true,
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                                8.kH,
+                                Obx(
+                                  () => squareCheckBoxWithLabel(
+                                    controller.hasDefault.value,
+                                    (val) {
+                                      if (controller.getAddressModel.value.data?.isNotEmpty ?? false) {
+                                        if ((controller.getAddressModel.value.data?.length ?? 0) > 0) {
+                                          controller.hasDefault.value = val;
+                                        }
+                                      }
+                                    },
+                                    label: appStrings.markasDefault,
+                                    checkedColor: appColors.brownDarkText,
+                                    uncheckedColor: Colors.transparent,
+                                    borderColor: appColors.brownDarkText,
+                                  ),
+                                ),
+                                8.kH,
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: commonButton(
-                          double.infinity,
-                          47,
-                          appColors.contentButtonBrown,
-                          appColors.contentWhite,
-                          () {
-                            if (!controller.isButtonEnabled.value) return;
-                            controller.isButtonEnabled.value = false;
-                            controller.validateForm()
-                                ? (id.isNotEmpty && id != "0")
-                                      ? controller.editAddressApi(id)
-                                      : controller.addAddressApi()
-                                : null;
-                            enableButtonAfterDelay(controller.isButtonEnabled);
-                          },
-                          fontSize: 17,
-                          radius: 12,
-                          hint: appStrings.confirmAddress,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: commonButton(
+                            double.infinity,
+                            47,
+                            appColors.contentButtonBrown,
+                            appColors.contentWhite,
+                            () {
+                              if (!controller.isButtonEnabled.value) return;
+                              controller.isButtonEnabled.value = false;
+                              controller.validateForm()
+                                  ? (id.isNotEmpty && id != "0")
+                                        ? controller.editAddressApi(id)
+                                        : controller.addAddressApi()
+                                  : null;
+                              enableButtonAfterDelay(controller.isButtonEnabled);
+                            },
+                            fontSize: 17,
+                            radius: 12,
+                            hint: appStrings.confirmAddress,
+                          ),
                         ),
-                      ),
+                      ],
+                      10.kH,
                     ],
-                    10.kH,
-                  ],
+                  ),
                 ),
-              ),
-              progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
-            ],
+                progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
+              ],
+            ),
           ),
-        ));
+        );
       },
     );
   }
