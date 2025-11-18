@@ -30,7 +30,7 @@ class MainProfile extends ParentWidget {
                   getProfileImage(h, w, controller.commonController.profileData.value.data?.avatar),
                   10.kH,
                   Text(
-                    controller.commonController.profileData.value.data?.name ?? appStrings.userDefault.toUpperCase(),
+                    "${controller.commonController.profileData.value.data?.firstName ?? appStrings.userDefault.toUpperCase()} ${controller.commonController.profileData.value.data?.lastName ?? ""}",
                     style: const TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                   3.kH,
