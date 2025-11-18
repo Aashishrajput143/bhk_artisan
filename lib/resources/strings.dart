@@ -150,6 +150,7 @@ class AppStrings {
   String get dimensions => "Dimensions";
   String get texture => "Texture";
   String get careInstructions => "Care Instructions";
+  String get productRemarks =>'Product Remarks';
 
   //Order Details
   String get orderDetailsTitle => "Order Details";

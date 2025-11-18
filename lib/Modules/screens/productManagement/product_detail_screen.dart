@@ -1,10 +1,12 @@
 import 'package:bhk_artisan/Modules/controller/product_details_controller.dart';
+import 'package:bhk_artisan/Modules/model/product_details_model.dart';
 import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/shimmer.dart';
 import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
+import 'package:bhk_artisan/resources/enums/product_status_enum.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
@@ -33,13 +35,20 @@ class ProductDetailScreen extends ParentWidget {
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Column(children: [productImageCarousel(h, w, controller), 20.kH, productTitleSection(h, w, controller)]),
+                                Column(
+                                  children: [
+                                    productImageCarousel(h, w, controller),
+                                    20.kH,
+                                    productTitleSection(h, w, controller),
+                                    if (((controller.getProductModel.value.data?.adminApprovalStatus == ProductStatus.APPROVED.name || controller.getProductModel.value.data?.adminApprovalStatus == ProductStatus.DISAPPROVED.name) && controller.getProductModel.value.data?.adminRemarks != null) && controller.orderStepModel.value==null) ...[20.kH, orderRemarks(controller)],
+                                    20.kH,
+                                  ],
+                                ),
                               ],
                             ),
                     ),
                   ),
           ),
-          //progressBarTransparent(controller.rxRequestStatus.value == Status.LOADING, h, w),
         ],
       ),
     );
@@ -80,7 +89,6 @@ class ProductDetailScreen extends ParentWidget {
                       } else {
                         targetOffset = currentOffset;
                       }
-
                       controller.thumbnailScrollController.animateTo(targetOffset, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
                     },
                   ),
@@ -170,6 +178,40 @@ class ProductDetailScreen extends ParentWidget {
     );
   }
 
+  Widget productCard(Widget child) {
+    return Container(
+      decoration: BoxDecoration(color: appColors.cardBackground2, borderRadius: BorderRadius.circular(16)),
+      child: Padding(padding: const EdgeInsets.all(16.0), child: child),
+    );
+  }
+
+  Widget orderRemarks(ProductDetailsController controller) {
+    Data? data = controller.getProductModel.value.data;
+    return productCard(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(data?.adminApprovalStatus == ProductStatus.DISAPPROVED.name ? Icons.cancel : Icons.check_circle, size: 22, color: data?.adminApprovalStatus == ProductStatus.DISAPPROVED.name ? appColors.declineColor : appColors.acceptColor),
+              8.kW,
+              Text(appStrings.productRemarks, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          16.kH,
+          commonText(data?.adminRemarks ?? appStrings.notAvailable, fontWeight: FontWeight.w400),
+        ],
+      ),
+    );
+  }
+
+  Widget commonText(String? text, {bool isHeading = false, FontWeight? fontWeight}) {
+    return Text(
+      text ?? appStrings.notAvailable,
+      style: TextStyle(fontSize: isHeading ? 17 : 14, fontWeight: fontWeight ?? FontWeight.w500, color: isHeading ? appColors.contentSecondary : appColors.contentPrimary),
+    );
+  }
+
   Widget productTitleSection(double h, double w, ProductDetailsController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +236,7 @@ class ProductDetailScreen extends ParentWidget {
           Row(
             children: [
               Text(
-                 "₹ ${formatNumberIndian(double.parse(controller.getProductModel.value.data?.productPricePerPiece ?? "0") * (controller.getProductModel.value.data?.quantity ?? 0).toDouble())}",
+                "₹ ${formatNumberIndian(double.parse(controller.getProductModel.value.data?.productPricePerPiece ?? "0") * (controller.getProductModel.value.data?.quantity ?? 0).toDouble())}",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: appColors.contentPrimary),
               ),
               10.kW,
