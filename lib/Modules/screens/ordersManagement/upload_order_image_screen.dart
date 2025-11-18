@@ -197,77 +197,127 @@ class UploadOrderImageScreen extends ParentWidget {
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return Obx(
-          () => Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return addresses.isEmpty
+            ? Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        appStrings.selectAddress,
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            appStrings.selectAddress,
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
+                          ),
+                        ),
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => Get.toNamed(RoutesClass.addresses)?.then((onValue) {
+                            Get.back();
+                            addresscontroller.getAddressApi();
+                            if (context.mounted) {
+                              bottomDrawerSelectAddress(context, h, w, addresscontroller, controller);
+                            }
+                          }),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              appStrings.manage,
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: appFonts.NunitoBold, color: appColors.brownDarkText),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    2.kH,
+                    Center(
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(appImages.emptyMap, color: appColors.brownbuttonBg),
+                          Text(appStrings.yourAddressEmpty, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          4.kH,
+                          Text(
+                            appStrings.emptyAddressDescription,
+                            style: TextStyle(fontSize: 14, color: appColors.contentSecondary),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                     ),
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => Get.toNamed(RoutesClass.addresses)?.then((onValue) {
+                    20.kH,
+                    commonButton(
+                      w,
+                      50,
+                      appColors.brownDarkText,
+                      appColors.contentWhite,
+                      () => Get.toNamed(RoutesClass.addresses)?.then((onValue) {
                         Get.back();
                         addresscontroller.getAddressApi();
                         if (context.mounted) {
                           bottomDrawerSelectAddress(context, h, w, addresscontroller, controller);
                         }
                       }),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          appStrings.manage,
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: appFonts.NunitoBold, color: appColors.brownDarkText),
-                        ),
-                      ),
+                      hint: appStrings.addAddress,
                     ),
+                    16.kH,
                   ],
                 ),
-                2.kH,
-                if (addresses.isEmpty) ...[
-                  Center(
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(appImages.emptyMap, color: appColors.brownbuttonBg),
-                        Text(appStrings.yourAddressEmpty, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        4.kH,
-                        Text(
-                          appStrings.emptyAddressDescription,
-                          style: TextStyle(fontSize: 14, color: appColors.contentSecondary),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
+              )
+            : Obx(
+                () => Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              appStrings.selectAddress,
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, fontFamily: appFonts.NunitoBold, color: appColors.contentPrimary),
+                            ),
+                          ),
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => Get.toNamed(RoutesClass.addresses)?.then((onValue) {
+                              Get.back();
+                              addresscontroller.getAddressApi();
+                              if (context.mounted) {
+                                bottomDrawerSelectAddress(context, h, w, addresscontroller, controller);
+                              }
+                            }),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                appStrings.manage,
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: appFonts.NunitoBold, color: appColors.brownDarkText),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      2.kH,
+                      addressContent(h, w, addresscontroller, controller),
+                      commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () {
+                        if (controller.addressId.value != "0") {
+                          Get.back(closeOverlays: true);
+                          controller.uploadOrderImageApi();
+                        } else {
+                          CommonMethods.showToast(appStrings.selectAddress, icon: Icons.error, bgColor: appColors.declineColor);
+                        }
+                      }, hint: appStrings.confirmAddress),
+                      16.kH,
+                    ],
                   ),
-                  20.kH,
-                  commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () => Get.toNamed(RoutesClass.addresses), hint: appStrings.addAddress),
-                ],
-                if (addresses.isNotEmpty) ...[
-                  addressContent(h, w, addresscontroller, controller),
-                  commonButton(w, 50, appColors.brownDarkText, appColors.contentWhite, () {
-                    if (controller.addressId.value != "0") {
-                      Get.back(closeOverlays: true);
-                      controller.uploadOrderImageApi();
-                    } else {
-                      CommonMethods.showToast(appStrings.selectAddress, icon: Icons.error, bgColor: appColors.declineColor);
-                    }
-                  }, hint: appStrings.confirmAddress),
-                ],
-                16.kH,
-              ],
-            ),
-          ),
-        );
+                ),
+              );
       },
     );
   }

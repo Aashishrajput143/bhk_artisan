@@ -31,10 +31,12 @@ class UploadOrderImageController extends GetxController {
 
   void setDefaultSelection() {
     final addresses = addressController.getAddressModel.value.data ?? [];
-    final defaultAddress = addresses.firstWhere((a) => a.isDefault == true);
+    if (addresses.isNotEmpty) {
+      final defaultAddress = addresses.firstWhere((a) => a.isDefault == true);
 
-    if (defaultAddress.id != null) {
-      addressId.value = (defaultAddress.id ?? 0).toString();
+      if (defaultAddress.id != null) {
+        addressId.value = (defaultAddress.id ?? 0).toString();
+      }
     }
   }
 
@@ -59,9 +61,8 @@ class UploadOrderImageController extends GetxController {
     return parts.join(", ");
   }
 
-
   String? validateStringForm() {
-    if ((imagefiles.length<4 || imagefiles.length>10)) {
+    if ((imagefiles.length < 4 || imagefiles.length > 10)) {
       return "Please Upload Min 4 and Max 10 Images";
     }
     return null;
@@ -83,7 +84,7 @@ class UploadOrderImageController extends GetxController {
     if (connection == true) {
       setRxRequestStatus(Status.LOADING);
 
-      Map<String, String> data = {"progress_percentage": "100","progress_status":OrderStatus.COMPLETED.name,"addressId": addressId.value};
+      Map<String, String> data = {"progress_percentage": "100", "progress_status": OrderStatus.COMPLETED.name, "addressId": addressId.value};
       _api
           .updateOrderImageApi(data, imagefiles, id)
           .then((value) {
