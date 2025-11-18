@@ -155,7 +155,7 @@ Widget commonCard(double w, double h, ProductDocs? list) {
                 5.kH,
                 Text(StringLimiter.limitCharacters(list?.material ?? "", 30), style: TextStyle(fontSize: 13, color: Colors.grey[700])),
                 5.kH,
-                Row(children: [commonContainer(list?.category?.categoryName ?? "", Colors.deepPurple), 8.kW, commonContainer(list?.subCategory?.categoryName ?? "", appColors.brownDarkText)]),
+                Row(children: [commonContainer(StringLimiter.limitCharacters(list?.category?.categoryName ?? "", 20), Colors.deepPurple), 4.kW, commonContainer(StringLimiter.limitCharacters(list?.subCategory?.categoryName ?? "", 20), appColors.brownDarkText, pH: 6)]),
               ],
             ),
           ),
