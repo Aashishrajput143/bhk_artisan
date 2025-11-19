@@ -46,7 +46,7 @@ class AddProductPage extends ParentWidget {
                     style: TextStyle(fontSize: 11.0, color: appColors.contentdescBrownColor, fontWeight: FontWeight.bold),
                   ),
                   25.kH,
-                  buildCircle(controller.selectedIndex.value,controller),
+                  buildCircle(controller.selectedIndex.value, controller),
                   16.kH,
                   if (controller.selectedIndex.value == 0) generalDetails(w, h, controller),
                   if (controller.selectedIndex.value == 1) productDetails(w, h, controller),
@@ -74,7 +74,7 @@ class AddProductPage extends ParentWidget {
                                 () {
                                   if (!controller.isButtonEnabled.value) return;
                                   controller.isButtonEnabled.value = false;
-                                  controller.validateMediaForm() ? controller.addProductApi():null;
+                                  controller.validateMediaForm() ? controller.addProductApi() : null;
                                   enableButtonAfterDelay(controller.isButtonEnabled);
                                 },
                                 hint: appStrings.submit,
@@ -232,7 +232,7 @@ class AddProductPage extends ParentWidget {
                 maxLength: 6,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 hint: appStrings.enterProductPrice,
-                prefix: '₹ ',
+                prefixIcon: Padding(padding: EdgeInsets.only(left: 12.0,bottom: 2), child: Icon(Icons.currency_rupee_outlined, size: 14)),
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))],
               ),
             ),
@@ -262,7 +262,19 @@ class AddProductPage extends ParentWidget {
                 ),
                 8.kW,
                 Expanded(
-                  child: commonComponent(appStrings.totalPrice, commonTextField(controller.totalPriceController.value, controller.totalPriceFocusNode.value, w, (value) {}, readonly: true, prefix: '₹ ', inputFormatters: [FilteringTextInputFormatter.digitsOnly]), mandatory: false),
+                  child: commonComponent(
+                    appStrings.totalPrice,
+                    commonTextField(
+                      controller.totalPriceController.value,
+                      controller.totalPriceFocusNode.value,
+                      w,
+                      (value) {},
+                      readonly: true,
+                      prefixIcon: Padding(padding: EdgeInsets.only(left: 12.0,bottom: 2), child: Icon(Icons.currency_rupee_outlined, size: 14)),
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    ),
+                    mandatory: false,
+                  ),
                 ),
               ],
             ),
@@ -344,7 +356,7 @@ class AddProductPage extends ParentWidget {
                 children: [
                   Expanded(
                     flex: 6,
-                    child: commonTextField(controller.netweightController.value,keyboardType: TextInputType.numberWithOptions(decimal: true), controller.netweightFocusNode.value, w, (value) {}, hint: "${appStrings.enterNetWeight}(in ${controller.dropdownValues})", inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
+                    child: commonTextField(controller.netweightController.value, keyboardType: TextInputType.numberWithOptions(decimal: true), controller.netweightFocusNode.value, w, (value) {}, hint: "${appStrings.enterNetWeight}(in ${controller.dropdownValues})", inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
@@ -472,11 +484,11 @@ class AddProductPage extends ParentWidget {
 
   Widget pickedfiles(double w, double h, AddProductController controller) {
     return SizedBox(
-      height:h>900?h*0.26:h * 0.22,
+      height: h > 900 ? h * 0.26 : h * 0.22,
       //height: h * 0.24,
       child: GridView.builder(
         itemCount: controller.imagefiles.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 16,childAspectRatio: 0.94),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 16, childAspectRatio: 0.94),
         physics: const AlwaysScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return Column(

@@ -1,4 +1,7 @@
+import 'package:bhk_artisan/common/common_controllers/common_loader_controller.dart';
 import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
+import 'package:bhk_artisan/common/my_utils.dart';
+import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
 
@@ -19,18 +22,21 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    final globalLoader = Get.put(GlobalLoaderController(), permanent: true);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.dark, statusBarBrightness: Brightness.dark));
     return GetMaterialApp(
       builder: (context, child) {
         // final systemScale = MediaQuery.of(context).textScaleFactor;
         // print(systemScale);
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1)),
-          child: child!,
+        return Stack(
+          children: [
+            MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1)),
+              child: child!,
+            ),
+            Obx(() => progressBarTransparentWithOutSize(globalLoader.rxRequestStatus.value == Status.LOADING)),
+          ],
         );
       },
       theme: ThemeData(fontFamily: 'Poppins', primaryColor: Color(appColors.colorPrimary)),
