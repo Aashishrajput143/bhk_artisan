@@ -88,18 +88,30 @@ void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setErr
   if (closeDialog) {
     Get.back();
   }
+
   setError?.call(error.toString());
   setRxRequestStatus?.call(Status.ERROR);
 
   try {
     final errorStr = error.toString();
+
     if (errorStr.contains("{")) {
       final jsonPart = errorStr.substring(errorStr.indexOf("{"), errorStr.lastIndexOf("}") + 1);
+
       final decoded = json.decode(jsonPart);
+
       if (decoded is Map) {
         final errorMap = Map<String, dynamic>.from(decoded);
+        final statusCode = errorMap['statusCode'] ?? errorMap['status'] ?? 0;
+
         if (errorMap.containsKey('message')) {
           Utils.printLog("ErrorState===> $errorMap");
+
+          if (statusCode == 463) {
+            setRxRequestStatus?.call(Status.COMPLETED);
+            return;
+          }
+
           if (showMessage) {
             CommonMethods.showToast(errorMap['message'].toString());
             setRxRequestStatus?.call(Status.COMPLETED);
@@ -107,6 +119,7 @@ void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setErr
           }
         }
       }
+
       CommonMethods.showToast("An unexpected error occurred.");
       setRxRequestStatus?.call(Status.COMPLETED);
     } else {
@@ -163,18 +176,16 @@ void showZoomableCircleImage({required String? imageUrl, Widget? placeholder}) {
 }
 
 Widget getProfileImage(double h, double w, String? imageUrl) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 30.0),
-      child: Center(
-        child: GestureDetector(
-          onTap: ()=>showZoomableCircleImage(imageUrl: imageUrl),
-          child: ClipOval(
-            child: imageUrl?.isNotEmpty ?? false ? commonProfileNetworkImage(imageUrl??"") : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover),
-          ),
-        ),
+  return Padding(
+    padding: const EdgeInsets.only(top: 30.0),
+    child: Center(
+      child: GestureDetector(
+        onTap: () => showZoomableCircleImage(imageUrl: imageUrl),
+        child: ClipOval(child: imageUrl?.isNotEmpty ?? false ? commonProfileNetworkImage(imageUrl ?? "") : Image.asset(appImages.profile, width: 150, height: 150, fit: BoxFit.cover)),
       ),
-    );
-  }
+    ),
+  );
+}
 
 PreferredSizeWidget appBarTab({required TabController? tabController, required List<Widget> tabs, required String title}) {
   return AppBar(
@@ -920,7 +931,7 @@ Widget bottomText() {
   );
 }
 
-Widget emptyScreen(double h, String title, String description, String imagePath, {bool useAssetImage = true, bool isThere = true, bool repeat = true,double? imageSize =250, double? fontSizeTitle = 22,double? fontSizeDesc = 16}) {
+Widget emptyScreen(double h, String title, String description, String imagePath, {bool useAssetImage = true, bool isThere = true, bool repeat = true, double? imageSize = 250, double? fontSizeTitle = 22, double? fontSizeDesc = 16}) {
   return SingleChildScrollView(
     child: Column(
       children: [

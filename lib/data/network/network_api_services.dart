@@ -61,11 +61,11 @@ class NetworkApiServices extends BaseApiServices {
     }
   }
 
-  void expired(response) async {
+  Future<bool> expired(http.Response response) async {
     final decoded = json.decode(response.body);
 
     if (decoded is Map && decoded['statusCode'] == 463) {
-      refreshTokenAndRetry(AppUrl.refreshToken);
+      await refreshTokenAndRetry(AppUrl.refreshToken);
       // CommonMethods.showToast("Session expired. Please login again.");
 
       // Utils.savePreferenceValues(Constants.accessToken, "");
@@ -73,7 +73,9 @@ class NetworkApiServices extends BaseApiServices {
       // await Utils.clearPreferenceValues();
       // Get.delete<LoginController>();
       // Get.offAll(() => LoginScreen());
+      return true; // token refreshed!
     }
+    return false; // no refresh required
   }
 
   @override
@@ -84,7 +86,11 @@ class NetworkApiServices extends BaseApiServices {
 
     try {
       final response = await http.get(Uri.parse(url), headers: {'content-Type': 'application/json', 'accesstoken': token}).timeout(const Duration(seconds: 600));
-      expired(response);
+      bool refreshNeeded = await expired(response);
+
+      if (refreshNeeded) {
+        return await getApi(url);
+      }
       responseJson = returnResponse(response);
     } on SocketException {
       throw InternetException('');
@@ -109,7 +115,11 @@ class NetworkApiServices extends BaseApiServices {
     try {
       final uri = Uri.parse(url).replace(queryParameters: {'page': page, 'status': status, 'search': search});
       final response = await http.get(uri, headers: {'Accept': 'application/json', 'accesstoken': token}).timeout(const Duration(seconds: 600));
-      expired(response);
+      bool refreshNeeded = await expired(response);
+
+      if (refreshNeeded) {
+        return await getApiWithParameter(page, status, search, url);
+      }
       responseJson = returnResponse(response);
     } on SocketException {
       throw InternetException('');
@@ -140,7 +150,11 @@ class NetworkApiServices extends BaseApiServices {
             body: data, //jsonEncode(data) //if raw form then we set jsonEncode if form the only data
           )
           .timeout(const Duration(seconds: 600));
-      expired(response);
+      bool refreshNeeded = await expired(response);
+
+      if (refreshNeeded) {
+        return await postApi(data, url);
+      }
       responseJson = returnResponse(response);
       Utils.printLog('Response: $response');
     } on SocketException {
@@ -170,7 +184,11 @@ class NetworkApiServices extends BaseApiServices {
             body: jsonEncode(data), //jsonEncode(data) //if raw form then we set jsonEncode if form the only data
           )
           .timeout(const Duration(seconds: 600));
-      expired(response);
+      bool refreshNeeded = await expired(response);
+
+      if (refreshNeeded) {
+        return await putEncodeApi(data, url);
+      }
       responseJson = returnResponse(response);
 
       Utils.printLog('Response: $response');
@@ -194,7 +212,11 @@ class NetworkApiServices extends BaseApiServices {
 
     try {
       final response = await http.delete(Uri.parse(url), headers: {'content-Type': "application/json", 'accesstoken': token}).timeout(const Duration(seconds: 600));
-      expired(response);
+     bool refreshNeeded = await expired(response);
+
+      if (refreshNeeded) {
+        return await deleteEncodeApi(url);
+      }
       responseJson = returnResponse(response);
 
       Utils.printLog('Response: $response');
@@ -257,8 +279,11 @@ class NetworkApiServices extends BaseApiServices {
 
       final response = await request.send();
       final responseHttp = await http.Response.fromStream(response);
+      bool refreshNeeded = await expired(responseHttp);
 
-      expired(responseHttp);
+      if (refreshNeeded) {
+        return await multiPartImageOnlyApi(url, imagePaths, key);
+      }
       responseJson = returnResponse(responseHttp);
     } on SocketException {
       throw InternetException('');
@@ -292,7 +317,11 @@ class NetworkApiServices extends BaseApiServices {
       }
       final response = await request.send();
       final responseHttp = await http.Response.fromStream(response);
-      expired(responseHttp);
+      bool refreshNeeded = await expired(responseHttp);
+
+      if (refreshNeeded) {
+        return await multiPartMediaApi(data, url, imagePaths, key);
+      }
       responseJson = returnResponse(responseHttp);
     } on SocketException {
       throw InternetException('');
@@ -316,10 +345,14 @@ class NetworkApiServices extends BaseApiServices {
     dynamic responseJson;
     String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
 
+    Map<String, String> convertToStringMap(Map<String, dynamic> input) {
+      return input.map((key, value) => MapEntry(key, value?.toString() ?? ""));
+    }
+
     try {
       var request = http.MultipartRequest("POST", Uri.parse(url));
+      if (data != null) request.fields.addAll(convertToStringMap(data));
 
-      request.fields.addAll(data);
       request.headers['accesstoken'] = token;
 
       for (var fileObj in files) {
@@ -333,12 +366,52 @@ class NetworkApiServices extends BaseApiServices {
 
       final streamed = await request.send();
       final response = await http.Response.fromStream(streamed);
-      expired(response);
+      bool refreshNeeded = await expired(response);
+
+      if (refreshNeeded) {
+        return await multiPartApi(data, url, files);
+      }
       responseJson = returnResponse(response);
     } catch (e) {
       throw Exception("Upload failed: $e");
     }
 
+    return responseJson;
+  }
+
+  @override
+  Future postEncodeApi(var data, String url) async {
+    Utils.printLog(url);
+    Utils.printLog(data);
+    dynamic responseJson;
+    String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
+
+    try {
+      final response = await http
+          .post(
+            Uri.parse(url),
+            headers: {'content-Type': "application/json", 'accesstoken': token},
+            body: jsonEncode(data), //jsonEncode(data) //if raw form then we set jsonEncode if form the only data
+          )
+          .timeout(const Duration(seconds: 600));
+      bool refreshNeeded = await expired(response);
+
+      if (refreshNeeded) {
+        return await postEncodeApi(data,url);
+      }
+      responseJson = returnResponse(response);
+
+      Utils.printLog('Response: $response');
+    } on SocketException {
+      throw InternetException('');
+    } on RequestTimeOut {
+      throw RequestTimeOut('');
+    } on TimeoutException {
+      throw RequestTimeOut('');
+    } on UnauthorizedException {
+      throw AuthenticationException('');
+    }
+    Utils.printLog(responseJson);
     return responseJson;
   }
 
@@ -351,7 +424,11 @@ class NetworkApiServices extends BaseApiServices {
     try {
       final response = await http.patch(Uri.parse(url), headers: {'Content-Type': 'application/json', 'accesstoken': token}).timeout(const Duration(seconds: 600));
 
-      expired(response);
+      bool refreshNeeded = await expired(response);
+
+      if (refreshNeeded) {
+        return await patchApi(url);
+      }
       responseJson = returnResponse(response);
 
       Utils.printLog('PATCH Response: $response');
@@ -369,25 +446,24 @@ class NetworkApiServices extends BaseApiServices {
     return responseJson;
   }
 
-  @override
-  Future postEncodeApi(data, String url) async {
-    Utils.printLog(url);
-    Utils.printLog(data);
+  Future patchEncodeApi(var data, String url) async {
+    Utils.printLog("PATCH URL: $url");
+    Utils.printLog("PATCH DATA: $data");
+
     dynamic responseJson;
     String token = await Utils.getPreferenceValues(Constants.accessToken) ?? "";
 
     try {
-      final response = await http
-          .post(
-            Uri.parse(url),
-            headers: {'content-Type': "application/json", 'accesstoken': token},
-            body: jsonEncode(data), //jsonEncode(data) //if raw form then we set jsonEncode if form the only data
-          )
-          .timeout(const Duration(seconds: 600));
-      expired(response);
+      final response = await http.patch(Uri.parse(url), headers: {'Content-Type': 'application/json', 'accesstoken': token}, body: jsonEncode(data)).timeout(const Duration(seconds: 600));
+
+      bool refreshNeeded = await expired(response);
+
+      if (refreshNeeded) {
+        return await patchEncodeApi(data,url);
+      }
       responseJson = returnResponse(response);
 
-      Utils.printLog('Response: $response');
+      Utils.printLog('PATCH Response: $response');
     } on SocketException {
       throw InternetException('');
     } on RequestTimeOut {
@@ -397,6 +473,7 @@ class NetworkApiServices extends BaseApiServices {
     } on UnauthorizedException {
       throw AuthenticationException('');
     }
+
     Utils.printLog(responseJson);
     return responseJson;
   }
@@ -409,7 +486,11 @@ class NetworkApiServices extends BaseApiServices {
 
     try {
       final response = await http.post(Uri.parse(url), headers: {'content-Type': "application/json", 'accesstoken': token, 'devicetype': "ANDROID"}, body: jsonEncode(data)).timeout(const Duration(seconds: 600));
-      expired(response);
+      bool refreshNeeded = await expired(response);
+
+      if (refreshNeeded) {
+        return await postEncodeApiForFCM(data,url);
+      }
       responseJson = returnResponse(response);
       Utils.printLog('Response: $response');
     } on SocketException {
