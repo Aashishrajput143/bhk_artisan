@@ -12,6 +12,7 @@ import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/enums/product_status_enum.dart';
+import 'package:bhk_artisan/resources/enums/sales_filter_enum.dart';
 import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
@@ -422,7 +423,7 @@ class HomeScreen extends ParentWidget {
                           }
                           return label.length > 3 ? label.substring(0, 3) : label;
                         },
-                        yValueMapper: (ChartData sales, _) => controller.dropdownsold.value == "Product Sales" ? sales.sales : sales.unitsSold,
+                        yValueMapper: (ChartData sales, _) => controller.dropdownsold.value == SalesFilterType.SALES.salesValue ? sales.sales : sales.unitsSold,
                         name: controller.dropdownsold.value,
                         animationDuration: 1600,
                         width: controller.selectedFilterData.length == 1
@@ -433,7 +434,7 @@ class HomeScreen extends ParentWidget {
                         gradient: AppGradients.graphGradient,
                         dataLabelSettings: DataLabelSettings(isVisible: true, labelAlignment: ChartDataLabelAlignment.outer),
                         dataLabelMapper: (ChartData sales, _) {
-                          final value = controller.dropdownsold.value == "Product Sales" ? sales.sales : sales.unitsSold;
+                          final value = controller.dropdownsold.value == SalesFilterType.SALES.salesValue ? sales.sales : sales.unitsSold;
                           return value != 0 ? formatNumberIndian(value!.toDouble()) : null;
                         },
                       ),

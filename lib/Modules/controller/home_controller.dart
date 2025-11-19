@@ -11,6 +11,7 @@ import 'package:bhk_artisan/common/common_function.dart';
 import 'package:bhk_artisan/common/common_methods.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/data/response/status.dart';
+import 'package:bhk_artisan/resources/enums/sales_filter_enum.dart';
 import 'package:bhk_artisan/resources/enums/sales_type_enum.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/utils.dart';
@@ -68,13 +69,13 @@ class Homecontroller extends GetxController {
   RxDouble scrollPosition = 0.0.obs;
   RxDouble maxScrollExtent = 0.0.obs;
   var dropdownmonth = SalesType.WEEKLY.displayName.obs;
-  var dropdownsold = 'Product Sales'.obs;
+  var dropdownsold = SalesFilterType.SALES.salesValue.obs;
 
   var scrollController = ScrollController().obs;
 
   List<String> daysfilter = [SalesType.WEEKLY.displayName, SalesType.MONTHLY.displayName, SalesType.YEARLY.displayName];
 
-  List<String> salesfilter = ['Product Sales', 'Units Sold'];
+  List<String> salesfilter = [SalesFilterType.SALES.salesValue, SalesFilterType.UNITSOLD.salesValue];
 
   void updateScrollPosition(double position, double maxExtent) {
     if (position == 0.0) {

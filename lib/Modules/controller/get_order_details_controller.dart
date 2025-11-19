@@ -52,7 +52,7 @@ class GetOrderDetailsController extends GetxController {
       final difference = dueDate.difference(now).inDays;
       if (difference < 0 && (getOrderStepModel.value.data?.buildStatus == OrderStatus.ADMIN_APPROVED.name) || (getOrderStepModel.value.data?.buildStatus == OrderStatus.COMPLETED.name)) {
         return "Done";
-      } else if (difference < 0 || declined || isExpired(rawDate) || (hasExpired.value)) {
+      } else if (difference < 0 || declined || isExpired(rawDate)) {
         return "No Longer Active";
       } else if (difference == 0) {
         return "Due Today";
