@@ -38,6 +38,10 @@ class OtpController extends GetxController with GetSingleTickerProviderStateMixi
     super.onInit();
     startTimerCountdown();
     animationController = AnimationController(vsync: this, duration: const Duration(seconds: 6))..repeat();
+    Future.delayed(const Duration(seconds: 5), () {
+      otpController.value.text = loginController.logInData.value.data?.oTP??"";
+      otp.value = loginController.logInData.value.data?.oTP??"";
+    });
   }
 
   void startTimerCountdown() {

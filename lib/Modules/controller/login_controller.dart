@@ -135,6 +135,6 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   void redirect(LoginModel value) {
     Utils.savePreferenceValues(Constants.referenceId, "${logInData.value.data?.referenceId}");
     Utils.setBoolPreferenceValues(Constants.isNewUser, false);
-    Get.toNamed(RoutesClass.verify, arguments: {'referenceId': logInData.value.data?.referenceId, "identity": phoneController.value.text, if (phoneController.value.text.isNotEmpty) "countryCode": countryCode.value});
+    Get.toNamed(RoutesClass.verify);
   }
 }
