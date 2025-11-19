@@ -268,7 +268,7 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
             Utils.setBoolPreferenceValues(Constants.isNewUser, false);
             if (isNewUser.value) {
               if (profileData.value.data?.hasAddress == false) addAddressApi(profileData.value.data?.id);
-              Get.offAllNamed(RoutesClass.commonScreen, arguments: {"isDialog": true});
+              Get.offAllNamed(RoutesClass.commonScreen);
             } else {
               Get.back();
               Get.back();

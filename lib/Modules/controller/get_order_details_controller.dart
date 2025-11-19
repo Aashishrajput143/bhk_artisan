@@ -69,7 +69,7 @@ class GetOrderDetailsController extends GetxController {
     try {
       final time = getRemainingDays(dueDate);
 
-      if (time == "2 Days" || time == "1 Day" || time == "Due Today") {
+      if ((time == "2 Days" || time == "1 Day" || time == "Due Today") && (getOrderStepModel.value.data?.buildStatus != OrderStatus.ADMIN_APPROVED.name)) {
         if(time == "Due Today"){
           showDeadlineHeader.value = "Today you need to complete this order.";
         }else{
