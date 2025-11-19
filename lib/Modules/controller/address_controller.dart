@@ -61,7 +61,7 @@ class AddressController extends GetxController with WidgetsBindingObserver {
 
   void loadLocation() {
     flatNameController.value.text = locationController.place.value?.name ?? "";
-    streetNameController.value.text = locationController.place.value?.street ?? locationController.place.value?.subLocality??"";
+    streetNameController.value.text = locationController.place.value?.subLocality ?? locationController.place.value?.thoroughfare??"";
     cityController.value.text = locationController.place.value?.locality ?? "";
     stateController.value.text = locationController.place.value?.administrativeArea ?? "";
     countryController.value.text = locationController.place.value?.country ?? "";

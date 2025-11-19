@@ -201,6 +201,7 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
             setProfileData(value);
             Utils.savePreferenceValues(Constants.userId, "${value.data?.id}");
             debugPrint("user_id===>${value.data?.id}");
+            if(value.data?.verifyStatus==false&&value.data?.hasAddress==true)Get.offAllNamed(RoutesClass.commonScreen);
             getExpertiseApi();
             //CommonMethods.showToast(value.message);
             Utils.printLog("Response===> ${value.toString()}");
