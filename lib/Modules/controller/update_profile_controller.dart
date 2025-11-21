@@ -1,13 +1,10 @@
-import 'package:bhk_artisan/Modules/model/add_address_model.dart';
 import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
 import 'package:bhk_artisan/Modules/model/get_subcategory_model.dart';
 import 'package:bhk_artisan/Modules/model/pre_signed_intro_video_model.dart';
-import 'package:bhk_artisan/Modules/repository/address_repository.dart';
 import 'package:bhk_artisan/Modules/repository/product_repository.dart';
 import 'package:bhk_artisan/common/common_controllers/geo_location_controller.dart';
 import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/common_constants.dart';
-import 'package:bhk_artisan/resources/enums/address_type_enum.dart';
 import 'package:bhk_artisan/resources/enums/caste_category_enum.dart';
 import 'package:bhk_artisan/resources/validation.dart';
 import 'package:bhk_artisan/routes/routes_class.dart';
@@ -24,7 +21,6 @@ import '../repository/profile_repository.dart';
 class UpdateProfileController extends GetxController with WidgetsBindingObserver {
   final _api = ProfileRepository();
   final productApi = ProductRepository();
-  final apiAddress = AddressRepository();
 
   var selectedImage = Rxn<String>();
   var selectedIntroVideo = Rxn<String>();
@@ -177,7 +173,6 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
   final getexpertiseModel = GetSubCategoryModel().obs;
   final updateProfileModel = UpdateProfileModel().obs;
   final urlData = PreSignedIntroVideoModel().obs;
-  final addAddressModel = AddAddressModel().obs;
 
   void setError(String value) => error.value = value;
   RxString error = ''.obs;
@@ -186,7 +181,6 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
   void setUrlData(PreSignedIntroVideoModel value) => urlData.value = value;
   void setgetExpertiseModeldata(GetSubCategoryModel value) => getexpertiseModel.value = value;
   void setProfileData(GetProfileModel value) => profileData.value = value;
-  void setaddAddressModeldata(AddAddressModel value) => addAddressModel.value = value;
 
   Future<void> getProfileApi() async {
     var connection = await CommonMethods.checkInternetConnectivity();
@@ -268,7 +262,6 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
             Utils.printLog("Response===> ${value.toString()}");
             Utils.setBoolPreferenceValues(Constants.isNewUser, false);
             if (isNewUser.value) {
-              if (profileData.value.data?.hasAddress == false) addAddressApi(profileData.value.data?.id);
               Get.offAllNamed(RoutesClass.commonScreen);
             } else {
               Get.back();
@@ -325,42 +318,6 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
             Utils.printLog("Response===> $value");
             if (value) selectedIntroVideo.value = "https://bhk-bucket-dev.s3.us-east-1.amazonaws.com/$key";
             updateProfileApi();
-          })
-          .onError((error, stackTrace) {
-            handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);
-          });
-    } else {
-      CommonMethods.showToast(appStrings.weUnableCheckData);
-    }
-  }
-
-  Future<void> addAddressApi(var id) async {
-    var connection = await CommonMethods.checkInternetConnectivity();
-    Utils.printLog("CheckInternetConnection===> ${connection.toString()}");
-
-    if (connection == true) {
-      setRxRequestStatus(Status.LOADING);
-
-      Map<String, dynamic> data = {
-        "userId": id,
-        "isDefault": true,
-        "houseNo": locationController.place.value?.name ?? "",
-        "street": locationController.place.value?.street ?? locationController.place.value?.subLocality ?? "",
-        "city": locationController.place.value?.locality ?? "",
-        "state": locationController.place.value?.administrativeArea ?? "",
-        "country": locationController.place.value?.country ?? "",
-        "postalCode": locationController.place.value?.postalCode ?? "",
-        "addressType": AddressType.HOME.name,
-        "latitude": locationController.latitude.value,
-        "longitude": locationController.longitude.value,
-      };
-
-      apiAddress
-          .addAddressApi(data)
-          .then((value) {
-            setRxRequestStatus(Status.COMPLETED);
-            setaddAddressModeldata(value);
-            Utils.printLog("Response===> ${value.toString()}");
           })
           .onError((error, stackTrace) {
             handleApiError(error, stackTrace, setError: setError, setRxRequestStatus: setRxRequestStatus);

@@ -118,7 +118,7 @@ class CommonScreenController extends GetxController with WidgetsBindingObserver 
         "userId": id,
         "isDefault": true,
         "houseNo": locationController.place.value?.name ?? "",
-        "street": locationController.place.value?.street ?? locationController.place.value?.subLocality ?? "",
+        "street": locationController.place.value?.subLocality ?? locationController.place.value?.thoroughfare ?? "",
         "city": locationController.place.value?.locality ?? "",
         "state": locationController.place.value?.administrativeArea ?? "",
         "country": locationController.place.value?.country ?? "",
