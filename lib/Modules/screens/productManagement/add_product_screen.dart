@@ -50,7 +50,7 @@ class AddProductPage extends ParentWidget {
                   16.kH,
                   if (controller.selectedIndex.value == 0) generalDetails(w, h, controller),
                   if (controller.selectedIndex.value == 1) productDetails(w, h, controller),
-                  if (controller.selectedIndex.value == 2) mediaFiles(context, w, h, controller),
+                  if (controller.selectedIndex.value == 2) Expanded(child: mediaFiles(context, w, h, controller)),
                 ],
               ),
             ),
@@ -232,7 +232,7 @@ class AddProductPage extends ParentWidget {
                 maxLength: 6,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 hint: appStrings.enterProductPrice,
-                prefixIcon: Padding(padding: EdgeInsets.only(left: 12.0,bottom: 2), child: Icon(Icons.currency_rupee_outlined, size: 14)),
+                prefixIcon: Padding(padding: EdgeInsets.only(left: 12.0, bottom: 2), child: Icon(Icons.currency_rupee_outlined, size: 14)),
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))],
               ),
             ),
@@ -270,7 +270,7 @@ class AddProductPage extends ParentWidget {
                       w,
                       (value) {},
                       readonly: true,
-                      prefixIcon: Padding(padding: EdgeInsets.only(left: 12.0,bottom: 2), child: Icon(Icons.currency_rupee_outlined, size: 14)),
+                      prefixIcon: Padding(padding: EdgeInsets.only(left: 12.0, bottom: 2), child: Icon(Icons.currency_rupee_outlined, size: 14)),
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     ),
                     mandatory: false,
@@ -477,68 +477,79 @@ class AddProductPage extends ParentWidget {
         20.kH,
         Text(appStrings.pickedFiles),
         Divider(),
-        if (controller.imagefiles.isNotEmpty) Padding(padding: const EdgeInsets.all(8.0), child: pickedfiles(w, h, controller)),
+        if (controller.imagefiles.isNotEmpty) pickedfiles(w, h, controller),
       ],
     );
   }
 
   Widget pickedfiles(double w, double h, AddProductController controller) {
-    return SizedBox(
-      height: h > 900 ? h * 0.26 : h * 0.22,
-      //height: h * 0.24,
-      child: GridView.builder(
-        itemCount: controller.imagefiles.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 16, childAspectRatio: 0.94),
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              GestureDetector(
-                onTap: () => controller.imagefiles.removeAt(index),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
-                    child: Icon(Icons.close, size: 17, color: appColors.contentWhite),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () => Get.dialog(
-                  Dialog(
-                    insetPadding: const EdgeInsets.all(16),
-                    backgroundColor: Colors.transparent,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () => Get.back(),
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 6),
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(color: Colors.brown.shade300, shape: BoxShape.circle),
-                              child: Icon(Icons.close, size: 20, color: appColors.contentWhite),
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: Wrap(
+            spacing: 16,
+            runSpacing: 16,
+            children: controller.imagefiles.asMap().entries.map((entry) {
+              int index = entry.key;
+              String imgPath = entry.value;
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  GestureDetector(
+                    onTap: () => Get.dialog(
+                      Dialog(
+                        insetPadding: EdgeInsets.all(16),
+                        backgroundColor: Colors.transparent,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () => Get.back(),
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(vertical: 6),
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(color: appColors.contentButtonBrown, shape: BoxShape.circle),
+                                  child: Icon(Icons.close, size: 20, color: appColors.contentWhite),
+                                ),
+                              ),
                             ),
-                          ),
+                            InteractiveViewer(
+                              child: Center(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.file(File(imgPath), height: h * 0.6, width: w * 0.9, fit: BoxFit.cover),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        InteractiveViewer(
-                          child: Center(
-                            child: Image.file(File(controller.imagefiles[index]), height: h * 0.6, width: w * 0.9, fit: BoxFit.cover),
-                          ),
-                        ),
-                      ],
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.file(File(imgPath), height: 100, width: 100, fit: BoxFit.cover),
                     ),
                   ),
-                ),
-                child: Image.file(File(controller.imagefiles[index]), width: w * .2, height: h * .09, fit: BoxFit.fitWidth),
-              ),
-            ],
-          );
-        },
+                  Positioned(
+                    top: -8,
+                    right: -8,
+                    child: GestureDetector(
+                      onTap: () => controller.imagefiles.removeAt(index),
+                      child: Container(
+                        padding: EdgeInsets.all(6),
+                        decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                        child: Icon(Icons.close, size: 16, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
+        ),
       ),
     );
   }
