@@ -262,7 +262,7 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
             Utils.printLog("Response===> ${value.toString()}");
             Utils.setBoolPreferenceValues(Constants.isNewUser, false);
             if (isNewUser.value) {
-              Get.offAllNamed(RoutesClass.commonScreen);
+              Get.offAllNamed(RoutesClass.verify);
             } else {
               Get.back();
               Get.back();
