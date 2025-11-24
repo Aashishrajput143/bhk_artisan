@@ -541,7 +541,7 @@ Widget commonDescriptionTextField(
             borderRadius: BorderRadius.circular(radius),
             borderSide: BorderSide(color: appColors.declineColor, width: borderWidth),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: contentPadding),
+          contentPadding: EdgeInsets.symmetric(horizontal: contentPadding,vertical: 8),
         ),
       );
     },
