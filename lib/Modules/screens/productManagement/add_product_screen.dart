@@ -150,7 +150,7 @@ class AddProductPage extends ParentWidget {
             16.kH,
             commonComponent(
               appStrings.productName,
-              commonTextField(
+              commonDescriptionTextField(
                 controller.nameController.value,
                 error: controller.nameError,
                 controller.nameFocusNode.value,
@@ -161,7 +161,7 @@ class AddProductPage extends ParentWidget {
                 },
                 fontSize: 14,
                 hint: appStrings.enterProductName,
-                maxLines: 3,
+                maxLines: 2,
                 inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
               ),
             ),
@@ -198,7 +198,7 @@ class AddProductPage extends ParentWidget {
                 (value) {},
                 fontSize: 14,
                 hint: appStrings.enterDescription,
-                maxLines: h > 800 ? 6 : 4,
+                maxLines: h > 900 ? 6 : 4,
                 minLines: 3,
                 maxLength: 1000,
                 inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter()],
