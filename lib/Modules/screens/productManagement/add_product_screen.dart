@@ -162,6 +162,7 @@ class AddProductPage extends ParentWidget {
                 fontSize: 14,
                 hint: appStrings.enterProductName,
                 maxLines: 2,
+                minLines: 2,
                 inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
               ),
             ),
