@@ -5,6 +5,7 @@ import 'package:bhk_artisan/resources/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_compress/video_compress.dart';
 import 'package:video_player/video_player.dart';
 
 var picker = ImagePicker().obs;
@@ -116,9 +117,8 @@ Future<void> pickVideoFromGallery(Rxn<String> selectedVideo, bool fromGallery, {
   final XFile? video = await picker.value.pickVideo(source: fromGallery ? ImageSource.gallery : ImageSource.camera, maxDuration: const Duration(seconds: 15));
 
   if (video != null) {
-    selectedVideo.value = video.path;
 
-    final file = File(video.path);
+    File file = File(video.path);
     final int bytes = await file.length();
     final double kb = bytes / 1024;
     final double mb = kb / 1024;
@@ -142,8 +142,26 @@ Future<void> pickVideoFromGallery(Rxn<String> selectedVideo, bool fromGallery, {
       return;
     }
 
+    if (mb > 15) {
+      File? compressed = await compressVideo(file);
+      if (compressed != null) {
+        file = compressed;
+      }
+    }
+
+    selectedVideo.value = video.path;
+
     if (onVideoPicked != null) {
       await onVideoPicked();
     }
+  }
+}
+
+Future<File?> compressVideo(File file) async {
+  try {
+    return await VideoCompress.compressVideo(file.path, quality: VideoQuality.MediumQuality, deleteOrigin: false).then((info) => info?.file);
+  } catch (e) {
+    debugPrint("Video compression error: $e");
+    return null;
   }
 }
