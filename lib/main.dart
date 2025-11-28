@@ -14,7 +14,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   //await availableCameras();
-  Get.put(LocationController());
+  final locationController = Get.put(LocationController());
+  await locationController.getCurrentLocation();
   runApp(MyApp());
 }
 

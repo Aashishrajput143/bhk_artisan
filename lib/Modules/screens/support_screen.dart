@@ -6,6 +6,7 @@ import 'package:bhk_artisan/data/response/status.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/font.dart';
+import 'package:bhk_artisan/resources/inputformatter.dart';
 import 'package:bhk_artisan/resources/strings.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +58,7 @@ class SupportScreen extends ParentWidget {
                       (value) {},
                       hint: appStrings.detailedDescriptionIssue,
                       fontSize: 15,
+                      inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingBreaksFormatter(), RemoveTrailingPeriodsFormatter()],
                     ),
                   ),
                   20.kH,
