@@ -58,7 +58,7 @@ class SupportScreen extends ParentWidget {
                       (value) {},
                       hint: appStrings.detailedDescriptionIssue,
                       fontSize: 15,
-                      inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingBreaksFormatter(), RemoveTrailingPeriodsFormatter()],
+                      inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter()],
                     ),
                   ),
                   20.kH,

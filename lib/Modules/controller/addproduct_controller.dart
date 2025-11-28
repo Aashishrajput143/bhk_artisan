@@ -247,10 +247,10 @@ class AddProductController extends GetxController {
       setRxRequestStatus(Status.LOADING);
 
       Map<String, String> data = {
-        "product_name": nameController.value.text,
+        "product_name": nameController.value.text.replaceAll(RegExp(r'\n+$'), ''),
         "categoryId": selectedcategoryid.value ?? "",
         "subCategoryId": selectedsubcategoryid.value ?? "",
-        "description": detaileddescriptionController.value.text,
+        "description": detaileddescriptionController.value.text.replaceAll(RegExp(r'\n+$'), ''),
         "productPricePerPiece": priceController.value.text,
         "quantity": quantityController.value.text,
         "material": materialController.value.text,
