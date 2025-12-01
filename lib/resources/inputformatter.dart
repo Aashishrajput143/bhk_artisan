@@ -122,20 +122,6 @@ class EmailInputFormatter extends TextInputFormatter {
   }
 }
 
-class RemoveTrailingBreaksFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    String text = newValue.text;
-
-    text = text.replaceAll(RegExp(r'\n+$'), '');
-
-    return TextEditingValue(
-      text: text,
-      selection: TextSelection.collapsed(offset: text.length),
-    );
-  }
-}
 
 class RemoveTrailingPeriodsFormatter extends TextInputFormatter {
   @override

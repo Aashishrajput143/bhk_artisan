@@ -1,11 +1,15 @@
+import 'package:bhk_artisan/common/common_widgets.dart';
 import 'package:bhk_artisan/common/tab_indicator.dart';
 import 'package:bhk_artisan/main.dart';
 import 'package:bhk_artisan/resources/colors.dart';
 import 'package:bhk_artisan/resources/font.dart';
+import 'package:bhk_artisan/resources/images.dart';
 import 'package:bhk_artisan/resources/strings.dart';
+import 'package:bhk_artisan/routes/routes_class.dart';
 import 'package:bhk_artisan/utils/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../common/common_back.dart';
 import '../controller/common_screen_controller.dart';
@@ -21,6 +25,33 @@ class CommonScreen extends ParentWidget {
         controller.selectedIndex.value = 0;
       }
     });
+  }
+
+  void showUpdateLocationDialog() {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(appImages.emptyMap, color: appColors.brownbuttonBg),
+              Text("Update Location", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              6.kH,
+              Text(
+                appStrings.emptyAddressDescription,
+                style: TextStyle(fontSize: 14, color: appColors.contentSecondary),
+                textAlign: TextAlign.center,
+              ),
+              16.kH,
+              commonButtonIcon(Get.width, 45, backgroundColor: appColors.brownbuttonBg, appColors.contentWhite, () => Get.offAllNamed(RoutesClass.addresses), icon: Icons.my_location, hint: appStrings.addAddress),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
   }
 
   @override

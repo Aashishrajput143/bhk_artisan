@@ -179,7 +179,27 @@ class EditProfile extends ParentWidget {
           appColors.contentWhite,
           () {
             if (controller.selectedIntroVideo.value != null || (controller.profileData.value.data?.introVideo?.isNotEmpty ?? false)) {
-              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.selectedIntroVideo.value ?? controller.profileData.value.data?.introVideo});
+              Get.toNamed(RoutesClass.videoPlayer, arguments: {'path': controller.selectedIntroVideo.value ?? controller.profileData.value.data?.introVideo,"change":controller.profileData.value.data?.introVideo ==null? true:false})?.then((onValue) {
+                if (onValue != null && onValue == true) {
+                  if (context.mounted) {
+                    bottomDrawer(
+                      context,
+                      h * 0.22,
+                      w,
+                      controller.selectedIntroVideo,
+                      () {
+                        Get.back();
+                        pickVideoFromGallery(controller.selectedIntroVideo, true);
+                      },
+                      () {
+                        Get.back();
+                        pickVideoFromGallery(controller.selectedIntroVideo, false);
+                      },
+                      isVideo: true,
+                    );
+                  }
+                }
+              });
             } else {
               bottomDrawer(
                 context,
@@ -309,8 +329,8 @@ class EditProfile extends ParentWidget {
           ),
           mandatory: false,
         ),
+        controller.gstError.value != null ? 16.kH : 0.kH,
         if (controller.isNewUser.value) ...[
-          16.kH,
           Row(
             children: [
               Expanded(

@@ -16,6 +16,7 @@ class VideoPreviewController extends GetxController {
   var isFullscreen = false.obs;
   var isBuffering = false.obs;
   var restart = false.obs;
+  var isChange = false.obs;
 
   var isInitialized = false.obs;
   var path = Rxn<String>();
@@ -27,7 +28,9 @@ class VideoPreviewController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    path.value = Get.arguments?["path"];
+    var args = Get.arguments ?? {};
+    path.value = args["path"];
+    isChange.value = args["change"] ?? false;
     //setVideo(appStrings.introVideoUrl);
     //setVideo("http://157.20.214.239:3000/api/v1/local/file/uploads/BHK/2025-11-13/file_example_MP4_1920_18MG.mp4");
     setVideo(path.value ?? appStrings.introVideoUrl);

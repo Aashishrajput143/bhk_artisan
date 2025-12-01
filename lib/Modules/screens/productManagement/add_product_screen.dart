@@ -150,7 +150,7 @@ class AddProductPage extends ParentWidget {
             16.kH,
             commonComponent(
               appStrings.productName,
-              commonDescriptionTextField(
+              commonTextField(
                 controller.nameController.value,
                 error: controller.nameError,
                 controller.nameFocusNode.value,
@@ -162,8 +162,7 @@ class AddProductPage extends ParentWidget {
                 fontSize: 14,
                 hint: appStrings.enterProductName,
                 maxLines: 2,
-                minLines: 2,
-                inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(),RemoveTrailingBreaksFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
+                inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter(), SpecialCharacterValidator(), EmojiInputFormatter(), LengthLimitingTextInputFormatter(50)],
               ),
             ),
             16.kH,
@@ -202,7 +201,7 @@ class AddProductPage extends ParentWidget {
                 maxLines: h > 900 ? 6 : 4,
                 minLines: 3,
                 maxLength: 1000,
-                inputFormatters: [NoLeadingSpaceFormatter(),RemoveTrailingBreaksFormatter(), RemoveTrailingPeriodsFormatter()],
+                inputFormatters: [NoLeadingSpaceFormatter(), RemoveTrailingPeriodsFormatter()],
               ),
             ),
           ],
@@ -387,22 +386,22 @@ class AddProductPage extends ParentWidget {
               Row(
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 5,
                     child: commonTextField(controller.lengthController.value, controller.lengthFocusNode.value, w, (value) {}, hint: appStrings.length, keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
-                    flex: 3,
+                    flex: 5,
                     child: commonTextField(controller.breadthController.value, controller.breadthFocusNode.value, w, (value) {}, hint: appStrings.breadth, keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
-                    flex: 3,
+                    flex: 5,
                     child: commonTextField(controller.heightController.value, controller.heightFocusNode.value, w, (value) {}, hint: appStrings.height, keyboardType: TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.digitsOnly, FilteringTextInputFormatter.deny(RegExp(r'^0'))], maxLength: 5),
                   ),
                   8.kW,
                   Expanded(
-                    flex: 4,
+                    flex: 6,
                     child: commonDropdownButton(
                       controller.measureunits.map((item) {
                         return DropdownMenuItem<String>(

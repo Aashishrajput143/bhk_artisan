@@ -134,12 +134,13 @@ void handleApiError(dynamic error, dynamic stackTrace, {Function(String)? setErr
   Utils.printLog("stackTrace===> ${stackTrace.toString()}");
 }
 
-PreferredSizeWidget commonAppBar(String title, {bool automaticallyImplyLeading = true}) {
+PreferredSizeWidget commonAppBar(String title, {bool automaticallyImplyLeading = true,List<Widget>? actions}) {
   return AppBar(
     flexibleSpace: Container(decoration: const BoxDecoration(gradient: AppGradients.customGradient)),
     iconTheme: IconThemeData(color: appColors.contentWhite),
     centerTitle: true,
     automaticallyImplyLeading: automaticallyImplyLeading,
+    actions: actions,
     title: Text(title.toUpperCase(), style: TextStyle(fontSize: 16, color: appColors.contentWhite)),
   );
 }
@@ -211,7 +212,7 @@ Widget commonProfileNetworkImage(String url, {double? width, double? height, Box
 }
 
 Widget commonNetworkImage(String url, {double? width, double? height, BoxFit? fit, String? defaultImage, BorderRadius? borderRadius}) {
-  return AvatarWithBlurHash().avatarWithBlurHashIcon(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url, width: width, height: height, borderRadius: borderRadius);
+  return AvatarWithBlurHash().avatarWithBlurHashIcon(blurHash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj', imageUrl: url,fit: fit??BoxFit.contain, width: width, height: height, borderRadius: borderRadius);
 }
 
 Widget commonCircleNetworkImage(String url, {double radius = 22}) {

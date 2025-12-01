@@ -106,7 +106,7 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
       if (communityController.value.text.isEmpty) {
         communityError.value = "Please Enter Your Caste";
       }
-      if (selectedIntroVideo.value == null) {
+      if (selectedIntroVideo.value == null && (profileData.value.data?.introVideo?.isEmpty ?? true)) {
         CommonMethods.showToast("Please Upload Your Intro");
       }
       return false;
@@ -166,6 +166,7 @@ class UpdateProfileController extends GetxController with WidgetsBindingObserver
     } else {
       selectedCategory.value = null;
     }
+
   }
 
   final rxRequestStatus = Status.COMPLETED.obs;

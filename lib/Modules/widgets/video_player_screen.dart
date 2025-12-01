@@ -16,7 +16,20 @@ class VideoPreviewPage extends ParentWidget {
     return Obx(
       () => Scaffold(
         backgroundColor: Colors.black,
-        appBar: controller.isFullscreen.value ? null : commonAppBar(appStrings.introductoryVideo),
+        appBar: controller.isFullscreen.value
+            ? null
+            : commonAppBar(
+                appStrings.introductoryVideo,
+                actions: controller.isChange.value?[
+                  GestureDetector(
+                    onTap: () => Get.back(result: controller.isChange.value),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: Text("Change", style: TextStyle(color: appColors.contentWhite, fontSize: 16)),
+                    ),
+                  ),
+                ]:[],
+              ),
         body: controller.isInitialized.value
             ? Center(
                 child: SizedBox.expand(
@@ -58,7 +71,7 @@ class VideoPreviewPage extends ParentWidget {
                             right: 0,
                             child: Container(
                               color: Colors.black.withValues(alpha: 0.5),
-                              padding: EdgeInsets.fromLTRB(8,8,8,controller.isFullscreen.value?h * 0.02: h * 0.04),
+                              padding: EdgeInsets.fromLTRB(8, 8, 8, controller.isFullscreen.value ? h * 0.02 : h * 0.04),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
