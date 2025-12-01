@@ -1,6 +1,5 @@
 import 'package:bhk_artisan/Modules/controller/product_screen_controller.dart';
 import 'package:bhk_artisan/Modules/model/get_profile_model.dart';
-import 'package:bhk_artisan/Modules/repository/address_repository.dart';
 import 'package:bhk_artisan/Modules/repository/profile_repository.dart';
 import 'package:bhk_artisan/Modules/screens/common_screen.dart';
 import 'package:bhk_artisan/Modules/screens/home_screen.dart';
@@ -23,7 +22,6 @@ import '../screens/profileManagement/main_profile.dart';
 class CommonScreenController extends GetxController with WidgetsBindingObserver {
   final _api = ProfileRepository();
   var selectedIndex = 0.obs;
-  final apiAddress = AddressRepository();
   var isDialog = false.obs;
 
   late LocationController locationController;
@@ -107,5 +105,11 @@ class CommonScreenController extends GetxController with WidgetsBindingObserver 
     } else {
       CommonMethods.showToast(appStrings.weUnableCheckData);
     }
+  }
+
+  @override
+  void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.onClose();
   }
 }
